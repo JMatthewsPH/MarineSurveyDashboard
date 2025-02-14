@@ -107,8 +107,7 @@ with st.container():
     comparison_data = None
     if biomass_comparison != get_text('compare_none'):
         if biomass_comparison == get_text('compare_avg'):
-            # TODO: Implement average comparison
-            pass
+            comparison_data = data_processor.get_average_biomass_data(exclude_site=selected_site)
         else:
             comparison_data = data_processor.get_biomass_data(biomass_comparison)
     biomass_fig = graph_generator.create_time_series(
@@ -127,8 +126,7 @@ with st.container():
     comparison_data = None
     if coral_comparison != get_text('compare_none'):
         if coral_comparison == get_text('compare_avg'):
-            # TODO: Implement average comparison
-            pass
+            comparison_data = data_processor.get_average_coral_cover_data(exclude_site=selected_site)
         else:
             comparison_data = data_processor.get_coral_cover_data(coral_comparison)
     coral_fig = graph_generator.create_time_series(

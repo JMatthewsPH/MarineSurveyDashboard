@@ -29,6 +29,34 @@ class DataProcessor:
         print(f"Found {len(surveys)} biomass surveys for {site_name}")
         return pd.DataFrame(surveys, columns=['date', 'Commercial Biomass'])
 
+    def get_average_biomass_data(self, exclude_site=None, start_date='2017-01-01'):
+        """Calculate average commercial fish biomass across all sites except the excluded one"""
+        print(f"Calculating average biomass (excluding {exclude_site})")
+
+        # Get the site to exclude
+        exclude_site_id = None
+        if exclude_site:
+            site = self.db.query(Site).filter(Site.name == exclude_site).first()
+            if site:
+                exclude_site_id = site.id
+
+        # Query all surveys
+        query = (self.db.query(
+                Survey.date,
+                func.avg(Survey.commercial_biomass).label('Commercial Biomass'))
+                .filter(Survey.date >= start_date))
+
+        # Exclude the selected site if specified
+        if exclude_site_id:
+            query = query.filter(Survey.site_id != exclude_site_id)
+
+        # Group by date and order
+        surveys = (query.group_by(Survey.date)
+                  .order_by(Survey.date)
+                  .all())
+
+        return pd.DataFrame(surveys, columns=['date', 'Commercial Biomass'])
+
     def get_coral_cover_data(self, site_name, start_date='2017-01-01'):
         """Process hard coral cover data"""
         print(f"Fetching coral cover data for site: {site_name}")
@@ -44,6 +72,34 @@ class DataProcessor:
                   .all())
 
         print(f"Found {len(surveys)} coral cover surveys for {site_name}")
+        return pd.DataFrame(surveys, columns=['date', 'Hard Coral Cover'])
+
+    def get_average_coral_cover_data(self, exclude_site=None, start_date='2017-01-01'):
+        """Calculate average hard coral cover across all sites except the excluded one"""
+        print(f"Calculating average coral cover (excluding {exclude_site})")
+
+        # Get the site to exclude
+        exclude_site_id = None
+        if exclude_site:
+            site = self.db.query(Site).filter(Site.name == exclude_site).first()
+            if site:
+                exclude_site_id = site.id
+
+        # Query all surveys
+        query = (self.db.query(
+                Survey.date,
+                func.avg(Survey.hard_coral_cover).label('Hard Coral Cover'))
+                .filter(Survey.date >= start_date))
+
+        # Exclude the selected site if specified
+        if exclude_site_id:
+            query = query.filter(Survey.site_id != exclude_site_id)
+
+        # Group by date and order
+        surveys = (query.group_by(Survey.date)
+                  .order_by(Survey.date)
+                  .all())
+
         return pd.DataFrame(surveys, columns=['date', 'Hard Coral Cover'])
 
     def get_fish_length_data(self, site_name, species, start_date='2017-01-01'):
