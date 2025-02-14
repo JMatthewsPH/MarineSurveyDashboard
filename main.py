@@ -137,20 +137,5 @@ with st.container():
     )
     st.plotly_chart(coral_fig, use_container_width=True)
 
-# Eco-Tourism Information in its own container
-with st.container():
-    st.header(get_text('eco_tourism'))
-    observation_type = st.radio(
-        get_text('observation_type'),
-        ['percentage', 'numeric']
-    )
-    ecotourism_data = data_processor.get_ecotourism_data(selected_site, observation_type)
-    eco_fig = graph_generator.create_eco_tourism_chart(
-        ecotourism_data,
-        f"{get_text('eco_tourism')} - {selected_site}",
-        observation_type
-    )
-    st.plotly_chart(eco_fig, use_container_width=True)
-
 # Clean up
 db.close()
