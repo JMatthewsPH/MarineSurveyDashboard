@@ -28,6 +28,12 @@ def parse_season_to_date(season: str) -> datetime:
         print(f"Error parsing date from season '{season}': {str(e)}")
         return None
 
+def clean_numeric_value(value):
+    """Convert string numbers with commas to float"""
+    if isinstance(value, str):
+        return float(value.replace(',', ''))
+    return value
+
 def import_csv_data(csv_folder_path: str, db: Session):
     """Import data from all CSV files in the specified folder."""
     print("Starting data import process...")
@@ -39,7 +45,11 @@ def import_csv_data(csv_folder_path: str, db: Session):
         print(f"Processing file: {filename}")
 
         # Extract site name from filename
-        municipality, site_name = filename.replace('.csv', '').split(' - ')
+        try:
+            municipality, site_name = filename.replace('.csv', '').split(' - ')
+        except ValueError:
+            print(f"Invalid filename format: {filename}")
+            continue
 
         # Get or create site
         site = db.query(Site).filter(Site.name == site_name).first()
@@ -52,6 +62,18 @@ def import_csv_data(csv_folder_path: str, db: Session):
         try:
             df = pd.read_csv(file_path)
             print(f"Successfully read CSV file {filename} with {len(df)} rows")
+
+            # Clean numeric columns
+            numeric_columns = [
+                'Hard Coral Cover', 'Fleshy Macro Algae Cover', 'Rubble',
+                'Bleaching', 'Total Denisty', 'Commercial Denisty',
+                'Commercial Biomass', 'Herbivore Denisty', 'Carnivore Density',
+                'Omnivore Density', 'Corallivore Denisty'
+            ]
+
+            for col in numeric_columns:
+                if col in df.columns:
+                    df[col] = df[col].apply(clean_numeric_value)
 
             # Process each row
             for _, row in df.iterrows():
