@@ -110,10 +110,12 @@ class GraphGenerator:
             hovermode='x unified',
             showlegend=True,
             legend=dict(
-                yanchor="top",
-                y=0.99,
-                xanchor="left",
-                x=0.01
+                orientation="h",  # horizontal orientation
+                yanchor="bottom",
+                y=1.02,  # Place it above the chart
+                xanchor="center",  # Center horizontally
+                x=0.5,  # Center position
+                bgcolor="rgba(255, 255, 255, 0.8)"  # Semi-transparent background
             ),
             # Ensure future dates can be accommodated
             xaxis=dict(
@@ -158,7 +160,15 @@ class GraphGenerator:
             yaxis_title='Species',
             template='plotly_white',
             height=400,
-            margin=dict(l=150)  # Add more space for species names
+            margin=dict(l=150),  # Add more space for species names
+            legend=dict(
+                orientation="h",  # horizontal orientation
+                yanchor="bottom",
+                y=1.02,  # Place it above the chart
+                xanchor="center",  # Center horizontally
+                x=0.5,  # Center position
+                bgcolor="rgba(255, 255, 255, 0.8)"  # Semi-transparent background
+            )
         )
 
         return fig
