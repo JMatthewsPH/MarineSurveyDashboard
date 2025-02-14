@@ -8,8 +8,8 @@ class GraphGenerator:
     def __init__(self, data_processor):
         self.data_processor = data_processor
 
-    def create_time_series(self, data, title, y_label, comparison_data=None):
-        """Create time series graph with optional comparison and data gap handling"""
+    def create_time_series(self, data, title, y_label, comparison_data=None, secondary_data=None, secondary_label=None):
+        """Create time series graph with optional comparison and secondary metric"""
         fig = go.Figure()
 
         # Main data
@@ -21,7 +21,6 @@ class GraphGenerator:
             covid_start = date(2019, 9, 1)
             covid_end = date(2022, 3, 1)
 
-            # Split data into pre and post COVID
             pre_covid = data[data['date'] < covid_start]
             post_covid = data[data['date'] > covid_end]
 
@@ -29,7 +28,7 @@ class GraphGenerator:
             fig.add_trace(go.Scatter(
                 x=pre_covid['date'],
                 y=pre_covid[pre_covid.columns[1]],
-                name='Current Site',
+                name=y_label,
                 line=dict(color='#0077b6', dash='solid'),
                 mode='lines+markers'
             ))
@@ -37,7 +36,7 @@ class GraphGenerator:
             fig.add_trace(go.Scatter(
                 x=post_covid['date'],
                 y=post_covid[post_covid.columns[1]],
-                name='Current Site',
+                name=y_label,
                 line=dict(color='#0077b6', dash='solid'),
                 mode='lines+markers',
                 showlegend=False
@@ -57,52 +56,93 @@ class GraphGenerator:
                     mode='lines'
                 ))
 
-            # Add comparison if provided
-            if comparison_data is not None and not comparison_data.empty:
-                comparison_data = comparison_data.sort_values('date')
-                pre_covid_comp = comparison_data[comparison_data['date'] < covid_start]
-                post_covid_comp = comparison_data[comparison_data['date'] > covid_end]
+        # Secondary metric data (if provided)
+        if secondary_data is not None and not secondary_data.empty:
+            secondary_data = secondary_data.sort_values('date')
+            pre_covid_sec = secondary_data[secondary_data['date'] < covid_start]
+            post_covid_sec = secondary_data[secondary_data['date'] > covid_end]
+
+            # Add secondary data traces with second y-axis
+            fig.add_trace(go.Scatter(
+                x=pre_covid_sec['date'],
+                y=pre_covid_sec[secondary_data.columns[1]],
+                name=secondary_label,
+                line=dict(color='#ef476f', dash='solid'),
+                mode='lines+markers',
+                yaxis='y2'
+            ))
+
+            fig.add_trace(go.Scatter(
+                x=post_covid_sec['date'],
+                y=post_covid_sec[post_covid_sec.columns[1]],
+                name=secondary_label,
+                line=dict(color='#ef476f', dash='solid'),
+                mode='lines+markers',
+                yaxis='y2',
+                showlegend=False
+            ))
+
+            if not pre_covid_sec.empty and not post_covid_sec.empty:
+                last_pre_covid = pre_covid_sec.iloc[-1]
+                first_post_covid = post_covid_sec.iloc[0]
 
                 fig.add_trace(go.Scatter(
-                    x=pre_covid_comp['date'],
-                    y=pre_covid_comp[comparison_data.columns[1]],
-                    name='Comparison',
-                    line=dict(color='#ef476f', dash='solid'),
-                    mode='lines+markers'
-                ))
-
-                fig.add_trace(go.Scatter(
-                    x=post_covid_comp['date'],
-                    y=post_covid_comp[comparison_data.columns[1]],
-                    name='Comparison',
-                    line=dict(color='#ef476f', dash='solid'),
-                    mode='lines+markers',
+                    x=[last_pre_covid['date'], first_post_covid['date']],
+                    y=[last_pre_covid[secondary_data.columns[1]], first_post_covid[secondary_data.columns[1]]],
+                    name='COVID-19 Period (No Data)',
+                    line=dict(color='#ef476f', dash='dot', width=1),
+                    opacity=0.3,
+                    mode='lines',
+                    yaxis='y2',
                     showlegend=False
                 ))
 
-                if not pre_covid_comp.empty and not post_covid_comp.empty:
-                    last_pre_covid = pre_covid_comp.iloc[-1]
-                    first_post_covid = post_covid_comp.iloc[0]
+        # Add comparison if provided (on primary y-axis)
+        elif comparison_data is not None and not comparison_data.empty:
+            comparison_data = comparison_data.sort_values('date')
+            pre_covid_comp = comparison_data[comparison_data['date'] < covid_start]
+            post_covid_comp = comparison_data[comparison_data['date'] > covid_end]
 
-                    fig.add_trace(go.Scatter(
-                        x=[last_pre_covid['date'], first_post_covid['date']],
-                        y=[last_pre_covid[comparison_data.columns[1]], first_post_covid[comparison_data.columns[1]]],
-                        name='COVID-19 Period (No Data)',
-                        line=dict(color='#ef476f', dash='dot', width=1),
-                        opacity=0.3,
-                        mode='lines',
-                        showlegend=False
-                    ))
+            fig.add_trace(go.Scatter(
+                x=pre_covid_comp['date'],
+                y=pre_covid_comp[comparison_data.columns[1]],
+                name='Comparison',
+                line=dict(color='#ef476f', dash='solid'),
+                mode='lines+markers'
+            ))
+
+            fig.add_trace(go.Scatter(
+                x=post_covid_comp['date'],
+                y=post_covid_comp[comparison_data.columns[1]],
+                name='Comparison',
+                line=dict(color='#ef476f', dash='solid'),
+                mode='lines+markers',
+                showlegend=False
+            ))
+
+            if not pre_covid_comp.empty and not post_covid_comp.empty:
+                last_pre_covid = pre_covid_comp.iloc[-1]
+                first_post_covid = post_covid_comp.iloc[0]
+
+                fig.add_trace(go.Scatter(
+                    x=[last_pre_covid['date'], first_post_covid['date']],
+                    y=[last_pre_covid[comparison_data.columns[1]], first_post_covid[comparison_data.columns[1]]],
+                    name='COVID-19 Period (No Data)',
+                    line=dict(color='#ef476f', dash='dot', width=1),
+                    opacity=0.3,
+                    mode='lines',
+                    showlegend=False
+                ))
 
         # Update layout for better responsiveness
-        fig.update_layout(
-            title=title,
-            xaxis_title='Date',
-            yaxis_title=y_label,
-            template='plotly_white',
-            hovermode='x unified',
-            showlegend=True,
-            legend=dict(
+        layout_updates = {
+            'title': title,
+            'xaxis_title': 'Date',
+            'yaxis_title': y_label,
+            'template': 'plotly_white',
+            'hovermode': 'x unified',
+            'showlegend': True,
+            'legend': dict(
                 orientation="h",
                 yanchor="bottom",
                 y=1.02,
@@ -110,11 +150,10 @@ class GraphGenerator:
                 x=0.5,
                 bgcolor="rgba(255, 255, 255, 0.8)"
             ),
-            # Make the plot responsive
-            autosize=True,
-            height=500,  # Minimum height
-            margin=dict(l=50, r=50, t=100, b=50),
-            xaxis=dict(
+            'autosize': True,
+            'height': 500,
+            'margin': dict(l=50, r=50, t=100, b=50),
+            'xaxis': dict(
                 range=[
                     datetime(2017, 1, 1),
                     datetime.now() + timedelta(days=365)
@@ -122,12 +161,25 @@ class GraphGenerator:
                 tickformat='%b %Y',
                 dtick='M3',
                 tickangle=45,
-                automargin=True  # Ensure labels don't get cut off
+                automargin=True
             ),
-            yaxis=dict(
-                automargin=True  # Ensure labels don't get cut off
+            'yaxis': dict(
+                automargin=True,
+                title=y_label,
+                side='left'
             )
-        )
+        }
+
+        # Add second y-axis if there's secondary data
+        if secondary_data is not None and not secondary_data.empty:
+            layout_updates['yaxis2'] = dict(
+                title=secondary_label,
+                overlaying='y',
+                side='right',
+                automargin=True
+            )
+
+        fig.update_layout(**layout_updates)
 
         return fig
 

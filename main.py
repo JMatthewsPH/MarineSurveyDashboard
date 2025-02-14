@@ -87,7 +87,7 @@ coral_comparison = st.sidebar.selectbox(
 )
 
 # Additional metrics selection
-st.sidebar.subheader(get_text('additional_metrics'))
+st.sidebar.subheader(get_text('metric_comparison'))
 metric_options = {
     'fleshy_algae': get_text('fleshy_algae'),
     'bleaching': get_text('bleaching'),
@@ -96,18 +96,21 @@ metric_options = {
     'omnivore': get_text('omnivore'),
     'corallivore': get_text('corallivore')
 }
-selected_metric = st.sidebar.selectbox(
-    "Select Metric",
+
+# Primary metric selection
+primary_metric = st.sidebar.selectbox(
+    get_text('primary_metric'),
     options=list(metric_options.keys()),
     format_func=lambda x: metric_options[x],
-    key="metric_selection"
+    key="primary_metric"
 )
 
-# Additional metric comparison
-metric_comparison = st.sidebar.selectbox(
-    "Comparison",
-    comparison_options,
-    key="metric_comparison"
+# Secondary metric selection (optional)
+secondary_metric = st.sidebar.selectbox(
+    get_text('secondary_metric'),
+    options=[None] + list(metric_options.keys()),
+    format_func=lambda x: "None" if x is None else metric_options[x],
+    key="secondary_metric"
 )
 
 # Main content area using columns for better layout
@@ -123,9 +126,8 @@ with col2:
         description = selected_site_obj.description_fil if st.session_state.language == 'fil' else selected_site_obj.description_en
         st.markdown(description or f"Description for {selected_site} in {st.session_state.language}")
 
-# Use container for better spacing
+# Commercial Fish Biomass Graph
 with st.container():
-    # Commercial Fish Biomass Graph
     st.header(get_text('fish_biomass'))
     biomass_data = data_processor.get_biomass_data(selected_site)
     comparison_data = None
@@ -142,9 +144,8 @@ with st.container():
     )
     st.plotly_chart(biomass_fig, use_container_width=True)
 
-# Use another container for coral cover
+# Hard Coral Cover Graph
 with st.container():
-    # Hard Coral Cover Graph
     st.header(get_text('coral_cover'))
     coral_data = data_processor.get_coral_cover_data(selected_site)
     comparison_data = None
@@ -161,21 +162,23 @@ with st.container():
     )
     st.plotly_chart(coral_fig, use_container_width=True)
 
-# Additional metric graph
+# Additional metrics graph
 with st.container():
-    st.header(metric_options[selected_metric])
-    metric_data = data_processor.get_metric_data(selected_site, selected_metric)
-    comparison_data = None
-    if metric_comparison != get_text('compare_none'):
-        if metric_comparison == get_text('compare_avg'):
-            comparison_data = data_processor.get_average_metric_data(selected_metric, exclude_site=selected_site)
-        else:
-            comparison_data = data_processor.get_metric_data(metric_comparison, selected_metric)
+    # Get primary metric data
+    primary_data = data_processor.get_metric_data(selected_site, primary_metric)
+
+    # Get secondary metric data if selected
+    secondary_data = None
+    if secondary_metric is not None:
+        secondary_data = data_processor.get_metric_data(selected_site, secondary_metric)
+
+    # Create graph with both metrics if secondary is selected
     metric_fig = graph_generator.create_time_series(
-        metric_data,
-        f"{metric_options[selected_metric]} - {selected_site}",
-        "Value",
-        comparison_data
+        primary_data,
+        f"{metric_options[primary_metric]} {'& ' + metric_options[secondary_metric] if secondary_metric else ''} - {selected_site}",
+        metric_options[primary_metric],
+        secondary_data=secondary_data,
+        secondary_label=metric_options.get(secondary_metric) if secondary_metric else None
     )
     st.plotly_chart(metric_fig, use_container_width=True)
 
