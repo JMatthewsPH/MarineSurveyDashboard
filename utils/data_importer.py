@@ -5,34 +5,73 @@ from sqlalchemy.orm import Session
 from .database import Site, Survey, get_db
 
 def parse_season_to_date(season: str) -> datetime:
-    """Convert season string to a date object using the middle month of the season."""
+    """
+    Convert season string to a date object using the first month of the season.
+    For DEC-FEB seasons that span across years (e.g., 'DEC-FEB 2017/18'),
+    uses December of the first year (2017) as the start date.
+    Each season spans exactly 3 months.
+    """
     try:
-        parts = season.replace('/', '-').split()
-        if len(parts) == 2:  # Format: "SEP-NOV 2017"
-            months, year = parts
-            start_month = months.split('-')[0]
-            year = year
-        else:  # Format: "DEC-FEB 2017/18"
-            months, years = parts[0], parts[1]
-            start_month = months.split('-')[0]
-            year = years.split('/')[0]
+        # Split into month range and year part
+        parts = season.strip().split()
+        if len(parts) != 2:
+            print(f"Invalid season format: {season}")
+            return None
 
+        months, year_part = parts
+        month_range = months.split('-')
+        if len(month_range) != 2:
+            print(f"Invalid month range format: {months}")
+            return None
+
+        start_month = month_range[0]
+
+        # Handle the year part
+        if '/' in year_part:
+            # For DEC-FEB seasons that span years (e.g., "2017/18")
+            # Use the first year as these seasons start in December of that year
+            year = year_part.split('/')[0]
+        else:
+            # For seasons within the same year (e.g., "SEP-NOV 2017")
+            year = year_part
+
+        # Map month abbreviations to numbers
         month_map = {
             'JAN': 1, 'FEB': 2, 'MAR': 3, 'APR': 4, 'MAY': 5, 'JUN': 6,
             'JUL': 7, 'AUG': 8, 'SEP': 9, 'OCT': 10, 'NOV': 11, 'DEC': 12
         }
 
-        month = month_map[start_month]
-        return datetime(int(year), month, 1)
+        # Convert month name to number
+        try:
+            month_num = month_map[start_month]
+        except KeyError:
+            print(f"Invalid month abbreviation: {start_month}")
+            return None
+
+        # Convert year to integer
+        try:
+            year_num = int(year)
+        except ValueError:
+            print(f"Invalid year format: {year}")
+            return None
+
+        return datetime(year_num, month_num, 1)
+
     except Exception as e:
         print(f"Error parsing date from season '{season}': {str(e)}")
         return None
 
 def clean_numeric_value(value):
-    """Convert string numbers with commas to float"""
-    if isinstance(value, str):
-        return float(value.replace(',', ''))
-    return value
+    """Convert string numbers with commas to float, handling invalid values."""
+    try:
+        if isinstance(value, str):
+            if value == '#REF!' or value.strip() == '':
+                return None
+            return float(value.replace(',', ''))
+        return float(value) if pd.notnull(value) else None
+    except Exception as e:
+        print(f"Error converting value '{value}' to float: {str(e)}")
+        return None
 
 def import_csv_data(csv_folder_path: str, db: Session):
     """Import data from all CSV files in the specified folder."""
@@ -76,13 +115,19 @@ def import_csv_data(csv_folder_path: str, db: Session):
                     df[col] = df[col].apply(clean_numeric_value)
 
             # Process each row
+            valid_surveys = 0
             for _, row in df.iterrows():
                 survey_date = parse_season_to_date(row['Season'])
                 if survey_date is None:
-                    print(f"Skipping row with invalid date in file {filename}")
+                    print(f"Skipping row with invalid date: {row['Season']}")
                     continue
 
                 try:
+                    # Skip rows where all numeric values are None
+                    if all(pd.isna(row[col]) for col in numeric_columns if col in df.columns):
+                        print(f"Skipping row with all null values in {filename}")
+                        continue
+
                     # Create new survey
                     survey = Survey(
                         site_id=site.id,
@@ -110,14 +155,15 @@ def import_csv_data(csv_folder_path: str, db: Session):
 
                     if not existing_survey:
                         db.add(survey)
-                        print(f"Added survey for {site_name} on {survey_date}")
+                        valid_surveys += 1
+
                 except Exception as e:
                     print(f"Error processing row in {filename}: {str(e)}")
                     continue
 
             try:
                 db.commit()
-                print(f"Successfully imported data for {site_name}")
+                print(f"Successfully imported {valid_surveys} surveys for {site_name}")
             except Exception as e:
                 print(f"Error committing data for {site_name}: {str(e)}")
                 db.rollback()
