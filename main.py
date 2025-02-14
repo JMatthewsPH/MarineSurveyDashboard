@@ -29,10 +29,6 @@ if 'language' not in st.session_state:
 def get_text(key):
     return TRANSLATIONS[st.session_state.language][key]
 
-# Language toggle
-if st.button(get_text('lang_toggle')):
-    st.session_state.language = 'fil' if st.session_state.language == 'en' else 'en'
-
 # Title and Subheading
 st.title("Marine Conservation Philippines")
 st.header("Data Dashboard")
@@ -46,7 +42,22 @@ graph_generator = GraphGenerator(data_processor)
 sites = data_processor.get_sites()
 site_names = [site.name for site in sites]
 
-# Sidebar for site selection
+# Sidebar for site selection and language
+st.sidebar.title("Settings")
+
+# Language selection in sidebar
+selected_language = st.sidebar.selectbox(
+    "Language / Wika",
+    options=['en', 'fil'],
+    format_func=lambda x: 'English' if x == 'en' else 'Filipino',
+    index=0 if st.session_state.language == 'en' else 1
+)
+
+# Update session state language
+if selected_language != st.session_state.language:
+    st.session_state.language = selected_language
+
+# Site selection
 st.sidebar.title("Site Selection")
 selected_site = st.sidebar.selectbox(
     "Select Site",
@@ -94,7 +105,6 @@ coral_fig = graph_generator.create_time_series(
     "Cover (%)"
 )
 st.plotly_chart(coral_fig, use_container_width=True)
-
 
 # Eco-Tourism Information
 st.header(get_text('eco_tourism'))
