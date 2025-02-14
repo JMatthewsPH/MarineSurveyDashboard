@@ -1,6 +1,8 @@
 import plotly.graph_objects as go
 import plotly.express as px
 from datetime import datetime, timedelta
+import pandas as pd
+import numpy as np
 
 class GraphGenerator:
     def __init__(self, data_processor):
@@ -10,31 +12,95 @@ class GraphGenerator:
         """Create time series graph with optional comparison and data gap handling"""
         fig = go.Figure()
 
+        # COVID-19 gap dates
+        covid_start = datetime(2019, 9, 1)
+        covid_end = datetime(2022, 3, 1)
+
         # Main data
         if not data.empty:
+            # Sort data by date
+            data = data.sort_values('date')
+
+            # Split data into pre and post COVID
+            pre_covid = data[data['date'] < covid_start]
+            post_covid = data[data['date'] > covid_end]
+
+            # Add main data traces
             fig.add_trace(go.Scatter(
-                x=data['date'],
-                y=data[data.columns[1]],
+                x=pre_covid['date'],
+                y=pre_covid[pre_covid.columns[1]],
                 name='Current Site',
-                line=dict(
-                    color='#0077b6',
-                    dash='solid'
-                ),
+                line=dict(color='#0077b6', dash='solid'),
                 mode='lines+markers'
             ))
 
-        # Add comparison if provided
-        if comparison_data is not None and not comparison_data.empty:
             fig.add_trace(go.Scatter(
-                x=comparison_data['date'],
-                y=comparison_data[comparison_data.columns[1]],
+                x=post_covid['date'],
+                y=post_covid[post_covid.columns[1]],
+                name='Current Site',
+                line=dict(color='#0077b6', dash='solid'),
+                mode='lines+markers',
+                showlegend=False
+            ))
+
+            # Add dotted line for COVID gap if there's data on both sides
+            if not pre_covid.empty and not post_covid.empty:
+                last_pre_covid = pre_covid.iloc[-1]
+                first_post_covid = post_covid.iloc[0]
+
+                fig.add_trace(go.Scatter(
+                    x=[last_pre_covid['date'], first_post_covid['date']],
+                    y=[last_pre_covid[pre_covid.columns[1]], first_post_covid[post_covid.columns[1]]],
+                    name='COVID-19 Period (No Data)',
+                    line=dict(
+                        color='#0077b6',
+                        dash='dot',
+                        width=1
+                    ),
+                    opacity=0.3,
+                    mode='lines'
+                ))
+
+        # Add comparison if provided (with same COVID gap handling)
+        if comparison_data is not None and not comparison_data.empty:
+            comparison_data = comparison_data.sort_values('date')
+            pre_covid_comp = comparison_data[comparison_data['date'] < covid_start]
+            post_covid_comp = comparison_data[comparison_data['date'] > covid_end]
+
+            fig.add_trace(go.Scatter(
+                x=pre_covid_comp['date'],
+                y=pre_covid_comp[comparison_data.columns[1]],
                 name='Comparison',
-                line=dict(
-                    color='#ef476f',
-                    dash='solid'
-                ),
+                line=dict(color='#ef476f', dash='solid'),
                 mode='lines+markers'
             ))
+
+            fig.add_trace(go.Scatter(
+                x=post_covid_comp['date'],
+                y=post_covid_comp[comparison_data.columns[1]],
+                name='Comparison',
+                line=dict(color='#ef476f', dash='solid'),
+                mode='lines+markers',
+                showlegend=False
+            ))
+
+            if not pre_covid_comp.empty and not post_covid_comp.empty:
+                last_pre_covid = pre_covid_comp.iloc[-1]
+                first_post_covid = post_covid_comp.iloc[0]
+
+                fig.add_trace(go.Scatter(
+                    x=[last_pre_covid['date'], first_post_covid['date']],
+                    y=[last_pre_covid[comparison_data.columns[1]], first_post_covid[comparison_data.columns[1]]],
+                    name='COVID-19 Period (No Data)',
+                    line=dict(
+                        color='#ef476f',
+                        dash='dot',
+                        width=1
+                    ),
+                    opacity=0.3,
+                    mode='lines',
+                    showlegend=False
+                ))
 
         fig.update_layout(
             title=title,
