@@ -116,6 +116,7 @@ coral_comparison = st.sidebar.selectbox(
 # Additional metrics selection
 st.sidebar.subheader(get_text('metric_comparison'))
 metric_options = {
+    'hard_coral': get_text('coral_cover'),
     'fleshy_algae': get_text('fleshy_algae'),
     'bleaching': get_text('bleaching'),
     'herbivore': get_text('herbivore'),

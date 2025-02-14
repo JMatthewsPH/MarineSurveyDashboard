@@ -28,6 +28,7 @@ class DataProcessor:
         print(f"Fetching {metric} data for site: {site_name}")
 
         metric_map = {
+            'hard_coral': 'hard_coral_cover',
             'fleshy_algae': 'fleshy_macro_algae_cover',
             'bleaching': 'bleaching',
             'herbivore': 'herbivore_density',
