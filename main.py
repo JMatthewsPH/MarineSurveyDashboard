@@ -8,6 +8,22 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Load custom CSS
+@st.cache_data
+def load_css():
+    with open('assets/site_styles.css') as f:
+        return f'<style>{f.read()}</style>'
+
+st.markdown(load_css(), unsafe_allow_html=True)
+
+# Add custom container styles
+st.markdown("""
+    <div class="site-header">
+        <h1>Marine Conservation Philippines</h1>
+        <h2>Data Dashboard</h2>
+    </div>
+""", unsafe_allow_html=True)
+
 import pandas as pd
 from utils.data_processor import DataProcessor
 from utils.graph_generator import GraphGenerator
@@ -23,14 +39,6 @@ def initialize_database():
 
 initialize_database()
 
-# Load custom CSS
-@st.cache_data
-def load_css():
-    with open('assets/site_styles.css') as f:
-        return f'<style>{f.read()}</style>'
-
-st.markdown(load_css(), unsafe_allow_html=True)
-
 # Session state initialization
 if 'language' not in st.session_state:
     st.session_state.language = 'en'
@@ -40,40 +48,17 @@ def get_text(key):
 
 # Sidebar Logo
 logo_path = "attached_assets/logo transparent plus white.png"
+# Sidebar
+st.sidebar.markdown('<div class="sidebar-header">', unsafe_allow_html=True)
 if os.path.exists(logo_path):
     st.sidebar.image(logo_path, width=128, use_container_width=True)
-else:
-    st.sidebar.markdown("""
-        <div style="width:100%; padding-bottom:100%; background:#f0f2f6; 
-        border-radius:10px; display:flex; align-items:center; 
-        justify-content:center; margin:10px 0; position:relative;">
-            <span style="position:absolute; top:50%; left:50%; 
-            transform:translate(-50%, -50%); color:#262730; font-size:1.2em;">
-                MCP
-            </span>
-        </div>
-    """, unsafe_allow_html=True)
+st.sidebar.markdown('</div>', unsafe_allow_html=True)
 
-# Title
-st.title("Marine Conservation Philippines")
-st.header("Data Dashboard")
-
-# Get database session
-@st.cache_resource
-def get_data_processor():
-    db = next(get_db())
-    return DataProcessor(db), GraphGenerator(DataProcessor(db))
-
-data_processor, graph_generator = get_data_processor()
-
-# Get all sites for selection
-sites = data_processor.get_sites()
-site_names = [site.name for site in sites]
-
-# Sidebar
+# Wrap the settings section in a custom container
+st.sidebar.markdown('<div class="settings-container">', unsafe_allow_html=True)
 st.sidebar.title("Settings")
 
-# Language selection in sidebar
+# Language selection with custom styling
 selected_language = st.sidebar.selectbox(
     "Language / Wika",
     options=['en', 'fil'],
@@ -85,12 +70,14 @@ selected_language = st.sidebar.selectbox(
 if selected_language != st.session_state.language:
     st.session_state.language = selected_language
 
-# Site selection
+# Site selection with custom styling
+st.sidebar.markdown('<div class="site-selector">', unsafe_allow_html=True)
 st.sidebar.title("Site Selection")
 selected_site = st.sidebar.selectbox(
     "Select Site",
     site_names
 )
+st.sidebar.markdown('</div>', unsafe_allow_html=True)
 
 # Comparison Settings
 st.sidebar.title("Comparison Settings")
@@ -141,21 +128,45 @@ secondary_metric = st.sidebar.selectbox(
     key="secondary_metric"
 )
 
-# Main content area using columns for better layout
-# Site Description Section
+st.sidebar.markdown('</div>', unsafe_allow_html=True)
+
+# Get all sites for selection
+sites = data_processor.get_sites()
+site_names = [site.name for site in sites]
+
+
+# Main content area using custom containers
+st.markdown('<div class="main-content">', unsafe_allow_html=True)
+
+# Site Description Section with enhanced styling
 st.header(get_text('site_description'))
 col1, col2 = st.columns([1, 2])
 with col1:
-    # Site image would be loaded here
+    # Site image with custom container
+    st.markdown('<div class="image-container">', unsafe_allow_html=True)
     st.image("https://via.placeholder.com/400x300", use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
 with col2:
+    # Site description with custom styling
+    st.markdown('<div class="site-description">', unsafe_allow_html=True)
     selected_site_obj = next((site for site in sites if site.name == selected_site), None)
     if selected_site_obj:
         description = selected_site_obj.description_fil if st.session_state.language == 'fil' else selected_site_obj.description_en
         st.markdown(description or f"Description for {selected_site} in {st.session_state.language}")
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# Get database session
+@st.cache_resource
+def get_data_processor():
+    db = next(get_db())
+    return DataProcessor(db), GraphGenerator(DataProcessor(db))
+
+data_processor, graph_generator = get_data_processor()
 
 # Commercial Fish Biomass Graph
 with st.container():
+    st.markdown('<div class="graph-container">', unsafe_allow_html=True)
     st.header(get_text('fish_biomass'))
     with st.spinner('Loading biomass data...'):
         biomass_data = data_processor.get_biomass_data(selected_site)
@@ -172,9 +183,11 @@ with st.container():
             comparison_data
         )
         st.plotly_chart(biomass_fig, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # Hard Coral Cover Graph
 with st.container():
+    st.markdown('<div class="graph-container">', unsafe_allow_html=True)
     st.header(get_text('coral_cover'))
     with st.spinner('Loading coral cover data...'):
         coral_data = data_processor.get_coral_cover_data(selected_site)
@@ -191,9 +204,11 @@ with st.container():
             comparison_data
         )
         st.plotly_chart(coral_fig, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # Additional metrics graph
 with st.container():
+    st.markdown('<div class="graph-container">', unsafe_allow_html=True)
     # Get primary metric data
     with st.spinner(f'Loading {metric_options[primary_metric]} data...'):
         primary_data = data_processor.get_metric_data(selected_site, primary_metric)
@@ -212,7 +227,10 @@ with st.container():
             secondary_label=metric_options.get(secondary_metric) if secondary_metric else None
         )
         st.plotly_chart(metric_fig, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+st.markdown('</div>', unsafe_allow_html=True)
 
 # Clean up
-db = next(get_db()) # Added to properly close the database connection.  The @st.cache_resource decorator doesn't manage this.
+db = next(get_db())
 db.close()
