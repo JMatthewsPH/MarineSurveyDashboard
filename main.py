@@ -38,9 +38,13 @@ if 'language' not in st.session_state:
 def get_text(key):
     return TRANSLATIONS[st.session_state.language][key]
 
-# Title and Subheading
-st.title("Marine Conservation Philippines")
-st.header("Data Dashboard")
+# Header with Logo
+col1, col2 = st.columns([1, 4])
+with col1:
+    st.image("attached_assets/logo transparent plus white.png", width=150)
+with col2:
+    st.title("Marine Conservation Philippines")
+    st.header("Data Dashboard")
 
 # Get database session
 @st.cache_resource
