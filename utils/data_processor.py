@@ -12,6 +12,80 @@ class DataProcessor:
         """Get all sites with their municipalities"""
         return self.db.query(Site).all()
 
+    def get_metric_data(self, site_name: str, metric: str, start_date='2017-01-01'):
+        """Process data for any metric"""
+        print(f"Fetching {metric} data for site: {site_name}")
+
+        # Map friendly names to database column names
+        metric_map = {
+            'fleshy_algae': 'fleshy_macro_algae_cover',
+            'bleaching': 'bleaching',
+            'herbivore': 'herbivore_density',
+            'carnivore': 'carnivore_density',
+            'omnivore': 'omnivore_density',
+            'corallivore': 'corallivore_density'
+        }
+
+        column_name = metric_map.get(metric)
+        if not column_name:
+            print(f"Invalid metric: {metric}")
+            return pd.DataFrame(columns=['date', metric])
+
+        site = self.db.query(Site).filter(Site.name == site_name).first()
+        if not site:
+            print(f"Site not found: {site_name}")
+            return pd.DataFrame(columns=['date', metric])
+
+        surveys = (self.db.query(Survey.date, getattr(Survey, column_name))
+                  .filter(Survey.site_id == site.id)
+                  .filter(Survey.date >= start_date)
+                  .order_by(Survey.date)
+                  .all())
+
+        print(f"Found {len(surveys)} {metric} surveys for {site_name}")
+        return pd.DataFrame(surveys, columns=['date', metric])
+
+    def get_average_metric_data(self, metric: str, exclude_site=None, start_date='2017-01-01'):
+        """Calculate average metric data across all sites except the excluded one"""
+        print(f"Calculating average {metric} (excluding {exclude_site})")
+
+        metric_map = {
+            'fleshy_algae': 'fleshy_macro_algae_cover',
+            'bleaching': 'bleaching',
+            'herbivore': 'herbivore_density',
+            'carnivore': 'carnivore_density',
+            'omnivore': 'omnivore_density',
+            'corallivore': 'corallivore_density'
+        }
+
+        column_name = metric_map.get(metric)
+        if not column_name:
+            return pd.DataFrame(columns=['date', metric])
+
+        # Get the site to exclude
+        exclude_site_id = None
+        if exclude_site:
+            site = self.db.query(Site).filter(Site.name == exclude_site).first()
+            if site:
+                exclude_site_id = site.id
+
+        # Query all surveys
+        query = (self.db.query(
+                Survey.date,
+                func.avg(getattr(Survey, column_name)).label(metric))
+                .filter(Survey.date >= start_date))
+
+        # Exclude the selected site if specified
+        if exclude_site_id:
+            query = query.filter(Survey.site_id != exclude_site_id)
+
+        # Group by date and order
+        surveys = (query.group_by(Survey.date)
+                  .order_by(Survey.date)
+                  .all())
+
+        return pd.DataFrame(surveys, columns=['date', metric])
+
     def get_biomass_data(self, site_name, start_date='2017-01-01'):
         """Process commercial fish biomass data"""
         print(f"Fetching biomass data for site: {site_name}")
@@ -104,10 +178,8 @@ class DataProcessor:
 
     def get_fish_length_data(self, site_name, species, start_date='2017-01-01'):
         """Process fish length data by species"""
-        # Note: This will need to be updated when fish species data is added
         return pd.DataFrame(columns=['date', 'average_length'])
 
     def get_ecotourism_data(self, site_name, observation_type='percentage'):
         """Process eco-tourism data for the last 365 days"""
-        # Note: This will need to be updated when eco-tourism data is added
         return pd.Series(dtype='float64')

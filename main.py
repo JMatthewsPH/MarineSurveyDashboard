@@ -86,6 +86,30 @@ coral_comparison = st.sidebar.selectbox(
     key="coral_comparison"
 )
 
+# Additional metrics selection
+st.sidebar.subheader(get_text('additional_metrics'))
+metric_options = {
+    'fleshy_algae': get_text('fleshy_algae'),
+    'bleaching': get_text('bleaching'),
+    'herbivore': get_text('herbivore'),
+    'carnivore': get_text('carnivore'),
+    'omnivore': get_text('omnivore'),
+    'corallivore': get_text('corallivore')
+}
+selected_metric = st.sidebar.selectbox(
+    "Select Metric",
+    options=list(metric_options.keys()),
+    format_func=lambda x: metric_options[x],
+    key="metric_selection"
+)
+
+# Additional metric comparison
+metric_comparison = st.sidebar.selectbox(
+    "Comparison",
+    comparison_options,
+    key="metric_comparison"
+)
+
 # Main content area using columns for better layout
 # Site Description Section
 st.header(get_text('site_description'))
@@ -136,6 +160,24 @@ with st.container():
         comparison_data
     )
     st.plotly_chart(coral_fig, use_container_width=True)
+
+# Additional metric graph
+with st.container():
+    st.header(metric_options[selected_metric])
+    metric_data = data_processor.get_metric_data(selected_site, selected_metric)
+    comparison_data = None
+    if metric_comparison != get_text('compare_none'):
+        if metric_comparison == get_text('compare_avg'):
+            comparison_data = data_processor.get_average_metric_data(selected_metric, exclude_site=selected_site)
+        else:
+            comparison_data = data_processor.get_metric_data(metric_comparison, selected_metric)
+    metric_fig = graph_generator.create_time_series(
+        metric_data,
+        f"{metric_options[selected_metric]} - {selected_site}",
+        "Value",
+        comparison_data
+    )
+    st.plotly_chart(metric_fig, use_container_width=True)
 
 # Clean up
 db.close()

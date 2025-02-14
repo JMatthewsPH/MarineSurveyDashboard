@@ -9,7 +9,14 @@ TRANSLATIONS = {
         'compare_none': 'No Comparison',
         'compare_site': 'Compare with Site',
         'compare_avg': 'Compare with Average',
-        'select_species': 'Select Fish Species'
+        'select_species': 'Select Fish Species',
+        'additional_metrics': 'Additional Metrics',
+        'fleshy_algae': 'Fleshy Macro Algae Cover',
+        'bleaching': 'Bleaching',
+        'herbivore': 'Herbivore Density',
+        'carnivore': 'Carnivore Density',
+        'omnivore': 'Omnivore Density',
+        'corallivore': 'Corallivore Density'
     },
     'fil': {
         'title': 'Dashboard ng Konserbasyon ng Dagat',
@@ -21,6 +28,13 @@ TRANSLATIONS = {
         'compare_none': 'Walang Paghahambing',
         'compare_site': 'Ihambing sa Site',
         'compare_avg': 'Ihambing sa Average',
-        'select_species': 'Pumili ng Uri ng Isda'
+        'select_species': 'Pumili ng Uri ng Isda',
+        'additional_metrics': 'Karagdagang Sukat',
+        'fleshy_algae': 'Takip ng Fleshy Macro Algae',
+        'bleaching': 'Pagpaputi',
+        'herbivore': 'Dami ng Herbivore',
+        'carnivore': 'Dami ng Carnivore',
+        'omnivore': 'Dami ng Omnivore',
+        'corallivore': 'Dami ng Corallivore'
     }
 }
