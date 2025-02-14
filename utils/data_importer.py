@@ -7,7 +7,7 @@ from .database import Site, Survey, get_db
 def parse_season_to_date(season: str) -> datetime:
     """
     Convert season string to a date object using the first month of the season.
-    For DEC-FEB seasons that span across years (e.g., 'DEC-FEB 2024/25'),
+    For DEC-FEB seasons that span across years (e.g., 'DEC-FEB 2024/25' or 'DEC-FEB 2024/ 25'),
     uses December of the first year (2024) as the start date.
     Each season spans exactly 3 months.
     """
@@ -26,10 +26,10 @@ def parse_season_to_date(season: str) -> datetime:
 
         start_month = month_range[0]
 
-        # Clean up the year part by removing all spaces
-        year_part = year_part.replace(" ", "")
+        # Clean up the year part by removing all spaces and any whitespace around the slash
+        year_part = ''.join(year_part.split())
 
-        # Handle the year part for cases like "2024/25"
+        # Handle the year part for cases like "2024/25" or "2024/ 25"
         if '/' in year_part:
             # Split on slash and take first year
             year = year_part.split('/')[0]
