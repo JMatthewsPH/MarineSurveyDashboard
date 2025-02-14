@@ -25,8 +25,8 @@ def parse_season_to_date(season: str) -> datetime:
             print(f"Invalid month range format: {months}")
             return None
 
-        start_month = month_range[0]
-        end_month = month_range[1]
+        start_month = month_range[0].strip()
+        end_month = month_range[1].strip()
 
         # Map month abbreviations to numbers
         month_map = {
@@ -35,10 +35,10 @@ def parse_season_to_date(season: str) -> datetime:
         }
 
         # Clean up the year part and handle the slash format
-        year_part = year_part.replace(' ', '')
+        year_part = year_part.strip().replace('/', ' ').replace('  ', ' ')
 
-        # Extract the first year for both formats: "2020/21" and "2020"
-        year = year_part.split('/')[0] if '/' in year_part else year_part
+        # Extract the first year
+        year = year_part.split()[0]
 
         try:
             year_num = int(year)
@@ -50,14 +50,16 @@ def parse_season_to_date(season: str) -> datetime:
         try:
             start_month_num = month_map[start_month]
             end_month_num = month_map[end_month]
-        except KeyError:
-            print(f"Invalid month abbreviation in {months}")
+        except KeyError as e:
+            print(f"Invalid month abbreviation in {months}: {e}")
             return None
 
-        # For DEC-FEB seasons, use December of the specified year
+        # For DEC-FEB seasons, use December of the first year
         if start_month == 'DEC' and end_month == 'FEB':
+            print(f"Processing winter season {season} -> {year_num}-12-01")
             return datetime(year_num, 12, 1)
         else:
+            print(f"Processing regular season {season} -> {year_num}-{start_month_num:02d}-01")
             return datetime(year_num, start_month_num, 1)
 
     except Exception as e:

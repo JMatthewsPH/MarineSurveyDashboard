@@ -1,0 +1,308 @@
+Starting data import process...
+Processing file: Santa Catalina - Cawitan.csv
+Successfully read CSV file Santa Catalina - Cawitan.csv with 4 rows
+Skipping row with all null values in Santa Catalina - Cawitan.csv
+Invalid month abbreviation in DEC-FEB 2024/
+Skipping row with invalid date: DEC-FEB 2024/ 25
+Successfully imported 2 surveys for Cawitan
+Processing file: Santa Catalina - Manalongon.csv
+Successfully read CSV file Santa Catalina - Manalongon.csv with 4 rows
+Skipping row with all null values in Santa Catalina - Manalongon.csv
+Invalid month abbreviation in DEC-FEB 2024/
+Skipping row with invalid date: DEC-FEB 2024/ 25
+Successfully imported 2 surveys for Manalongon
+Processing file: Siaton - Andulay.csv
+Successfully read CSV file Siaton - Andulay.csv with 30 rows
+Invalid month abbreviation in DEC-FEB 2017/
+Skipping row with invalid date: DEC-FEB 2017/ 18
+Invalid month abbreviation in DEC-FEB 2018/
+Skipping row with invalid date: DEC-FEB 2018/ 19
+Invalid month abbreviation in DEC-FEB 2019/
+Skipping row with invalid date: DEC-FEB 2019/ 20
+Skipping row with all null values in Siaton - Andulay.csv
+Skipping row with all null values in Siaton - Andulay.csv
+Skipping row with all null values in Siaton - Andulay.csv
+Invalid month abbreviation in DEC-FEB 2020/
+Skipping row with invalid date: DEC-FEB 2020/ 21
+Skipping row with all null values in Siaton - Andulay.csv
+Skipping row with all null values in Siaton - Andulay.csv
+Skipping row with all null values in Siaton - Andulay.csv
+Invalid month abbreviation in DEC-FEB 2021/
+Skipping row with invalid date: DEC-FEB 2021/ 22
+Invalid month abbreviation in DEC-FEB 2022/
+Skipping row with invalid date: DEC-FEB 2022/ 23
+Invalid month abbreviation in DEC-FEB 2023/
+Skipping row with invalid date: DEC-FEB 2023/ 24
+Invalid month abbreviation in DEC-FEB 2024/
+Skipping row with invalid date: DEC-FEB 2024/ 25
+Successfully imported 16 surveys for Andulay
+Processing file: Siaton - Antulang.csv
+Successfully read CSV file Siaton - Antulang.csv with 30 rows
+Invalid month abbreviation in DEC-FEB 2017/
+Skipping row with invalid date: DEC-FEB 2017/ 18
+Invalid month abbreviation in DEC-FEB 2018/
+Skipping row with invalid date: DEC-FEB 2018/ 19
+Invalid month abbreviation in DEC-FEB 2019/
+Skipping row with invalid date: DEC-FEB 2019/ 20
+Skipping row with all null values in Siaton - Antulang.csv
+Skipping row with all null values in Siaton - Antulang.csv
+Skipping row with all null values in Siaton - Antulang.csv
+Invalid month abbreviation in DEC-FEB 2020/
+Skipping row with invalid date: DEC-FEB 2020/ 21
+Skipping row with all null values in Siaton - Antulang.csv
+Skipping row with all null values in Siaton - Antulang.csv
+Skipping row with all null values in Siaton - Antulang.csv
+Invalid month abbreviation in DEC-FEB 2021/
+Skipping row with invalid date: DEC-FEB 2021/ 22
+Skipping row with all null values in Siaton - Antulang.csv
+Invalid month abbreviation in DEC-FEB 2022/
+Skipping row with invalid date: DEC-FEB 2022/ 23
+Invalid month abbreviation in DEC-FEB 2023/
+Skipping row with invalid date: DEC-FEB 2023/ 24
+Invalid month abbreviation in DEC-FEB 2024/
+Skipping row with invalid date: DEC-FEB 2024/ 25
+Successfully imported 15 surveys for Antulang
+Processing file: Siaton - Kookoos.csv
+Successfully read CSV file Siaton - Kookoos.csv with 30 rows
+Invalid month abbreviation in DEC-FEB 2017/
+Skipping row with invalid date: DEC-FEB 2017/ 18
+Invalid month abbreviation in DEC-FEB 2018/
+Skipping row with invalid date: DEC-FEB 2018/ 19
+Invalid month abbreviation in DEC-FEB 2019/
+Skipping row with invalid date: DEC-FEB 2019/ 20
+Skipping row with all null values in Siaton - Kookoos.csv
+Skipping row with all null values in Siaton - Kookoos.csv
+Skipping row with all null values in Siaton - Kookoos.csv
+Invalid month abbreviation in DEC-FEB 2020/
+Skipping row with invalid date: DEC-FEB 2020/ 21
+Skipping row with all null values in Siaton - Kookoos.csv
+Skipping row with all null values in Siaton - Kookoos.csv
+Skipping row with all null values in Siaton - Kookoos.csv
+Invalid month abbreviation in DEC-FEB 2021/
+Skipping row with invalid date: DEC-FEB 2021/ 22
+Invalid month abbreviation in DEC-FEB 2022/
+Skipping row with invalid date: DEC-FEB 2022/ 23
+Invalid month abbreviation in DEC-FEB 2023/
+Skipping row with invalid date: DEC-FEB 2023/ 24
+Invalid month abbreviation in DEC-FEB 2024/
+Skipping row with invalid date: DEC-FEB 2024/ 25
+Successfully imported 16 surveys for Kookoos
+Processing file: Siaton - Salag.csv
+Successfully read CSV file Siaton - Salag.csv with 24 rows
+Invalid month abbreviation in DEC-FEB 2019/
+Skipping row with invalid date: DEC-FEB 2019/ 20
+Skipping row with all null values in Siaton - Salag.csv
+Skipping row with all null values in Siaton - Salag.csv
+Skipping row with all null values in Siaton - Salag.csv
+Invalid month abbreviation in DEC-FEB 2020/
+Skipping row with invalid date: DEC-FEB 2020/ 21
+Skipping row with all null values in Siaton - Salag.csv
+Skipping row with all null values in Siaton - Salag.csv
+Skipping row with all null values in Siaton - Salag.csv
+Invalid month abbreviation in DEC-FEB 2021/
+Skipping row with invalid date: DEC-FEB 2021/ 22
+Skipping row with all null values in Siaton - Salag.csv
+Invalid month abbreviation in DEC-FEB 2022/
+Skipping row with invalid date: DEC-FEB 2022/ 23
+Invalid month abbreviation in DEC-FEB 2023/
+Skipping row with invalid date: DEC-FEB 2023/ 24
+Invalid month abbreviation in DEC-FEB 2024/
+Skipping row with invalid date: DEC-FEB 2024/ 25
+Successfully imported 11 surveys for Salag
+Processing file: Zamboanguita - Basak.csv
+Successfully read CSV file Zamboanguita - Basak.csv with 30 rows
+Invalid month abbreviation in DEC-FEB 2017/
+Skipping row with invalid date: DEC-FEB 2017/ 18
+Invalid month abbreviation in DEC-FEB 2018/
+Skipping row with invalid date: DEC-FEB 2018/ 19
+Invalid month abbreviation in DEC-FEB 2019/
+Skipping row with invalid date: DEC-FEB 2019/ 20
+Skipping row with all null values in Zamboanguita - Basak.csv
+Skipping row with all null values in Zamboanguita - Basak.csv
+Skipping row with all null values in Zamboanguita - Basak.csv
+Invalid month abbreviation in DEC-FEB 2020/
+Skipping row with invalid date: DEC-FEB 2020/ 21
+Skipping row with all null values in Zamboanguita - Basak.csv
+Skipping row with all null values in Zamboanguita - Basak.csv
+Skipping row with all null values in Zamboanguita - Basak.csv
+Invalid month abbreviation in DEC-FEB 2021/
+Skipping row with invalid date: DEC-FEB 2021/ 22
+Invalid month abbreviation in DEC-FEB 2022/
+Skipping row with invalid date: DEC-FEB 2022/ 23
+Invalid month abbreviation in DEC-FEB 2023/
+Skipping row with invalid date: DEC-FEB 2023/ 24
+Invalid month abbreviation in DEC-FEB 2024/
+Skipping row with invalid date: DEC-FEB 2024/ 25
+Successfully imported 16 surveys for Basak
+Processing file: Zamboanguita - Dalakit.csv
+Successfully read CSV file Zamboanguita - Dalakit.csv with 24 rows
+Invalid month abbreviation in DEC-FEB 2019/
+Skipping row with invalid date: DEC-FEB 2019/ 20
+Skipping row with all null values in Zamboanguita - Dalakit.csv
+Skipping row with all null values in Zamboanguita - Dalakit.csv
+Skipping row with all null values in Zamboanguita - Dalakit.csv
+Invalid month abbreviation in DEC-FEB 2020/
+Skipping row with invalid date: DEC-FEB 2020/ 21
+Skipping row with all null values in Zamboanguita - Dalakit.csv
+Skipping row with all null values in Zamboanguita - Dalakit.csv
+Skipping row with all null values in Zamboanguita - Dalakit.csv
+Invalid month abbreviation in DEC-FEB 2021/
+Skipping row with invalid date: DEC-FEB 2021/ 22
+Invalid month abbreviation in DEC-FEB 2022/
+Skipping row with invalid date: DEC-FEB 2022/ 23
+Invalid month abbreviation in DEC-FEB 2023/
+Skipping row with invalid date: DEC-FEB 2023/ 24
+Invalid month abbreviation in DEC-FEB 2024/
+Skipping row with invalid date: DEC-FEB 2024/ 25
+Successfully imported 12 surveys for Dalakit
+Processing file: Zamboanguita - Guinsuan.csv
+Successfully read CSV file Zamboanguita - Guinsuan.csv with 30 rows
+Invalid month abbreviation in DEC-FEB 2017/
+Skipping row with invalid date: DEC-FEB 2017/ 18
+Invalid month abbreviation in DEC-FEB 2018/
+Skipping row with invalid date: DEC-FEB 2018/ 19
+Invalid month abbreviation in DEC-FEB 2019/
+Skipping row with invalid date: DEC-FEB 2019/ 20
+Skipping row with all null values in Zamboanguita - Guinsuan.csv
+Skipping row with all null values in Zamboanguita - Guinsuan.csv
+Skipping row with all null values in Zamboanguita - Guinsuan.csv
+Invalid month abbreviation in DEC-FEB 2020/
+Skipping row with invalid date: DEC-FEB 2020/ 21
+Skipping row with all null values in Zamboanguita - Guinsuan.csv
+Skipping row with all null values in Zamboanguita - Guinsuan.csv
+Skipping row with all null values in Zamboanguita - Guinsuan.csv
+Invalid month abbreviation in DEC-FEB 2021/
+Skipping row with invalid date: DEC-FEB 2021/ 22
+Invalid month abbreviation in DEC-FEB 2022/
+Skipping row with invalid date: DEC-FEB 2022/ 23
+Invalid month abbreviation in DEC-FEB 2023/
+Skipping row with invalid date: DEC-FEB 2023/ 24
+Invalid month abbreviation in DEC-FEB 2024/
+Skipping row with invalid date: DEC-FEB 2024/ 25
+Successfully imported 16 surveys for Guinsuan
+Processing file: Zamboanguita - Latason.csv
+Successfully read CSV file Zamboanguita - Latason.csv with 11 rows
+Invalid month abbreviation in DEC-FEB 2022/
+Skipping row with invalid date: DEC-FEB 2022/ 23
+Invalid month abbreviation in DEC-FEB 2023/
+Skipping row with invalid date: DEC-FEB 2023/ 24
+Invalid month abbreviation in DEC-FEB 2024/
+Skipping row with invalid date: DEC-FEB 2024/ 25
+Successfully imported 8 surveys for Latason
+Processing file: Zamboanguita - Lutoban North.csv
+Successfully read CSV file Zamboanguita - Lutoban North.csv with 30 rows
+Invalid month abbreviation in DEC-FEB 2017/
+Skipping row with invalid date: DEC-FEB 2017/ 18
+Invalid month abbreviation in DEC-FEB 2018/
+Skipping row with invalid date: DEC-FEB 2018/ 19
+Invalid month abbreviation in DEC-FEB 2019/
+Skipping row with invalid date: DEC-FEB 2019/ 20
+Skipping row with all null values in Zamboanguita - Lutoban North.csv
+Skipping row with all null values in Zamboanguita - Lutoban North.csv
+Skipping row with all null values in Zamboanguita - Lutoban North.csv
+Invalid month abbreviation in DEC-FEB 2010/
+Skipping row with invalid date: DEC-FEB 2010/ 21
+Skipping row with all null values in Zamboanguita - Lutoban North.csv
+Skipping row with all null values in Zamboanguita - Lutoban North.csv
+Skipping row with all null values in Zamboanguita - Lutoban North.csv
+Invalid month abbreviation in DEC-FEB 2021/
+Skipping row with invalid date: DEC-FEB 2021/ 22
+Invalid month abbreviation in DEC-FEB 2022/
+Skipping row with invalid date: DEC-FEB 2022/ 23
+Invalid month abbreviation in DEC-FEB 2023/
+Skipping row with invalid date: DEC-FEB 2023/ 24
+Invalid month abbreviation in DEC-FEB 2024/
+Skipping row with invalid date: DEC-FEB 2024/ 25
+Successfully imported 16 surveys for Lutoban North
+Processing file: Zamboanguita - Lutoban Pier.csv
+Successfully read CSV file Zamboanguita - Lutoban Pier.csv with 30 rows
+Invalid month abbreviation in DEC-FEB 2017/
+Skipping row with invalid date: DEC-FEB 2017/ 18
+Invalid month abbreviation in DEC-FEB 2018/
+Skipping row with invalid date: DEC-FEB 2018/ 19
+Invalid month abbreviation in DEC-FEB 2019/
+Skipping row with invalid date: DEC-FEB 2019/ 20
+Skipping row with all null values in Zamboanguita - Lutoban Pier.csv
+Skipping row with all null values in Zamboanguita - Lutoban Pier.csv
+Skipping row with all null values in Zamboanguita - Lutoban Pier.csv
+Invalid month abbreviation in DEC-FEB 2020/
+Skipping row with invalid date: DEC-FEB 2020/ 21
+Skipping row with all null values in Zamboanguita - Lutoban Pier.csv
+Skipping row with all null values in Zamboanguita - Lutoban Pier.csv
+Skipping row with all null values in Zamboanguita - Lutoban Pier.csv
+Invalid month abbreviation in DEC-FEB 2021/
+Skipping row with invalid date: DEC-FEB 2021/ 22
+Invalid month abbreviation in DEC-FEB 2022/
+Skipping row with invalid date: DEC-FEB 2022/ 23
+Invalid month abbreviation in DEC-FEB 2023/
+Skipping row with invalid date: DEC-FEB 2023/ 24
+Invalid month abbreviation in DEC-FEB 2024/
+Skipping row with invalid date: DEC-FEB 2024/ 25
+Successfully imported 16 surveys for Lutoban Pier
+Processing file: Zamboanguita - Lutoban South.csv
+Successfully read CSV file Zamboanguita - Lutoban South.csv with 30 rows
+Skipping row with all null values in Zamboanguita - Lutoban South.csv
+Invalid month abbreviation in DEC-FEB 2017/
+Skipping row with invalid date: DEC-FEB 2017/ 18
+Skipping row with all null values in Zamboanguita - Lutoban South.csv
+Skipping row with all null values in Zamboanguita - Lutoban South.csv
+Invalid month abbreviation in DEC-FEB 2018/
+Skipping row with invalid date: DEC-FEB 2018/ 19
+Skipping row with all null values in Zamboanguita - Lutoban South.csv
+Skipping row with all null values in Zamboanguita - Lutoban South.csv
+Invalid month abbreviation in DEC-FEB 2019/
+Skipping row with invalid date: DEC-FEB 2019/ 20
+Skipping row with all null values in Zamboanguita - Lutoban South.csv
+Skipping row with all null values in Zamboanguita - Lutoban South.csv
+Skipping row with all null values in Zamboanguita - Lutoban South.csv
+Invalid month abbreviation in DEC-FEB 2020/
+Skipping row with invalid date: DEC-FEB 2020/ 21
+Skipping row with all null values in Zamboanguita - Lutoban South.csv
+Skipping row with all null values in Zamboanguita - Lutoban South.csv
+Skipping row with all null values in Zamboanguita - Lutoban South.csv
+Invalid month abbreviation in DEC-FEB 2021/
+Skipping row with invalid date: DEC-FEB 2021/ 22
+Invalid month abbreviation in DEC-FEB 2022/
+Skipping row with invalid date: DEC-FEB 2022/ 23
+Invalid month abbreviation in DEC-FEB 2023/
+Skipping row with invalid date: DEC-FEB 2023/ 24
+Invalid month abbreviation in DEC-FEB 2024/
+Skipping row with invalid date: DEC-FEB 2024/ 25
+Successfully imported 11 surveys for Lutoban South
+Processing file: Zamboanguita - Mahon.csv
+Successfully read CSV file Zamboanguita - Mahon.csv with 1 rows
+Invalid month abbreviation in DEC-FEB 2024/
+Skipping row with invalid date: DEC-FEB 2024/ 25
+Successfully imported 0 surveys for Mahon
+Processing file: Zamboanguita - Malatapay.csv
+Successfully read CSV file Zamboanguita - Malatapay.csv with 30 rows
+Invalid month abbreviation in DEC-FEB 2017/
+Skipping row with invalid date: DEC-FEB 2017/ 18
+Invalid month abbreviation in DEC-FEB 2018/
+Skipping row with invalid date: DEC-FEB 2018/ 19
+Invalid month abbreviation in DEC-FEB 2019/
+Skipping row with invalid date: DEC-FEB 2019/ 20
+Skipping row with all null values in Zamboanguita - Malatapay.csv
+Skipping row with all null values in Zamboanguita - Malatapay.csv
+Skipping row with all null values in Zamboanguita - Malatapay.csv
+Invalid month abbreviation in DEC-FEB 2020/
+Skipping row with invalid date: DEC-FEB 2020/ 21
+Skipping row with all null values in Zamboanguita - Malatapay.csv
+Skipping row with all null values in Zamboanguita - Malatapay.csv
+Skipping row with all null values in Zamboanguita - Malatapay.csv
+Invalid month abbreviation in DEC-FEB 2021/
+Skipping row with invalid date: DEC-FEB 2021/ 22
+Invalid month abbreviation in DEC-FEB 2022/
+Skipping row with invalid date: DEC-FEB 2022/ 23
+Invalid month abbreviation in DEC-FEB 2023/
+Skipping row with invalid date: DEC-FEB 2023/ 24
+Invalid month abbreviation in DEC-FEB 2024/
+Skipping row with invalid date: DEC-FEB 2024/ 25
+Successfully imported 16 surveys for Malatapay
+Data import completed successfully
+Fetching biomass data for site: Andulay
+Found 16 biomass surveys for Andulay
+Fetching coral cover data for site: Andulay
+Found 16 coral cover surveys for Andulay
+Fetching fleshy_algae data for site: Andulay
+Found 16 fleshy_algae surveys for Andulay
