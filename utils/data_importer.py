@@ -7,14 +7,14 @@ from .database import Site, Survey, get_db
 def parse_season_to_date(season: str) -> datetime:
     """
     Convert season string to a date object using the first month of the season.
-    For DEC-FEB seasons that span across years (e.g., 'DEC-FEB 2017/18'),
-    uses December of the first year (2017) as the start date.
+    For DEC-FEB seasons that span across years (e.g., 'DEC-FEB 2024/25'),
+    uses December of the first year (2024) as the start date.
     Each season spans exactly 3 months.
     """
     try:
         # Split into month range and year part
         parts = season.strip().split()
-        if len_parts := len(parts) != 2:
+        if len(parts) != 2:
             print(f"Invalid season format: {season}")
             return None
 
@@ -26,16 +26,14 @@ def parse_season_to_date(season: str) -> datetime:
 
         start_month = month_range[0]
 
-        # Handle the year part - clean up any extra spaces
+        # Clean up the year part by removing all spaces
         year_part = year_part.replace(" ", "")
 
-        # Handle the year part
+        # Handle the year part for cases like "2024/25"
         if '/' in year_part:
-            # For DEC-FEB seasons that span years (e.g., "2017/18")
-            # Use the first year as these seasons start in December of that year
+            # Split on slash and take first year
             year = year_part.split('/')[0]
         else:
-            # For seasons within the same year (e.g., "SEP-NOV 2017")
             year = year_part
 
         # Map month abbreviations to numbers
@@ -180,6 +178,10 @@ def run_import():
     csv_folder_path = "attached_assets/MCP_Data"
     db = next(get_db())
     try:
+        # Clear existing data to avoid duplicates
+        db.query(Survey).delete()
+        db.commit()
+
         import_csv_data(csv_folder_path, db)
         print("Data import completed successfully")
     except Exception as e:
