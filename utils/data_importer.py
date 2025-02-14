@@ -9,7 +9,6 @@ def parse_season_to_date(season: str) -> datetime:
     Convert season string to a date object using the first month of the season.
     For DEC-FEB seasons that span across years (e.g., 'DEC-FEB 2020/ 21'),
     uses December of the first year as the start date.
-    Each season spans exactly 3 months.
     """
     try:
         # Split into month range and year part
@@ -27,12 +26,7 @@ def parse_season_to_date(season: str) -> datetime:
             return None
 
         start_month = month_range[0]
-
-        # Clean up the year part and handle the slash format
-        year_part = year_part.replace(' ', '')
-
-        # Extract the first year for both formats: "2020/21" and "2020"
-        year = year_part.split('/')[0] if '/' in year_part else year_part
+        end_month = month_range[1]
 
         # Map month abbreviations to numbers
         month_map = {
@@ -40,21 +34,31 @@ def parse_season_to_date(season: str) -> datetime:
             'JUL': 7, 'AUG': 8, 'SEP': 9, 'OCT': 10, 'NOV': 11, 'DEC': 12
         }
 
-        # Convert month name to number
-        try:
-            month_num = month_map[start_month]
-        except KeyError:
-            print(f"Invalid month abbreviation: {start_month}")
-            return None
+        # Clean up the year part and handle the slash format
+        year_part = year_part.replace(' ', '')
 
-        # Convert year to integer
+        # Extract the first year for both formats: "2020/21" and "2020"
+        year = year_part.split('/')[0] if '/' in year_part else year_part
+
         try:
             year_num = int(year)
         except ValueError:
             print(f"Invalid year format: {year}")
             return None
 
-        return datetime(year_num, month_num, 1)
+        # Convert month name to number
+        try:
+            start_month_num = month_map[start_month]
+            end_month_num = month_map[end_month]
+        except KeyError:
+            print(f"Invalid month abbreviation in {months}")
+            return None
+
+        # For DEC-FEB seasons, use December of the specified year
+        if start_month == 'DEC' and end_month == 'FEB':
+            return datetime(year_num, 12, 1)
+        else:
+            return datetime(year_num, start_month_num, 1)
 
     except Exception as e:
         print(f"Error parsing date from season '{season}': {str(e)}")
