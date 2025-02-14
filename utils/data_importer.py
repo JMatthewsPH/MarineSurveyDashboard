@@ -7,19 +7,21 @@ from .database import Site, Survey, get_db
 def parse_season_to_date(season: str) -> datetime:
     """
     Convert season string to a date object using the first month of the season.
-    For DEC-FEB seasons that span across years (e.g., 'DEC-FEB 2024/25' or 'DEC-FEB 2024/ 25'),
-    uses December of the first year (2024) as the start date.
+    For DEC-FEB seasons that span across years (e.g., 'DEC-FEB 2020/ 21'),
+    uses December of the first year as the start date.
     Each season spans exactly 3 months.
     """
     try:
         # Split into month range and year part
-        parts = season.strip().split()
-        if len(parts) != 2:
+        if not season or season.count(' ') == 0:
             print(f"Invalid season format: {season}")
             return None
 
-        months, year_part = parts
+        # Split on last space to handle cases with spaces in year part
+        *month_parts, year_part = season.rsplit(' ', 1)
+        months = ' '.join(month_parts)  # Rejoin any month parts
         month_range = months.split('-')
+
         if len(month_range) != 2:
             print(f"Invalid month range format: {months}")
             return None
@@ -27,10 +29,9 @@ def parse_season_to_date(season: str) -> datetime:
         start_month = month_range[0]
 
         # Clean up the year part and handle the slash format
-        # Remove all whitespace and normalize the year format
-        year_part = ''.join(year_part.split()).replace(' ', '')
+        year_part = year_part.replace(' ', '')
 
-        # Extract the first year for both formats: "2024/25" and "2024"
+        # Extract the first year for both formats: "2020/21" and "2020"
         year = year_part.split('/')[0] if '/' in year_part else year_part
 
         # Map month abbreviations to numbers
