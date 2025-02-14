@@ -41,7 +41,7 @@ def get_text(key):
 # Sidebar Logo
 logo_path = "attached_assets/logo transparent plus white.png"
 if os.path.exists(logo_path):
-    st.sidebar.image(logo_path, width=200, use_column_width=True)
+    st.sidebar.image(logo_path, width=160, use_container_width=True)
 else:
     st.sidebar.markdown("""
         <div style="width:100%; padding-bottom:100%; background:#f0f2f6; 
