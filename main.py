@@ -112,7 +112,7 @@ with st.container():
             comparison_data = data_processor.get_biomass_data(biomass_comparison)
     biomass_fig = graph_generator.create_time_series(
         biomass_data,
-        get_text('fish_biomass'),
+        f"{get_text('fish_biomass')} - {selected_site}",
         "Biomass (kg/ha)",
         comparison_data
     )
@@ -131,7 +131,7 @@ with st.container():
             comparison_data = data_processor.get_coral_cover_data(coral_comparison)
     coral_fig = graph_generator.create_time_series(
         coral_data,
-        get_text('coral_cover'),
+        f"{get_text('coral_cover')} - {selected_site}",
         "Cover (%)",
         comparison_data
     )
@@ -147,7 +147,7 @@ with st.container():
     ecotourism_data = data_processor.get_ecotourism_data(selected_site, observation_type)
     eco_fig = graph_generator.create_eco_tourism_chart(
         ecotourism_data,
-        get_text('eco_tourism'),
+        f"{get_text('eco_tourism')} - {selected_site}",
         observation_type
     )
     st.plotly_chart(eco_fig, use_container_width=True)
