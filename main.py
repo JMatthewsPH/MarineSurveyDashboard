@@ -140,6 +140,14 @@ secondary_metric = st.sidebar.selectbox(
     key="secondary_metric"
 )
 
+# Tertiary metric selection (optional)
+tertiary_metric = st.sidebar.selectbox(
+    get_text('tertiary_metric'),
+    options=[None] + list(metric_options.keys()),
+    format_func=lambda x: "None" if x is None else metric_options[x],
+    key="tertiary_metric"
+)
+
 st.sidebar.markdown('</div>', unsafe_allow_html=True)
 
 # Main content area using custom containers
@@ -225,14 +233,21 @@ with st.container():
         if secondary_metric is not None:
             secondary_data = data_processor.get_metric_data(selected_site, secondary_metric)
 
-        # Create graph with both metrics if secondary is selected
+        # Get tertiary metric data if selected
+        tertiary_data = None
+        if tertiary_metric is not None:
+            tertiary_data = data_processor.get_metric_data(selected_site, tertiary_metric)
+
+        # Create graph with all selected metrics
         metric_fig = graph_generator.create_time_series(
             primary_data,
-            f"{metric_options[primary_metric]} {'& ' + metric_options[secondary_metric] if secondary_metric else ''} - {selected_site}",
+            f"{metric_options[primary_metric]} {'& ' + metric_options[secondary_metric] if secondary_metric else ''} {'& ' + metric_options[tertiary_metric] if tertiary_metric else ''} - {selected_site}",
             metric_options[primary_metric],
             comparison_data=comparison_data,
             secondary_data=secondary_data,
-            secondary_label=metric_options.get(secondary_metric) if secondary_metric else None
+            secondary_label=metric_options.get(secondary_metric) if secondary_metric else None,
+            tertiary_data=tertiary_data,
+            tertiary_label=metric_options.get(tertiary_metric) if tertiary_metric else None
         )
         st.plotly_chart(metric_fig, use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)

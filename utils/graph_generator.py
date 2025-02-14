@@ -8,8 +8,8 @@ class GraphGenerator:
     def __init__(self, data_processor):
         self.data_processor = data_processor
 
-    def create_time_series(self, data, title, y_label, comparison_data=None, secondary_data=None, secondary_label=None):
-        """Create time series graph with optional comparison and secondary metric"""
+    def create_time_series(self, data, title, y_label, comparison_data=None, secondary_data=None, secondary_label=None, tertiary_data=None, tertiary_label=None):
+        """Create time series graph with optional comparison and secondary/tertiary metrics"""
         fig = go.Figure()
 
         # Main data
@@ -97,6 +97,47 @@ class GraphGenerator:
                     showlegend=False
                 ))
 
+        # Tertiary metric data (if provided)
+        elif tertiary_data is not None and not tertiary_data.empty:
+            tertiary_data = tertiary_data.sort_values('date')
+            pre_covid_ter = tertiary_data[tertiary_data['date'] < covid_start]
+            post_covid_ter = tertiary_data[tertiary_data['date'] > covid_end]
+
+            # Add tertiary data traces with third y-axis
+            fig.add_trace(go.Scatter(
+                x=pre_covid_ter['date'],
+                y=pre_covid_ter[tertiary_data.columns[1]],
+                name=tertiary_label,
+                line=dict(color='#06d6a0', dash='solid'),  # New color for tertiary metric
+                mode='lines+markers',
+                yaxis='y3'
+            ))
+
+            fig.add_trace(go.Scatter(
+                x=post_covid_ter['date'],
+                y=post_covid_ter[post_covid_ter.columns[1]],
+                name=tertiary_label,
+                line=dict(color='#06d6a0', dash='solid'),
+                mode='lines+markers',
+                yaxis='y3',
+                showlegend=False
+            ))
+
+            if not pre_covid_ter.empty and not post_covid_ter.empty:
+                last_pre_covid = pre_covid_ter.iloc[-1]
+                first_post_covid = post_covid_ter.iloc[0]
+
+                fig.add_trace(go.Scatter(
+                    x=[last_pre_covid['date'], first_post_covid['date']],
+                    y=[last_pre_covid[tertiary_data.columns[1]], first_post_covid[tertiary_data.columns[1]]],
+                    name='COVID-19 Period (No Data)',
+                    line=dict(color='#06d6a0', dash='dot', width=1),
+                    opacity=0.3,
+                    mode='lines',
+                    yaxis='y3',
+                    showlegend=False
+                ))
+
         # Add comparison if provided (on primary y-axis)
         elif comparison_data is not None and not comparison_data.empty:
             comparison_data = comparison_data.sort_values('date')
@@ -176,6 +217,16 @@ class GraphGenerator:
                 title=secondary_label,
                 overlaying='y',
                 side='right',
+                automargin=True
+            )
+
+        # Add third y-axis if there's tertiary data
+        if tertiary_data is not None and not tertiary_data.empty:
+            layout_updates['yaxis3'] = dict(
+                title=tertiary_label,
+                overlaying='y',
+                side='right',
+                position=0.85,  # Position the third y-axis slightly to the left of the second
                 automargin=True
             )
 
