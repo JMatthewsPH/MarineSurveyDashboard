@@ -8,8 +8,12 @@ from utils.data_importer import run_import
 import plotly.graph_objects as go
 
 # Initialize database with sample data and import CSV data
-init_sample_data()
-run_import()  # Import CSV data
+@st.cache_resource
+def initialize_database():
+    init_sample_data()
+    run_import()  # Import CSV data
+
+initialize_database()
 
 # Page configuration
 st.set_page_config(
@@ -19,8 +23,12 @@ st.set_page_config(
 )
 
 # Load custom CSS
-with open('assets/site_styles.css') as f:
-    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+@st.cache_data
+def load_css():
+    with open('assets/site_styles.css') as f:
+        return f'<style>{f.read()}</style>'
+
+st.markdown(load_css(), unsafe_allow_html=True)
 
 # Session state initialization
 if 'language' not in st.session_state:
@@ -34,9 +42,12 @@ st.title("Marine Conservation Philippines")
 st.header("Data Dashboard")
 
 # Get database session
-db = next(get_db())
-data_processor = DataProcessor(db)
-graph_generator = GraphGenerator(data_processor)
+@st.cache_resource
+def get_data_processor():
+    db = next(get_db())
+    return DataProcessor(db), GraphGenerator(DataProcessor(db))
+
+data_processor, graph_generator = get_data_processor()
 
 # Get all sites for selection
 sites = data_processor.get_sites()
@@ -129,58 +140,62 @@ with col2:
 # Commercial Fish Biomass Graph
 with st.container():
     st.header(get_text('fish_biomass'))
-    biomass_data = data_processor.get_biomass_data(selected_site)
-    comparison_data = None
-    if biomass_comparison != get_text('compare_none'):
-        if biomass_comparison == get_text('compare_avg'):
-            comparison_data = data_processor.get_average_biomass_data(exclude_site=selected_site)
-        else:
-            comparison_data = data_processor.get_biomass_data(biomass_comparison)
-    biomass_fig = graph_generator.create_time_series(
-        biomass_data,
-        f"{get_text('fish_biomass')} - {selected_site}",
-        "Biomass (kg/ha)",
-        comparison_data
-    )
-    st.plotly_chart(biomass_fig, use_container_width=True)
+    with st.spinner('Loading biomass data...'):
+        biomass_data = data_processor.get_biomass_data(selected_site)
+        comparison_data = None
+        if biomass_comparison != get_text('compare_none'):
+            if biomass_comparison == get_text('compare_avg'):
+                comparison_data = data_processor.get_average_biomass_data(exclude_site=selected_site)
+            else:
+                comparison_data = data_processor.get_biomass_data(biomass_comparison)
+        biomass_fig = graph_generator.create_time_series(
+            biomass_data,
+            f"{get_text('fish_biomass')} - {selected_site}",
+            "Biomass (kg/ha)",
+            comparison_data
+        )
+        st.plotly_chart(biomass_fig, use_container_width=True)
 
 # Hard Coral Cover Graph
 with st.container():
     st.header(get_text('coral_cover'))
-    coral_data = data_processor.get_coral_cover_data(selected_site)
-    comparison_data = None
-    if coral_comparison != get_text('compare_none'):
-        if coral_comparison == get_text('compare_avg'):
-            comparison_data = data_processor.get_average_coral_cover_data(exclude_site=selected_site)
-        else:
-            comparison_data = data_processor.get_coral_cover_data(coral_comparison)
-    coral_fig = graph_generator.create_time_series(
-        coral_data,
-        f"{get_text('coral_cover')} - {selected_site}",
-        "Cover (%)",
-        comparison_data
-    )
-    st.plotly_chart(coral_fig, use_container_width=True)
+    with st.spinner('Loading coral cover data...'):
+        coral_data = data_processor.get_coral_cover_data(selected_site)
+        comparison_data = None
+        if coral_comparison != get_text('compare_none'):
+            if coral_comparison == get_text('compare_avg'):
+                comparison_data = data_processor.get_average_coral_cover_data(exclude_site=selected_site)
+            else:
+                comparison_data = data_processor.get_coral_cover_data(coral_comparison)
+        coral_fig = graph_generator.create_time_series(
+            coral_data,
+            f"{get_text('coral_cover')} - {selected_site}",
+            "Cover (%)",
+            comparison_data
+        )
+        st.plotly_chart(coral_fig, use_container_width=True)
 
 # Additional metrics graph
 with st.container():
     # Get primary metric data
-    primary_data = data_processor.get_metric_data(selected_site, primary_metric)
+    with st.spinner(f'Loading {metric_options[primary_metric]} data...'):
+        primary_data = data_processor.get_metric_data(selected_site, primary_metric)
 
-    # Get secondary metric data if selected
-    secondary_data = None
-    if secondary_metric is not None:
-        secondary_data = data_processor.get_metric_data(selected_site, secondary_metric)
+        # Get secondary metric data if selected
+        secondary_data = None
+        if secondary_metric is not None:
+            secondary_data = data_processor.get_metric_data(selected_site, secondary_metric)
 
-    # Create graph with both metrics if secondary is selected
-    metric_fig = graph_generator.create_time_series(
-        primary_data,
-        f"{metric_options[primary_metric]} {'& ' + metric_options[secondary_metric] if secondary_metric else ''} - {selected_site}",
-        metric_options[primary_metric],
-        secondary_data=secondary_data,
-        secondary_label=metric_options.get(secondary_metric) if secondary_metric else None
-    )
-    st.plotly_chart(metric_fig, use_container_width=True)
+        # Create graph with both metrics if secondary is selected
+        metric_fig = graph_generator.create_time_series(
+            primary_data,
+            f"{metric_options[primary_metric]} {'& ' + metric_options[secondary_metric] if secondary_metric else ''} - {selected_site}",
+            metric_options[primary_metric],
+            secondary_data=secondary_data,
+            secondary_label=metric_options.get(secondary_metric) if secondary_metric else None
+        )
+        st.plotly_chart(metric_fig, use_container_width=True)
 
 # Clean up
+db = next(get_db()) # Added to properly close the database connection.  The @st.cache_resource decorator doesn't manage this.
 db.close()

@@ -3,15 +3,18 @@ from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from .database import Site, Survey
+import streamlit as st
 
 class DataProcessor:
     def __init__(self, db: Session):
         self.db = db
 
+    @st.cache_data(ttl=3600)  # Cache for 1 hour
     def get_sites(self):
         """Get all sites with their municipalities"""
         return self.db.query(Site).all()
 
+    @st.cache_data(ttl=3600)
     def get_metric_data(self, site_name: str, metric: str, start_date='2017-01-01'):
         """Process data for any metric"""
         print(f"Fetching {metric} data for site: {site_name}")
@@ -36,6 +39,7 @@ class DataProcessor:
             print(f"Site not found: {site_name}")
             return pd.DataFrame(columns=['date', metric])
 
+        # Optimize query by selecting only needed columns
         surveys = (self.db.query(Survey.date, getattr(Survey, column_name))
                   .filter(Survey.site_id == site.id)
                   .filter(Survey.date >= start_date)
@@ -45,6 +49,7 @@ class DataProcessor:
         print(f"Found {len(surveys)} {metric} surveys for {site_name}")
         return pd.DataFrame(surveys, columns=['date', metric])
 
+    @st.cache_data(ttl=3600)
     def get_average_metric_data(self, metric: str, exclude_site=None, start_date='2017-01-01'):
         """Calculate average metric data across all sites except the excluded one"""
         print(f"Calculating average {metric} (excluding {exclude_site})")
@@ -69,23 +74,22 @@ class DataProcessor:
             if site:
                 exclude_site_id = site.id
 
-        # Query all surveys
+        # Optimize query by selecting only needed columns
         query = (self.db.query(
                 Survey.date,
                 func.avg(getattr(Survey, column_name)).label(metric))
                 .filter(Survey.date >= start_date))
 
-        # Exclude the selected site if specified
         if exclude_site_id:
             query = query.filter(Survey.site_id != exclude_site_id)
 
-        # Group by date and order
         surveys = (query.group_by(Survey.date)
                   .order_by(Survey.date)
                   .all())
 
         return pd.DataFrame(surveys, columns=['date', metric])
 
+    @st.cache_data(ttl=3600)
     def get_biomass_data(self, site_name, start_date='2017-01-01'):
         """Process commercial fish biomass data"""
         print(f"Fetching biomass data for site: {site_name}")
@@ -103,34 +107,32 @@ class DataProcessor:
         print(f"Found {len(surveys)} biomass surveys for {site_name}")
         return pd.DataFrame(surveys, columns=['date', 'Commercial Biomass'])
 
+    @st.cache_data(ttl=3600)
     def get_average_biomass_data(self, exclude_site=None, start_date='2017-01-01'):
         """Calculate average commercial fish biomass across all sites except the excluded one"""
         print(f"Calculating average biomass (excluding {exclude_site})")
 
-        # Get the site to exclude
         exclude_site_id = None
         if exclude_site:
             site = self.db.query(Site).filter(Site.name == exclude_site).first()
             if site:
                 exclude_site_id = site.id
 
-        # Query all surveys
         query = (self.db.query(
                 Survey.date,
                 func.avg(Survey.commercial_biomass).label('Commercial Biomass'))
                 .filter(Survey.date >= start_date))
 
-        # Exclude the selected site if specified
         if exclude_site_id:
             query = query.filter(Survey.site_id != exclude_site_id)
 
-        # Group by date and order
         surveys = (query.group_by(Survey.date)
                   .order_by(Survey.date)
                   .all())
 
         return pd.DataFrame(surveys, columns=['date', 'Commercial Biomass'])
 
+    @st.cache_data(ttl=3600)
     def get_coral_cover_data(self, site_name, start_date='2017-01-01'):
         """Process hard coral cover data"""
         print(f"Fetching coral cover data for site: {site_name}")
@@ -148,28 +150,25 @@ class DataProcessor:
         print(f"Found {len(surveys)} coral cover surveys for {site_name}")
         return pd.DataFrame(surveys, columns=['date', 'Hard Coral Cover'])
 
+    @st.cache_data(ttl=3600)
     def get_average_coral_cover_data(self, exclude_site=None, start_date='2017-01-01'):
         """Calculate average hard coral cover across all sites except the excluded one"""
         print(f"Calculating average coral cover (excluding {exclude_site})")
 
-        # Get the site to exclude
         exclude_site_id = None
         if exclude_site:
             site = self.db.query(Site).filter(Site.name == exclude_site).first()
             if site:
                 exclude_site_id = site.id
 
-        # Query all surveys
         query = (self.db.query(
                 Survey.date,
                 func.avg(Survey.hard_coral_cover).label('Hard Coral Cover'))
                 .filter(Survey.date >= start_date))
 
-        # Exclude the selected site if specified
         if exclude_site_id:
             query = query.filter(Survey.site_id != exclude_site_id)
 
-        # Group by date and order
         surveys = (query.group_by(Survey.date)
                   .order_by(Survey.date)
                   .all())
