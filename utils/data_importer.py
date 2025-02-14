@@ -26,15 +26,12 @@ def parse_season_to_date(season: str) -> datetime:
 
         start_month = month_range[0]
 
-        # Clean up the year part by removing all spaces and any whitespace around the slash
-        year_part = ''.join(year_part.split())
+        # Clean up the year part and handle the slash format
+        # Remove all whitespace and normalize the year format
+        year_part = ''.join(year_part.split()).replace(' ', '')
 
-        # Handle the year part for cases like "2024/25" or "2024/ 25"
-        if '/' in year_part:
-            # Split on slash and take first year
-            year = year_part.split('/')[0]
-        else:
-            year = year_part
+        # Extract the first year for both formats: "2024/25" and "2024"
+        year = year_part.split('/')[0] if '/' in year_part else year_part
 
         # Map month abbreviations to numbers
         month_map = {
