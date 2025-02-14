@@ -69,35 +69,22 @@ st.sidebar.title("Comparison Settings")
 
 # Biomass comparison
 st.sidebar.subheader(get_text('fish_biomass'))
-biomass_comparison_type = st.sidebar.selectbox(
-    "Comparison Type",
-    ["none", "site", "average"],
-    key="biomass_comparison_type"
+comparison_options = [get_text('compare_none')] + \
+                    [site for site in site_names if site != selected_site] + \
+                    [get_text('compare_avg')]
+biomass_comparison = st.sidebar.selectbox(
+    "Comparison",
+    comparison_options,
+    key="biomass_comparison"
 )
-
-biomass_comparison_site = None
-if biomass_comparison_type == "site":
-    biomass_comparison_site = st.sidebar.selectbox(
-        "Compare with Site",
-        [site for site in site_names if site != selected_site],
-        key="biomass_comparison_site"
-    )
 
 # Coral cover comparison
 st.sidebar.subheader(get_text('coral_cover'))
-coral_comparison_type = st.sidebar.selectbox(
-    "Comparison Type",
-    ["none", "site", "average"],
-    key="coral_comparison_type"
+coral_comparison = st.sidebar.selectbox(
+    "Comparison",
+    comparison_options,
+    key="coral_comparison"
 )
-
-coral_comparison_site = None
-if coral_comparison_type == "site":
-    coral_comparison_site = st.sidebar.selectbox(
-        "Compare with Site",
-        [site for site in site_names if site != selected_site],
-        key="coral_comparison_site"
-    )
 
 # Main content area
 # Site Description Section
@@ -116,8 +103,12 @@ with col2:
 st.header(get_text('fish_biomass'))
 biomass_data = data_processor.get_biomass_data(selected_site)
 comparison_data = None
-if biomass_comparison_type == "site" and biomass_comparison_site:
-    comparison_data = data_processor.get_biomass_data(biomass_comparison_site)
+if biomass_comparison != get_text('compare_none'):
+    if biomass_comparison == get_text('compare_avg'):
+        # TODO: Implement average comparison
+        pass
+    else:
+        comparison_data = data_processor.get_biomass_data(biomass_comparison)
 biomass_fig = graph_generator.create_time_series(
     biomass_data,
     get_text('fish_biomass'),
@@ -130,8 +121,12 @@ st.plotly_chart(biomass_fig, use_container_width=True)
 st.header(get_text('coral_cover'))
 coral_data = data_processor.get_coral_cover_data(selected_site)
 comparison_data = None
-if coral_comparison_type == "site" and coral_comparison_site:
-    comparison_data = data_processor.get_coral_cover_data(coral_comparison_site)
+if coral_comparison != get_text('compare_none'):
+    if coral_comparison == get_text('compare_avg'):
+        # TODO: Implement average comparison
+        pass
+    else:
+        comparison_data = data_processor.get_coral_cover_data(coral_comparison)
 coral_fig = graph_generator.create_time_series(
     coral_data,
     get_text('coral_cover'),
