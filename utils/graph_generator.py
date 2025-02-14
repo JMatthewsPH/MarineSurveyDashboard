@@ -98,7 +98,7 @@ class GraphGenerator:
                 ))
 
         # Tertiary metric data (if provided)
-        elif tertiary_data is not None and not tertiary_data.empty:
+        if tertiary_data is not None and not tertiary_data.empty:
             tertiary_data = tertiary_data.sort_values('date')
             pre_covid_ter = tertiary_data[tertiary_data['date'] < covid_start]
             post_covid_ter = tertiary_data[tertiary_data['date'] > covid_end]
@@ -108,7 +108,7 @@ class GraphGenerator:
                 x=pre_covid_ter['date'],
                 y=pre_covid_ter[tertiary_data.columns[1]],
                 name=tertiary_label,
-                line=dict(color='#06d6a0', dash='solid'),  # New color for tertiary metric
+                line=dict(color='#06d6a0', dash='solid'),
                 mode='lines+markers',
                 yaxis='y3'
             ))
@@ -139,7 +139,7 @@ class GraphGenerator:
                 ))
 
         # Add comparison if provided (on primary y-axis)
-        elif comparison_data is not None and not comparison_data.empty:
+        if comparison_data is not None and not comparison_data.empty:
             comparison_data = comparison_data.sort_values('date')
             pre_covid_comp = comparison_data[comparison_data['date'] < covid_start]
             post_covid_comp = comparison_data[comparison_data['date'] > covid_end]
@@ -226,7 +226,7 @@ class GraphGenerator:
                 title=tertiary_label,
                 overlaying='y',
                 side='right',
-                position=0.85,  # Position the third y-axis slightly to the left of the second
+                position=0.85,
                 automargin=True
             )
 
