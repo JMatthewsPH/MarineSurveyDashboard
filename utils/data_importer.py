@@ -15,13 +15,31 @@ def parse_season_to_date(season: str) -> datetime:
     Returns the date of the first month in the season.
     """
     try:
-        # Extract year and quarter from format like "2017Q4"
-        if not season or 'Q' not in season:
+        if not season or not isinstance(season, str):
             print(f"Invalid season format: {season}")
             return None
 
-        year = int(season[:4])
-        quarter = int(season[5])
+        # Clean up the season string
+        clean_season = season.strip().split('/')[0]  # Handle cases like "2022Q4/ 23"
+
+        if 'Q' not in clean_season:
+            print(f"Invalid season format (missing Q): {season}")
+            return None
+
+        year_str = clean_season[:4]
+        quarter_str = clean_season[5:6]
+
+        try:
+            year = int(year_str)
+            quarter = int(quarter_str)
+        except ValueError:
+            print(f"Invalid year or quarter format: {season}")
+            return None
+
+        # Validate year and quarter
+        if not (2000 <= year <= 2100) or not (1 <= quarter <= 4):
+            print(f"Year or quarter out of valid range: {season}")
+            return None
 
         # Map quarter to starting month
         quarter_to_month = {
@@ -31,12 +49,7 @@ def parse_season_to_date(season: str) -> datetime:
             4: 12  # Q4: December
         }
 
-        if quarter not in quarter_to_month:
-            print(f"Invalid quarter: {quarter}")
-            return None
-
         month = quarter_to_month[quarter]
-        print(f"Processing {season} -> {year}-{month:02d}-01")
         return datetime(year, month, 1)
 
     except Exception as e:
