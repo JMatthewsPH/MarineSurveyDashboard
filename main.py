@@ -13,7 +13,7 @@ run_import()  # Import CSV data
 
 # Page configuration
 st.set_page_config(
-    page_title="Marine Conservation Dashboard",
+    page_title="Marine Conservation Philippines",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -33,8 +33,9 @@ def get_text(key):
 if st.button(get_text('lang_toggle')):
     st.session_state.language = 'fil' if st.session_state.language == 'en' else 'en'
 
-# Title
-st.title(get_text('title'))
+# Title and Subheading
+st.title("Marine Conservation Philippines")
+st.header("Data Dashboard")
 
 # Get database session
 db = next(get_db())
