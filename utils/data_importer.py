@@ -7,60 +7,37 @@ from .database import Site, Survey, get_db
 def parse_season_to_date(season: str) -> datetime:
     """
     Convert season string to a date object using the first month of the season.
-    For DEC-FEB seasons that span across years (e.g., 'DEC-FEB 2020/ 21'),
-    uses December of the first year as the start date.
+    Format: "<year>Q<1-4>" where:
+    Q1 = MAR-MAY
+    Q2 = JUN-AUG
+    Q3 = SEP-NOV
+    Q4 = DEC-FEB
+    Returns the date of the first month in the season.
     """
     try:
-        # Split into month range and year part
-        if not season or season.count(' ') == 0:
+        # Extract year and quarter from format like "2017Q4"
+        if not season or 'Q' not in season:
             print(f"Invalid season format: {season}")
             return None
 
-        # Split on last space to handle cases with spaces in year part
-        *month_parts, year_part = season.rsplit(' ', 1)
-        months = ' '.join(month_parts)  # Rejoin any month parts
-        month_range = months.split('-')
+        year = int(season[:4])
+        quarter = int(season[5])
 
-        if len(month_range) != 2:
-            print(f"Invalid month range format: {months}")
-            return None
-
-        start_month = month_range[0].strip()
-        end_month = month_range[1].strip()
-
-        # Map month abbreviations to numbers
-        month_map = {
-            'JAN': 1, 'FEB': 2, 'MAR': 3, 'APR': 4, 'MAY': 5, 'JUN': 6,
-            'JUL': 7, 'AUG': 8, 'SEP': 9, 'OCT': 10, 'NOV': 11, 'DEC': 12
+        # Map quarter to starting month
+        quarter_to_month = {
+            1: 3,  # Q1: March
+            2: 6,  # Q2: June
+            3: 9,  # Q3: September
+            4: 12  # Q4: December
         }
 
-        # Clean up the year part and handle the slash format
-        year_part = year_part.strip().replace('/', ' ').replace('  ', ' ')
-
-        # Extract the first year
-        year = year_part.split()[0]
-
-        try:
-            year_num = int(year)
-        except ValueError:
-            print(f"Invalid year format: {year}")
+        if quarter not in quarter_to_month:
+            print(f"Invalid quarter: {quarter}")
             return None
 
-        # Convert month name to number
-        try:
-            start_month_num = month_map[start_month]
-            end_month_num = month_map[end_month]
-        except KeyError as e:
-            print(f"Invalid month abbreviation in {months}: {e}")
-            return None
-
-        # For DEC-FEB seasons, use December of the first year
-        if start_month == 'DEC' and end_month == 'FEB':
-            print(f"Processing winter season {season} -> {year_num}-12-01")
-            return datetime(year_num, 12, 1)
-        else:
-            print(f"Processing regular season {season} -> {year_num}-{start_month_num:02d}-01")
-            return datetime(year_num, start_month_num, 1)
+        month = quarter_to_month[quarter]
+        print(f"Processing {season} -> {year}-{month:02d}-01")
+        return datetime(year, month, 1)
 
     except Exception as e:
         print(f"Error parsing date from season '{season}': {str(e)}")
