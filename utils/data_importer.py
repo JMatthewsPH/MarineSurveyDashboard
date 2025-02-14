@@ -14,7 +14,7 @@ def parse_season_to_date(season: str) -> datetime:
     try:
         # Split into month range and year part
         parts = season.strip().split()
-        if len(parts) != 2:
+        if len_parts := len(parts) != 2:
             print(f"Invalid season format: {season}")
             return None
 
@@ -25,6 +25,9 @@ def parse_season_to_date(season: str) -> datetime:
             return None
 
         start_month = month_range[0]
+
+        # Handle the year part - clean up any extra spaces
+        year_part = year_part.replace(" ", "")
 
         # Handle the year part
         if '/' in year_part:
