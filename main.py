@@ -42,7 +42,7 @@ graph_generator = GraphGenerator(data_processor)
 sites = data_processor.get_sites()
 site_names = [site.name for site in sites]
 
-# Sidebar for site selection and language
+# Sidebar
 st.sidebar.title("Settings")
 
 # Language selection in sidebar
@@ -64,6 +64,42 @@ selected_site = st.sidebar.selectbox(
     site_names
 )
 
+# Comparison Settings
+st.sidebar.title("Comparison Settings")
+
+# Biomass comparison
+st.sidebar.subheader(get_text('fish_biomass'))
+biomass_comparison_type = st.sidebar.selectbox(
+    "Comparison Type",
+    ["none", "site", "average"],
+    key="biomass_comparison_type"
+)
+
+biomass_comparison_site = None
+if biomass_comparison_type == "site":
+    biomass_comparison_site = st.sidebar.selectbox(
+        "Compare with Site",
+        [site for site in site_names if site != selected_site],
+        key="biomass_comparison_site"
+    )
+
+# Coral cover comparison
+st.sidebar.subheader(get_text('coral_cover'))
+coral_comparison_type = st.sidebar.selectbox(
+    "Comparison Type",
+    ["none", "site", "average"],
+    key="coral_comparison_type"
+)
+
+coral_comparison_site = None
+if coral_comparison_type == "site":
+    coral_comparison_site = st.sidebar.selectbox(
+        "Compare with Site",
+        [site for site in site_names if site != selected_site],
+        key="coral_comparison_site"
+    )
+
+# Main content area
 # Site Description Section
 st.header(get_text('site_description'))
 col1, col2 = st.columns([1, 2])
@@ -78,31 +114,29 @@ with col2:
 
 # Commercial Fish Biomass Graph
 st.header(get_text('fish_biomass'))
-comparison_type = st.selectbox(
-    "Comparison",
-    ["none", "site", "average"],
-    key="biomass_comparison"
-)
 biomass_data = data_processor.get_biomass_data(selected_site)
+comparison_data = None
+if biomass_comparison_type == "site" and biomass_comparison_site:
+    comparison_data = data_processor.get_biomass_data(biomass_comparison_site)
 biomass_fig = graph_generator.create_time_series(
     biomass_data,
     get_text('fish_biomass'),
-    "Biomass (kg/ha)"
+    "Biomass (kg/ha)",
+    comparison_data
 )
 st.plotly_chart(biomass_fig, use_container_width=True)
 
 # Hard Coral Cover Graph
 st.header(get_text('coral_cover'))
-comparison_type = st.selectbox(
-    "Comparison",
-    ["none", "site", "average"],
-    key="coral_comparison"
-)
 coral_data = data_processor.get_coral_cover_data(selected_site)
+comparison_data = None
+if coral_comparison_type == "site" and coral_comparison_site:
+    comparison_data = data_processor.get_coral_cover_data(coral_comparison_site)
 coral_fig = graph_generator.create_time_series(
     coral_data,
     get_text('coral_cover'),
-    "Cover (%)"
+    "Cover (%)",
+    comparison_data
 )
 st.plotly_chart(coral_fig, use_container_width=True)
 
@@ -111,11 +145,6 @@ st.header(get_text('eco_tourism'))
 observation_type = st.radio(
     get_text('observation_type'),
     ['percentage', 'numeric']
-)
-comparison_type = st.selectbox(
-    "Comparison",
-    ["none", "previous_year", "all_sites"],
-    key="eco_comparison"
 )
 ecotourism_data = data_processor.get_ecotourism_data(selected_site, observation_type)
 eco_fig = graph_generator.create_eco_tourism_chart(
