@@ -3,7 +3,11 @@ import pandas as pd
 from utils.data_processor import DataProcessor
 from utils.graph_generator import GraphGenerator
 from utils.translations import TRANSLATIONS
+from utils.database import get_db, init_sample_data
 import plotly.graph_objects as go
+
+# Initialize database with sample data
+init_sample_data()
 
 # Page configuration
 st.set_page_config(
@@ -27,21 +31,24 @@ def get_text(key):
 if st.button(get_text('lang_toggle')):
     st.session_state.language = 'fil' if st.session_state.language == 'en' else 'en'
 
-# Title and site selection
+# Title
 st.title(get_text('title'))
+
+# Get database session
+db = next(get_db())
+data_processor = DataProcessor(db)
+graph_generator = GraphGenerator(data_processor)
+
+# Get all sites for selection
+sites = data_processor.get_sites()
+site_names = [site.name for site in sites]
 
 # Sidebar for site selection
 st.sidebar.title("Site Selection")
 selected_site = st.sidebar.selectbox(
     "Select Site",
-    ["Site 1", "Site 2", "Site 3"]  # Replace with actual site IDs
+    site_names
 )
-
-# Initialize data processor and graph generator
-# Note: Replace this with actual data loading from MongoDB
-sample_data = []  # Replace with actual data
-data_processor = DataProcessor(sample_data)
-graph_generator = GraphGenerator(data_processor)
 
 # Site Description Section
 st.header(get_text('site_description'))
@@ -50,7 +57,10 @@ with col1:
     # Site image would be loaded here
     st.image("https://via.placeholder.com/400x300", use_column_width=True)
 with col2:
-    st.markdown(f"Site description in {st.session_state.language}")
+    selected_site_obj = next((site for site in sites if site.name == selected_site), None)
+    if selected_site_obj:
+        description = selected_site_obj.description_fil if st.session_state.language == 'fil' else selected_site_obj.description_en
+        st.markdown(description or f"Description for {selected_site} in {st.session_state.language}")
 
 # Commercial Fish Biomass Graph
 st.header(get_text('fish_biomass'))
@@ -119,3 +129,6 @@ eco_fig = graph_generator.create_eco_tourism_chart(
     observation_type
 )
 st.plotly_chart(eco_fig, use_container_width=True)
+
+# Clean up
+db.close()

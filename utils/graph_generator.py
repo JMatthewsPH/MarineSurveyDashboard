@@ -7,61 +7,89 @@ class GraphGenerator:
         self.data_processor = data_processor
 
     def create_time_series(self, data, title, y_label, comparison_data=None):
-        """Create time series graph with optional comparison"""
+        """Create time series graph with optional comparison and data gap handling"""
         fig = go.Figure()
-        
+
         # Main data
-        fig.add_trace(go.Scatter(
-            x=data['date'],
-            y=data[data.columns[1]],
-            name='Current Site',
-            line=dict(color='#0077b6')
-        ))
-        
+        if not data.empty:
+            fig.add_trace(go.Scatter(
+                x=data['date'],
+                y=data[data.columns[1]],
+                name='Current Site',
+                line=dict(
+                    color='#0077b6',
+                    dash='solid'
+                ),
+                mode='lines+markers'
+            ))
+
         # Add comparison if provided
-        if comparison_data is not None:
+        if comparison_data is not None and not comparison_data.empty:
             fig.add_trace(go.Scatter(
                 x=comparison_data['date'],
                 y=comparison_data[comparison_data.columns[1]],
                 name='Comparison',
-                line=dict(color='#ef476f')
+                line=dict(
+                    color='#ef476f',
+                    dash='solid'
+                ),
+                mode='lines+markers'
             ))
-        
+
         fig.update_layout(
             title=title,
             xaxis_title='Date',
             yaxis_title=y_label,
             template='plotly_white',
             hovermode='x unified',
+            showlegend=True,
             legend=dict(
                 yanchor="top",
                 y=0.99,
                 xanchor="left",
                 x=0.01
+            ),
+            # Ensure future dates can be accommodated
+            xaxis=dict(
+                range=[
+                    datetime(2017, 1, 1),
+                    datetime.now() + timedelta(days=365)
+                ]
             )
         )
-        
+
         return fig
 
     def create_eco_tourism_chart(self, data, title, observation_type='percentage'):
         """Create bar chart for eco-tourism data"""
-        fig = go.Figure()
-        
-        fig.add_trace(go.Bar(
-            y=data.index,
-            x=data.values,
-            orientation='h',
-            marker_color='#0077b6'
-        ))
-        
-        x_title = '% Success Rate' if observation_type == 'percentage' else 'Average Count'
-        
+        if data.empty:
+            # Create empty figure with message
+            fig = go.Figure()
+            fig.add_annotation(
+                text="No data available for selected period",
+                xref="paper",
+                yref="paper",
+                x=0.5,
+                y=0.5,
+                showarrow=False
+            )
+        else:
+            fig = go.Figure(go.Bar(
+                y=data.index,
+                x=data.values,
+                orientation='h',
+                marker_color='#0077b6'
+            ))
+
+        x_title = 'Success Rate (%)' if observation_type == 'percentage' else 'Average Count'
+
         fig.update_layout(
             title=title,
             xaxis_title=x_title,
             yaxis_title='Species',
             template='plotly_white',
-            height=400
+            height=400,
+            margin=dict(l=150)  # Add more space for species names
         )
-        
+
         return fig
