@@ -38,29 +38,25 @@ if 'language' not in st.session_state:
 def get_text(key):
     return TRANSLATIONS[st.session_state.language][key]
 
-# Header with Logo
-col1, col2 = st.columns([1, 4])
-with col1:
-    # Create a centered container for the logo
-    with st.container():
-        # Try to load the logo, use a placeholder if not available
-        logo_path = "attached_assets/logo transparent plus white.png"
-        if os.path.exists(logo_path):
-            st.image(logo_path, width=150)
-        else:
-            st.markdown("""
-                <div style="width:150px; height:150px; background:#f0f2f6; 
-                border-radius:10px; display:flex; align-items:center; 
-                justify-content:center; margin:10px 0;">
-                    <span style="color:#262730; font-size:1.2em;">
-                        MCP
-                    </span>
-                </div>
-            """, unsafe_allow_html=True)
+# Sidebar Logo
+logo_path = "attached_assets/logo transparent plus white.png"
+if os.path.exists(logo_path):
+    st.sidebar.image(logo_path, width=200, use_column_width=True)
+else:
+    st.sidebar.markdown("""
+        <div style="width:100%; padding-bottom:100%; background:#f0f2f6; 
+        border-radius:10px; display:flex; align-items:center; 
+        justify-content:center; margin:10px 0; position:relative;">
+            <span style="position:absolute; top:50%; left:50%; 
+            transform:translate(-50%, -50%); color:#262730; font-size:1.2em;">
+                MCP
+            </span>
+        </div>
+    """, unsafe_allow_html=True)
 
-with col2:
-    st.title("Marine Conservation Philippines")
-    st.header("Data Dashboard")
+# Title
+st.title("Marine Conservation Philippines")
+st.header("Data Dashboard")
 
 # Get database session
 @st.cache_resource
