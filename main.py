@@ -94,24 +94,6 @@ coral_fig = graph_generator.create_time_series(
 )
 st.plotly_chart(coral_fig, use_container_width=True)
 
-# Fish Average Length Graph
-st.header(get_text('fish_length'))
-selected_species = st.selectbox(
-    get_text('select_species'),
-    ["Species 1", "Species 2", "Species 3"]  # Replace with actual species
-)
-comparison_type = st.selectbox(
-    "Comparison",
-    ["none", "site", "average"],
-    key="length_comparison"
-)
-length_data = data_processor.get_fish_length_data(selected_site, selected_species)
-length_fig = graph_generator.create_time_series(
-    length_data,
-    get_text('fish_length'),
-    "Length (cm)"
-)
-st.plotly_chart(length_fig, use_container_width=True)
 
 # Eco-Tourism Information
 st.header(get_text('eco_tourism'))
