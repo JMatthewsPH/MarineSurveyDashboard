@@ -122,7 +122,8 @@ metric_options = {
     'herbivore': get_text('herbivore'),
     'carnivore': get_text('carnivore'),
     'omnivore': get_text('omnivore'),
-    'corallivore': get_text('corallivore')
+    'corallivore': get_text('corallivore'),
+    'rubble': get_text('rubble')
 }
 
 # Primary metric selection

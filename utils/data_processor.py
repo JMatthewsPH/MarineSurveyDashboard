@@ -34,7 +34,8 @@ class DataProcessor:
             'herbivore': 'herbivore_density',
             'carnivore': 'carnivore_density',
             'omnivore': 'omnivore_density',
-            'corallivore': 'corallivore_density'
+            'corallivore': 'corallivore_density',
+            'rubble': 'rubble'
         }
 
         column_name = metric_map.get(metric)

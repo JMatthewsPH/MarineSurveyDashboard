@@ -20,7 +20,8 @@ TRANSLATIONS = {
         'herbivore': 'Herbivore Density',
         'carnivore': 'Carnivore Density',
         'omnivore': 'Omnivore Density',
-        'corallivore': 'Corallivore Density'
+        'corallivore': 'Corallivore Density',
+        'rubble': 'Rubble Cover'
     },
     'fil': {
         'title': 'Dashboard ng Konserbasyon ng Dagat',
@@ -43,6 +44,7 @@ TRANSLATIONS = {
         'herbivore': 'Dami ng Herbivore',
         'carnivore': 'Dami ng Carnivore',
         'omnivore': 'Dami ng Omnivore',
-        'corallivore': 'Dami ng Corallivore'
+        'corallivore': 'Dami ng Corallivore',
+        'rubble': 'Takip ng Rubble'
     }
 }
