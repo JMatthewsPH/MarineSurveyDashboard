@@ -59,7 +59,7 @@ def get_text(key):
     return TRANSLATIONS[st.session_state.language][key]
 
 # Sidebar Logo
-logo_path = "attached_assets/logo transparent plus white.png"
+logo_path = "attached_assets/MCP_Data/Logo Hands Color White BG.png"
 # Sidebar
 st.sidebar.markdown('<div class="sidebar-header">', unsafe_allow_html=True)
 if os.path.exists(logo_path):
