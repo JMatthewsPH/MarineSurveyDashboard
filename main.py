@@ -212,6 +212,14 @@ with st.container():
     with st.spinner(f'Loading {metric_options[primary_metric]} data...'):
         primary_data = data_processor.get_metric_data(selected_site, primary_metric)
 
+        # Get comparison data if selected
+        comparison_data = None
+        if biomass_comparison != get_text('compare_none'):
+            if biomass_comparison == get_text('compare_avg'):
+                comparison_data = data_processor.get_average_metric_data(primary_metric, exclude_site=selected_site)
+            else:
+                comparison_data = data_processor.get_metric_data(biomass_comparison, primary_metric)
+
         # Get secondary metric data if selected
         secondary_data = None
         if secondary_metric is not None:
@@ -222,6 +230,7 @@ with st.container():
             primary_data,
             f"{metric_options[primary_metric]} {'& ' + metric_options[secondary_metric] if secondary_metric else ''} - {selected_site}",
             metric_options[primary_metric],
+            comparison_data=comparison_data,
             secondary_data=secondary_data,
             secondary_label=metric_options.get(secondary_metric) if secondary_metric else None
         )
