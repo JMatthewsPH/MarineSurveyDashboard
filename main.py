@@ -1,4 +1,12 @@
 import streamlit as st
+
+# Page configuration must be the first Streamlit command
+st.set_page_config(
+    page_title="Marine Conservation Philippines",
+    layout="wide",  # Set to wide mode for better scaling
+    initial_sidebar_state="expanded"
+)
+
 import pandas as pd
 from utils.data_processor import DataProcessor
 from utils.graph_generator import GraphGenerator
@@ -14,13 +22,6 @@ def initialize_database():
     run_import()  # Import CSV data
 
 initialize_database()
-
-# Page configuration
-st.set_page_config(
-    page_title="Marine Conservation Philippines",
-    layout="wide",  # Set to wide mode for better scaling
-    initial_sidebar_state="expanded"
-)
 
 # Load custom CSS
 @st.cache_data
