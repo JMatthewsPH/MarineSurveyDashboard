@@ -14,8 +14,10 @@ class DataProcessor:
 
     def get_biomass_data(self, site_name, start_date='2017-01-01'):
         """Process commercial fish biomass data"""
+        print(f"Fetching biomass data for site: {site_name}")
         site = self.db.query(Site).filter(Site.name == site_name).first()
         if not site:
+            print(f"Site not found: {site_name}")
             return pd.DataFrame(columns=['date', 'Commercial Biomass'])
 
         surveys = (self.db.query(Survey.date, Survey.commercial_biomass)
@@ -24,12 +26,15 @@ class DataProcessor:
                   .order_by(Survey.date)
                   .all())
 
+        print(f"Found {len(surveys)} biomass surveys for {site_name}")
         return pd.DataFrame(surveys, columns=['date', 'Commercial Biomass'])
 
     def get_coral_cover_data(self, site_name, start_date='2017-01-01'):
         """Process hard coral cover data"""
+        print(f"Fetching coral cover data for site: {site_name}")
         site = self.db.query(Site).filter(Site.name == site_name).first()
         if not site:
+            print(f"Site not found: {site_name}")
             return pd.DataFrame(columns=['date', 'Hard Coral Cover'])
 
         surveys = (self.db.query(Survey.date, Survey.hard_coral_cover)
@@ -38,6 +43,7 @@ class DataProcessor:
                   .order_by(Survey.date)
                   .all())
 
+        print(f"Found {len(surveys)} coral cover surveys for {site_name}")
         return pd.DataFrame(surveys, columns=['date', 'Hard Coral Cover'])
 
     def get_fish_length_data(self, site_name, species, start_date='2017-01-01'):
