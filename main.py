@@ -55,7 +55,7 @@ st.header(get_text('site_description'))
 col1, col2 = st.columns([1, 2])
 with col1:
     # Site image would be loaded here
-    st.image("https://via.placeholder.com/400x300", use_column_width=True)
+    st.image("https://via.placeholder.com/400x300", use_container_width=True)
 with col2:
     selected_site_obj = next((site for site in sites if site.name == selected_site), None)
     if selected_site_obj:
