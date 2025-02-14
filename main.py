@@ -4,10 +4,12 @@ from utils.data_processor import DataProcessor
 from utils.graph_generator import GraphGenerator
 from utils.translations import TRANSLATIONS
 from utils.database import get_db, init_sample_data
+from utils.data_importer import run_import
 import plotly.graph_objects as go
 
-# Initialize database with sample data
+# Initialize database with sample data and import CSV data
 init_sample_data()
+run_import()  # Import CSV data
 
 # Page configuration
 st.set_page_config(
