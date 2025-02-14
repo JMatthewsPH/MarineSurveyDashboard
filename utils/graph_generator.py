@@ -12,14 +12,14 @@ class GraphGenerator:
         """Create time series graph with optional comparison and data gap handling"""
         fig = go.Figure()
 
-        # COVID-19 gap dates as date objects
-        covid_start = date(2019, 9, 1)
-        covid_end = date(2022, 3, 1)
-
         # Main data
         if not data.empty:
             # Sort data by date
             data = data.sort_values('date')
+
+            # Split data into pre and post COVID
+            covid_start = date(2019, 9, 1)
+            covid_end = date(2022, 3, 1)
 
             # Split data into pre and post COVID
             pre_covid = data[data['date'] < covid_start]
@@ -52,56 +52,49 @@ class GraphGenerator:
                     x=[last_pre_covid['date'], first_post_covid['date']],
                     y=[last_pre_covid[pre_covid.columns[1]], first_post_covid[post_covid.columns[1]]],
                     name='COVID-19 Period (No Data)',
-                    line=dict(
-                        color='#0077b6',
-                        dash='dot',
-                        width=1
-                    ),
+                    line=dict(color='#0077b6', dash='dot', width=1),
                     opacity=0.3,
                     mode='lines'
                 ))
 
-        # Add comparison if provided (with same COVID gap handling)
-        if comparison_data is not None and not comparison_data.empty:
-            comparison_data = comparison_data.sort_values('date')
-            pre_covid_comp = comparison_data[comparison_data['date'] < covid_start]
-            post_covid_comp = comparison_data[comparison_data['date'] > covid_end]
-
-            fig.add_trace(go.Scatter(
-                x=pre_covid_comp['date'],
-                y=pre_covid_comp[comparison_data.columns[1]],
-                name='Comparison',
-                line=dict(color='#ef476f', dash='solid'),
-                mode='lines+markers'
-            ))
-
-            fig.add_trace(go.Scatter(
-                x=post_covid_comp['date'],
-                y=post_covid_comp[comparison_data.columns[1]],
-                name='Comparison',
-                line=dict(color='#ef476f', dash='solid'),
-                mode='lines+markers',
-                showlegend=False
-            ))
-
-            if not pre_covid_comp.empty and not post_covid_comp.empty:
-                last_pre_covid = pre_covid_comp.iloc[-1]
-                first_post_covid = post_covid_comp.iloc[0]
+            # Add comparison if provided
+            if comparison_data is not None and not comparison_data.empty:
+                comparison_data = comparison_data.sort_values('date')
+                pre_covid_comp = comparison_data[comparison_data['date'] < covid_start]
+                post_covid_comp = comparison_data[comparison_data['date'] > covid_end]
 
                 fig.add_trace(go.Scatter(
-                    x=[last_pre_covid['date'], first_post_covid['date']],
-                    y=[last_pre_covid[comparison_data.columns[1]], first_post_covid[comparison_data.columns[1]]],
-                    name='COVID-19 Period (No Data)',
-                    line=dict(
-                        color='#ef476f',
-                        dash='dot',
-                        width=1
-                    ),
-                    opacity=0.3,
-                    mode='lines',
+                    x=pre_covid_comp['date'],
+                    y=pre_covid_comp[comparison_data.columns[1]],
+                    name='Comparison',
+                    line=dict(color='#ef476f', dash='solid'),
+                    mode='lines+markers'
+                ))
+
+                fig.add_trace(go.Scatter(
+                    x=post_covid_comp['date'],
+                    y=post_covid_comp[comparison_data.columns[1]],
+                    name='Comparison',
+                    line=dict(color='#ef476f', dash='solid'),
+                    mode='lines+markers',
                     showlegend=False
                 ))
 
+                if not pre_covid_comp.empty and not post_covid_comp.empty:
+                    last_pre_covid = pre_covid_comp.iloc[-1]
+                    first_post_covid = post_covid_comp.iloc[0]
+
+                    fig.add_trace(go.Scatter(
+                        x=[last_pre_covid['date'], first_post_covid['date']],
+                        y=[last_pre_covid[comparison_data.columns[1]], first_post_covid[comparison_data.columns[1]]],
+                        name='COVID-19 Period (No Data)',
+                        line=dict(color='#ef476f', dash='dot', width=1),
+                        opacity=0.3,
+                        mode='lines',
+                        showlegend=False
+                    ))
+
+        # Update layout for better responsiveness
         fig.update_layout(
             title=title,
             xaxis_title='Date',
@@ -110,22 +103,29 @@ class GraphGenerator:
             hovermode='x unified',
             showlegend=True,
             legend=dict(
-                orientation="h",  # horizontal orientation
+                orientation="h",
                 yanchor="bottom",
-                y=1.02,  # Place it above the chart
-                xanchor="center",  # Center horizontally
-                x=0.5,  # Center position
-                bgcolor="rgba(255, 255, 255, 0.8)"  # Semi-transparent background
+                y=1.02,
+                xanchor="center",
+                x=0.5,
+                bgcolor="rgba(255, 255, 255, 0.8)"
             ),
-            # Ensure future dates can be accommodated
+            # Make the plot responsive
+            autosize=True,
+            height=500,  # Minimum height
+            margin=dict(l=50, r=50, t=100, b=50),
             xaxis=dict(
                 range=[
                     datetime(2017, 1, 1),
                     datetime.now() + timedelta(days=365)
                 ],
-                tickformat='%b %Y',  # Format to show month and year (e.g., "Jan 2023")
-                dtick='M3',  # Show tick every 3 months
-                tickangle=45  # Angle the labels for better readability
+                tickformat='%b %Y',
+                dtick='M3',
+                tickangle=45,
+                automargin=True  # Ensure labels don't get cut off
+            ),
+            yaxis=dict(
+                automargin=True  # Ensure labels don't get cut off
             )
         )
 

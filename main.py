@@ -14,7 +14,7 @@ run_import()  # Import CSV data
 # Page configuration
 st.set_page_config(
     page_title="Marine Conservation Philippines",
-    layout="wide",
+    layout="wide",  # Set to wide mode for better scaling
     initial_sidebar_state="expanded"
 )
 
@@ -86,7 +86,7 @@ coral_comparison = st.sidebar.selectbox(
     key="coral_comparison"
 )
 
-# Main content area
+# Main content area using columns for better layout
 # Site Description Section
 st.header(get_text('site_description'))
 col1, col2 = st.columns([1, 2])
@@ -99,55 +99,60 @@ with col2:
         description = selected_site_obj.description_fil if st.session_state.language == 'fil' else selected_site_obj.description_en
         st.markdown(description or f"Description for {selected_site} in {st.session_state.language}")
 
-# Commercial Fish Biomass Graph
-st.header(get_text('fish_biomass'))
-biomass_data = data_processor.get_biomass_data(selected_site)
-comparison_data = None
-if biomass_comparison != get_text('compare_none'):
-    if biomass_comparison == get_text('compare_avg'):
-        # TODO: Implement average comparison
-        pass
-    else:
-        comparison_data = data_processor.get_biomass_data(biomass_comparison)
-biomass_fig = graph_generator.create_time_series(
-    biomass_data,
-    get_text('fish_biomass'),
-    "Biomass (kg/ha)",
-    comparison_data
-)
-st.plotly_chart(biomass_fig, use_container_width=True)
+# Use container for better spacing
+with st.container():
+    # Commercial Fish Biomass Graph
+    st.header(get_text('fish_biomass'))
+    biomass_data = data_processor.get_biomass_data(selected_site)
+    comparison_data = None
+    if biomass_comparison != get_text('compare_none'):
+        if biomass_comparison == get_text('compare_avg'):
+            # TODO: Implement average comparison
+            pass
+        else:
+            comparison_data = data_processor.get_biomass_data(biomass_comparison)
+    biomass_fig = graph_generator.create_time_series(
+        biomass_data,
+        get_text('fish_biomass'),
+        "Biomass (kg/ha)",
+        comparison_data
+    )
+    st.plotly_chart(biomass_fig, use_container_width=True)
 
-# Hard Coral Cover Graph
-st.header(get_text('coral_cover'))
-coral_data = data_processor.get_coral_cover_data(selected_site)
-comparison_data = None
-if coral_comparison != get_text('compare_none'):
-    if coral_comparison == get_text('compare_avg'):
-        # TODO: Implement average comparison
-        pass
-    else:
-        comparison_data = data_processor.get_coral_cover_data(coral_comparison)
-coral_fig = graph_generator.create_time_series(
-    coral_data,
-    get_text('coral_cover'),
-    "Cover (%)",
-    comparison_data
-)
-st.plotly_chart(coral_fig, use_container_width=True)
+# Use another container for coral cover
+with st.container():
+    # Hard Coral Cover Graph
+    st.header(get_text('coral_cover'))
+    coral_data = data_processor.get_coral_cover_data(selected_site)
+    comparison_data = None
+    if coral_comparison != get_text('compare_none'):
+        if coral_comparison == get_text('compare_avg'):
+            # TODO: Implement average comparison
+            pass
+        else:
+            comparison_data = data_processor.get_coral_cover_data(coral_comparison)
+    coral_fig = graph_generator.create_time_series(
+        coral_data,
+        get_text('coral_cover'),
+        "Cover (%)",
+        comparison_data
+    )
+    st.plotly_chart(coral_fig, use_container_width=True)
 
-# Eco-Tourism Information
-st.header(get_text('eco_tourism'))
-observation_type = st.radio(
-    get_text('observation_type'),
-    ['percentage', 'numeric']
-)
-ecotourism_data = data_processor.get_ecotourism_data(selected_site, observation_type)
-eco_fig = graph_generator.create_eco_tourism_chart(
-    ecotourism_data,
-    get_text('eco_tourism'),
-    observation_type
-)
-st.plotly_chart(eco_fig, use_container_width=True)
+# Eco-Tourism Information in its own container
+with st.container():
+    st.header(get_text('eco_tourism'))
+    observation_type = st.radio(
+        get_text('observation_type'),
+        ['percentage', 'numeric']
+    )
+    ecotourism_data = data_processor.get_ecotourism_data(selected_site, observation_type)
+    eco_fig = graph_generator.create_eco_tourism_chart(
+        ecotourism_data,
+        get_text('eco_tourism'),
+        observation_type
+    )
+    st.plotly_chart(eco_fig, use_container_width=True)
 
 # Clean up
 db.close()

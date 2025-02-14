@@ -1,6 +1,7 @@
 .stApp {
-    max-width: 1200px;
+    max-width: 100%;
     margin: 0 auto;
+    padding: 1rem;
 }
 
 .site-header {
@@ -8,6 +9,7 @@
     background: #f8f9fa;
     border-radius: 10px;
     margin-bottom: 2rem;
+    width: 100%;
 }
 
 .language-toggle {
@@ -20,6 +22,7 @@
     background: white;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 100%;
 }
 
 .site-description {
@@ -27,6 +30,7 @@
     background: #f8f9fa;
     border-radius: 5px;
     margin: 1rem 0;
+    width: 100%;
 }
 
 .comparison-selector {
@@ -34,4 +38,16 @@
     padding: 0.5rem;
     background: #f0f2f6;
     border-radius: 5px;
+    width: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .stApp {
+        padding: 0.5rem;
+    }
+
+    .site-header, .graph-container {
+        margin: 1rem 0;
+    }
 }
