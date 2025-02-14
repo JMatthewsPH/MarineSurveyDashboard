@@ -39,6 +39,18 @@ def initialize_database():
 
 initialize_database()
 
+# Get database session and initialize data processor early
+@st.cache_resource
+def get_data_processor():
+    db = next(get_db())
+    return DataProcessor(db), GraphGenerator(DataProcessor(db))
+
+data_processor, graph_generator = get_data_processor()
+
+# Get all sites for selection
+sites = data_processor.get_sites()
+site_names = [site.name for site in sites]
+
 # Session state initialization
 if 'language' not in st.session_state:
     st.session_state.language = 'en'
@@ -130,11 +142,6 @@ secondary_metric = st.sidebar.selectbox(
 
 st.sidebar.markdown('</div>', unsafe_allow_html=True)
 
-# Get all sites for selection
-sites = data_processor.get_sites()
-site_names = [site.name for site in sites]
-
-
 # Main content area using custom containers
 st.markdown('<div class="main-content">', unsafe_allow_html=True)
 
@@ -155,14 +162,6 @@ with col2:
         description = selected_site_obj.description_fil if st.session_state.language == 'fil' else selected_site_obj.description_en
         st.markdown(description or f"Description for {selected_site} in {st.session_state.language}")
     st.markdown('</div>', unsafe_allow_html=True)
-
-# Get database session
-@st.cache_resource
-def get_data_processor():
-    db = next(get_db())
-    return DataProcessor(db), GraphGenerator(DataProcessor(db))
-
-data_processor, graph_generator = get_data_processor()
 
 # Commercial Fish Biomass Graph
 with st.container():
