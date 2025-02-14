@@ -67,12 +67,14 @@ class DataProcessor:
         print(f"Calculating average {metric} (excluding {exclude_site})")
 
         metric_map = {
+            'hard_coral': 'hard_coral_cover',
             'fleshy_algae': 'fleshy_macro_algae_cover',
             'bleaching': 'bleaching',
             'herbivore': 'herbivore_density',
             'carnivore': 'carnivore_density',
             'omnivore': 'omnivore_density',
-            'corallivore': 'corallivore_density'
+            'corallivore': 'corallivore_density',
+            'rubble': 'rubble'
         }
 
         column_name = metric_map.get(metric)
@@ -102,7 +104,6 @@ class DataProcessor:
         except Exception as e:
             print(f"Error calculating average metric data: {str(e)}")
             return pd.DataFrame(columns=['date', metric])
-
 
     @st.cache_data(ttl=3600, show_spinner=False)
     def get_biomass_data(_self, site_name, start_date='2017-01-01'):
