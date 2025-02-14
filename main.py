@@ -1,4 +1,5 @@
 import streamlit as st
+import os
 
 # Page configuration must be the first Streamlit command
 st.set_page_config(
@@ -13,7 +14,6 @@ from utils.graph_generator import GraphGenerator
 from utils.translations import TRANSLATIONS
 from utils.database import get_db, init_sample_data
 from utils.data_importer import run_import
-import plotly.graph_objects as go
 
 # Initialize database with sample data and import CSV data
 @st.cache_resource
@@ -41,7 +41,23 @@ def get_text(key):
 # Header with Logo
 col1, col2 = st.columns([1, 4])
 with col1:
-    st.image("attached_assets/logo transparent plus white.png", width=150)
+    # Create a centered container for the logo
+    with st.container():
+        # Try to load the logo, use a placeholder if not available
+        logo_path = "attached_assets/logo transparent plus white.png"
+        if os.path.exists(logo_path):
+            st.image(logo_path, width=150)
+        else:
+            st.markdown("""
+                <div style="width:150px; height:150px; background:#f0f2f6; 
+                border-radius:10px; display:flex; align-items:center; 
+                justify-content:center; margin:10px 0;">
+                    <span style="color:#262730; font-size:1.2em;">
+                        MCP
+                    </span>
+                </div>
+            """, unsafe_allow_html=True)
+
 with col2:
     st.title("Marine Conservation Philippines")
     st.header("Data Dashboard")
