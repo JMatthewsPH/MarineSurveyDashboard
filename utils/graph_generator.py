@@ -1,6 +1,6 @@
 import plotly.graph_objects as go
 import plotly.express as px
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import pandas as pd
 import numpy as np
 
@@ -12,9 +12,9 @@ class GraphGenerator:
         """Create time series graph with optional comparison and data gap handling"""
         fig = go.Figure()
 
-        # COVID-19 gap dates
-        covid_start = datetime(2019, 9, 1)
-        covid_end = datetime(2022, 3, 1)
+        # COVID-19 gap dates as date objects
+        covid_start = date(2019, 9, 1)
+        covid_end = date(2022, 3, 1)
 
         # Main data
         if not data.empty:
