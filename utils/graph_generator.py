@@ -54,7 +54,10 @@ class GraphGenerator:
                 range=[
                     datetime(2017, 1, 1),
                     datetime.now() + timedelta(days=365)
-                ]
+                ],
+                tickformat='%b %Y',  # Format to show month and year (e.g., "Jan 2023")
+                dtick='M3',  # Show tick every 3 months
+                tickangle=45  # Angle the labels for better readability
             )
         )
 
