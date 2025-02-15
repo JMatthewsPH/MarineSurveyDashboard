@@ -185,11 +185,14 @@ with st.container():
                 comparison_data = data_processor.get_average_biomass_data(exclude_site=selected_site)
             else:
                 comparison_data = data_processor.get_biomass_data(biomass_comparison)
+
+        print(f"Biomass comparison data: {comparison_data if comparison_data is not None else 'None'}")  # Debug log
+
         biomass_fig = graph_generator.create_time_series(
             biomass_data,
             f"{get_text('fish_biomass')} - {selected_site}",
             "Biomass (kg/ha)",
-            comparison_data
+            comparison_data=comparison_data
         )
         st.plotly_chart(biomass_fig, use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
@@ -206,11 +209,14 @@ with st.container():
                 comparison_data = data_processor.get_average_coral_cover_data(exclude_site=selected_site)
             else:
                 comparison_data = data_processor.get_coral_cover_data(coral_comparison)
+
+        print(f"Coral comparison data: {comparison_data if comparison_data is not None else 'None'}")  # Debug log
+
         coral_fig = graph_generator.create_time_series(
             coral_data,
             f"{get_text('coral_cover')} - {selected_site}",
             "Cover (%)",
-            comparison_data
+            comparison_data=comparison_data
         )
         st.plotly_chart(coral_fig, use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)

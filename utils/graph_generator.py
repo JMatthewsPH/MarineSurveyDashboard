@@ -34,7 +34,6 @@ class GraphGenerator:
         if not data.empty:
             # Sort data by date
             data = data.sort_values('date')
-
             # Format dates as seasons
             data['season'] = data['date'].apply(format_season)
 
@@ -75,6 +74,44 @@ class GraphGenerator:
                     line=dict(color='#0077b6', dash='dot', width=1),
                     opacity=0.3,
                     mode='lines'
+                ))
+
+        # Add comparison if provided (on primary y-axis)
+        if comparison_data is not None and not comparison_data.empty:
+            comparison_data = comparison_data.sort_values('date')
+            comparison_data['season'] = comparison_data['date'].apply(format_season)
+            pre_covid_comp = comparison_data[comparison_data['date'] < covid_start]
+            post_covid_comp = comparison_data[comparison_data['date'] > covid_end]
+
+            fig.add_trace(go.Scatter(
+                x=pre_covid_comp['season'],
+                y=pre_covid_comp[comparison_data.columns[1]],
+                name='Comparison',
+                line=dict(color='#ef476f', dash='solid'),
+                mode='lines+markers'
+            ))
+
+            fig.add_trace(go.Scatter(
+                x=post_covid_comp['season'],
+                y=post_covid_comp[comparison_data.columns[1]],
+                name='Comparison',
+                line=dict(color='#ef476f', dash='solid'),
+                mode='lines+markers',
+                showlegend=False
+            ))
+
+            if not pre_covid_comp.empty and not post_covid_comp.empty:
+                last_pre_covid = pre_covid_comp.iloc[-1]
+                first_post_covid = post_covid_comp.iloc[0]
+
+                fig.add_trace(go.Scatter(
+                    x=[last_pre_covid['season'], first_post_covid['season']],
+                    y=[last_pre_covid[comparison_data.columns[1]], first_post_covid[comparison_data.columns[1]]],
+                    name='COVID-19 Period (No Data)',
+                    line=dict(color='#ef476f', dash='dot', width=1),
+                    opacity=0.3,
+                    mode='lines',
+                    showlegend=False
                 ))
 
         # Secondary metric data (if provided)
@@ -136,7 +173,7 @@ class GraphGenerator:
 
             fig.add_trace(go.Scatter(
                 x=post_covid_ter['season'],
-                y=post_covid_ter[post_covid_ter.columns[1]],
+                y=post_covid_ter[tertiary_data.columns[1]],
                 name=tertiary_label,
                 line=dict(color='#06d6a0', dash='solid'),
                 mode='lines+markers',
