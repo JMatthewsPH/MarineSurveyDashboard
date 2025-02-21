@@ -2,6 +2,7 @@ import os
 from sqlalchemy import create_engine, Column, Integer, Float, String, Date, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.pool import QueuePool
 
 # Get database URL from environment variables
 DATABASE_URL = os.getenv('DATABASE_URL', '')
@@ -14,8 +15,23 @@ if '?' not in DATABASE_URL:
 elif 'sslmode=' not in DATABASE_URL:
     DATABASE_URL += '&sslmode=require'
 
-# Create database engine
-engine = create_engine(DATABASE_URL)
+# Create database engine with connection pooling and retry settings
+engine = create_engine(
+    DATABASE_URL,
+    poolclass=QueuePool,
+    pool_size=5,
+    max_overflow=10,
+    pool_timeout=30,
+    pool_recycle=1800,  # Recycle connections after 30 minutes
+    pool_pre_ping=True,  # Enable connection health checks
+    connect_args={
+        "keepalives": 1,
+        "keepalives_idle": 30,
+        "keepalives_interval": 10,
+        "keepalives_count": 5
+    }
+)
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
@@ -56,9 +72,17 @@ class Survey(Base):
 Base.metadata.create_all(bind=engine)
 
 def get_db():
-    """Get database session"""
+    """Get database session with automatic retry on connection failure"""
     db = SessionLocal()
     try:
+        # Test the connection
+        db.execute("SELECT 1")
+        yield db
+    except Exception as e:
+        print(f"Database connection error: {str(e)}")
+        db.close()
+        # Create a new session and try again
+        db = SessionLocal()
         yield db
     finally:
         db.close()
