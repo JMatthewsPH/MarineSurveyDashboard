@@ -38,13 +38,13 @@
 .graph-container {
     background: white;
     border-radius: 15px;
-    padding: 1rem;
-    margin: 1rem 0;  /* Reduced margin between graphs */
+    padding: 1.5rem 1rem;  /* More padding on top/bottom */
+    margin: 1rem 0;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     border: 1px solid var(--border-color);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     width: 100%;
-    min-height: 400px;  /* Match the reduced graph height */
+    min-height: 450px;  /* Slightly increased to accommodate title */
     display: flex;
     flex-direction: column;
 }
@@ -147,20 +147,38 @@
     margin-bottom: 0.75rem !important;
 }
 
-/* Ensure Plotly charts take full width */
+/* Ensure Plotly charts take full width and have proper spacing */
 .js-plotly-plot, .plot-container {
     width: 100% !important;
+    margin-top: 1rem !important;  /* Add space between title and plot */
+}
+
+/* Adjust modebar (Plotly buttons) positioning */
+.modebar {
+    top: 0 !important;
+    right: 0 !important;
+}
+
+/* Make sure subheaders don't overlap with plots */
+.stSubheader {
+    margin-bottom: 1rem !important;
+    margin-top: 0.5rem !important;
+}
+
+/* Ensure proper spacing for the plot title */
+.gtitle {
+    margin-top: 1rem !important;
 }
 
 /* Streamlit subheader spacing */
-.stSubheader {
+/*.stSubheader {
     margin-bottom: 0.5rem !important;
-}
+}*/
 
 /* Adjust spacing for markdown elements */
-.stMarkdown {
+/*.stMarkdown {
     margin-bottom: 0.5rem !important;
-}
+}*/
 
 /* Animation for loading states */
 .stSpinner {

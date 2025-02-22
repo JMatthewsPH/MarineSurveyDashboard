@@ -107,10 +107,11 @@ class GraphGenerator:
         layout_updates = {
             'title': {
                 'text': title,
-                'y': 0.95,
+                'y': 0.98,  # Moved title higher
                 'x': 0.5,
                 'xanchor': 'center',
-                'yanchor': 'top'
+                'yanchor': 'top',
+                'pad': {'t': 20}  # Added padding above title
             },
             'xaxis_title': 'Season',
             'yaxis_title': y_label,
@@ -127,11 +128,14 @@ class GraphGenerator:
             ),
             'autosize': True,
             'height': 400,  # Reduced height
-            'margin': dict(l=50, r=30, t=50, b=50),  # Reduced margins
+            'margin': dict(l=50, r=30, t=80, b=80),  # Increased top and bottom margins
             'xaxis': dict(
                 tickangle=45,
                 automargin=True,
-                type='category'
+                type='category',
+                tickfont=dict(size=10),  # Reduced font size for x-axis labels
+                ticktext=data['season'].unique(),
+                tickmode='array'
             ),
             'yaxis': dict(
                 automargin=True,
@@ -142,31 +146,6 @@ class GraphGenerator:
                 side='left'
             )
         }
-
-        # Add second y-axis if there's secondary data
-        if secondary_data is not None and not secondary_data.empty:
-            layout_updates['yaxis2'] = dict(
-                title=dict(
-                    text=secondary_label,
-                    standoff=10
-                ),
-                overlaying='y',
-                side='right',
-                automargin=True
-            )
-
-        # Add third y-axis if there's tertiary data
-        if tertiary_data is not None and not tertiary_data.empty:
-            layout_updates['yaxis3'] = dict(
-                title=dict(
-                    text=tertiary_label,
-                    standoff=10
-                ),
-                overlaying='y',
-                side='right',
-                position=0.85,
-                automargin=True
-            )
 
         fig.update_layout(**layout_updates)
         return fig
