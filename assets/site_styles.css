@@ -75,6 +75,29 @@
     line-height: 1.6;
 }
 
+/* Dashboard container */
+.dashboard-container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* Image container */
+.image-container {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.image-container img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
 /* Comparison selector styling */
 .comparison-selector {
     background: white;
@@ -126,9 +149,14 @@
         padding: 1rem;
     }
 
-    .metric-container {
-        flex-direction: column;
-        text-align: center;
+    .dashboard-container {
+        padding: 0.5rem;
+    }
+
+    /* Adjust columns for mobile */
+    .row-widget.stHorizontal > div {
+        flex: 0 1 100% !important;
+        width: 100% !important;
     }
 }
 

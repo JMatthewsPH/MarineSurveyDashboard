@@ -44,6 +44,11 @@ def load_css():
 
 st.markdown(load_css(), unsafe_allow_html=True)
 
+# Set up the page with proper container and padding
+st.markdown("""
+    <div class="dashboard-container">
+""", unsafe_allow_html=True)
+
 # Display site content
 selected_site_obj = next((site for site in sites if site.name == selected_site), None)
 if selected_site_obj:
@@ -54,13 +59,13 @@ if selected_site_obj:
     col1, col2 = st.columns([1, 2])
 
     with col1:
-        # Site image
+        # Site image with responsive container
         st.markdown('<div class="image-container">', unsafe_allow_html=True)
         st.image("https://via.placeholder.com/400x300", use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
     with col2:
-        # Site description
+        # Site description with responsive container
         st.markdown('<div class="site-description">', unsafe_allow_html=True)
         description = selected_site_obj.description_en
         st.markdown(description or f"Description for {selected_site}")
@@ -69,7 +74,7 @@ if selected_site_obj:
     # Metrics Section
     st.header("Site Metrics")
 
-    # Commercial Fish Biomass
+    # Use containers for better organization and responsiveness
     with st.container():
         st.subheader("Commercial Fish Biomass")
         biomass_data = data_processor.get_biomass_data(selected_site)
@@ -78,9 +83,8 @@ if selected_site_obj:
             f"Commercial Fish Biomass - {selected_site}",
             "Biomass (kg/ha)"
         )
-        st.plotly_chart(biomass_fig, use_container_width=True)
+        st.plotly_chart(biomass_fig, use_container_width=True, config={'responsive': True})
 
-    # Hard Coral Cover
     with st.container():
         st.subheader("Hard Coral Cover")
         coral_data = data_processor.get_coral_cover_data(selected_site)
@@ -89,4 +93,6 @@ if selected_site_obj:
             f"Hard Coral Cover - {selected_site}",
             "Cover (%)"
         )
-        st.plotly_chart(coral_fig, use_container_width=True)
+        st.plotly_chart(coral_fig, use_container_width=True, config={'responsive': True})
+
+st.markdown("</div>", unsafe_allow_html=True)
