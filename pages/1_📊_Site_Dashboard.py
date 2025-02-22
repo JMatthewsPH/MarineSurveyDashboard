@@ -15,8 +15,8 @@ data_processor, graph_generator = get_data_processor()
 
 # Get site from URL parameter
 def get_site_from_params():
-    query_params = st.experimental_get_query_params()
-    return query_params.get("site", [None])[0]
+    query_params = st.query_params
+    return query_params.get("site", None)
 
 # Get all sites
 sites = data_processor.get_sites()
@@ -34,7 +34,7 @@ selected_site = get_site_from_params()
 if not selected_site or selected_site not in site_names:
     selected_site = st.selectbox("Select Site", site_names)
     # Update URL when site is selected
-    st.experimental_set_query_params(site=selected_site)
+    st.query_params["site"] = selected_site
 
 # Load custom CSS
 @st.cache_data
@@ -48,27 +48,27 @@ st.markdown(load_css(), unsafe_allow_html=True)
 selected_site_obj = next((site for site in sites if site.name == selected_site), None)
 if selected_site_obj:
     st.title(f"{selected_site} Dashboard")
-    
+
     # Site Description Section
     st.header("Site Description")
     col1, col2 = st.columns([1, 2])
-    
+
     with col1:
         # Site image
         st.markdown('<div class="image-container">', unsafe_allow_html=True)
         st.image("https://via.placeholder.com/400x300", use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
-    
+
     with col2:
         # Site description
         st.markdown('<div class="site-description">', unsafe_allow_html=True)
         description = selected_site_obj.description_en
         st.markdown(description or f"Description for {selected_site}")
         st.markdown('</div>', unsafe_allow_html=True)
-    
+
     # Metrics Section
     st.header("Site Metrics")
-    
+
     # Commercial Fish Biomass
     with st.container():
         st.subheader("Commercial Fish Biomass")
@@ -79,7 +79,7 @@ if selected_site_obj:
             "Biomass (kg/ha)"
         )
         st.plotly_chart(biomass_fig, use_container_width=True)
-    
+
     # Hard Coral Cover
     with st.container():
         st.subheader("Hard Coral Cover")
