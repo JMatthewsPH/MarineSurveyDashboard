@@ -120,18 +120,24 @@ class GraphGenerator:
                 bgcolor="rgba(255, 255, 255, 0.8)"
             ),
             'autosize': True,
-            'height': 500,
-            'margin': dict(l=50, r=50, t=100, b=50),
+            'height': None,  # Let the container determine the height
+            'margin': dict(l=20, r=20, t=100, b=50),  # Reduced margins
             'xaxis': dict(
                 tickangle=45,
                 automargin=True,
-                type='category'  # Use category type for discrete season labels
+                type='category'
             ),
             'yaxis': dict(
                 automargin=True,
                 title=y_label,
                 side='left'
-            )
+            ),
+            'config': {
+                'responsive': True,
+                'displayModeBar': True,
+                'displaylogo': False,
+                'modeBarButtonsToRemove': ['lasso2d', 'select2d']
+            }
         }
 
         # Add second y-axis if there's secondary data
@@ -185,16 +191,16 @@ class GraphGenerator:
             xaxis_title=x_title,
             yaxis_title='Species',
             template='plotly_white',
-            height=400,
-            margin=dict(l=150),  # Add more space for species names
-            legend=dict(
-                orientation="h",
-                yanchor="bottom",
-                y=1.02,
-                xanchor="center",
-                x=0.5,
-                bgcolor="rgba(255, 255, 255, 0.8)"
-            )
+            height=None,  # Let the container determine the height
+            margin=dict(l=20, r=20, t=100, b=50),  # Reduced margins
+            showlegend=False,
+            autosize=True,
+            config={
+                'responsive': True,
+                'displayModeBar': True,
+                'displaylogo': False,
+                'modeBarButtonsToRemove': ['lasso2d', 'select2d']
+            }
         )
 
         return fig

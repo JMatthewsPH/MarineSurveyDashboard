@@ -12,9 +12,10 @@
 .stApp {
     background-color: var(--background-color);
     color: var(--text-color);
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 2rem;
+    width: 100%;
+    max-width: 100vw;
+    margin: 0;
+    padding: 1rem;
 }
 
 /* Header styling */
@@ -26,26 +27,11 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     transition: box-shadow 0.3s ease;
     border: 1px solid var(--border-color);
+    width: 100%;
 }
 
 .site-header:hover {
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-/* Language toggle button */
-.language-toggle {
-    float: right;
-    padding: 0.5rem 1rem;
-    background: var(--primary-color);
-    color: white;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.language-toggle:hover {
-    background-color: var(--hover-color);
 }
 
 /* Graph containers */
@@ -53,10 +39,11 @@
     background: white;
     border-radius: 15px;
     padding: 1.5rem;
-    margin: 2rem 0;
+    margin: 1rem 0;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     border: 1px solid var(--border-color);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
 }
 
 .graph-container:hover {
@@ -69,18 +56,20 @@
     background: white;
     border-radius: 15px;
     padding: 1.5rem;
-    margin: 1.5rem 0;
+    margin: 1rem 0;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     border: 1px solid var(--border-color);
     line-height: 1.6;
+    width: 100%;
 }
 
 /* Dashboard container */
 .dashboard-container {
     width: 100%;
-    max-width: 1400px;
     margin: 0 auto;
-    padding: 1rem;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Image container */
@@ -98,65 +87,39 @@
     object-fit: cover;
 }
 
-/* Comparison selector styling */
-.comparison-selector {
-    background: white;
-    border-radius: 12px;
-    padding: 1rem;
-    margin: 1.5rem 0;
-    border: 1px solid var(--border-color);
-}
-
 /* Streamlit specific overrides */
-.stSelectbox {
-    margin: 1rem 0;
+.stPlotlyChart {
+    width: 100% !important;
 }
 
-.stSelectbox > div > div {
-    background: white;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
+/* Make all Streamlit elements full width */
+.element-container, .stMarkdown, .stDataFrame {
+    width: 100% !important;
+    padding: 0 !important;
+    max-width: none !important;
 }
 
-/* Custom styling for metrics */
-.metric-container {
-    background: white;
-    border-radius: 12px;
-    padding: 1rem;
-    margin: 1rem 0;
-    border: 1px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.metric-value {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--primary-color);
-}
-
-/* Responsive adjustments */
+/* Responsive columns */
 @media (max-width: 768px) {
+    .row-widget.stHorizontal {
+        flex-wrap: wrap !important;
+    }
+
+    .row-widget.stHorizontal > div {
+        flex: 1 1 100% !important;
+        width: 100% !important;
+        margin-bottom: 1rem;
+    }
+
     .stApp {
-        padding: 1rem;
+        padding: 0.5rem;
     }
 
     .site-header, 
     .graph-container,
     .site-description {
-        margin: 1rem 0;
+        margin: 0.5rem 0;
         padding: 1rem;
-    }
-
-    .dashboard-container {
-        padding: 0.5rem;
-    }
-
-    /* Adjust columns for mobile */
-    .row-widget.stHorizontal > div {
-        flex: 0 1 100% !important;
-        width: 100% !important;
     }
 }
 

@@ -13,6 +13,13 @@ def get_data_processor():
 
 data_processor, graph_generator = get_data_processor()
 
+# Page configuration
+st.set_page_config(
+    page_title="Site Dashboard",
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
+
 # Get site from URL parameter
 def get_site_from_params():
     query_params = st.query_params
@@ -44,11 +51,6 @@ def load_css():
 
 st.markdown(load_css(), unsafe_allow_html=True)
 
-# Set up the page with proper container and padding
-st.markdown("""
-    <div class="dashboard-container">
-""", unsafe_allow_html=True)
-
 # Display site content
 selected_site_obj = next((site for site in sites if site.name == selected_site), None)
 if selected_site_obj:
@@ -56,26 +58,26 @@ if selected_site_obj:
 
     # Site Description Section
     st.header("Site Description")
-    col1, col2 = st.columns([1, 2])
 
-    with col1:
-        # Site image with responsive container
-        st.markdown('<div class="image-container">', unsafe_allow_html=True)
-        st.image("https://via.placeholder.com/400x300", use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+    with st.container():
+        cols = st.columns([1, 2])
 
-    with col2:
-        # Site description with responsive container
-        st.markdown('<div class="site-description">', unsafe_allow_html=True)
-        description = selected_site_obj.description_en
-        st.markdown(description or f"Description for {selected_site}")
-        st.markdown('</div>', unsafe_allow_html=True)
+        with cols[0]:
+            st.markdown('<div class="image-container">', unsafe_allow_html=True)
+            st.image("https://via.placeholder.com/400x300", use_column_width=True)
+            st.markdown('</div>', unsafe_allow_html=True)
+
+        with cols[1]:
+            st.markdown('<div class="site-description">', unsafe_allow_html=True)
+            description = selected_site_obj.description_en
+            st.markdown(description or f"Description for {selected_site}")
+            st.markdown('</div>', unsafe_allow_html=True)
 
     # Metrics Section
     st.header("Site Metrics")
 
-    # Use containers for better organization and responsiveness
     with st.container():
+        st.markdown('<div class="graph-container">', unsafe_allow_html=True)
         st.subheader("Commercial Fish Biomass")
         biomass_data = data_processor.get_biomass_data(selected_site)
         biomass_fig = graph_generator.create_time_series(
@@ -83,9 +85,11 @@ if selected_site_obj:
             f"Commercial Fish Biomass - {selected_site}",
             "Biomass (kg/ha)"
         )
-        st.plotly_chart(biomass_fig, use_container_width=True, config={'responsive': True})
+        st.plotly_chart(biomass_fig, use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
     with st.container():
+        st.markdown('<div class="graph-container">', unsafe_allow_html=True)
         st.subheader("Hard Coral Cover")
         coral_data = data_processor.get_coral_cover_data(selected_site)
         coral_fig = graph_generator.create_time_series(
@@ -93,6 +97,5 @@ if selected_site_obj:
             f"Hard Coral Cover - {selected_site}",
             "Cover (%)"
         )
-        st.plotly_chart(coral_fig, use_container_width=True, config={'responsive': True})
-
-st.markdown("</div>", unsafe_allow_html=True)
+        st.plotly_chart(coral_fig, use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
