@@ -119,19 +119,19 @@ class GraphGenerator:
             'showlegend': True,
             'legend': {
                 'orientation': 'h',
-                'yanchor': 'bottom',
-                'y': -0.35,  # Move legend below the chart
-                'xanchor': 'center',
-                'x': 0.5,
+                'yanchor': 'top',
+                'y': 0.98,
+                'xanchor': 'left',
+                'x': 0.01,
                 'bgcolor': 'rgba(255, 255, 255, 0.8)'
             },
             'autosize': True,
-            'height': 400,  # Increased height to accommodate legend
+            'height': 350,  # Reduced height since legend is inside
             'margin': {
                 'l': 50,
                 'r': 30,
                 't': 60,
-                'b': 100  # Increased bottom margin for legend
+                'b': 50  # Reduced bottom margin
             },
             'xaxis': {
                 'tickangle': 45,
