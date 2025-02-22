@@ -65,12 +65,19 @@ with st.sidebar:
     )
 
     biomass_compare_site = None
+    biomass_compare_scope = None
     if biomass_comparison == "Compare with Site":
         compare_sites = [site for site in site_names if site != selected_site]
         biomass_compare_site = st.selectbox(
             "Select site to compare biomass:",
             compare_sites,
             key="biomass_compare_site"
+        )
+    elif biomass_comparison == "Compare with Average":
+        biomass_compare_scope = st.radio(
+            "Select average scope:",
+            ["Municipality Average", "All Sites Average"],
+            key="biomass_compare_scope"
         )
 
     # Coral cover comparison options
@@ -82,12 +89,19 @@ with st.sidebar:
     )
 
     coral_compare_site = None
+    coral_compare_scope = None
     if coral_comparison == "Compare with Site":
         compare_sites = [site for site in site_names if site != selected_site]
         coral_compare_site = st.selectbox(
             "Select site to compare coral cover:",
             compare_sites,
             key="coral_compare_site"
+        )
+    elif coral_comparison == "Compare with Average":
+        coral_compare_scope = st.radio(
+            "Select average scope:",
+            ["Municipality Average", "All Sites Average"],
+            key="coral_compare_scope"
         )
 
 # Display site content
@@ -123,19 +137,30 @@ if selected_site_obj:
         'modeBarButtonsToRemove': ['lasso2d', 'select2d']
     }
 
+    # Get current site's municipality
+    site_municipality = selected_site_obj.municipality if selected_site_obj else None
+
     # Get comparison data for biomass
     biomass_comparison_data = None
     if biomass_comparison == "Compare with Site" and biomass_compare_site:
         biomass_comparison_data = data_processor.get_biomass_data(biomass_compare_site)
     elif biomass_comparison == "Compare with Average":
-        biomass_comparison_data = data_processor.get_average_biomass_data(exclude_site=selected_site)
+        municipality = site_municipality if biomass_compare_scope == "Municipality Average" else None
+        biomass_comparison_data = data_processor.get_average_biomass_data(
+            exclude_site=selected_site,
+            municipality=municipality
+        )
 
     # Get comparison data for coral cover
     coral_comparison_data = None
     if coral_comparison == "Compare with Site" and coral_compare_site:
         coral_comparison_data = data_processor.get_coral_cover_data(coral_compare_site)
     elif coral_comparison == "Compare with Average":
-        coral_comparison_data = data_processor.get_average_coral_cover_data(exclude_site=selected_site)
+        municipality = site_municipality if coral_compare_scope == "Municipality Average" else None
+        coral_comparison_data = data_processor.get_average_coral_cover_data(
+            exclude_site=selected_site,
+            municipality=municipality
+        )
 
     with st.container():
         st.markdown('<div class="graph-container">', unsafe_allow_html=True)

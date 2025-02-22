@@ -62,9 +62,9 @@ class DataProcessor:
             return pd.DataFrame(columns=['date', metric])
 
     @st.cache_data(ttl=3600, show_spinner=False)
-    def get_average_metric_data(_self, metric: str, exclude_site=None, start_date='2017-01-01'):
-        """Calculate average metric data across all sites except the excluded one"""
-        print(f"Calculating average {metric} (excluding {exclude_site})")
+    def get_average_metric_data(_self, metric: str, exclude_site=None, municipality=None, start_date='2017-01-01'):
+        """Calculate average metric data across sites with optional municipality filter"""
+        print(f"Calculating average {metric} (excluding {exclude_site}, municipality filter: {municipality})")
 
         metric_map = {
             'hard_coral': 'hard_coral_cover',
@@ -88,13 +88,18 @@ class DataProcessor:
                 exclude_site_id = site.id
 
         try:
+            # Start with base query
             query = (_self.db.query(
                     Survey.date,
                     func.avg(getattr(Survey, column_name)).label(metric))
+                    .join(Site)  # Join with Site table to access municipality
                     .filter(Survey.date >= start_date))
 
             if exclude_site_id:
                 query = query.filter(Survey.site_id != exclude_site_id)
+
+            if municipality:
+                query = query.filter(Site.municipality == municipality)
 
             surveys = (query.group_by(Survey.date)
                       .order_by(Survey.date)
@@ -104,6 +109,72 @@ class DataProcessor:
         except Exception as e:
             print(f"Error calculating average metric data: {str(e)}")
             return pd.DataFrame(columns=['date', metric])
+
+    @st.cache_data(ttl=3600, show_spinner=False)
+    def get_average_biomass_data(_self, exclude_site=None, municipality=None, start_date='2017-01-01'):
+        """Calculate average commercial fish biomass with optional municipality filter"""
+        print(f"Calculating average biomass (excluding {exclude_site}, municipality filter: {municipality})")
+
+        exclude_site_id = None
+        if exclude_site:
+            site = _self.db.query(Site).filter(Site.name == exclude_site).first()
+            if site:
+                exclude_site_id = site.id
+
+        try:
+            query = (_self.db.query(
+                    Survey.date,
+                    func.avg(Survey.commercial_biomass).label('Commercial Biomass'))
+                    .join(Site)  # Join with Site table
+                    .filter(Survey.date >= start_date))
+
+            if exclude_site_id:
+                query = query.filter(Survey.site_id != exclude_site_id)
+
+            if municipality:
+                query = query.filter(Site.municipality == municipality)
+
+            surveys = (query.group_by(Survey.date)
+                      .order_by(Survey.date)
+                      .all())
+
+            return pd.DataFrame(surveys, columns=['date', 'Commercial Biomass'])
+        except Exception as e:
+            print(f"Error calculating average biomass data: {str(e)}")
+            return pd.DataFrame(columns=['date', 'Commercial Biomass'])
+
+    @st.cache_data(ttl=3600, show_spinner=False)
+    def get_average_coral_cover_data(_self, exclude_site=None, municipality=None, start_date='2017-01-01'):
+        """Calculate average hard coral cover with optional municipality filter"""
+        print(f"Calculating average coral cover (excluding {exclude_site}, municipality filter: {municipality})")
+
+        exclude_site_id = None
+        if exclude_site:
+            site = _self.db.query(Site).filter(Site.name == exclude_site).first()
+            if site:
+                exclude_site_id = site.id
+
+        try:
+            query = (_self.db.query(
+                    Survey.date,
+                    func.avg(Survey.hard_coral_cover).label('Hard Coral Cover'))
+                    .join(Site)  # Join with Site table
+                    .filter(Survey.date >= start_date))
+
+            if exclude_site_id:
+                query = query.filter(Survey.site_id != exclude_site_id)
+
+            if municipality:
+                query = query.filter(Site.municipality == municipality)
+
+            surveys = (query.group_by(Survey.date)
+                      .order_by(Survey.date)
+                      .all())
+
+            return pd.DataFrame(surveys, columns=['date', 'Hard Coral Cover'])
+        except Exception as e:
+            print(f"Error calculating average coral cover data: {str(e)}")
+            return pd.DataFrame(columns=['date', 'Hard Coral Cover'])
 
     @st.cache_data(ttl=3600, show_spinner=False)
     def get_biomass_data(_self, site_name, start_date='2017-01-01'):
@@ -128,35 +199,6 @@ class DataProcessor:
             return pd.DataFrame(columns=['date', 'Commercial Biomass'])
 
     @st.cache_data(ttl=3600, show_spinner=False)
-    def get_average_biomass_data(_self, exclude_site=None, start_date='2017-01-01'):
-        """Calculate average commercial fish biomass across all sites except the excluded one"""
-        print(f"Calculating average biomass (excluding {exclude_site})")
-
-        exclude_site_id = None
-        if exclude_site:
-            site = _self.db.query(Site).filter(Site.name == exclude_site).first()
-            if site:
-                exclude_site_id = site.id
-
-        try:
-            query = (_self.db.query(
-                    Survey.date,
-                    func.avg(Survey.commercial_biomass).label('Commercial Biomass'))
-                    .filter(Survey.date >= start_date))
-
-            if exclude_site_id:
-                query = query.filter(Survey.site_id != exclude_site_id)
-
-            surveys = (query.group_by(Survey.date)
-                      .order_by(Survey.date)
-                      .all())
-
-            return pd.DataFrame(surveys, columns=['date', 'Commercial Biomass'])
-        except Exception as e:
-            print(f"Error calculating average biomass data: {str(e)}")
-            return pd.DataFrame(columns=['date', 'Commercial Biomass'])
-
-    @st.cache_data(ttl=3600, show_spinner=False)
     def get_coral_cover_data(_self, site_name, start_date='2017-01-01'):
         """Process hard coral cover data"""
         print(f"Fetching coral cover data for site: {site_name}")
@@ -176,35 +218,6 @@ class DataProcessor:
             return pd.DataFrame(surveys, columns=['date', 'Hard Coral Cover'])
         except Exception as e:
             print(f"Error fetching coral cover data: {str(e)}")
-            return pd.DataFrame(columns=['date', 'Hard Coral Cover'])
-
-    @st.cache_data(ttl=3600, show_spinner=False)
-    def get_average_coral_cover_data(_self, exclude_site=None, start_date='2017-01-01'):
-        """Calculate average hard coral cover across all sites except the excluded one"""
-        print(f"Calculating average coral cover (excluding {exclude_site})")
-
-        exclude_site_id = None
-        if exclude_site:
-            site = _self.db.query(Site).filter(Site.name == exclude_site).first()
-            if site:
-                exclude_site_id = site.id
-
-        try:
-            query = (_self.db.query(
-                    Survey.date,
-                    func.avg(Survey.hard_coral_cover).label('Hard Coral Cover'))
-                    .filter(Survey.date >= start_date))
-
-            if exclude_site_id:
-                query = query.filter(Survey.site_id != exclude_site_id)
-
-            surveys = (query.group_by(Survey.date)
-                      .order_by(Survey.date)
-                      .all())
-
-            return pd.DataFrame(surveys, columns=['date', 'Hard Coral Cover'])
-        except Exception as e:
-            print(f"Error calculating average coral cover data: {str(e)}")
             return pd.DataFrame(columns=['date', 'Hard Coral Cover'])
 
     def get_fish_length_data(self, site_name, species, start_date='2017-01-01'):
