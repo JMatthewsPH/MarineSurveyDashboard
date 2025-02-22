@@ -65,7 +65,7 @@ if selected_site_obj:
 
         with cols[0]:
             st.markdown('<div class="image-container">', unsafe_allow_html=True)
-            st.image("https://via.placeholder.com/400x300", use_column_width=True)
+            st.image("https://via.placeholder.com/400x300", use_container_width=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
         with cols[1]:
