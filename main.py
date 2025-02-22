@@ -2,6 +2,7 @@ import streamlit as st
 import os
 from utils.data_processor import DataProcessor
 from utils.database import get_db
+from utils.translations import TRANSLATIONS
 
 # Page configuration
 st.set_page_config(
@@ -18,11 +19,23 @@ def load_css():
 
 st.markdown(load_css(), unsafe_allow_html=True)
 
+# Sidebar for language selection
+with st.sidebar:
+    st.title("Settings")
+    language = st.selectbox(
+        "Language / Wika",
+        ["English", "Filipino"],
+        key="language_selector"
+    )
+
 # Header
-st.markdown("""
+header_text = "Marine Conservation Philippines" if language == "English" else "Pangangalaga sa Karagatan ng Pilipinas"
+subheader_text = "Site Explorer" if language == "English" else "Tagasiyasat ng Lugar"
+
+st.markdown(f"""
     <div class="site-header">
-        <h1>Marine Conservation Philippines</h1>
-        <h2>Site Explorer</h2>
+        <h1>{header_text}</h1>
+        <h2>{subheader_text}</h2>
     </div>
 """, unsafe_allow_html=True)
 
@@ -51,71 +64,59 @@ santa_catalina_sites = sorted(
     key=lambda x: x.name
 )
 
-# Function to create site card
+# Function to create site card with translations
 def create_site_card(site):
-    description = site.description_en or "Site description coming soon..."
+    description = site.description_fil if language == "Filipino" else site.description_en
+    description = description or ("Paglalarawan ng lugar ay darating sa lalong madaling panahon..." 
+                                if language == "Filipino" else "Site description coming soon...")
     # Truncate description to 200 characters and add ellipsis
     truncated_description = description[:200] + "..." if len(description) > 200 else description
+    municipality_label = "Munisipyo:" if language == "Filipino" else "Municipality:"
+    view_details_text = "Tingnan ang Detalye" if language == "Filipino" else "View Details"
+
     st.markdown(f"""
         <div class="site-card">
             <h3>{site.name}</h3>
-            <p><strong>Municipality:</strong> {site.municipality}</p>
+            <p><strong>{municipality_label}</strong> {site.municipality}</p>
             <p>{truncated_description}</p>
             <a href="Site_Dashboard?site={site.name}" target="_self">
-                <button class="site-button">View Details</button>
+                <button class="site-button">{view_details_text}</button>
             </a>
         </div>
     """, unsafe_allow_html=True)
 
-# Add new CSS for site cards
-st.markdown("""
-    <style>
-    .site-card {
-        background: white;
-        border-radius: 10px;
-        padding: 1.5rem;
-        margin: 1rem 0;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        transition: transform 0.3s ease;
+# Display sites by municipality with translations
+municipality_headers = {
+    "Zamboanguita": {
+        "English": "Zamboanguita Sites",
+        "Filipino": "Mga Lugar sa Zamboanguita"
+    },
+    "Siaton": {
+        "English": "Siaton Sites",
+        "Filipino": "Mga Lugar sa Siaton"
+    },
+    "Santa Catalina": {
+        "English": "Santa Catalina Sites",
+        "Filipino": "Mga Lugar sa Santa Catalina"
     }
-    .site-card:hover {
-        transform: translateY(-5px);
-    }
-    .site-button {
-        background: #2b6cb0;
-        color: white;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 1rem;
-    }
-    .site-button:hover {
-        background: #4299e1;
-    }
-    .municipality-section {
-        margin: 2rem 0;
-    }
-    </style>
-""", unsafe_allow_html=True)
+}
 
-# Display sites by municipality
 if zamboanguita_sites:
-    st.header("Zamboanguita Sites")
+    st.header(municipality_headers["Zamboanguita"][language])
     cols = st.columns(3)
     for idx, site in enumerate(zamboanguita_sites):
         with cols[idx % 3]:
             create_site_card(site)
 
 if siaton_sites:
-    st.header("Siaton Sites")
+    st.header(municipality_headers["Siaton"][language])
     cols = st.columns(3)
     for idx, site in enumerate(siaton_sites):
         with cols[idx % 3]:
             create_site_card(site)
 
 if santa_catalina_sites:
-    st.header("Santa Catalina Sites")
+    st.header(municipality_headers["Santa Catalina"][language])
     cols = st.columns(3)
     for idx, site in enumerate(santa_catalina_sites):
         with cols[idx % 3]:
