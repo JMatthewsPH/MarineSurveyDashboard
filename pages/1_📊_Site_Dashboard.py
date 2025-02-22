@@ -134,7 +134,7 @@ if selected_site_obj:
 
     with cols[1]:
         selected_language = st.session_state.language
-        description = selected_site_obj.description_en if selected_language == "English" else selected_site_obj.description_tl
+        description = selected_site_obj.description_en if selected_language == "English" else selected_site_obj.description_fil
         st.markdown(description or f"Description for {selected_site}")
 
 
