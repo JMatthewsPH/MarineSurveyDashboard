@@ -19,14 +19,23 @@ def load_css():
 
 st.markdown(load_css(), unsafe_allow_html=True)
 
+# Initialize language in session state if not present
+if 'language' not in st.session_state:
+    st.session_state.language = "English"
+
 # Sidebar for language selection
 with st.sidebar:
     st.title("Settings")
-    language = st.selectbox(
+    # Update session state when language changes
+    st.session_state.language = st.selectbox(
         "Language / Wika",
         ["English", "Filipino"],
-        key="language_selector"
+        key="language_selector",
+        index=0 if st.session_state.language == "English" else 1
     )
+
+# Use session state language for content
+language = st.session_state.language
 
 # Header
 header_text = "Marine Conservation Philippines" if language == "English" else "Pangangalaga sa Karagatan ng Pilipinas"

@@ -13,6 +13,21 @@ from utils.graph_generator import GraphGenerator
 from utils.translations import TRANSLATIONS
 from utils.database import get_db
 
+# Initialize language in session state if not present
+if 'language' not in st.session_state:
+    st.session_state.language = "English"
+
+# Sidebar for language selection
+with st.sidebar:
+    st.title("Settings")
+    # Update session state when language changes
+    st.session_state.language = st.selectbox(
+        "Language / Wika",
+        ["English", "Filipino"],
+        key="language_selector",
+        index=0 if st.session_state.language == "English" else 1
+    )
+
 # Initialize processors
 @st.cache_resource
 def get_data_processor():
@@ -118,7 +133,8 @@ if selected_site_obj:
         st.image("https://via.placeholder.com/400x300", use_container_width=True)
 
     with cols[1]:
-        description = selected_site_obj.description_en
+        selected_language = st.session_state.language
+        description = selected_site_obj.description_en if selected_language == "English" else selected_site_obj.description_tl
         st.markdown(description or f"Description for {selected_site}")
 
 
