@@ -28,77 +28,80 @@ class GraphGenerator:
 
     def create_time_series(self, data, title, y_label, comparison_data=None, secondary_data=None, secondary_label=None, tertiary_data=None, tertiary_label=None):
         """Create time series graph with optional comparison and secondary/tertiary metrics"""
+        # Create base figure
         fig = go.Figure()
 
-        # Main data
-        if not data.empty:
-            # Sort data by date
-            data = data.sort_values('date')
-            # Format dates as seasons
-            data['season'] = data['date'].apply(format_season)
+        # If no data, return empty figure
+        if data.empty:
+            return fig
 
-            # Split data into pre and post COVID
-            covid_start = date(2019, 9, 1)
-            covid_end = date(2022, 3, 1)
+        # Sort data by date
+        data = data.sort_values('date')
+        # Format dates as seasons
+        data['season'] = data['date'].apply(format_season)
 
-            pre_covid = data[data['date'] < covid_start]
-            post_covid = data[data['date'] > covid_end]
+        # Split data into pre and post COVID
+        covid_start = date(2019, 9, 1)
+        covid_end = date(2022, 3, 1)
 
-            # Add main data traces
-            fig.add_trace(go.Scatter(
-                x=pre_covid['season'],
-                y=pre_covid[pre_covid.columns[1]],
-                name=y_label,
-                line=dict(color='#0077b6', dash='solid'),
-                mode='lines+markers'
-            ))
+        pre_covid = data[data['date'] < covid_start]
+        post_covid = data[data['date'] > covid_end]
 
-            fig.add_trace(go.Scatter(
-                x=post_covid['season'],
-                y=post_covid[post_covid.columns[1]],
-                name=y_label,
-                line=dict(color='#0077b6', dash='solid'),
-                mode='lines+markers',
-                showlegend=False
-            ))
-
-            # Add dotted line for COVID gap if there's data on both sides
-            if not pre_covid.empty and not post_covid.empty:
-                last_pre_covid = pre_covid.iloc[-1]
-                first_post_covid = post_covid.iloc[0]
-
-                fig.add_trace(go.Scatter(
-                    x=[last_pre_covid['season'], first_post_covid['season']],
-                    y=[last_pre_covid[pre_covid.columns[1]], first_post_covid[post_covid.columns[1]]],
-                    name='COVID-19 Period (No Data)',
-                    line=dict(color='#0077b6', dash='dot', width=1),
-                    opacity=0.3,
-                    mode='lines'
-                ))
-
-    # Add comparison if provided (on primary y-axis)
-    if comparison_data is not None and not comparison_data.empty:
-        comparison_data = comparison_data.sort_values('date')
-        comparison_data['season'] = comparison_data['date'].apply(format_season)
-        pre_covid_comp = comparison_data[comparison_data['date'] < covid_start]
-        post_covid_comp = comparison_data[comparison_data['date'] > covid_end]
-
+        # Add main data traces
         fig.add_trace(go.Scatter(
-            x=pre_covid_comp['season'],
-            y=pre_covid_comp[comparison_data.columns[1]],
-            name='Comparison',
-            line=dict(color='#ef476f', dash='solid'),
+            x=pre_covid['season'],
+            y=pre_covid[pre_covid.columns[1]],
+            name=y_label,
+            line=dict(color='#0077b6', dash='solid'),
             mode='lines+markers'
         ))
 
         fig.add_trace(go.Scatter(
-            x=post_covid_comp['season'],
-            y=post_covid_comp[comparison_data.columns[1]],
-            name='Comparison',
-            line=dict(color='#ef476f', dash='solid'),
+            x=post_covid['season'],
+            y=post_covid[post_covid.columns[1]],
+            name=y_label,
+            line=dict(color='#0077b6', dash='solid'),
             mode='lines+markers',
             showlegend=False
         ))
+
+        # Add dotted line for COVID gap if there's data on both sides
+        if not pre_covid.empty and not post_covid.empty:
+            last_pre_covid = pre_covid.iloc[-1]
+            first_post_covid = post_covid.iloc[0]
+
+            fig.add_trace(go.Scatter(
+                x=[last_pre_covid['season'], first_post_covid['season']],
+                y=[last_pre_covid[pre_covid.columns[1]], first_post_covid[post_covid.columns[1]]],
+                name='COVID-19 Period (No Data)',
+                line=dict(color='#0077b6', dash='dot', width=1),
+                opacity=0.3,
+                mode='lines'
+            ))
+
+        # Add comparison if provided
+        if comparison_data is not None and not comparison_data.empty:
+            comparison_data = comparison_data.sort_values('date')
+            comparison_data['season'] = comparison_data['date'].apply(format_season)
+            pre_covid_comp = comparison_data[comparison_data['date'] < covid_start]
+            post_covid_comp = comparison_data[comparison_data['date'] > covid_end]
+
+            fig.add_trace(go.Scatter(
+                x=pre_covid_comp['season'],
+                y=pre_covid_comp[comparison_data.columns[1]],
+                name='Comparison',
+                line=dict(color='#ef476f', dash='solid'),
+                mode='lines+markers'
+            ))
+
+            fig.add_trace(go.Scatter(
+                x=post_covid_comp['season'],
+                y=post_covid_comp[comparison_data.columns[1]],
+                name='Comparison',
+                line=dict(color='#ef476f', dash='solid'),
+                mode='lines+markers',
+                showlegend=False
+            ))
 
         # Update layout for better responsiveness
         layout_updates = {
@@ -151,7 +154,6 @@ class GraphGenerator:
             )
 
         fig.update_layout(**layout_updates)
-
         return fig
 
     def create_eco_tourism_chart(self, data, title, observation_type='percentage'):
@@ -167,13 +169,14 @@ class GraphGenerator:
                 y=0.5,
                 showarrow=False
             )
-        else:
-            fig = go.Figure(go.Bar(
-                y=data.index,
-                x=data.values,
-                orientation='h',
-                marker_color='#0077b6'
-            ))
+            return fig
+
+        fig = go.Figure(go.Bar(
+            y=data.index,
+            x=data.values,
+            orientation='h',
+            marker_color='#0077b6'
+        ))
 
         x_title = 'Success Rate (%)' if observation_type == 'percentage' else 'Average Count'
 
