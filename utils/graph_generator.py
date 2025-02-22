@@ -131,13 +131,7 @@ class GraphGenerator:
                 automargin=True,
                 title=y_label,
                 side='left'
-            ),
-            'config': {
-                'responsive': True,
-                'displayModeBar': True,
-                'displaylogo': False,
-                'modeBarButtonsToRemove': ['lasso2d', 'select2d']
-            }
+            )
         }
 
         # Add second y-axis if there's secondary data
@@ -194,13 +188,7 @@ class GraphGenerator:
             height=None,  # Let the container determine the height
             margin=dict(l=20, r=20, t=100, b=50),  # Reduced margins
             showlegend=False,
-            autosize=True,
-            config={
-                'responsive': True,
-                'displayModeBar': True,
-                'displaylogo': False,
-                'modeBarButtonsToRemove': ['lasso2d', 'select2d']
-            }
+            autosize=True
         )
 
         return fig

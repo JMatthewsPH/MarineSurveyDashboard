@@ -77,6 +77,14 @@ if selected_site_obj:
     # Metrics Section
     st.header("Site Metrics")
 
+    # Configure Plotly chart settings
+    plotly_config = {
+        'responsive': True,
+        'displayModeBar': True,
+        'displaylogo': False,
+        'modeBarButtonsToRemove': ['lasso2d', 'select2d']
+    }
+
     with st.container():
         st.markdown('<div class="graph-container">', unsafe_allow_html=True)
         st.subheader("Commercial Fish Biomass")
@@ -86,7 +94,7 @@ if selected_site_obj:
             f"Commercial Fish Biomass - {selected_site}",
             "Biomass (kg/ha)"
         )
-        st.plotly_chart(biomass_fig, use_container_width=True)
+        st.plotly_chart(biomass_fig, use_container_width=True, config=plotly_config)
         st.markdown('</div>', unsafe_allow_html=True)
 
     with st.container():
@@ -98,5 +106,5 @@ if selected_site_obj:
             f"Hard Coral Cover - {selected_site}",
             "Cover (%)"
         )
-        st.plotly_chart(coral_fig, use_container_width=True)
+        st.plotly_chart(coral_fig, use_container_width=True, config=plotly_config)
         st.markdown('</div>', unsafe_allow_html=True)
