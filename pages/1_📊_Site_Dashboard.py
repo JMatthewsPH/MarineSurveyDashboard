@@ -52,6 +52,44 @@ def load_css():
 
 st.markdown(load_css(), unsafe_allow_html=True)
 
+# Sidebar for metric comparisons
+with st.sidebar:
+    st.title("Metric Comparisons")
+
+    # Biomass comparison options
+    st.subheader("Commercial Fish Biomass")
+    biomass_comparison = st.radio(
+        "Compare biomass with:",
+        ["No Comparison", "Compare with Site", "Compare with Average"],
+        key="biomass_comparison"
+    )
+
+    biomass_compare_site = None
+    if biomass_comparison == "Compare with Site":
+        compare_sites = [site for site in site_names if site != selected_site]
+        biomass_compare_site = st.selectbox(
+            "Select site to compare biomass:",
+            compare_sites,
+            key="biomass_compare_site"
+        )
+
+    # Coral cover comparison options
+    st.subheader("Hard Coral Cover")
+    coral_comparison = st.radio(
+        "Compare coral cover with:",
+        ["No Comparison", "Compare with Site", "Compare with Average"],
+        key="coral_comparison"
+    )
+
+    coral_compare_site = None
+    if coral_comparison == "Compare with Site":
+        compare_sites = [site for site in site_names if site != selected_site]
+        coral_compare_site = st.selectbox(
+            "Select site to compare coral cover:",
+            compare_sites,
+            key="coral_compare_site"
+        )
+
 # Display site content
 selected_site_obj = next((site for site in sites if site.name == selected_site), None)
 if selected_site_obj:
@@ -85,6 +123,20 @@ if selected_site_obj:
         'modeBarButtonsToRemove': ['lasso2d', 'select2d']
     }
 
+    # Get comparison data for biomass
+    biomass_comparison_data = None
+    if biomass_comparison == "Compare with Site" and biomass_compare_site:
+        biomass_comparison_data = data_processor.get_biomass_data(biomass_compare_site)
+    elif biomass_comparison == "Compare with Average":
+        biomass_comparison_data = data_processor.get_average_biomass_data(exclude_site=selected_site)
+
+    # Get comparison data for coral cover
+    coral_comparison_data = None
+    if coral_comparison == "Compare with Site" and coral_compare_site:
+        coral_comparison_data = data_processor.get_coral_cover_data(coral_compare_site)
+    elif coral_comparison == "Compare with Average":
+        coral_comparison_data = data_processor.get_average_coral_cover_data(exclude_site=selected_site)
+
     with st.container():
         st.markdown('<div class="graph-container">', unsafe_allow_html=True)
         st.subheader("Commercial Fish Biomass")
@@ -92,7 +144,8 @@ if selected_site_obj:
         biomass_fig = graph_generator.create_time_series(
             biomass_data,
             f"Commercial Fish Biomass - {selected_site}",
-            "Biomass (kg/ha)"
+            "Biomass (kg/ha)",
+            comparison_data=biomass_comparison_data
         )
         st.plotly_chart(biomass_fig, use_container_width=True, config=plotly_config)
         st.markdown('</div>', unsafe_allow_html=True)
@@ -104,7 +157,8 @@ if selected_site_obj:
         coral_fig = graph_generator.create_time_series(
             coral_data,
             f"Hard Coral Cover - {selected_site}",
-            "Cover (%)"
+            "Cover (%)",
+            comparison_data=coral_comparison_data
         )
         st.plotly_chart(coral_fig, use_container_width=True, config=plotly_config)
         st.markdown('</div>', unsafe_allow_html=True)
