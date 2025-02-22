@@ -1,5 +1,5 @@
 import os
-from sqlalchemy import create_engine, Column, Integer, Float, String, Date, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, Float, String, Date, ForeignKey, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.pool import QueuePool
@@ -75,8 +75,8 @@ def get_db():
     """Get database session with automatic retry on connection failure"""
     db = SessionLocal()
     try:
-        # Test the connection
-        db.execute("SELECT 1")
+        # Test the connection using proper SQLAlchemy text() function
+        db.execute(text("SELECT 1"))
         yield db
     except Exception as e:
         print(f"Database connection error: {str(e)}")
