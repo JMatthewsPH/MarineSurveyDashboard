@@ -66,36 +66,6 @@
     width: 100%;
 }
 
-/* Dashboard container */
-.dashboard-container {
-    width: 100%;
-    margin: 0 auto;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-/* Image container */
-.image-container {
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-bottom: 0.5rem;
-}
-
-.image-container img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-}
-
-/* Streamlit specific overrides */
-.stPlotlyChart {
-    width: 100% !important;
-}
-
 /* Make all Streamlit elements full width */
 .element-container, .stMarkdown, .stDataFrame {
     width: 100% !important;
@@ -117,13 +87,6 @@
 
     .stApp {
         padding: 0.25rem;
-    }
-
-    .site-header, 
-    .graph-container,
-    .site-description {
-        margin: 0.25rem 0;
-        padding: 0.5rem;
     }
 }
 

@@ -112,23 +112,18 @@ if selected_site_obj:
     # Site Description Section
     st.header("Site Description")
 
-    with st.container():
-        cols = st.columns([1, 2])
+    cols = st.columns([1, 2])
 
-        with cols[0]:
-            st.markdown('<div class="image-container">', unsafe_allow_html=True)
-            st.image("https://via.placeholder.com/400x300", use_container_width=True)
-            st.markdown('</div>', unsafe_allow_html=True)
+    with cols[0]:
+        st.image("https://via.placeholder.com/400x300", use_container_width=True)
 
-        with cols[1]:
-            st.markdown('<div class="site-description">', unsafe_allow_html=True)
-            description = selected_site_obj.description_en
-            st.markdown(description or f"Description for {selected_site}")
-            st.markdown('</div>', unsafe_allow_html=True)
+    with cols[1]:
+        description = selected_site_obj.description_en
+        st.markdown(description or f"Description for {selected_site}")
 
-    # Metrics Section
+
+    # Metrics Section - More compact layout
     st.header("Site Metrics")
-
     # Configure Plotly chart settings
     plotly_config = {
         'responsive': True,
@@ -162,28 +157,22 @@ if selected_site_obj:
             municipality=municipality
         )
 
-    with st.container():
-        st.markdown('<div class="graph-container">', unsafe_allow_html=True)
-        st.subheader("Commercial Fish Biomass")
-        biomass_data = data_processor.get_biomass_data(selected_site)
-        biomass_fig = graph_generator.create_time_series(
-            biomass_data,
-            f"Commercial Fish Biomass - {selected_site}",
-            "Biomass (kg/ha)",
-            comparison_data=biomass_comparison_data
-        )
-        st.plotly_chart(biomass_fig, use_container_width=True, config=plotly_config)
-        st.markdown('</div>', unsafe_allow_html=True)
+    st.subheader("Commercial Fish Biomass")
+    biomass_data = data_processor.get_biomass_data(selected_site)
+    biomass_fig = graph_generator.create_time_series(
+        biomass_data,
+        f"Commercial Fish Biomass - {selected_site}",
+        "Biomass (kg/ha)",
+        comparison_data=biomass_comparison_data
+    )
+    st.plotly_chart(biomass_fig, use_container_width=True, config=plotly_config)
 
-    with st.container():
-        st.markdown('<div class="graph-container">', unsafe_allow_html=True)
-        st.subheader("Hard Coral Cover")
-        coral_data = data_processor.get_coral_cover_data(selected_site)
-        coral_fig = graph_generator.create_time_series(
-            coral_data,
-            f"Hard Coral Cover - {selected_site}",
-            "Cover (%)",
-            comparison_data=coral_comparison_data
-        )
-        st.plotly_chart(coral_fig, use_container_width=True, config=plotly_config)
-        st.markdown('</div>', unsafe_allow_html=True)
+    st.subheader("Hard Coral Cover")
+    coral_data = data_processor.get_coral_cover_data(selected_site)
+    coral_fig = graph_generator.create_time_series(
+        coral_data,
+        f"Hard Coral Cover - {selected_site}",
+        "Cover (%)",
+        comparison_data=coral_comparison_data
+    )
+    st.plotly_chart(coral_fig, use_container_width=True, config=plotly_config)
