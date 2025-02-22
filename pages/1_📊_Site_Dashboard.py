@@ -237,6 +237,54 @@ if selected_site_obj:
                 key="corallivore_compare_scope"
             )
 
+        # Add Bleaching comparison options
+        st.subheader("Bleaching")
+        bleaching_comparison = st.selectbox(
+            "Compare bleaching with:",
+            ["No Comparison", "Compare with Site", "Compare with Average"],
+            key="bleaching_comparison"
+        )
+
+        bleaching_compare_site = None
+        bleaching_compare_scope = None
+        if bleaching_comparison == "Compare with Site":
+            compare_sites = [site for site in site_names if site != selected_site]
+            bleaching_compare_site = st.selectbox(
+                "Select site to compare bleaching:",
+                compare_sites,
+                key="bleaching_compare_site"
+            )
+        elif bleaching_comparison == "Compare with Average":
+            bleaching_compare_scope = st.selectbox(
+                "Select average scope:",
+                ["Municipality Average", "All Sites Average"],
+                key="bleaching_compare_scope"
+            )
+
+        # Add Rubble comparison options
+        st.subheader("Rubble Cover")
+        rubble_comparison = st.selectbox(
+            "Compare rubble cover with:",
+            ["No Comparison", "Compare with Site", "Compare with Average"],
+            key="rubble_comparison"
+        )
+
+        rubble_compare_site = None
+        rubble_compare_scope = None
+        if rubble_comparison == "Compare with Site":
+            compare_sites = [site for site in site_names if site != selected_site]
+            rubble_compare_site = st.selectbox(
+                "Select site to compare rubble cover:",
+                compare_sites,
+                key="rubble_compare_site"
+            )
+        elif rubble_comparison == "Compare with Average":
+            rubble_compare_scope = st.selectbox(
+                "Select average scope:",
+                ["Municipality Average", "All Sites Average"],
+                key="rubble_compare_scope"
+            )
+
     # Display metrics section with comparisons
     if selected_site_obj:
         st.header("Site Metrics")
@@ -373,3 +421,45 @@ if selected_site_obj:
             comparison_data=corallivore_comparison_data
         )
         st.plotly_chart(corallivore_fig, use_container_width=True, config=plotly_config)
+
+        # Add bleaching visualization
+        st.subheader("Bleaching")
+        bleaching_data = data_processor.get_metric_data(selected_site, 'bleaching')
+        bleaching_comparison_data = None
+        if bleaching_comparison == "Compare with Site" and bleaching_compare_site:
+            bleaching_comparison_data = data_processor.get_metric_data(bleaching_compare_site, 'bleaching')
+        elif bleaching_comparison == "Compare with Average":
+            municipality = site_municipality if bleaching_compare_scope == "Municipality Average" else None
+            bleaching_comparison_data = data_processor.get_average_metric_data(
+                'bleaching',
+                exclude_site=selected_site,
+                municipality=municipality
+            )
+        bleaching_fig = graph_generator.create_time_series(
+            bleaching_data,
+            f"Bleaching - {selected_site}",
+            "Bleaching (%)",
+            comparison_data=bleaching_comparison_data
+        )
+        st.plotly_chart(bleaching_fig, use_container_width=True, config=plotly_config)
+
+        # Add rubble visualization
+        st.subheader("Rubble Cover")
+        rubble_data = data_processor.get_metric_data(selected_site, 'rubble')
+        rubble_comparison_data = None
+        if rubble_comparison == "Compare with Site" and rubble_compare_site:
+            rubble_comparison_data = data_processor.get_metric_data(rubble_compare_site, 'rubble')
+        elif rubble_comparison == "Compare with Average":
+            municipality = site_municipality if rubble_compare_scope == "Municipality Average" else None
+            rubble_comparison_data = data_processor.get_average_metric_data(
+                'rubble',
+                exclude_site=selected_site,
+                municipality=municipality
+            )
+        rubble_fig = graph_generator.create_time_series(
+            rubble_data,
+            f"Rubble Cover - {selected_site}",
+            "Rubble Cover (%)",
+            comparison_data=rubble_comparison_data
+        )
+        st.plotly_chart(rubble_fig, use_container_width=True, config=plotly_config)
