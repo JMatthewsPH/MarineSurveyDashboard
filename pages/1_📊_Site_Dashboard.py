@@ -67,58 +67,6 @@ def load_css():
 
 st.markdown(load_css(), unsafe_allow_html=True)
 
-# Sidebar for metric comparisons
-with st.sidebar:
-    st.title("Metric Comparisons")
-
-    # Biomass comparison options
-    st.subheader("Commercial Fish Biomass")
-    biomass_comparison = st.radio(
-        "Compare biomass with:",
-        ["No Comparison", "Compare with Site", "Compare with Average"],
-        key="biomass_comparison"
-    )
-
-    biomass_compare_site = None
-    biomass_compare_scope = None
-    if biomass_comparison == "Compare with Site":
-        compare_sites = [site for site in site_names if site != selected_site]
-        biomass_compare_site = st.selectbox(
-            "Select site to compare biomass:",
-            compare_sites,
-            key="biomass_compare_site"
-        )
-    elif biomass_comparison == "Compare with Average":
-        biomass_compare_scope = st.radio(
-            "Select average scope:",
-            ["Municipality Average", "All Sites Average"],
-            key="biomass_compare_scope"
-        )
-
-    # Coral cover comparison options
-    st.subheader("Hard Coral Cover")
-    coral_comparison = st.radio(
-        "Compare coral cover with:",
-        ["No Comparison", "Compare with Site", "Compare with Average"],
-        key="coral_comparison"
-    )
-
-    coral_compare_site = None
-    coral_compare_scope = None
-    if coral_comparison == "Compare with Site":
-        compare_sites = [site for site in site_names if site != selected_site]
-        coral_compare_site = st.selectbox(
-            "Select site to compare coral cover:",
-            compare_sites,
-            key="coral_compare_site"
-        )
-    elif coral_comparison == "Compare with Average":
-        coral_compare_scope = st.radio(
-            "Select average scope:",
-            ["Municipality Average", "All Sites Average"],
-            key="coral_compare_scope"
-        )
-
 # Display site content
 selected_site_obj = next((site for site in sites if site.name == selected_site), None)
 if selected_site_obj:
@@ -138,8 +86,9 @@ if selected_site_obj:
         st.markdown(description or f"Description for {selected_site}")
 
 
-    # Metrics Section - More compact layout
+    # Metrics Section
     st.header("Site Metrics")
+
     # Configure Plotly chart settings
     plotly_config = {
         'responsive': True,
@@ -151,44 +100,99 @@ if selected_site_obj:
     # Get current site's municipality
     site_municipality = selected_site_obj.municipality if selected_site_obj else None
 
-    # Get comparison data for biomass
-    biomass_comparison_data = None
-    if biomass_comparison == "Compare with Site" and biomass_compare_site:
-        biomass_comparison_data = data_processor.get_biomass_data(biomass_compare_site)
-    elif biomass_comparison == "Compare with Average":
-        municipality = site_municipality if biomass_compare_scope == "Municipality Average" else None
-        biomass_comparison_data = data_processor.get_average_biomass_data(
-            exclude_site=selected_site,
-            municipality=municipality
+    # Define metrics for display
+    metrics = {
+        'biomass': {
+            'title': 'Commercial Fish Biomass',
+            'unit': 'kg/ha',
+            'get_data': data_processor.get_biomass_data,
+            'get_average': data_processor.get_average_biomass_data
+        },
+        'hard_coral': {
+            'title': 'Hard Coral Cover',
+            'unit': '%',
+            'get_data': lambda site: data_processor.get_metric_data(site, 'hard_coral'),
+            'get_average': lambda exclude_site, municipality: data_processor.get_average_metric_data('hard_coral', exclude_site, municipality)
+        },
+        'fleshy_algae': {
+            'title': 'Fleshy Algae Cover',
+            'unit': '%',
+            'get_data': lambda site: data_processor.get_metric_data(site, 'fleshy_algae'),
+            'get_average': lambda exclude_site, municipality: data_processor.get_average_metric_data('fleshy_algae', exclude_site, municipality)
+        },
+        'herbivore': {
+            'title': 'Herbivore Density',
+            'unit': 'ind/ha',
+            'get_data': lambda site: data_processor.get_metric_data(site, 'herbivore'),
+            'get_average': lambda exclude_site, municipality: data_processor.get_average_metric_data('herbivore', exclude_site, municipality)
+        },
+        'omnivore': {
+            'title': 'Omnivore Density',
+            'unit': 'ind/ha',
+            'get_data': lambda site: data_processor.get_metric_data(site, 'omnivore'),
+            'get_average': lambda exclude_site, municipality: data_processor.get_average_metric_data('omnivore', exclude_site, municipality)
+        },
+        'corallivore': {
+            'title': 'Corallivore Density',
+            'unit': 'ind/ha',
+            'get_data': lambda site: data_processor.get_metric_data(site, 'corallivore'),
+            'get_average': lambda exclude_site, municipality: data_processor.get_average_metric_data('corallivore', exclude_site, municipality)
+        }
+    }
+
+    # Sidebar metric comparisons
+    with st.sidebar:
+        st.title("Metric Comparisons")
+
+        comparison_options = {metric: {
+            'comparison': st.radio(
+                f"Compare {metrics[metric]['title']} with:",
+                ["No Comparison", "Compare with Site", "Compare with Average"],
+                key=f"{metric}_comparison"
+            ),
+            'compare_site': None,
+            'compare_scope': None
+        } for metric in metrics}
+
+        # Handle comparison selections
+        for metric, options in comparison_options.items():
+            if options['comparison'] == "Compare with Site":
+                compare_sites = [site for site in site_names if site != selected_site]
+                options['compare_site'] = st.selectbox(
+                    f"Select site to compare {metrics[metric]['title']}:",
+                    compare_sites,
+                    key=f"{metric}_compare_site"
+                )
+            elif options['comparison'] == "Compare with Average":
+                options['compare_scope'] = st.radio(
+                    f"Select average scope for {metrics[metric]['title']}:",
+                    ["Municipality Average", "All Sites Average"],
+                    key=f"{metric}_compare_scope"
+                )
+
+    # Display metrics
+    for metric, config in metrics.items():
+        st.subheader(config['title'])
+
+        # Get main data
+        metric_data = config['get_data'](selected_site)
+
+        # Get comparison data if selected
+        comparison_data = None
+        if comparison_options[metric]['comparison'] == "Compare with Site" and comparison_options[metric]['compare_site']:
+            comparison_data = config['get_data'](comparison_options[metric]['compare_site'])
+        elif comparison_options[metric]['comparison'] == "Compare with Average":
+            municipality = site_municipality if comparison_options[metric]['compare_scope'] == "Municipality Average" else None
+            comparison_data = config['get_average'](
+                exclude_site=selected_site,
+                municipality=municipality
+            )
+
+        # Create and display figure
+        fig = graph_generator.create_time_series(
+            metric_data,
+            f"{config['title']} - {selected_site}",
+            f"{config['title']} ({config['unit']})",
+            comparison_data=comparison_data
         )
-
-    # Get comparison data for coral cover
-    coral_comparison_data = None
-    if coral_comparison == "Compare with Site" and coral_compare_site:
-        coral_comparison_data = data_processor.get_coral_cover_data(coral_compare_site)
-    elif coral_comparison == "Compare with Average":
-        municipality = site_municipality if coral_compare_scope == "Municipality Average" else None
-        coral_comparison_data = data_processor.get_average_coral_cover_data(
-            exclude_site=selected_site,
-            municipality=municipality
-        )
-
-    st.subheader("Commercial Fish Biomass")
-    biomass_data = data_processor.get_biomass_data(selected_site)
-    biomass_fig = graph_generator.create_time_series(
-        biomass_data,
-        f"Commercial Fish Biomass - {selected_site}",
-        "Biomass (kg/ha)",
-        comparison_data=biomass_comparison_data
-    )
-    st.plotly_chart(biomass_fig, use_container_width=True, config=plotly_config)
-
-    st.subheader("Hard Coral Cover")
-    coral_data = data_processor.get_coral_cover_data(selected_site)
-    coral_fig = graph_generator.create_time_series(
-        coral_data,
-        f"Hard Coral Cover - {selected_site}",
-        "Cover (%)",
-        comparison_data=coral_comparison_data
-    )
-    st.plotly_chart(coral_fig, use_container_width=True, config=plotly_config)
+        st.plotly_chart(fig, use_container_width=True, config=plotly_config)
