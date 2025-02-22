@@ -1,4 +1,12 @@
 import streamlit as st
+
+# Page configuration must be the first Streamlit command
+st.set_page_config(
+    page_title="Site Dashboard",
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
+
 import os
 from utils.data_processor import DataProcessor
 from utils.graph_generator import GraphGenerator
@@ -12,13 +20,6 @@ def get_data_processor():
     return DataProcessor(db), GraphGenerator(DataProcessor(db))
 
 data_processor, graph_generator = get_data_processor()
-
-# Page configuration
-st.set_page_config(
-    page_title="Site Dashboard",
-    layout="wide",
-    initial_sidebar_state="collapsed"
-)
 
 # Get site from URL parameter
 def get_site_from_params():
