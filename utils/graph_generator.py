@@ -107,7 +107,7 @@ class GraphGenerator:
         layout_updates = {
             'title': {
                 'text': title,
-                'y': 0.9,
+                'y': 0.95,
                 'x': 0.5,
                 'xanchor': 'center',
                 'yanchor': 'top'
@@ -126,8 +126,8 @@ class GraphGenerator:
                 bgcolor="rgba(255, 255, 255, 0.8)"
             ),
             'autosize': True,
-            'height': 500,  # Fixed height
-            'margin': dict(l=80, r=30, t=100, b=80),
+            'height': 400,  # Reduced height
+            'margin': dict(l=50, r=30, t=50, b=50),  # Reduced margins
             'xaxis': dict(
                 tickangle=45,
                 automargin=True,
