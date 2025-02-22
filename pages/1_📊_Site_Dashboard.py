@@ -145,7 +145,7 @@ if selected_site_obj:
         st.title("Metric Comparisons")
 
         comparison_options = {metric: {
-            'comparison': st.radio(
+            'comparison': st.selectbox(
                 f"Compare {metrics[metric]['title']} with:",
                 ["No Comparison", "Compare with Site", "Compare with Average"],
                 key=f"{metric}_comparison"
@@ -164,7 +164,7 @@ if selected_site_obj:
                     key=f"{metric}_compare_site"
                 )
             elif options['comparison'] == "Compare with Average":
-                options['compare_scope'] = st.radio(
+                options['compare_scope'] = st.selectbox(
                     f"Select average scope for {metrics[metric]['title']}:",
                     ["Municipality Average", "All Sites Average"],
                     key=f"{metric}_compare_scope"
