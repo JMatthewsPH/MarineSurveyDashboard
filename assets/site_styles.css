@@ -39,11 +39,14 @@
     background: white;
     border-radius: 15px;
     padding: 1.5rem;
-    margin: 1rem 0;
+    margin: 2rem 0;  /* Increased margin between graphs */
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     border: 1px solid var(--border-color);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     width: 100%;
+    min-height: 500px;  /* Match the graph height */
+    display: flex;
+    flex-direction: column;
 }
 
 .graph-container:hover {
@@ -135,4 +138,29 @@
     to {
         transform: rotate(360deg);
     }
+}
+
+/* Ensure Plotly charts take full width */
+.js-plotly-plot, .plot-container {
+    width: 100% !important;
+}
+
+/* Remove any default margins from Streamlit elements */
+.block-container {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+}
+
+/* Add spacing between sidebar elements */
+.sidebar .sidebar-content {
+    padding: 2rem 1rem;
+}
+
+/* Ensure proper spacing in radio buttons and dropdowns */
+.stRadio > div {
+    margin-bottom: 1rem !important;
+}
+
+.stSelectbox {
+    margin-bottom: 1.5rem !important;
 }

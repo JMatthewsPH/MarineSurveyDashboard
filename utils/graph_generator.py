@@ -28,7 +28,7 @@ class GraphGenerator:
 
     def create_time_series(self, data, title, y_label, comparison_data=None, secondary_data=None, secondary_label=None, tertiary_data=None, tertiary_label=None):
         """Create time series graph with optional comparison and secondary/tertiary metrics"""
-        # Create base figure
+        # Create base figure with fixed dimensions
         fig = go.Figure()
 
         # If no data, return empty figure
@@ -105,7 +105,13 @@ class GraphGenerator:
 
         # Update layout for better responsiveness
         layout_updates = {
-            'title': title,
+            'title': {
+                'text': title,
+                'y': 0.9,
+                'x': 0.5,
+                'xanchor': 'center',
+                'yanchor': 'top'
+            },
             'xaxis_title': 'Season',
             'yaxis_title': y_label,
             'template': 'plotly_white',
@@ -120,8 +126,8 @@ class GraphGenerator:
                 bgcolor="rgba(255, 255, 255, 0.8)"
             ),
             'autosize': True,
-            'height': None,  # Let the container determine the height
-            'margin': dict(l=20, r=20, t=100, b=50),  # Reduced margins
+            'height': 500,  # Fixed height
+            'margin': dict(l=80, r=30, t=100, b=80),
             'xaxis': dict(
                 tickangle=45,
                 automargin=True,
@@ -129,7 +135,10 @@ class GraphGenerator:
             ),
             'yaxis': dict(
                 automargin=True,
-                title=y_label,
+                title=dict(
+                    text=y_label,
+                    standoff=10
+                ),
                 side='left'
             )
         }
@@ -137,7 +146,10 @@ class GraphGenerator:
         # Add second y-axis if there's secondary data
         if secondary_data is not None and not secondary_data.empty:
             layout_updates['yaxis2'] = dict(
-                title=secondary_label,
+                title=dict(
+                    text=secondary_label,
+                    standoff=10
+                ),
                 overlaying='y',
                 side='right',
                 automargin=True
@@ -146,7 +158,10 @@ class GraphGenerator:
         # Add third y-axis if there's tertiary data
         if tertiary_data is not None and not tertiary_data.empty:
             layout_updates['yaxis3'] = dict(
-                title=tertiary_label,
+                title=dict(
+                    text=tertiary_label,
+                    standoff=10
+                ),
                 overlaying='y',
                 side='right',
                 position=0.85,
@@ -181,12 +196,18 @@ class GraphGenerator:
         x_title = 'Success Rate (%)' if observation_type == 'percentage' else 'Average Count'
 
         fig.update_layout(
-            title=title,
+            title=dict(
+                text=title,
+                y=0.95,
+                x=0.5,
+                xanchor='center',
+                yanchor='top'
+            ),
             xaxis_title=x_title,
             yaxis_title='Species',
             template='plotly_white',
-            height=None,  # Let the container determine the height
-            margin=dict(l=20, r=20, t=100, b=50),  # Reduced margins
+            height=500,  # Fixed height
+            margin=dict(l=80, r=30, t=100, b=50),
             showlegend=False,
             autosize=True
         )
