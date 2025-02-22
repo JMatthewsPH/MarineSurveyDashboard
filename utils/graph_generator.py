@@ -103,49 +103,53 @@ class GraphGenerator:
                 showlegend=False
             ))
 
-        # Update layout for better responsiveness
+        # Update layout for better responsiveness and legend placement
         layout_updates = {
+            'title': {
+                'text': title,
+                'y': 0.95,
+                'x': 0.5,
+                'xanchor': 'center',
+                'yanchor': 'top',
+            },
+            'xaxis_title': 'Season',
+            'yaxis_title': y_label,
+            'template': 'plotly_white',
+            'hovermode': 'x unified',
+            'showlegend': True,
+            'legend': {
+                'orientation': 'h',
+                'yanchor': 'bottom',
+                'y': -0.35,  # Move legend below the chart
+                'xanchor': 'center',
+                'x': 0.5,
+                'bgcolor': 'rgba(255, 255, 255, 0.8)'
+            },
+            'autosize': True,
+            'height': 400,  # Increased height to accommodate legend
+            'margin': {
+                'l': 50,
+                'r': 30,
+                't': 60,
+                'b': 100  # Increased bottom margin for legend
+            },
+            'xaxis': {
+                'tickangle': 45,
+                'automargin': True,
+                'type': 'category',
+                'tickfont': {'size': 10},
+                'ticktext': data['season'].unique(),
+                'tickmode': 'array'
+            },
+            'yaxis': {
+                'automargin': True,
                 'title': {
-                    'text': title,
-                    'y': 0.98,
-                    'x': 0.5,
-                    'xanchor': 'center',
-                    'yanchor': 'top',
-                    'pad': {'t': 10}  # Reduced padding above title
+                    'text': y_label,
+                    'standoff': 10
                 },
-                'xaxis_title': 'Season',
-                'yaxis_title': y_label,
-                'template': 'plotly_white',
-                'hovermode': 'x unified',
-                'showlegend': True,
-                'legend': dict(
-                    orientation="h",
-                    yanchor="bottom",
-                    y=1.02,
-                    xanchor="center",
-                    x=0.5,
-                    bgcolor="rgba(255, 255, 255, 0.8)"
-                ),
-                'autosize': True,
-                'height': 350,  # Further reduced height
-                'margin': dict(l=50, r=30, t=50, b=50),  # Reduced margins
-                'xaxis': dict(
-                    tickangle=45,
-                    automargin=True,
-                    type='category',
-                    tickfont=dict(size=10),
-                    ticktext=data['season'].unique(),
-                    tickmode='array'
-                ),
-                'yaxis': dict(
-                    automargin=True,
-                    title=dict(
-                        text=y_label,
-                        standoff=10
-                    ),
-                    side='left'
-                )
+                'side': 'left'
             }
+        }
 
         fig.update_layout(**layout_updates)
         return fig
