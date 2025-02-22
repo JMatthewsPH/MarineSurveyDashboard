@@ -38,17 +38,29 @@ data_processor = get_processor()
 sites = data_processor.get_sites()
 
 # Create ordered groups by municipality
-zamboanguita_sites = sorted([site for site in sites if site.municipality == "Zamboanguita"])
-siaton_sites = sorted([site for site in sites if site.municipality == "Siaton"])
-santa_catalina_sites = sorted([site for site in sites if site.municipality == "Santa Catalina"])
+zamboanguita_sites = sorted(
+    [site for site in sites if site.municipality == "Zamboanguita"],
+    key=lambda x: x.name
+)
+siaton_sites = sorted(
+    [site for site in sites if site.municipality == "Siaton"],
+    key=lambda x: x.name
+)
+santa_catalina_sites = sorted(
+    [site for site in sites if site.municipality == "Santa Catalina"],
+    key=lambda x: x.name
+)
 
 # Function to create site card
 def create_site_card(site):
+    description = site.description_en or "Site description coming soon..."
+    # Truncate description to 200 characters and add ellipsis
+    truncated_description = description[:200] + "..." if len(description) > 200 else description
     st.markdown(f"""
         <div class="site-card">
             <h3>{site.name}</h3>
             <p><strong>Municipality:</strong> {site.municipality}</p>
-            <p>{site.description_en[:200]}...</p>
+            <p>{truncated_description}</p>
             <a href="Site_Dashboard?site={site.name}" target="_self">
                 <button class="site-button">View Details</button>
             </a>
