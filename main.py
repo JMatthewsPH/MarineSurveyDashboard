@@ -1,10 +1,12 @@
 import streamlit as st
 import os
+from utils.data_processor import DataProcessor
+from utils.database import get_db
 
-# Page configuration must be the first Streamlit command
+# Page configuration
 st.set_page_config(
     page_title="Marine Conservation Philippines",
-    layout="wide",  # Set to wide mode for better scaling
+    layout="wide",
     initial_sidebar_state="expanded"
 )
 
@@ -16,258 +18,96 @@ def load_css():
 
 st.markdown(load_css(), unsafe_allow_html=True)
 
-# Add custom container styles
+# Header
 st.markdown("""
     <div class="site-header">
         <h1>Marine Conservation Philippines</h1>
-        <h2>Data Dashboard</h2>
+        <h2>Site Explorer</h2>
     </div>
 """, unsafe_allow_html=True)
 
-import pandas as pd
-from utils.data_processor import DataProcessor
-from utils.graph_generator import GraphGenerator
-from utils.translations import TRANSLATIONS
-from utils.database import get_db, init_sample_data
-from utils.data_importer import run_import
-
-# Initialize database with sample data and import CSV data
+# Initialize database connection
 @st.cache_resource
-def initialize_database():
-    init_sample_data()
-    run_import()  # Import CSV data
-
-initialize_database()
-
-# Get database session and initialize data processor early
-@st.cache_resource
-def get_data_processor():
+def get_processor():
     db = next(get_db())
-    return DataProcessor(db), GraphGenerator(DataProcessor(db))
+    return DataProcessor(db)
 
-data_processor, graph_generator = get_data_processor()
+data_processor = get_processor()
 
-# Get all sites for selection
+# Get all sites
 sites = data_processor.get_sites()
 
 # Create ordered groups by municipality
-zamboanguita_sites = sorted([site.name for site in sites if site.municipality == "Zamboanguita"])
-siaton_sites = sorted([site.name for site in sites if site.municipality == "Siaton"])
-santa_catalina_sites = sorted([site.name for site in sites if site.municipality == "Santa Catalina"])
+zamboanguita_sites = sorted([site for site in sites if site.municipality == "Zamboanguita"])
+siaton_sites = sorted([site for site in sites if site.municipality == "Siaton"])
+santa_catalina_sites = sorted([site for site in sites if site.municipality == "Santa Catalina"])
 
-# Combine in desired order
-site_names = zamboanguita_sites + siaton_sites + santa_catalina_sites
+# Function to create site card
+def create_site_card(site):
+    st.markdown(f"""
+        <div class="site-card">
+            <h3>{site.name}</h3>
+            <p><strong>Municipality:</strong> {site.municipality}</p>
+            <p>{site.description_en[:200]}...</p>
+            <a href="Site_Dashboard?site={site.name}" target="_self">
+                <button class="site-button">View Details</button>
+            </a>
+        </div>
+    """, unsafe_allow_html=True)
 
-# Session state initialization
-if 'language' not in st.session_state:
-    st.session_state.language = 'en'
+# Add new CSS for site cards
+st.markdown("""
+    <style>
+    .site-card {
+        background: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+    .site-card:hover {
+        transform: translateY(-5px);
+    }
+    .site-button {
+        background: #2b6cb0;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 1rem;
+    }
+    .site-button:hover {
+        background: #4299e1;
+    }
+    .municipality-section {
+        margin: 2rem 0;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
-def get_text(key):
-    return TRANSLATIONS[st.session_state.language][key]
+# Display sites by municipality
+if zamboanguita_sites:
+    st.header("Zamboanguita Sites")
+    cols = st.columns(3)
+    for idx, site in enumerate(zamboanguita_sites):
+        with cols[idx % 3]:
+            create_site_card(site)
 
-# Sidebar Logo
-logo_path = "attached_assets/MCP_Data/Logo Hands Color White BG.png"
-# Sidebar
-st.sidebar.markdown('<div class="sidebar-header">', unsafe_allow_html=True)
-if os.path.exists(logo_path):
-    st.sidebar.image(logo_path, width=128, use_container_width=True)
-st.sidebar.markdown('</div>', unsafe_allow_html=True)
+if siaton_sites:
+    st.header("Siaton Sites")
+    cols = st.columns(3)
+    for idx, site in enumerate(siaton_sites):
+        with cols[idx % 3]:
+            create_site_card(site)
 
-# Wrap the settings section in a custom container
-st.sidebar.markdown('<div class="settings-container">', unsafe_allow_html=True)
-st.sidebar.title("Settings")
-
-# Language selection with custom styling
-selected_language = st.sidebar.selectbox(
-    "Language / Wika",
-    options=['en', 'fil'],
-    format_func=lambda x: 'English' if x == 'en' else 'Filipino',
-    index=0 if st.session_state.language == 'en' else 1
-)
-
-# Update session state language
-if selected_language != st.session_state.language:
-    st.session_state.language = selected_language
-
-# Site selection with custom styling
-st.sidebar.markdown('<div class="site-selector">', unsafe_allow_html=True)
-st.sidebar.title("Site Selection")
-selected_site = st.sidebar.selectbox(
-    "Select Site",
-    site_names
-)
-st.sidebar.markdown('</div>', unsafe_allow_html=True)
-
-# Comparison Settings
-st.sidebar.title("Comparison Settings")
-
-# Biomass comparison
-st.sidebar.subheader(get_text('fish_biomass'))
-comparison_options = [get_text('compare_none')] + \
-                    [site for site in site_names if site != selected_site] + \
-                    [get_text('compare_avg')]
-biomass_comparison = st.sidebar.selectbox(
-    "Comparison",
-    comparison_options,
-    key="biomass_comparison"
-)
-
-# Coral cover comparison
-st.sidebar.subheader(get_text('coral_cover'))
-coral_comparison = st.sidebar.selectbox(
-    "Comparison",
-    comparison_options,
-    key="coral_comparison"
-)
-
-# Additional metrics selection
-st.sidebar.subheader(get_text('metric_comparison'))
-metric_options = {
-    'hard_coral': get_text('coral_cover'),
-    'fleshy_algae': get_text('fleshy_algae'),
-    'bleaching': get_text('bleaching'),
-    'herbivore': get_text('herbivore'),
-    'carnivore': get_text('carnivore'),
-    'omnivore': get_text('omnivore'),
-    'corallivore': get_text('corallivore'),
-    'rubble': get_text('rubble')
-}
-
-# Primary metric selection
-primary_metric = st.sidebar.selectbox(
-    get_text('primary_metric'),
-    options=list(metric_options.keys()),
-    format_func=lambda x: metric_options[x],
-    key="primary_metric"
-)
-
-# Secondary metric selection (optional)
-secondary_metric = st.sidebar.selectbox(
-    get_text('secondary_metric'),
-    options=[None] + list(metric_options.keys()),
-    format_func=lambda x: "None" if x is None else metric_options[x],
-    key="secondary_metric"
-)
-
-# Tertiary metric selection (optional)
-tertiary_metric = st.sidebar.selectbox(
-    get_text('tertiary_metric'),
-    options=[None] + list(metric_options.keys()),
-    format_func=lambda x: "None" if x is None else metric_options[x],
-    key="tertiary_metric"
-)
-
-st.sidebar.markdown('</div>', unsafe_allow_html=True)
-
-# Main content area using custom containers
-st.markdown('<div class="main-content">', unsafe_allow_html=True)
-
-# Site Description Section with enhanced styling
-st.header(get_text('site_description'))
-col1, col2 = st.columns([1, 2])
-with col1:
-    # Site image with custom container
-    st.markdown('<div class="image-container">', unsafe_allow_html=True)
-    st.image("https://via.placeholder.com/400x300", use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-with col2:
-    # Site description with custom styling
-    st.markdown('<div class="site-description">', unsafe_allow_html=True)
-    selected_site_obj = next((site for site in sites if site.name == selected_site), None)
-    if selected_site_obj:
-        description = selected_site_obj.description_fil if st.session_state.language == 'fil' else selected_site_obj.description_en
-        st.markdown(description or f"Description for {selected_site} in {st.session_state.language}")
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# Commercial Fish Biomass Graph
-with st.container():
-    st.markdown('<div class="graph-container">', unsafe_allow_html=True)
-    st.header(get_text('fish_biomass'))
-    with st.spinner('Loading biomass data...'):
-        biomass_data = data_processor.get_biomass_data(selected_site)
-        comparison_data = None
-        if biomass_comparison != get_text('compare_none'):
-            if biomass_comparison == get_text('compare_avg'):
-                comparison_data = data_processor.get_average_biomass_data(exclude_site=selected_site)
-            else:
-                comparison_data = data_processor.get_biomass_data(biomass_comparison)
-
-        print(f"Biomass comparison data: {comparison_data if comparison_data is not None else 'None'}")  # Debug log
-
-        biomass_fig = graph_generator.create_time_series(
-            biomass_data,
-            f"{get_text('fish_biomass')} - {selected_site}",
-            "Biomass (kg/ha)",
-            comparison_data=comparison_data
-        )
-        st.plotly_chart(biomass_fig, use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# Hard Coral Cover Graph
-with st.container():
-    st.markdown('<div class="graph-container">', unsafe_allow_html=True)
-    st.header(get_text('coral_cover'))
-    with st.spinner('Loading coral cover data...'):
-        coral_data = data_processor.get_coral_cover_data(selected_site)
-        comparison_data = None
-        if coral_comparison != get_text('compare_none'):
-            if coral_comparison == get_text('compare_avg'):
-                comparison_data = data_processor.get_average_coral_cover_data(exclude_site=selected_site)
-            else:
-                comparison_data = data_processor.get_coral_cover_data(coral_comparison)
-
-        print(f"Coral comparison data: {comparison_data if comparison_data is not None else 'None'}")  # Debug log
-
-        coral_fig = graph_generator.create_time_series(
-            coral_data,
-            f"{get_text('coral_cover')} - {selected_site}",
-            "Cover (%)",
-            comparison_data=comparison_data
-        )
-        st.plotly_chart(coral_fig, use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# Additional metrics graph
-with st.container():
-    st.markdown('<div class="graph-container">', unsafe_allow_html=True)
-    # Get primary metric data
-    with st.spinner(f'Loading {metric_options[primary_metric]} data...'):
-        primary_data = data_processor.get_metric_data(selected_site, primary_metric)
-
-        # Get comparison data if selected
-        comparison_data = None
-        if biomass_comparison != get_text('compare_none'):
-            if biomass_comparison == get_text('compare_avg'):
-                comparison_data = data_processor.get_average_metric_data(primary_metric, exclude_site=selected_site)
-            else:
-                comparison_data = data_processor.get_metric_data(biomass_comparison, primary_metric)
-
-        # Get secondary metric data if selected
-        secondary_data = None
-        if secondary_metric is not None:
-            secondary_data = data_processor.get_metric_data(selected_site, secondary_metric)
-
-        # Get tertiary metric data if selected
-        tertiary_data = None
-        if tertiary_metric is not None:
-            tertiary_data = data_processor.get_metric_data(selected_site, tertiary_metric)
-
-        # Create graph with all selected metrics
-        metric_fig = graph_generator.create_time_series(
-            primary_data,
-            f"{metric_options[primary_metric]} {'& ' + metric_options[secondary_metric] if secondary_metric else ''} {'& ' + metric_options[tertiary_metric] if tertiary_metric else ''} - {selected_site}",
-            metric_options[primary_metric],
-            comparison_data=comparison_data,
-            secondary_data=secondary_data,
-            secondary_label=metric_options.get(secondary_metric) if secondary_metric else None,
-            tertiary_data=tertiary_data,
-            tertiary_label=metric_options.get(tertiary_metric) if tertiary_metric else None
-        )
-        st.plotly_chart(metric_fig, use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-st.markdown('</div>', unsafe_allow_html=True)
+if santa_catalina_sites:
+    st.header("Santa Catalina Sites")
+    cols = st.columns(3)
+    for idx, site in enumerate(santa_catalina_sites):
+        with cols[idx % 3]:
+            create_site_card(site)
 
 # Clean up
 db = next(get_db())
