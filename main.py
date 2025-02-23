@@ -41,15 +41,40 @@ language = st.session_state.language
 header_text = "Marine Conservation Philippines" if language == "English" else "Pangangalaga sa Karagatan ng Pilipinas"
 subheader_text = "Marine Monitoring Dashboard" if language == "English" else "Dashboard ng Pagsubaybay sa Karagatan"
 
-st.markdown(f"""
-    <div class="site-header">
-        <div class="logo-container">
-            <img src="attached_assets/MCP_Data/Logo Text Color.png" alt="MCP Logo" class="header-logo">
+# Get logo path
+logo_path = os.path.join("attached_assets", "MCP_Data", "Logo Text Color.png")
+
+# Debug information
+st.write("Current working directory:", os.getcwd())
+st.write("Looking for logo at:", os.path.abspath(logo_path))
+if os.path.exists(logo_path):
+    st.image(logo_path, use_container_width=True)
+    st.markdown(f"""
+        <div class="site-header">
+            <h1>{header_text}</h1>
+            <h2>{subheader_text}</h2>
         </div>
-        <h1>{header_text}</h1>
-        <h2>{subheader_text}</h2>
-    </div>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
+else:
+    # List directory contents for debugging
+    st.error(f"Logo not found at path: {logo_path}")
+    st.write("Contents of attached_assets/MCP_Data:")
+    try:
+        mcp_data_path = os.path.join("attached_assets", "MCP_Data")
+        if os.path.exists(mcp_data_path):
+            st.write(os.listdir(mcp_data_path))
+        else:
+            st.error(f"Directory not found: {mcp_data_path}")
+    except Exception as e:
+        st.error(f"Error checking directory: {str(e)}")
+
+    st.markdown(f"""
+        <div class="site-header">
+            <h1>{header_text}</h1>
+            <h2>{subheader_text}</h2>
+        </div>
+    """, unsafe_allow_html=True)
+
 
 # Initialize database connection
 @st.cache_resource
@@ -80,7 +105,7 @@ santa_catalina_sites = sorted(
 def create_site_card(site):
     description = site.description_fil if language == "Filipino" else site.description_en
     description = description or ("Paglalarawan ng lugar ay darating sa lalong madaling panahon..." 
-                                if language == "Filipino" else "Site description coming soon...")
+                                 if language == "Filipino" else "Site description coming soon...")
     # Truncate description to 200 characters and add ellipsis
     truncated_description = description[:200] + "..." if len(description) > 200 else description
     municipality_label = "Munisipyo:" if language == "Filipino" else "Municipality:"
