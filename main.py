@@ -43,14 +43,11 @@ subheader_text = "Marine Monitoring Dashboard" if language == "English" else "Da
 # Get logo path
 logo_path = os.path.join("attached_assets", "MCP_Data", "Logo Text Color.png")
 
-# Debug information
-st.write("Current working directory:", os.getcwd())
-st.write("Looking for logo at:", os.path.abspath(logo_path))
 if os.path.exists(logo_path):
     # Create columns to center and resize the logo
-    cols = st.columns([2, 1, 2])  # This creates a smaller center column
+    cols = st.columns([1.5, 1, 1.5])  # This creates a larger center column than before
     with cols[1]:
-        st.image(logo_path, use_column_width=True)
+        st.image(logo_path, use_container_width=True)
 
     st.markdown(f"""
         <div class="site-header">
@@ -58,18 +55,7 @@ if os.path.exists(logo_path):
         </div>
     """, unsafe_allow_html=True)
 else:
-    # List directory contents for debugging
     st.error(f"Logo not found at path: {logo_path}")
-    st.write("Contents of attached_assets/MCP_Data:")
-    try:
-        mcp_data_path = os.path.join("attached_assets", "MCP_Data")
-        if os.path.exists(mcp_data_path):
-            st.write(os.listdir(mcp_data_path))
-        else:
-            st.error(f"Directory not found: {mcp_data_path}")
-    except Exception as e:
-        st.error(f"Error checking directory: {str(e)}")
-
     st.markdown(f"""
         <div class="site-header">
             <h2>{subheader_text}</h2>
