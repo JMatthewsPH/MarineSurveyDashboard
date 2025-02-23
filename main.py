@@ -34,6 +34,22 @@ with st.sidebar:
         index=0 if st.session_state.language == "English" else 1
     )
 
+    # Add site description based on selected language
+    st.markdown("---")  # Add a visual separator
+    st.title("About")
+    if st.session_state.language == "English":
+        st.markdown("""
+        The Marine Conservation Dashboard provides a comprehensive visualization platform for monitoring marine protected areas (MPAs) across different municipalities. It displays critical ecological data including coral cover, fish biomass, and various marine species density measurements.
+
+        Users can compare data between sites or against municipal averages, track changes over time, and analyze the impact of conservation efforts. The interactive graphs include markers for significant events like the COVID-19 period, helping researchers and conservationists understand long-term ecological trends.
+        """)
+    else:
+        st.markdown("""
+        Ang Dashboard ng Pangangalaga sa Karagatan ay nagbibigay ng komprehensibong plataporma para sa pagsubaybay sa mga Protected Marine Areas (MPAs) sa iba't ibang munisipyo. Ipinapakita nito ang mahahalagang datos tungkol sa ecological system tulad ng saklaw ng coral, dami ng isda, at iba't ibang sukat ng densidad ng mga species sa dagat.
+
+        Maaaring ihambing ang datos sa pagitan ng mga lugar o sa average ng munisipyo, subaybayan ang mga pagbabago sa paglipas ng panahon, at suriin ang epekto ng mga pagsisikap sa pangangalaga. Ang mga interactive na graph ay may marka para sa mahahalagang pangyayari tulad ng panahon ng COVID-19, na tumutulong sa mga mananaliksik at conservationist na maintindihan ang pangmatagalang ecological trends.
+        """)
+
 # Use session state language for content
 language = st.session_state.language
 
