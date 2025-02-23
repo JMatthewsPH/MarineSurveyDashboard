@@ -39,7 +39,7 @@ language = st.session_state.language
 
 # Header
 header_text = "Marine Conservation Philippines" if language == "English" else "Pangangalaga sa Karagatan ng Pilipinas"
-subheader_text = "Site Explorer" if language == "English" else "Tagasiyasat ng Lugar"
+subheader_text = "Marine Monitoring Dashboard" if language == "English" else "Dashboard ng Pagsubaybay sa Karagatan"
 
 st.markdown(f"""
     <div class="site-header">
