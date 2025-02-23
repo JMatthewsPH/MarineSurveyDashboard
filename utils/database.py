@@ -1,8 +1,10 @@
 import os
+import time
 from sqlalchemy import create_engine, Column, Integer, Float, String, Date, ForeignKey, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.pool import QueuePool
+from contextlib import contextmanager
 
 # Get database URL from environment variables
 DATABASE_URL = os.getenv('DATABASE_URL', '')
@@ -73,16 +75,37 @@ Base.metadata.create_all(bind=engine)
 
 def get_db():
     """Get database session with automatic retry on connection failure"""
-    db = SessionLocal()
+    max_retries = 3
+    retry_count = 0
+
+    while retry_count < max_retries:
+        try:
+            db = SessionLocal()
+            # Test the connection using proper SQLAlchemy text() function
+            db.execute(text("SELECT 1"))
+            yield db
+            break
+        except Exception as e:
+            retry_count += 1
+            print(f"Database connection attempt {retry_count} failed: {str(e)}")
+            if db:
+                db.close()
+            if retry_count >= max_retries:
+                print("Max retries reached, failing...")
+                raise
+            # Wait before retrying, with exponential backoff
+            time.sleep(2 ** retry_count)
     try:
-        # Test the connection using proper SQLAlchemy text() function
-        db.execute(text("SELECT 1"))
         yield db
-    except Exception as e:
-        print(f"Database connection error: {str(e)}")
+    finally:
         db.close()
-        # Create a new session and try again
-        db = SessionLocal()
+
+# Modify the DataProcessor to handle connection failures
+@contextmanager
+def get_db_session():
+    """Context manager for database sessions with automatic retry"""
+    db = next(get_db())
+    try:
         yield db
     finally:
         db.close()

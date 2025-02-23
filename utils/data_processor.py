@@ -2,7 +2,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from .database import Site, Survey
+from .database import Site, Survey, get_db_session
 import streamlit as st
 from contextlib import contextmanager
 
@@ -14,13 +14,15 @@ class DataProcessor:
     def db(self) -> Session:
         """Ensures db session is active"""
         if not self._db.is_active:
-            self._db = next(get_db()) # Assuming get_db is defined elsewhere and yields database sessions.
+            with get_db_session() as new_db:
+                self._db = new_db
         return self._db
 
     @st.cache_data(ttl=3600, show_spinner=False)
     def get_sites(_self):  # Added underscore to ignore self in caching
         """Get all sites with their municipalities"""
-        return _self.db.query(Site).all()
+        with get_db_session() as db:
+            return db.query(Site).all()
 
     @st.cache_data(ttl=3600, show_spinner=False)
     def get_metric_data(_self, site_name: str, metric: str, start_date='2017-01-01'):
@@ -44,19 +46,20 @@ class DataProcessor:
             return pd.DataFrame(columns=['date', metric])
 
         try:
-            site = _self.db.query(Site).filter(Site.name == site_name).first()
-            if not site:
-                print(f"Site not found: {site_name}")
-                return pd.DataFrame(columns=['date', metric])
+            with get_db_session() as db:
+                site = db.query(Site).filter(Site.name == site_name).first()
+                if not site:
+                    print(f"Site not found: {site_name}")
+                    return pd.DataFrame(columns=['date', metric])
 
-            surveys = (_self.db.query(Survey.date, getattr(Survey, column_name))
-                      .filter(Survey.site_id == site.id)
-                      .filter(Survey.date >= start_date)
-                      .order_by(Survey.date)
-                      .all())
+                surveys = (db.query(Survey.date, getattr(Survey, column_name))
+                          .filter(Survey.site_id == site.id)
+                          .filter(Survey.date >= start_date)
+                          .order_by(Survey.date)
+                          .all())
 
-            print(f"Found {len(surveys)} {metric} surveys for {site_name}")
-            return pd.DataFrame(surveys, columns=['date', metric])
+                print(f"Found {len(surveys)} {metric} surveys for {site_name}")
+                return pd.DataFrame(surveys, columns=['date', metric])
         except Exception as e:
             print(f"Error fetching metric data: {str(e)}")
             return pd.DataFrame(columns=['date', metric])
@@ -83,29 +86,31 @@ class DataProcessor:
 
         exclude_site_id = None
         if exclude_site:
-            site = _self.db.query(Site).filter(Site.name == exclude_site).first()
-            if site:
-                exclude_site_id = site.id
+            with get_db_session() as db:
+                site = db.query(Site).filter(Site.name == exclude_site).first()
+                if site:
+                    exclude_site_id = site.id
 
         try:
-            # Start with base query
-            query = (_self.db.query(
-                    Survey.date,
-                    func.avg(getattr(Survey, column_name)).label(metric))
-                    .join(Site)  # Join with Site table to access municipality
-                    .filter(Survey.date >= start_date))
+            with get_db_session() as db:
+                # Start with base query
+                query = (db.query(
+                        Survey.date,
+                        func.avg(getattr(Survey, column_name)).label(metric))
+                        .join(Site)  # Join with Site table to access municipality
+                        .filter(Survey.date >= start_date))
 
-            if exclude_site_id:
-                query = query.filter(Survey.site_id != exclude_site_id)
+                if exclude_site_id:
+                    query = query.filter(Survey.site_id != exclude_site_id)
 
-            if municipality:
-                query = query.filter(Site.municipality == municipality)
+                if municipality:
+                    query = query.filter(Site.municipality == municipality)
 
-            surveys = (query.group_by(Survey.date)
-                      .order_by(Survey.date)
-                      .all())
+                surveys = (query.group_by(Survey.date)
+                          .order_by(Survey.date)
+                          .all())
 
-            return pd.DataFrame(surveys, columns=['date', metric])
+                return pd.DataFrame(surveys, columns=['date', metric])
         except Exception as e:
             print(f"Error calculating average metric data: {str(e)}")
             return pd.DataFrame(columns=['date', metric])
@@ -117,28 +122,30 @@ class DataProcessor:
 
         exclude_site_id = None
         if exclude_site:
-            site = _self.db.query(Site).filter(Site.name == exclude_site).first()
-            if site:
-                exclude_site_id = site.id
+            with get_db_session() as db:
+                site = db.query(Site).filter(Site.name == exclude_site).first()
+                if site:
+                    exclude_site_id = site.id
 
         try:
-            query = (_self.db.query(
-                    Survey.date,
-                    func.avg(Survey.commercial_biomass).label('Commercial Biomass'))
-                    .join(Site)  # Join with Site table
-                    .filter(Survey.date >= start_date))
+            with get_db_session() as db:
+                query = (db.query(
+                        Survey.date,
+                        func.avg(Survey.commercial_biomass).label('Commercial Biomass'))
+                        .join(Site)  # Join with Site table
+                        .filter(Survey.date >= start_date))
 
-            if exclude_site_id:
-                query = query.filter(Survey.site_id != exclude_site_id)
+                if exclude_site_id:
+                    query = query.filter(Survey.site_id != exclude_site_id)
 
-            if municipality:
-                query = query.filter(Site.municipality == municipality)
+                if municipality:
+                    query = query.filter(Site.municipality == municipality)
 
-            surveys = (query.group_by(Survey.date)
-                      .order_by(Survey.date)
-                      .all())
+                surveys = (query.group_by(Survey.date)
+                          .order_by(Survey.date)
+                          .all())
 
-            return pd.DataFrame(surveys, columns=['date', 'Commercial Biomass'])
+                return pd.DataFrame(surveys, columns=['date', 'Commercial Biomass'])
         except Exception as e:
             print(f"Error calculating average biomass data: {str(e)}")
             return pd.DataFrame(columns=['date', 'Commercial Biomass'])
@@ -150,28 +157,30 @@ class DataProcessor:
 
         exclude_site_id = None
         if exclude_site:
-            site = _self.db.query(Site).filter(Site.name == exclude_site).first()
-            if site:
-                exclude_site_id = site.id
+            with get_db_session() as db:
+                site = db.query(Site).filter(Site.name == exclude_site).first()
+                if site:
+                    exclude_site_id = site.id
 
         try:
-            query = (_self.db.query(
-                    Survey.date,
-                    func.avg(Survey.hard_coral_cover).label('Hard Coral Cover'))
-                    .join(Site)  # Join with Site table
-                    .filter(Survey.date >= start_date))
+            with get_db_session() as db:
+                query = (db.query(
+                        Survey.date,
+                        func.avg(Survey.hard_coral_cover).label('Hard Coral Cover'))
+                        .join(Site)  # Join with Site table
+                        .filter(Survey.date >= start_date))
 
-            if exclude_site_id:
-                query = query.filter(Survey.site_id != exclude_site_id)
+                if exclude_site_id:
+                    query = query.filter(Survey.site_id != exclude_site_id)
 
-            if municipality:
-                query = query.filter(Site.municipality == municipality)
+                if municipality:
+                    query = query.filter(Site.municipality == municipality)
 
-            surveys = (query.group_by(Survey.date)
-                      .order_by(Survey.date)
-                      .all())
+                surveys = (query.group_by(Survey.date)
+                          .order_by(Survey.date)
+                          .all())
 
-            return pd.DataFrame(surveys, columns=['date', 'Hard Coral Cover'])
+                return pd.DataFrame(surveys, columns=['date', 'Hard Coral Cover'])
         except Exception as e:
             print(f"Error calculating average coral cover data: {str(e)}")
             return pd.DataFrame(columns=['date', 'Hard Coral Cover'])
@@ -181,19 +190,20 @@ class DataProcessor:
         """Process commercial fish biomass data"""
         print(f"Fetching biomass data for site: {site_name}")
         try:
-            site = _self.db.query(Site).filter(Site.name == site_name).first()
-            if not site:
-                print(f"Site not found: {site_name}")
-                return pd.DataFrame(columns=['date', 'Commercial Biomass'])
+            with get_db_session() as db:
+                site = db.query(Site).filter(Site.name == site_name).first()
+                if not site:
+                    print(f"Site not found: {site_name}")
+                    return pd.DataFrame(columns=['date', 'Commercial Biomass'])
 
-            surveys = (_self.db.query(Survey.date, Survey.commercial_biomass)
-                      .filter(Survey.site_id == site.id)
-                      .filter(Survey.date >= start_date)
-                      .order_by(Survey.date)
-                      .all())
+                surveys = (db.query(Survey.date, Survey.commercial_biomass)
+                          .filter(Survey.site_id == site.id)
+                          .filter(Survey.date >= start_date)
+                          .order_by(Survey.date)
+                          .all())
 
-            print(f"Found {len(surveys)} biomass surveys for {site_name}")
-            return pd.DataFrame(surveys, columns=['date', 'Commercial Biomass'])
+                print(f"Found {len(surveys)} biomass surveys for {site_name}")
+                return pd.DataFrame(surveys, columns=['date', 'Commercial Biomass'])
         except Exception as e:
             print(f"Error fetching biomass data: {str(e)}")
             return pd.DataFrame(columns=['date', 'Commercial Biomass'])
@@ -203,19 +213,20 @@ class DataProcessor:
         """Process hard coral cover data"""
         print(f"Fetching coral cover data for site: {site_name}")
         try:
-            site = _self.db.query(Site).filter(Site.name == site_name).first()
-            if not site:
-                print(f"Site not found: {site_name}")
-                return pd.DataFrame(columns=['date', 'Hard Coral Cover'])
+            with get_db_session() as db:
+                site = db.query(Site).filter(Site.name == site_name).first()
+                if not site:
+                    print(f"Site not found: {site_name}")
+                    return pd.DataFrame(columns=['date', 'Hard Coral Cover'])
 
-            surveys = (_self.db.query(Survey.date, Survey.hard_coral_cover)
-                      .filter(Survey.site_id == site.id)
-                      .filter(Survey.date >= start_date)
-                      .order_by(Survey.date)
-                      .all())
+                surveys = (db.query(Survey.date, Survey.hard_coral_cover)
+                          .filter(Survey.site_id == site.id)
+                          .filter(Survey.date >= start_date)
+                          .order_by(Survey.date)
+                          .all())
 
-            print(f"Found {len(surveys)} coral cover surveys for {site_name}")
-            return pd.DataFrame(surveys, columns=['date', 'Hard Coral Cover'])
+                print(f"Found {len(surveys)} coral cover surveys for {site_name}")
+                return pd.DataFrame(surveys, columns=['date', 'Hard Coral Cover'])
         except Exception as e:
             print(f"Error fetching coral cover data: {str(e)}")
             return pd.DataFrame(columns=['date', 'Hard Coral Cover'])
