@@ -1,3 +1,17 @@
+/* Add logo styles */
+.logo-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.header-logo {
+    max-width: 300px;
+    height: auto;
+    margin-bottom: 1rem;
+}
+
 /* Modern color palette */
 :root {
     --primary-color: #2b6cb0;
@@ -28,10 +42,24 @@
     transition: box-shadow 0.3s ease;
     border: 1px solid var(--border-color);
     width: 100%;
+    text-align: center;
 }
 
 .site-header:hover {
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Responsive styles for logo */
+@media (max-width: 768px) {
+    .header-logo {
+        max-width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-logo {
+        max-width: 150px;
+    }
 }
 
 /* Graph containers */

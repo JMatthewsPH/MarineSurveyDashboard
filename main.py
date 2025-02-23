@@ -43,6 +43,9 @@ subheader_text = "Marine Monitoring Dashboard" if language == "English" else "Da
 
 st.markdown(f"""
     <div class="site-header">
+        <div class="logo-container">
+            <img src="attached_assets/MCP_Data/logo text colour.png" alt="MCP Logo" class="header-logo">
+        </div>
         <h1>{header_text}</h1>
         <h2>{subheader_text}</h2>
     </div>
