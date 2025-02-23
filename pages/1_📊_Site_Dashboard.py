@@ -315,7 +315,7 @@ if selected_site_obj:
             "Biomass (kg/ha)",
             comparison_data=biomass_comparison_data
         )
-        st.plotly_chart(biomass_fig, use_container_width=True, config=plotly_config)
+        st.plotly_chart(biomass_fig, use_container_width=True, config=plotly_config, key='biomass_chart')
 
         # Get coral cover data and comparison
         st.subheader("Hard Coral Cover")
@@ -336,7 +336,7 @@ if selected_site_obj:
             "Cover (%)",
             comparison_data=coral_comparison_data
         )
-        st.plotly_chart(coral_fig, use_container_width=True, config=plotly_config)
+        st.plotly_chart(coral_fig, use_container_width=True, config=plotly_config, key='coral_chart')
 
         # Get fleshy algae data and comparison
         st.subheader("Fleshy Algae Cover")
@@ -357,7 +357,7 @@ if selected_site_obj:
             "Cover (%)",
             comparison_data=algae_comparison_data
         )
-        st.plotly_chart(algae_fig, use_container_width=True, config=plotly_config)
+        st.plotly_chart(algae_fig, use_container_width=True, config=plotly_config, key='algae_chart')
 
         # Get herbivore data and comparison
         st.subheader("Herbivore Density")
@@ -378,7 +378,7 @@ if selected_site_obj:
             "Density (ind/ha)",
             comparison_data=herbivore_comparison_data
         )
-        st.plotly_chart(herbivore_fig, use_container_width=True, config=plotly_config)
+        st.plotly_chart(herbivore_fig, use_container_width=True, config=plotly_config, key='herbivore_chart')
 
         # Get omnivore data and comparison
         st.subheader("Omnivore Density")
@@ -399,7 +399,7 @@ if selected_site_obj:
             "Density (ind/ha)",
             comparison_data=omnivore_comparison_data
         )
-        st.plotly_chart(omnivore_fig, use_container_width=True, config=plotly_config)
+        st.plotly_chart(omnivore_fig, use_container_width=True, config=plotly_config, key='omnivore_chart')
 
         # Get corallivore data and comparison
         st.subheader("Corallivore Density")
@@ -420,7 +420,7 @@ if selected_site_obj:
             "Density (ind/ha)",
             comparison_data=corallivore_comparison_data
         )
-        st.plotly_chart(corallivore_fig, use_container_width=True, config=plotly_config)
+        st.plotly_chart(corallivore_fig, use_container_width=True, config=plotly_config, key='corallivore_chart')
 
         # Add bleaching visualization
         st.subheader("Bleaching")
@@ -441,7 +441,7 @@ if selected_site_obj:
             "Bleaching (%)",
             comparison_data=bleaching_comparison_data
         )
-        st.plotly_chart(bleaching_fig, use_container_width=True, config=plotly_config)
+        st.plotly_chart(bleaching_fig, use_container_width=True, config=plotly_config, key='bleaching_chart')
 
         # Add rubble visualization
         st.subheader("Rubble Cover")
@@ -462,4 +462,4 @@ if selected_site_obj:
             "Rubble Cover (%)",
             comparison_data=rubble_comparison_data
         )
-        st.plotly_chart(rubble_fig, use_container_width=True, config=plotly_config)
+        st.plotly_chart(rubble_fig, use_container_width=True, config=plotly_config, key='rubble_chart')
