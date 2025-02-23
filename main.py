@@ -38,7 +38,6 @@ with st.sidebar:
 language = st.session_state.language
 
 # Header
-header_text = "Marine Conservation Philippines" if language == "English" else "Pangangalaga sa Karagatan ng Pilipinas"
 subheader_text = "Marine Monitoring Dashboard" if language == "English" else "Dashboard ng Pagsubaybay sa Karagatan"
 
 # Get logo path
@@ -48,10 +47,13 @@ logo_path = os.path.join("attached_assets", "MCP_Data", "Logo Text Color.png")
 st.write("Current working directory:", os.getcwd())
 st.write("Looking for logo at:", os.path.abspath(logo_path))
 if os.path.exists(logo_path):
-    st.image(logo_path, use_container_width=True)
+    # Create columns to center and resize the logo
+    cols = st.columns([2, 1, 2])  # This creates a smaller center column
+    with cols[1]:
+        st.image(logo_path, use_column_width=True)
+
     st.markdown(f"""
         <div class="site-header">
-            <h1>{header_text}</h1>
             <h2>{subheader_text}</h2>
         </div>
     """, unsafe_allow_html=True)
@@ -70,7 +72,6 @@ else:
 
     st.markdown(f"""
         <div class="site-header">
-            <h1>{header_text}</h1>
             <h2>{subheader_text}</h2>
         </div>
     """, unsafe_allow_html=True)
