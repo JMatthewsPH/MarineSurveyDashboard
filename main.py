@@ -40,6 +40,9 @@ language = st.session_state.language
 # Header
 subheader_text = "Marine Monitoring Dashboard" if language == "English" else "Dashboard ng Pagsubaybay sa Karagatan"
 
+# Add some padding at the top
+st.markdown("<div style='padding-top: 20px;'></div>", unsafe_allow_html=True)
+
 # Get logo path
 logo_path = os.path.join("attached_assets", "MCP_Data", "Logo Text Color.png")
 
@@ -61,6 +64,7 @@ else:
             <h2>{subheader_text}</h2>
         </div>
     """, unsafe_allow_html=True)
+
 
 
 # Initialize database connection
