@@ -52,6 +52,21 @@ class GraphGenerator:
     def __init__(self, data_processor):
         self.data_processor = data_processor
 
+    def get_metric_range(self, metric_name):
+        """Define standard ranges for each metric type"""
+        ranges = {
+            'Commercial Biomass': {'min': 0, 'max': 3000},  # kg/ha
+            'Hard Coral Cover': {'min': 0, 'max': 100},     # percentage
+            'Fleshy Algae': {'min': 0, 'max': 100},         # percentage
+            'Bleaching': {'min': 0, 'max': 100},            # percentage
+            'Herbivore': {'min': 0, 'max': 5000},           # ind/ha
+            'Carnivore': {'min': 0, 'max': 5000},           # ind/ha
+            'Omnivore': {'min': 0, 'max': 5000},            # ind/ha
+            'Corallivore': {'min': 0, 'max': 5000},         # ind/ha
+            'Rubble': {'min': 0, 'max': 100}                # percentage
+        }
+        return ranges.get(metric_name, {'min': 0, 'max': 100})  # default range
+
     def create_time_series(self, data, title, y_label, comparison_data=None, secondary_data=None, secondary_label=None, tertiary_data=None, tertiary_label=None):
         """Create time series graph with optional comparison and secondary/tertiary metrics"""
         # Create base figure
@@ -93,6 +108,10 @@ class GraphGenerator:
 
         pre_covid = data[data['date'] < covid_start]
         post_covid = data[data['date'] > covid_end]
+
+        # Get the metric name from the title
+        metric_name = title.split(' - ')[0].strip()
+        y_range = self.get_metric_range(metric_name)
 
         # Add pre-COVID data
         fig.add_trace(go.Scatter(
@@ -152,53 +171,54 @@ class GraphGenerator:
                 showlegend=False
             ))
 
-        # Update layout
+        # Update layout with fixed y-axis range
         layout_updates = {
+            'title': {
+                'text': title,
+                'y': 0.95,
+                'x': 0.5,
+                'xanchor': 'center',
+                'yanchor': 'top',
+                'font': {'size': 16}
+            },
+            'xaxis_title': 'Season',
+            'yaxis_title': y_label,
+            'template': 'plotly_white',
+            'hovermode': 'x unified',
+            'showlegend': True,
+            'legend': {
+                'orientation': 'h',
+                'yanchor': 'bottom',
+                'y': -0.6,
+                'xanchor': 'center',
+                'x': 0.5,
+                'bgcolor': 'rgba(255, 255, 255, 1)'
+            },
+            'autosize': True,
+            'height': 550,
+            'margin': {
+                'l': 50,
+                'r': 30,
+                't': 60,
+                'b': 180
+            },
+            'xaxis': {
+                'tickangle': 45,
+                'automargin': True,
+                'type': 'category',
+                'tickfont': {'size': 10},
+                'title': {'standoff': 50}
+            },
+            'yaxis': {
+                'automargin': True,
                 'title': {
-                    'text': title,
-                    'y': 0.95,  # Move title up slightly
-                    'x': 0.5,
-                    'xanchor': 'center',
-                    'yanchor': 'top',
-                    'font': {'size': 16}  # Slightly smaller font for better mobile view
+                    'text': y_label,
+                    'standoff': 10
                 },
-                'xaxis_title': 'Season',
-                'yaxis_title': y_label,
-                'template': 'plotly_white',
-                'hovermode': 'x unified',
-                'showlegend': True,
-                'legend': {
-                    'orientation': 'h',
-                    'yanchor': 'bottom',
-                    'y': -0.6,  # Further increased distance from plot area
-                    'xanchor': 'center',
-                    'x': 0.5,
-                    'bgcolor': 'rgba(255, 255, 255, 1)'  # Fully opaque background
-                },
-                'autosize': True,
-                'height': 550,  # Further increased height to accommodate legend and axis labels
-                'margin': {
-                    'l': 50,
-                    'r': 30,
-                    't': 60,
-                    'b': 180  # Further increased bottom margin for legend and x-axis labels
-                },
-                'xaxis': {
-                    'tickangle': 45,
-                    'automargin': True,
-                    'type': 'category',
-                    'tickfont': {'size': 10},
-                    'title': {'standoff': 50}  # Add space between axis title and labels
-                },
-                'yaxis': {
-                    'automargin': True,
-                    'title': {
-                        'text': y_label,
-                        'standoff': 10
-                    },
-                    'side': 'left'
-                }
+                'side': 'left',
+                'range': [y_range['min'], y_range['max']]  # Set fixed y-axis range
             }
+        }
 
         fig.update_layout(**layout_updates)
         return fig, config
