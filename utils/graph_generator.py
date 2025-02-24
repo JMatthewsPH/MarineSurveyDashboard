@@ -22,16 +22,31 @@ def format_season(date_obj):
         # If it's January or February, it's end of Q4 for current year
         return f'DEC-FEB {year}'
 
-def generate_filename(title: str) -> str:
-    """Generate a filename based on the plot title and current date"""
+def generate_filename(title: str, start_date=None, end_date=None) -> str:
+    """Generate a filename based on the plot title and date range"""
     # Remove any special characters and convert spaces to underscores
     clean_title = "".join(c if c.isalnum() or c.isspace() else "_" for c in title.lower())
     clean_title = clean_title.replace(" ", "_")
 
-    # Get current date in the format YYYYMMMDD
-    current_date = datetime.now().strftime("%Y%b%d").lower()
+    # Format date part of filename
+    try:
+        if start_date and end_date:
+            # Convert to datetime if needed
+            if not isinstance(start_date, datetime):
+                start_date = pd.to_datetime(start_date)
+            if not isinstance(end_date, datetime):
+                end_date = pd.to_datetime(end_date)
+            date_str = f"{start_date.strftime('%Y%b').lower()}_{end_date.strftime('%Y%b').lower()}"
+        else:
+            # Default to current date if no range specified
+            current_date = datetime.now().strftime("%Y%b%d").lower()
+            date_str = current_date
+    except (AttributeError, ValueError, TypeError) as e:
+        print(f"Error formatting dates for filename: {e}")
+        current_date = datetime.now().strftime("%Y%b%d").lower()
+        date_str = current_date
 
-    return f"{clean_title}_{current_date}.png"
+    return f"{clean_title}_{date_str}.png"
 
 class GraphGenerator:
     def __init__(self, data_processor):
@@ -42,25 +57,33 @@ class GraphGenerator:
         # Create base figure
         fig = go.Figure()
 
-        # If no data, return empty figure with config
+        # Configure basic download settings
+        config = {
+            'toImageButtonOptions': {
+                'format': 'png',
+                'filename': generate_filename(title),
+                'height': 800,
+                'width': 1200,
+                'scale': 2
+            },
+            'displaylogo': False,
+            'responsive': True,
+            'displayModeBar': True,
+            'modeBarButtonsToRemove': ['lasso2d', 'select2d']
+        }
+
+        # If no data, return empty figure with basic config
         if data.empty:
-            config = {
-                'toImageButtonOptions': {
-                    'format': 'png',
-                    'filename': generate_filename(title),
-                    'height': 800,
-                    'width': 1200,
-                    'scale': 2
-                },
-                'displaylogo': False,
-                'responsive': True,
-                'displayModeBar': True,
-                'modeBarButtonsToRemove': ['lasso2d', 'select2d']
-            }
             return fig, config
 
-        # Sort data by date
+        # Sort data by date and get date range for filename
         data = data.sort_values('date')
+        start_date = data['date'].min()
+        end_date = data['date'].max()
+
+        # Update filename with date range
+        config['toImageButtonOptions']['filename'] = generate_filename(title, start_date, end_date)
+
         # Format dates as seasons
         data['season'] = data['date'].apply(format_season)
 
@@ -71,7 +94,7 @@ class GraphGenerator:
         pre_covid = data[data['date'] < covid_start]
         post_covid = data[data['date'] > covid_end]
 
-        # Add main data traces
+        # Add pre-COVID data
         fig.add_trace(go.Scatter(
             x=pre_covid['season'],
             y=pre_covid[pre_covid.columns[1]],
@@ -80,6 +103,7 @@ class GraphGenerator:
             mode='lines+markers'
         ))
 
+        # Add post-COVID data
         fig.add_trace(go.Scatter(
             x=post_covid['season'],
             y=post_covid[post_covid.columns[1]],
@@ -89,11 +113,10 @@ class GraphGenerator:
             showlegend=False
         ))
 
-        # Add dotted line for COVID gap if there's data on both sides
+        # Add COVID period indicator if data exists on both sides
         if not pre_covid.empty and not post_covid.empty:
             last_pre_covid = pre_covid.iloc[-1]
             first_post_covid = post_covid.iloc[0]
-
             fig.add_trace(go.Scatter(
                 x=[last_pre_covid['season'], first_post_covid['season']],
                 y=[last_pre_covid[pre_covid.columns[1]], first_post_covid[post_covid.columns[1]]],
@@ -103,13 +126,14 @@ class GraphGenerator:
                 mode='lines'
             ))
 
-        # Add comparison if provided
+        # Add comparison data if provided
         if comparison_data is not None and not comparison_data.empty:
             comparison_data = comparison_data.sort_values('date')
             comparison_data['season'] = comparison_data['date'].apply(format_season)
             pre_covid_comp = comparison_data[comparison_data['date'] < covid_start]
             post_covid_comp = comparison_data[comparison_data['date'] > covid_end]
 
+            # Add pre-COVID comparison data
             fig.add_trace(go.Scatter(
                 x=pre_covid_comp['season'],
                 y=pre_covid_comp[comparison_data.columns[1]],
@@ -118,6 +142,7 @@ class GraphGenerator:
                 mode='lines+markers'
             ))
 
+            # Add post-COVID comparison data
             fig.add_trace(go.Scatter(
                 x=post_covid_comp['season'],
                 y=post_covid_comp[comparison_data.columns[1]],
@@ -127,7 +152,7 @@ class GraphGenerator:
                 showlegend=False
             ))
 
-        # Update layout for better responsiveness and legend placement
+        # Update layout
         layout_updates = {
             'title': {
                 'text': title,
@@ -161,9 +186,7 @@ class GraphGenerator:
                 'tickangle': 45,
                 'automargin': True,
                 'type': 'category',
-                'tickfont': {'size': 10},
-                'ticktext': data['season'].unique(),
-                'tickmode': 'array'
+                'tickfont': {'size': 10}
             },
             'yaxis': {
                 'automargin': True,
@@ -176,28 +199,11 @@ class GraphGenerator:
         }
 
         fig.update_layout(**layout_updates)
-
-        # Configure download and display settings
-        config = {
-            'toImageButtonOptions': {
-                'format': 'png',
-                'filename': generate_filename(title),
-                'height': 800,
-                'width': 1200,
-                'scale': 2
-            },
-            'displaylogo': False,
-            'responsive': True,
-            'displayModeBar': True,
-            'modeBarButtonsToRemove': ['lasso2d', 'select2d']
-        }
-
         return fig, config
 
     def create_eco_tourism_chart(self, data, title, observation_type='percentage'):
         """Create bar chart for eco-tourism data"""
         if data.empty:
-            # Return empty figure with message
             fig = go.Figure()
             fig.add_annotation(
                 text="No data available for selected period",
@@ -207,7 +213,20 @@ class GraphGenerator:
                 y=0.5,
                 showarrow=False
             )
-            return fig
+            config = {
+                'toImageButtonOptions': {
+                    'format': 'png',
+                    'filename': generate_filename(title),
+                    'height': 800,
+                    'width': 1200,
+                    'scale': 2
+                },
+                'displaylogo': False,
+                'responsive': True,
+                'displayModeBar': True,
+                'modeBarButtonsToRemove': ['lasso2d', 'select2d']
+            }
+            return fig, config
 
         fig = go.Figure(go.Bar(
             y=data.index,
