@@ -154,50 +154,51 @@ class GraphGenerator:
 
         # Update layout
         layout_updates = {
-            'title': {
-                'text': title,
-                'y': 0.95,  # Move title up slightly
-                'x': 0.5,
-                'xanchor': 'center',
-                'yanchor': 'top',
-                'font': {'size': 16}  # Slightly smaller font for better mobile view
-            },
-            'xaxis_title': 'Season',
-            'yaxis_title': y_label,
-            'template': 'plotly_white',
-            'hovermode': 'x unified',
-            'showlegend': True,
-            'legend': {
-                'orientation': 'h',
-                'yanchor': 'bottom',  # Move legend to bottom
-                'y': -0.3,  # Position below the plot
-                'xanchor': 'center',
-                'x': 0.5,
-                'bgcolor': 'rgba(255, 255, 255, 0.8)'
-            },
-            'autosize': True,
-            'height': 400,  # Slightly taller to accommodate bottom legend
-            'margin': {
-                'l': 50,
-                'r': 30,
-                't': 60,  # Increased top margin
-                'b': 100  # Increased bottom margin for legend
-            },
-            'xaxis': {
-                'tickangle': 45,
-                'automargin': True,
-                'type': 'category',
-                'tickfont': {'size': 10}
-            },
-            'yaxis': {
-                'automargin': True,
                 'title': {
-                    'text': y_label,
-                    'standoff': 10
+                    'text': title,
+                    'y': 0.95,  # Move title up slightly
+                    'x': 0.5,
+                    'xanchor': 'center',
+                    'yanchor': 'top',
+                    'font': {'size': 16}  # Slightly smaller font for better mobile view
                 },
-                'side': 'left'
+                'xaxis_title': 'Season',
+                'yaxis_title': y_label,
+                'template': 'plotly_white',
+                'hovermode': 'x unified',
+                'showlegend': True,
+                'legend': {
+                    'orientation': 'h',
+                    'yanchor': 'bottom',
+                    'y': -0.6,  # Further increased distance from plot area
+                    'xanchor': 'center',
+                    'x': 0.5,
+                    'bgcolor': 'rgba(255, 255, 255, 1)'  # Fully opaque background
+                },
+                'autosize': True,
+                'height': 550,  # Further increased height to accommodate legend and axis labels
+                'margin': {
+                    'l': 50,
+                    'r': 30,
+                    't': 60,
+                    'b': 180  # Further increased bottom margin for legend and x-axis labels
+                },
+                'xaxis': {
+                    'tickangle': 45,
+                    'automargin': True,
+                    'type': 'category',
+                    'tickfont': {'size': 10},
+                    'title': {'standoff': 50}  # Add space between axis title and labels
+                },
+                'yaxis': {
+                    'automargin': True,
+                    'title': {
+                        'text': y_label,
+                        'standoff': 10
+                    },
+                    'side': 'left'
+                }
             }
-        }
 
         fig.update_layout(**layout_updates)
         return fig, config
