@@ -46,7 +46,13 @@ st.markdown(load_css(), unsafe_allow_html=True)
 
 # Sidebar for site selection and language
 with st.sidebar:
-    st.title("Navigation")
+    # Back to main link first
+    if st.session_state.language == "English":
+        st.markdown("[🏠 Back to Main](../)")
+    else:
+        st.markdown("[🏠 Balik sa Main](../)")
+
+    st.markdown("---")  # Add separator
 
     # Language selection
     st.session_state.language = st.selectbox(
@@ -83,14 +89,6 @@ with st.sidebar:
     if selected_site and selected_site in site_names:
         # Update URL when site is selected
         st.query_params["site"] = selected_site
-
-    st.markdown("---")  # Add separator
-
-    # Back to main link
-    if st.session_state.language == "English":
-        st.markdown("[🏠 Back to Main](../)")
-    else:
-        st.markdown("[🏠 Balik sa Main](../)")
 
 
 # Display site content
