@@ -22,6 +22,17 @@ def format_season(date_obj):
         # If it's January or February, it's end of Q4 for current year
         return f'DEC-FEB {year}'
 
+def generate_filename(title: str) -> str:
+    """Generate a filename based on the plot title and current date"""
+    # Remove any special characters and convert spaces to underscores
+    clean_title = "".join(c if c.isalnum() or c.isspace() else "_" for c in title.lower())
+    clean_title = clean_title.replace(" ", "_")
+
+    # Get current date in the format YYYYMMMDD
+    current_date = datetime.now().strftime("%Y%b%d").lower()
+
+    return f"{clean_title}_{current_date}.png"
+
 class GraphGenerator:
     def __init__(self, data_processor):
         self.data_processor = data_processor
@@ -152,6 +163,30 @@ class GraphGenerator:
         }
 
         fig.update_layout(**layout_updates)
+
+        # Add custom filename for downloads based on the title
+        fig.update_layout(
+            modebar=dict(
+                orientation='v',
+                bgcolor='rgba(255, 255, 255, 0.7)',
+            ),
+        )
+
+        # Update the config to use the custom filename
+        fig.config = {
+            'toImageButtonOptions': {
+                'format': 'png',
+                'filename': generate_filename(title),
+                'height': 800,
+                'width': 1200,
+                'scale': 2
+            },
+            'displaylogo': False,
+            'responsive': True,
+            'displayModeBar': True,
+            'modeBarButtonsToRemove': ['lasso2d', 'select2d']
+        }
+
         return fig
 
     def create_eco_tourism_chart(self, data, title, observation_type='percentage'):
