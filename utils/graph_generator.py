@@ -156,10 +156,11 @@ class GraphGenerator:
         layout_updates = {
             'title': {
                 'text': title,
-                'y': 0.95,
+                'y': 0.95,  # Move title up slightly
                 'x': 0.5,
                 'xanchor': 'center',
                 'yanchor': 'top',
+                'font': {'size': 16}  # Slightly smaller font for better mobile view
             },
             'xaxis_title': 'Season',
             'yaxis_title': y_label,
@@ -168,19 +169,19 @@ class GraphGenerator:
             'showlegend': True,
             'legend': {
                 'orientation': 'h',
-                'yanchor': 'top',
-                'y': 0.98,
-                'xanchor': 'left',
-                'x': 0.01,
+                'yanchor': 'bottom',  # Move legend to bottom
+                'y': -0.3,  # Position below the plot
+                'xanchor': 'center',
+                'x': 0.5,
                 'bgcolor': 'rgba(255, 255, 255, 0.8)'
             },
             'autosize': True,
-            'height': 350,
+            'height': 400,  # Slightly taller to accommodate bottom legend
             'margin': {
                 'l': 50,
                 'r': 30,
-                't': 60,
-                'b': 50
+                't': 60,  # Increased top margin
+                'b': 100  # Increased bottom margin for legend
             },
             'xaxis': {
                 'tickangle': 45,

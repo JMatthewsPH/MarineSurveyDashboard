@@ -297,8 +297,10 @@ if selected_site_obj:
             'modeBarButtonsToRemove': ['lasso2d', 'select2d']
         }
 
+        # Add spacing before first chart
+        st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
+
         # Get biomass data and comparison
-        st.subheader("Commercial Fish Biomass")
         biomass_data = data_processor.get_biomass_data(selected_site)
         biomass_comparison_data = None
         if biomass_comparison == "Compare with Site" and biomass_compare_site:
@@ -317,8 +319,10 @@ if selected_site_obj:
         )
         st.plotly_chart(biomass_fig, use_container_width=True, config=biomass_config, key='biomass_chart')
 
+        # Add spacing between charts
+        st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
+
         # Get coral cover data and comparison
-        st.subheader("Hard Coral Cover")
         coral_data = data_processor.get_metric_data(selected_site, 'hard_coral')
         coral_comparison_data = None
         if coral_comparison == "Compare with Site" and coral_compare_site:
@@ -338,8 +342,10 @@ if selected_site_obj:
         )
         st.plotly_chart(coral_fig, use_container_width=True, config=coral_config, key='coral_chart')
 
+        # Add spacing between charts
+        st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
+
         # Get fleshy algae data and comparison
-        st.subheader("Fleshy Algae Cover")
         algae_data = data_processor.get_metric_data(selected_site, 'fleshy_algae')
         algae_comparison_data = None
         if algae_comparison == "Compare with Site" and algae_compare_site:
@@ -359,8 +365,10 @@ if selected_site_obj:
         )
         st.plotly_chart(algae_fig, use_container_width=True, config=algae_config, key='algae_chart')
 
+        # Add spacing between charts
+        st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
+
         # Get herbivore data and comparison
-        st.subheader("Herbivore Density")
         herbivore_data = data_processor.get_metric_data(selected_site, 'herbivore')
         herbivore_comparison_data = None
         if herbivore_comparison == "Compare with Site" and herbivore_compare_site:
@@ -380,8 +388,10 @@ if selected_site_obj:
         )
         st.plotly_chart(herbivore_fig, use_container_width=True, config=herbivore_config, key='herbivore_chart')
 
+        # Add spacing between charts
+        st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
+
         # Get omnivore data and comparison
-        st.subheader("Omnivore Density")
         omnivore_data = data_processor.get_metric_data(selected_site, 'omnivore')
         omnivore_comparison_data = None
         if omnivore_comparison == "Compare with Site" and omnivore_compare_site:
@@ -401,8 +411,10 @@ if selected_site_obj:
         )
         st.plotly_chart(omnivore_fig, use_container_width=True, config=omnivore_config, key='omnivore_chart')
 
+        # Add spacing between charts
+        st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
+
         # Get corallivore data and comparison
-        st.subheader("Corallivore Density")
         corallivore_data = data_processor.get_metric_data(selected_site, 'corallivore')
         corallivore_comparison_data = None
         if corallivore_comparison == "Compare with Site" and corallivore_compare_site:
@@ -422,8 +434,10 @@ if selected_site_obj:
         )
         st.plotly_chart(corallivore_fig, use_container_width=True, config=corallivore_config, key='corallivore_chart')
 
+        # Add spacing between charts
+        st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
+
         # Add bleaching visualization
-        st.subheader("Bleaching")
         bleaching_data = data_processor.get_metric_data(selected_site, 'bleaching')
         bleaching_comparison_data = None
         if bleaching_comparison == "Compare with Site" and bleaching_compare_site:
@@ -443,8 +457,10 @@ if selected_site_obj:
         )
         st.plotly_chart(bleaching_fig, use_container_width=True, config=bleaching_config, key='bleaching_chart')
 
+        # Add spacing between charts
+        st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
+
         # Add rubble visualization
-        st.subheader("Rubble Cover")
         rubble_data = data_processor.get_metric_data(selected_site, 'rubble')
         rubble_comparison_data = None
         if rubble_comparison == "Compare with Site" and rubble_compare_site:
