@@ -39,6 +39,21 @@ class GraphGenerator:
 
     def create_time_series(self, data, title, y_label, comparison_data=None, secondary_data=None, secondary_label=None, tertiary_data=None, tertiary_label=None):
         """Create time series graph with optional comparison and secondary/tertiary metrics"""
+        # Configure Plotly chart settings
+        config = {
+            'toImageButtonOptions': {
+                'format': 'png',
+                'filename': generate_filename(title),
+                'height': 800,
+                'width': 1200,
+                'scale': 2
+            },
+            'displaylogo': False,
+            'responsive': True,
+            'displayModeBar': True,
+            'modeBarButtonsToRemove': ['lasso2d', 'select2d']
+        }
+
         # Create base figure with fixed dimensions
         fig = go.Figure()
 
@@ -159,33 +174,16 @@ class GraphGenerator:
                     'standoff': 10
                 },
                 'side': 'left'
+            },
+            'modebar': {
+                'orientation': 'v',
+                'bgcolor': 'rgba(255, 255, 255, 0.7)',
             }
         }
 
         fig.update_layout(**layout_updates)
 
-        # Add custom filename for downloads based on the title
-        fig.update_layout(
-            modebar=dict(
-                orientation='v',
-                bgcolor='rgba(255, 255, 255, 0.7)',
-            ),
-        )
-
-        # Update the config to use the custom filename
-        fig.config = {
-            'toImageButtonOptions': {
-                'format': 'png',
-                'filename': generate_filename(title),
-                'height': 800,
-                'width': 1200,
-                'scale': 2
-            },
-            'displaylogo': False,
-            'responsive': True,
-            'displayModeBar': True,
-            'modeBarButtonsToRemove': ['lasso2d', 'select2d']
-        }
+        fig.update_layout(config=config) #Apply config here
 
         return fig
 

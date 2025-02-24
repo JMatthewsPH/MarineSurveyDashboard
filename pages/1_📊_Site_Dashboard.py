@@ -309,13 +309,13 @@ if selected_site_obj:
                 exclude_site=selected_site,
                 municipality=municipality
             )
-        biomass_fig = graph_generator.create_time_series(
+        biomass_fig, biomass_config = graph_generator.create_time_series(
             biomass_data,
             f"Commercial Fish Biomass - {selected_site}",
             "Biomass (kg/ha)",
             comparison_data=biomass_comparison_data
         )
-        st.plotly_chart(biomass_fig, use_container_width=True, config=plotly_config, key='biomass_chart')
+        st.plotly_chart(biomass_fig, use_container_width=True, config=biomass_config, key='biomass_chart')
 
         # Get coral cover data and comparison
         st.subheader("Hard Coral Cover")
@@ -330,13 +330,13 @@ if selected_site_obj:
                 exclude_site=selected_site,
                 municipality=municipality
             )
-        coral_fig = graph_generator.create_time_series(
+        coral_fig, coral_config = graph_generator.create_time_series(
             coral_data,
             f"Hard Coral Cover - {selected_site}",
             "Cover (%)",
             comparison_data=coral_comparison_data
         )
-        st.plotly_chart(coral_fig, use_container_width=True, config=plotly_config, key='coral_chart')
+        st.plotly_chart(coral_fig, use_container_width=True, config=coral_config, key='coral_chart')
 
         # Get fleshy algae data and comparison
         st.subheader("Fleshy Algae Cover")
@@ -351,13 +351,13 @@ if selected_site_obj:
                 exclude_site=selected_site,
                 municipality=municipality
             )
-        algae_fig = graph_generator.create_time_series(
+        algae_fig, algae_config = graph_generator.create_time_series(
             algae_data,
             f"Fleshy Algae Cover - {selected_site}",
             "Cover (%)",
             comparison_data=algae_comparison_data
         )
-        st.plotly_chart(algae_fig, use_container_width=True, config=plotly_config, key='algae_chart')
+        st.plotly_chart(algae_fig, use_container_width=True, config=algae_config, key='algae_chart')
 
         # Get herbivore data and comparison
         st.subheader("Herbivore Density")
@@ -372,13 +372,13 @@ if selected_site_obj:
                 exclude_site=selected_site,
                 municipality=municipality
             )
-        herbivore_fig = graph_generator.create_time_series(
+        herbivore_fig, herbivore_config = graph_generator.create_time_series(
             herbivore_data,
             f"Herbivore Density - {selected_site}",
             "Density (ind/ha)",
             comparison_data=herbivore_comparison_data
         )
-        st.plotly_chart(herbivore_fig, use_container_width=True, config=plotly_config, key='herbivore_chart')
+        st.plotly_chart(herbivore_fig, use_container_width=True, config=herbivore_config, key='herbivore_chart')
 
         # Get omnivore data and comparison
         st.subheader("Omnivore Density")
@@ -393,13 +393,13 @@ if selected_site_obj:
                 exclude_site=selected_site,
                 municipality=municipality
             )
-        omnivore_fig = graph_generator.create_time_series(
+        omnivore_fig, omnivore_config = graph_generator.create_time_series(
             omnivore_data,
             f"Omnivore Density - {selected_site}",
             "Density (ind/ha)",
             comparison_data=omnivore_comparison_data
         )
-        st.plotly_chart(omnivore_fig, use_container_width=True, config=plotly_config, key='omnivore_chart')
+        st.plotly_chart(omnivore_fig, use_container_width=True, config=omnivore_config, key='omnivore_chart')
 
         # Get corallivore data and comparison
         st.subheader("Corallivore Density")
@@ -414,13 +414,13 @@ if selected_site_obj:
                 exclude_site=selected_site,
                 municipality=municipality
             )
-        corallivore_fig = graph_generator.create_time_series(
+        corallivore_fig, corallivore_config = graph_generator.create_time_series(
             corallivore_data,
             f"Corallivore Density - {selected_site}",
             "Density (ind/ha)",
             comparison_data=corallivore_comparison_data
         )
-        st.plotly_chart(corallivore_fig, use_container_width=True, config=plotly_config, key='corallivore_chart')
+        st.plotly_chart(corallivore_fig, use_container_width=True, config=corallivore_config, key='corallivore_chart')
 
         # Add bleaching visualization
         st.subheader("Bleaching")
@@ -435,13 +435,13 @@ if selected_site_obj:
                 exclude_site=selected_site,
                 municipality=municipality
             )
-        bleaching_fig = graph_generator.create_time_series(
+        bleaching_fig, bleaching_config = graph_generator.create_time_series(
             bleaching_data,
             f"Bleaching - {selected_site}",
             "Bleaching (%)",
             comparison_data=bleaching_comparison_data
         )
-        st.plotly_chart(bleaching_fig, use_container_width=True, config=plotly_config, key='bleaching_chart')
+        st.plotly_chart(bleaching_fig, use_container_width=True, config=bleaching_config, key='bleaching_chart')
 
         # Add rubble visualization
         st.subheader("Rubble Cover")
@@ -456,10 +456,10 @@ if selected_site_obj:
                 exclude_site=selected_site,
                 municipality=municipality
             )
-        rubble_fig = graph_generator.create_time_series(
+        rubble_fig, rubble_config = graph_generator.create_time_series(
             rubble_data,
             f"Rubble Cover - {selected_site}",
             "Rubble Cover (%)",
             comparison_data=rubble_comparison_data
         )
-        st.plotly_chart(rubble_fig, use_container_width=True, config=plotly_config, key='rubble_chart')
+        st.plotly_chart(rubble_fig, use_container_width=True, config=rubble_config, key='rubble_chart')
