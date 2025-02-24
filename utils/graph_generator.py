@@ -39,27 +39,25 @@ class GraphGenerator:
 
     def create_time_series(self, data, title, y_label, comparison_data=None, secondary_data=None, secondary_label=None, tertiary_data=None, tertiary_label=None):
         """Create time series graph with optional comparison and secondary/tertiary metrics"""
-        # Configure Plotly chart settings
-        config = {
-            'toImageButtonOptions': {
-                'format': 'png',
-                'filename': generate_filename(title),
-                'height': 800,
-                'width': 1200,
-                'scale': 2
-            },
-            'displaylogo': False,
-            'responsive': True,
-            'displayModeBar': True,
-            'modeBarButtonsToRemove': ['lasso2d', 'select2d']
-        }
-
-        # Create base figure with fixed dimensions
+        # Create base figure
         fig = go.Figure()
 
-        # If no data, return empty figure
+        # If no data, return empty figure with config
         if data.empty:
-            return fig
+            config = {
+                'toImageButtonOptions': {
+                    'format': 'png',
+                    'filename': generate_filename(title),
+                    'height': 800,
+                    'width': 1200,
+                    'scale': 2
+                },
+                'displaylogo': False,
+                'responsive': True,
+                'displayModeBar': True,
+                'modeBarButtonsToRemove': ['lasso2d', 'select2d']
+            }
+            return fig, config
 
         # Sort data by date
         data = data.sort_values('date')
@@ -152,12 +150,12 @@ class GraphGenerator:
                 'bgcolor': 'rgba(255, 255, 255, 0.8)'
             },
             'autosize': True,
-            'height': 350,  # Reduced height since legend is inside
+            'height': 350,
             'margin': {
                 'l': 50,
                 'r': 30,
                 't': 60,
-                'b': 50  # Reduced bottom margin
+                'b': 50
             },
             'xaxis': {
                 'tickangle': 45,
@@ -174,23 +172,32 @@ class GraphGenerator:
                     'standoff': 10
                 },
                 'side': 'left'
-            },
-            'modebar': {
-                'orientation': 'v',
-                'bgcolor': 'rgba(255, 255, 255, 0.7)',
             }
         }
 
         fig.update_layout(**layout_updates)
 
-        fig.update_layout(config=config) #Apply config here
+        # Configure download and display settings
+        config = {
+            'toImageButtonOptions': {
+                'format': 'png',
+                'filename': generate_filename(title),
+                'height': 800,
+                'width': 1200,
+                'scale': 2
+            },
+            'displaylogo': False,
+            'responsive': True,
+            'displayModeBar': True,
+            'modeBarButtonsToRemove': ['lasso2d', 'select2d']
+        }
 
-        return fig
+        return fig, config
 
     def create_eco_tourism_chart(self, data, title, observation_type='percentage'):
         """Create bar chart for eco-tourism data"""
         if data.empty:
-            # Create empty figure with message
+            # Return empty figure with message
             fig = go.Figure()
             fig.add_annotation(
                 text="No data available for selected period",
@@ -222,10 +229,23 @@ class GraphGenerator:
             xaxis_title=x_title,
             yaxis_title='Species',
             template='plotly_white',
-            height=500,  # Fixed height
+            height=500,
             margin=dict(l=80, r=30, t=100, b=50),
             showlegend=False,
             autosize=True
         )
 
-        return fig
+        config = {
+            'toImageButtonOptions': {
+                'format': 'png',
+                'filename': generate_filename(title),
+                'height': 800,
+                'width': 1200,
+                'scale': 2
+            },
+            'displaylogo': False,
+            'responsive': True,
+            'displayModeBar': True,
+            'modeBarButtonsToRemove': ['lasso2d', 'select2d']
+        }
+        return fig, config
