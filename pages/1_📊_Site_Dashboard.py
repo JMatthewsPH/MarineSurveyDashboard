@@ -4,7 +4,7 @@ import streamlit as st
 st.set_page_config(
     page_title="Site Dashboard",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"
 )
 
 import os
@@ -16,17 +16,6 @@ from utils.database import get_db
 # Initialize language in session state if not present
 if 'language' not in st.session_state:
     st.session_state.language = "English"
-
-# Sidebar for language selection
-with st.sidebar:
-    st.title("Settings")
-    # Update session state when language changes
-    st.session_state.language = st.selectbox(
-        "Language / Wika",
-        ["English", "Filipino"],
-        key="language_selector",
-        index=0 if st.session_state.language == "English" else 1
-    )
 
 # Initialize processors
 @st.cache_resource
@@ -47,11 +36,30 @@ santa_catalina_sites = sorted([site.name for site in sites if site.municipality 
 # Combine in desired order
 site_names = zamboanguita_sites + siaton_sites + santa_catalina_sites
 
-# Create two columns for site navigation
-col1, col2 = st.columns([3, 1])
+# Load custom CSS
+@st.cache_data
+def load_css():
+    with open('assets/site_styles.css') as f:
+        return f'<style>{f.read()}</style>'
 
-with col1:
-    # Get site from URL or dropdown with municipality grouping
+st.markdown(load_css(), unsafe_allow_html=True)
+
+# Sidebar for site selection and language
+with st.sidebar:
+    st.title("Navigation")
+
+    # Language selection
+    st.session_state.language = st.selectbox(
+        "Language / Wika",
+        ["English", "Filipino"],
+        key="language_selector",
+        index=0 if st.session_state.language == "English" else 1
+    )
+
+    st.markdown("---")  # Add separator
+
+    # Site selection with municipality grouping
+    st.subheader("Select Site")
     site_options = []
     if zamboanguita_sites:
         site_options.append("Zamboanguita")
@@ -64,7 +72,7 @@ with col1:
         site_options.extend([f"  {site}" for site in santa_catalina_sites])
 
     selected_option = st.selectbox(
-        "Select Site",
+        "Choose a site to view",
         site_options,
         index=site_options.index(f"  {st.query_params.get('site')}") if st.query_params.get('site') in [s.strip() for s in site_options] else 0
     )
@@ -76,19 +84,14 @@ with col1:
         # Update URL when site is selected
         st.query_params["site"] = selected_site
 
-with col2:
+    st.markdown("---")  # Add separator
+
+    # Back to main link
     if st.session_state.language == "English":
         st.markdown("[🏠 Back to Main](../)")
     else:
         st.markdown("[🏠 Balik sa Main](../)")
 
-# Load custom CSS
-@st.cache_data
-def load_css():
-    with open('assets/site_styles.css') as f:
-        return f'<style>{f.read()}</style>'
-
-st.markdown(load_css(), unsafe_allow_html=True)
 
 # Display site content
 if selected_site:
