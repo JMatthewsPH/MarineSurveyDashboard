@@ -35,8 +35,11 @@ zamboanguita_sites = sorted([site.name for site in sites if site.municipality ==
 siaton_sites = sorted([site.name for site in sites if site.municipality == "Siaton"])
 santa_catalina_sites = sorted([site.name for site in sites if site.municipality == "Santa Catalina"])
 
-# Combine in desired order
+# Combine in desired order for display in sidebar
 site_names = zamboanguita_sites + siaton_sites + santa_catalina_sites
+
+# Create alphabetical list for comparison dropdowns
+alphabetical_site_names = sorted([site.name for site in sites])
 
 # Load custom CSS
 @st.cache_data
@@ -200,7 +203,7 @@ if selected_site:
             biomass_compare_labels = None
             
             if biomass_comparison == "Compare with Sites":
-                compare_sites = [site for site in site_names if site != selected_site]
+                compare_sites = [site for site in alphabetical_site_names if site != selected_site]
                 biomass_compare_sites = st.multiselect(
                     "Select sites to compare biomass:",
                     compare_sites,
@@ -234,7 +237,7 @@ if selected_site:
             coral_compare_site = None
             coral_compare_scope = None
             if coral_comparison == "Compare with Site":
-                compare_sites = [site for site in site_names if site != selected_site]
+                compare_sites = [site for site in alphabetical_site_names if site != selected_site]
                 coral_compare_site = st.selectbox(
                     "Select site to compare coral cover:",
                     compare_sites,
@@ -258,7 +261,7 @@ if selected_site:
             algae_compare_site = None
             algae_compare_scope = None
             if algae_comparison == "Compare with Site":
-                compare_sites = [site for site in site_names if site != selected_site]
+                compare_sites = [site for site in alphabetical_site_names if site != selected_site]
                 algae_compare_site = st.selectbox(
                     "Select site to compare fleshy algae:",
                     compare_sites,
@@ -282,7 +285,7 @@ if selected_site:
             herbivore_compare_site = None
             herbivore_compare_scope = None
             if herbivore_comparison == "Compare with Site":
-                compare_sites = [site for site in site_names if site != selected_site]
+                compare_sites = [site for site in alphabetical_site_names if site != selected_site]
                 herbivore_compare_site = st.selectbox(
                     "Select site to compare herbivore density:",
                     compare_sites,
@@ -306,7 +309,7 @@ if selected_site:
             omnivore_compare_site = None
             omnivore_compare_scope = None
             if omnivore_comparison == "Compare with Site":
-                compare_sites = [site for site in site_names if site != selected_site]
+                compare_sites = [site for site in alphabetical_site_names if site != selected_site]
                 omnivore_compare_site = st.selectbox(
                     "Select site to compare omnivore density:",
                     compare_sites,
@@ -330,7 +333,7 @@ if selected_site:
             corallivore_compare_site = None
             corallivore_compare_scope = None
             if corallivore_comparison == "Compare with Site":
-                compare_sites = [site for site in site_names if site != selected_site]
+                compare_sites = [site for site in alphabetical_site_names if site != selected_site]
                 corallivore_compare_site = st.selectbox(
                     "Select site to compare corallivore density:",
                     compare_sites,
@@ -354,7 +357,7 @@ if selected_site:
             bleaching_compare_site = None
             bleaching_compare_scope = None
             if bleaching_comparison == "Compare with Site":
-                compare_sites = [site for site in site_names if site != selected_site]
+                compare_sites = [site for site in alphabetical_site_names if site != selected_site]
                 bleaching_compare_site = st.selectbox(
                     "Select site to compare bleaching:",
                     compare_sites,
@@ -378,7 +381,7 @@ if selected_site:
             rubble_compare_site = None
             rubble_compare_scope = None
             if rubble_comparison == "Compare with Site":
-                compare_sites = [site for site in site_names if site != selected_site]
+                compare_sites = [site for site in alphabetical_site_names if site != selected_site]
                 rubble_compare_site = st.selectbox(
                     "Select site to compare rubble cover:",
                     compare_sites,
