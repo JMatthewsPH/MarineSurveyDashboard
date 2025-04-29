@@ -136,6 +136,7 @@ class GraphGenerator:
 
         # Get the metric name from the title
         metric_name = title.split(' - ')[0].strip()
+        print(f"DEBUG - Metric name: {metric_name}")
         y_range = self.get_metric_range(metric_name)
         
         # Set custom tick intervals for specific metrics
