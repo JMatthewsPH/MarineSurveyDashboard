@@ -13,10 +13,10 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Load custom CSS
+# Load custom CSS and JavaScript
 @st.cache_data
 def load_css():
-    css_files = ['assets/site_styles.css', '.streamlit/style.css']
+    css_files = ['assets/site_styles.css', '.streamlit/style.css', 'assets/force_black_text.css']
     css_content = ""
     for css_file in css_files:
         try:
@@ -24,13 +24,48 @@ def load_css():
                 css_content += f.read() + "\n"
         except Exception as e:
             st.warning(f"Could not load CSS file: {css_file}")
+    
+    # Add the inline force black CSS for extra emphasis
+    css_content += """
+    /* Aggressive black text forcing */
+    [data-theme="light"] *, body:not(.dark-mode) * {
+        color: #000000 !important;
+        opacity: 1 !important;
+    }
+    
+    /* Site descriptions and headers */
+    .site-header h2, 
+    .site-description h3,
+    .site-description p,
+    .site-card h3,
+    .site-card p {
+        color: #000000 !important;
+        opacity: 1 !important;
+        font-weight: 500 !important;
+    }
+    """
+    
     return f'<style>{css_content}</style>'
+
+@st.cache_data
+def load_js():
+    js_files = ['assets/force_black_text.js']
+    js_content = ""
+    for js_file in js_files:
+        try:
+            with open(js_file) as f:
+                js_content += f.read() + "\n"
+        except Exception as e:
+            st.warning(f"Could not load JavaScript file: {js_file}")
+    
+    return f'<script type="text/javascript">{js_content}</script>'
 
 # Include CSS for loading states and skeleton UI
 from utils.ui_helpers import add_loading_css
 
 st.markdown(load_css(), unsafe_allow_html=True)
 st.markdown(add_loading_css(), unsafe_allow_html=True)
+st.markdown(load_js(), unsafe_allow_html=True)
 
 # Add JavaScript to hide "main" text and force text color
 js_code = """
@@ -491,10 +526,10 @@ add_favicon()
 # Display the logo using our branding utility
 display_logo(size="medium")
 
-# Display the site header
+# Display the site header with forced black text in light mode
 st.markdown(f"""
     <div class="site-header">
-        <h2>{subheader_text}</h2>
+        <h2 style="color: #000000 !important; opacity: 1 !important; font-weight: 600 !important;">{subheader_text}</h2>
     </div>
 """, unsafe_allow_html=True)
 
@@ -547,11 +582,11 @@ def create_site_card(site):
 
     st.markdown(f"""
         <div class="site-card">
-            <h3>{site.name}</h3>
-            <p><strong>{municipality_label}</strong> {site.municipality}</p>
-            <p>{truncated_description}</p>
+            <h3 style="color: #000000 !important; opacity: 1 !important; font-weight: 600 !important;">{site.name}</h3>
+            <p style="color: #000000 !important; opacity: 1 !important;"><strong style="color: #000000 !important;">{municipality_label}</strong> {site.municipality}</p>
+            <p style="color: #000000 !important; opacity: 1 !important;">{truncated_description}</p>
             <a href="/Site_Dashboard?site={site.name}" target="_self">
-                <button class="site-button">{view_details_text}</button>
+                <button class="site-button" style="color: white !important;">{view_details_text}</button>
             </a>
         </div>
     """, unsafe_allow_html=True)
@@ -577,21 +612,24 @@ municipality_names = {
 }
 
 if zamboanguita_sites:
-    st.header(municipality_names[language_code]["Zamboanguita"])
+    # Using markdown with inline style to ensure black text
+    st.markdown(f"<h2 style='color: #000000 !important; opacity: 1 !important; font-weight: 600 !important;'>{municipality_names[language_code]['Zamboanguita']}</h2>", unsafe_allow_html=True)
     cols = st.columns(3)
     for idx, site in enumerate(zamboanguita_sites):
         with cols[idx % 3]:
             create_site_card(site)
 
 if siaton_sites:
-    st.header(municipality_names[language_code]["Siaton"])
+    # Using markdown with inline style to ensure black text
+    st.markdown(f"<h2 style='color: #000000 !important; opacity: 1 !important; font-weight: 600 !important;'>{municipality_names[language_code]['Siaton']}</h2>", unsafe_allow_html=True)
     cols = st.columns(3)
     for idx, site in enumerate(siaton_sites):
         with cols[idx % 3]:
             create_site_card(site)
 
 if santa_catalina_sites:
-    st.header(municipality_names[language_code]["Santa Catalina"])
+    # Using markdown with inline style to ensure black text
+    st.markdown(f"<h2 style='color: #000000 !important; opacity: 1 !important; font-weight: 600 !important;'>{municipality_names[language_code]['Santa Catalina']}</h2>", unsafe_allow_html=True)
     cols = st.columns(3)
     for idx, site in enumerate(santa_catalina_sites):
         with cols[idx % 3]:
