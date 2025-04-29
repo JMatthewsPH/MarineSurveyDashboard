@@ -105,8 +105,28 @@ if st.session_state.theme == "dark":
         color: #e2e8f0 !important;
     }
     
-    [data-testid="stSidebar"] {
+    /* Target sidebar specifically with stronger selectors in dark mode */
+    [data-testid="stSidebar"], 
+    [data-testid="stSidebar"] > div:first-child,
+    div[data-testid="stSidebarUserContent"],
+    .css-6qob1r.e1fqkh3o3,
+    .css-10oheav.e1fqkh3o4,
+    section[data-testid="stSidebar"] {
         background-color: #1a202c !important;
+        color: #e2e8f0 !important;
+    }
+    
+    /* Target sidebar elements in dark mode */
+    [data-testid="stSidebar"] h1, 
+    [data-testid="stSidebar"] h2, 
+    [data-testid="stSidebar"] h3, 
+    [data-testid="stSidebar"] h4,
+    [data-testid="stSidebar"] p,
+    [data-testid="stSidebar"] span,
+    [data-testid="stSidebar"] label,
+    [data-testid="stSidebar"] div,
+    div[data-testid="stMarkdownContainer"],
+    div[data-baseweb="select"] {
         color: #e2e8f0 !important;
     }
     
@@ -166,8 +186,25 @@ else:
         color: #2d3748 !important;
     }
     
-    [data-testid="stSidebar"] {
+    /* Target sidebar specifically with stronger selectors */
+    [data-testid="stSidebar"], 
+    [data-testid="stSidebar"] > div:first-child,
+    div[data-testid="stSidebarUserContent"],
+    .css-6qob1r.e1fqkh3o3,
+    .css-10oheav.e1fqkh3o4 {
         background-color: #f7fafc !important;
+        color: #2d3748 !important;
+    }
+    
+    /* Target sidebar elements */
+    [data-testid="stSidebar"] h1, 
+    [data-testid="stSidebar"] h2, 
+    [data-testid="stSidebar"] h3, 
+    [data-testid="stSidebar"] h4,
+    [data-testid="stSidebar"] p,
+    [data-testid="stSidebar"] span,
+    [data-testid="stSidebar"] label,
+    [data-testid="stSidebar"] div {
         color: #2d3748 !important;
     }
     
