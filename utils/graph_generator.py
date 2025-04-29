@@ -67,8 +67,22 @@ class GraphGenerator:
         }
         return ranges.get(metric_name, {'min': 0, 'max': 100})  # default range
 
-    def create_time_series(self, data, title, y_label, comparison_data=None, secondary_data=None, secondary_label=None, tertiary_data=None, tertiary_label=None):
-        """Create time series graph with optional comparison and secondary/tertiary metrics"""
+    def create_time_series(self, data, title, y_label, comparison_data=None, comparison_labels=None, date_range=None, secondary_data=None, secondary_label=None, tertiary_data=None, tertiary_label=None):
+        """
+        Create time series graph with optional multiple comparison sites and date range
+        
+        Args:
+            data: Primary data to plot
+            title: Chart title
+            y_label: Y-axis label
+            comparison_data: Single DataFrame or list of DataFrames for comparison
+            comparison_labels: List of labels for comparison data
+            date_range: Tuple of (start_date, end_date) to filter the data
+            secondary_data: Optional secondary metric data
+            secondary_label: Label for secondary data
+            tertiary_data: Optional tertiary metric data
+            tertiary_label: Label for tertiary data
+        """
         # Create base figure
         fig = go.Figure()
 
@@ -145,31 +159,95 @@ class GraphGenerator:
                 mode='lines'
             ))
 
-        # Add comparison data if provided
-        if comparison_data is not None and not comparison_data.empty:
-            comparison_data = comparison_data.sort_values('date')
-            comparison_data['season'] = comparison_data['date'].apply(format_season)
-            pre_covid_comp = comparison_data[comparison_data['date'] < covid_start]
-            post_covid_comp = comparison_data[comparison_data['date'] > covid_end]
-
-            # Add pre-COVID comparison data
-            fig.add_trace(go.Scatter(
-                x=pre_covid_comp['season'],
-                y=pre_covid_comp[comparison_data.columns[1]],
-                name='Comparison',
-                line=dict(color='#ef476f', dash='solid'),
-                mode='lines+markers'
-            ))
-
-            # Add post-COVID comparison data
-            fig.add_trace(go.Scatter(
-                x=post_covid_comp['season'],
-                y=post_covid_comp[comparison_data.columns[1]],
-                name='Comparison',
-                line=dict(color='#ef476f', dash='solid'),
-                mode='lines+markers',
-                showlegend=False
-            ))
+        # Apply date range filter if provided
+        if date_range and len(date_range) == 2:
+            start_filter, end_filter = date_range
+            if start_filter and end_filter:
+                # Filter the primary data
+                data = data[(data['date'] >= start_filter) & (data['date'] <= end_filter)]
+                pre_covid = data[data['date'] < covid_start]
+                post_covid = data[data['date'] > covid_end]
+                
+                # Update chart title with date range info
+                date_range_str = f"{start_filter.strftime('%b %Y')} - {end_filter.strftime('%b %Y')}"
+                title = f"{title} ({date_range_str})"
+        
+        # Define a list of colors for multiple comparison sites
+        comparison_colors = ['#ef476f', '#ffd166', '#06d6a0', '#118ab2', '#073b4c', '#9b5de5', '#f15bb5']
+        
+        # Handle comparison data (which can be a single DataFrame or a list of DataFrames)
+        if comparison_data is not None:
+            comparison_list = []
+            labels_list = []
+            
+            # Convert single DataFrame to list for consistent handling
+            if isinstance(comparison_data, pd.DataFrame) and not comparison_data.empty:
+                comparison_list = [comparison_data]
+                labels_list = ['Comparison'] if comparison_labels is None else [comparison_labels[0]]
+            # Handle list of DataFrames
+            elif isinstance(comparison_data, list):
+                comparison_list = [df for df in comparison_data if df is not None and not df.empty]
+                if comparison_labels is not None:
+                    # Use provided labels but ensure the length matches our data
+                    labels_list = comparison_labels[:len(comparison_list)] if comparison_labels else []
+                    # Fill any missing labels
+                    labels_list += [f'Comparison {i+1}' for i in range(len(labels_list), len(comparison_list))]
+                else:
+                    # Generate default labels if none provided
+                    labels_list = [f'Comparison {i+1}' for i in range(len(comparison_list))]
+            
+            # Process each comparison dataset
+            for i, (comp_df, label) in enumerate(zip(comparison_list, labels_list)):
+                # Apply date range filter if specified
+                if date_range and len(date_range) == 2:
+                    start_filter, end_filter = date_range
+                    if start_filter and end_filter:
+                        comp_df = comp_df[(comp_df['date'] >= start_filter) & (comp_df['date'] <= end_filter)]
+                
+                # Sort and format data
+                comp_df = comp_df.sort_values('date')
+                comp_df['season'] = comp_df['date'].apply(format_season)
+                
+                # Split into pre/post COVID periods
+                pre_covid_comp = comp_df[comp_df['date'] < covid_start]
+                post_covid_comp = comp_df[comp_df['date'] > covid_end]
+                
+                # Pick a color (cycle through the available colors)
+                color = comparison_colors[i % len(comparison_colors)]
+                
+                # Add pre-COVID comparison data
+                if not pre_covid_comp.empty:
+                    fig.add_trace(go.Scatter(
+                        x=pre_covid_comp['season'],
+                        y=pre_covid_comp[comp_df.columns[1]],
+                        name=label,
+                        line=dict(color=color, dash='solid'),
+                        mode='lines+markers'
+                    ))
+                
+                # Add post-COVID comparison data
+                if not post_covid_comp.empty:
+                    fig.add_trace(go.Scatter(
+                        x=post_covid_comp['season'],
+                        y=post_covid_comp[comp_df.columns[1]],
+                        name=label,
+                        line=dict(color=color, dash='solid'),
+                        mode='lines+markers',
+                        showlegend=False
+                    ))
+                    
+                # Add COVID period connector if both pre and post exist
+                if not pre_covid_comp.empty and not post_covid_comp.empty:
+                    last_pre = pre_covid_comp.iloc[-1]
+                    first_post = post_covid_comp.iloc[0]
+                    fig.add_trace(go.Scatter(
+                        x=[last_pre['season'], first_post['season']],
+                        y=[last_pre[comp_df.columns[1]], first_post[comp_df.columns[1]]],
+                        line=dict(color=color, dash='dot', width=1),
+                        opacity=0.3,
+                        mode='lines',
+                        showlegend=False
+                    ))
 
         # Update layout with fixed y-axis range
         layout_updates = {

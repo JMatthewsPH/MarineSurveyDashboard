@@ -8,6 +8,8 @@ st.set_page_config(
 )
 
 import os
+import pandas as pd
+from datetime import datetime, date
 from utils.data_processor import DataProcessor
 from utils.graph_generator import GraphGenerator
 from utils.translations import TRANSLATIONS
@@ -139,27 +141,81 @@ if selected_site:
         # Get current site's municipality
         site_municipality = selected_site_obj.municipality if selected_site_obj else None
 
-        # Sidebar metric comparisons
+        # Sidebar metric comparisons and date range selection
         with st.sidebar:
+            st.title("Analysis Options")
+            
+            # Date Range Selection
+            st.header("Date Range")
+            
+            # Get the min and max dates from all surveys 
+            all_surveys = []
+            for site in sites:
+                site_surveys = data_processor.get_biomass_data(site.name)
+                if not site_surveys.empty:
+                    all_surveys.append(site_surveys)
+            
+            # Combine all survey data to get date range
+            if all_surveys:
+                all_data = pd.concat(all_surveys)
+                min_date = pd.to_datetime(all_data['date'].min())
+                max_date = pd.to_datetime(all_data['date'].max())
+            else:
+                # Fallback dates if no data
+                min_date = pd.to_datetime('2017-01-01')
+                max_date = pd.to_datetime('2023-12-31')
+            
+            # Date range selection
+            col1, col2 = st.columns(2)
+            with col1:
+                start_date = st.date_input("Start Date", 
+                                          value=min_date,
+                                          min_value=min_date,
+                                          max_value=max_date)
+            with col2:
+                end_date = st.date_input("End Date", 
+                                        value=max_date,
+                                        min_value=min_date,
+                                        max_value=max_date)
+            
+            # Set date range only if valid selection
+            date_range = (pd.to_datetime(start_date), pd.to_datetime(end_date)) if start_date <= end_date else None
+            if start_date > end_date:
+                st.error("Start date must be before end date")
+                
+            st.markdown("---")
+            
             st.title("Metric Comparisons")
 
             # Biomass comparison options
             st.subheader("Commercial Fish Biomass")
             biomass_comparison = st.selectbox(
                 "Compare biomass with:",
-                ["No Comparison", "Compare with Site", "Compare with Average"],
+                ["No Comparison", "Compare with Sites", "Compare with Average"],
                 key="biomass_comparison"
             )
 
-            biomass_compare_site = None
+            biomass_compare_sites = None
             biomass_compare_scope = None
-            if biomass_comparison == "Compare with Site":
+            biomass_compare_labels = None
+            
+            if biomass_comparison == "Compare with Sites":
                 compare_sites = [site for site in site_names if site != selected_site]
-                biomass_compare_site = st.selectbox(
-                    "Select site to compare biomass:",
+                biomass_compare_sites = st.multiselect(
+                    "Select sites to compare biomass:",
                     compare_sites,
-                    key="biomass_compare_site"
+                    key="biomass_compare_sites",
+                    max_selections=5  # Limit to 5 sites for readability
                 )
+                if biomass_compare_sites:
+                    # Show option to group by municipality (helps organize large datasets)
+                    group_by_municipality = st.checkbox("Group by municipality", key="biomass_group_by_muni", value=False)
+                    if group_by_municipality:
+                        site_to_muni = {site.name: site.municipality for site in sites}
+                        biomass_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in biomass_compare_sites]
+                    else:
+                        biomass_compare_labels = biomass_compare_sites
+                        
             elif biomass_comparison == "Compare with Average":
                 biomass_compare_scope = st.selectbox(
                     "Select average scope:",
@@ -353,19 +409,43 @@ if selected_site:
             # Get biomass data and comparison
             biomass_data = data_processor.get_biomass_data(selected_site)
             biomass_comparison_data = None
-            if biomass_comparison == "Compare with Site" and biomass_compare_site:
-                biomass_comparison_data = data_processor.get_biomass_data(biomass_compare_site)
+            biomass_comparison_labels = None
+            
+            if biomass_comparison == "Compare with Sites" and biomass_compare_sites:
+                # Get data for multiple comparison sites
+                comparison_data_list = []
+                for site_name in biomass_compare_sites:
+                    site_data = data_processor.get_biomass_data(site_name)
+                    if not site_data.empty:
+                        comparison_data_list.append(site_data)
+                
+                if comparison_data_list:
+                    biomass_comparison_data = comparison_data_list
+                    # Use custom labels if provided
+                    if biomass_compare_labels:
+                        biomass_comparison_labels = biomass_compare_labels
+                    else:
+                        biomass_comparison_labels = biomass_compare_sites
+                        
             elif biomass_comparison == "Compare with Average":
                 municipality = site_municipality if biomass_compare_scope == "Municipality Average" else None
-                biomass_comparison_data = data_processor.get_average_biomass_data(
+                avg_data = data_processor.get_average_biomass_data(
                     exclude_site=selected_site,
                     municipality=municipality
                 )
+                if not avg_data.empty:
+                    biomass_comparison_data = avg_data
+                    label = f"{site_municipality} Average" if biomass_compare_scope == "Municipality Average" else "All Sites Average"
+                    biomass_comparison_labels = [label]
+                    
+            # Create the time series chart with date range filtering
             biomass_fig, biomass_config = graph_generator.create_time_series(
                 biomass_data,
                 f"Commercial Fish Biomass - {selected_site}",
                 "Biomass (kg/ha)",
-                comparison_data=biomass_comparison_data
+                comparison_data=biomass_comparison_data,
+                comparison_labels=biomass_comparison_labels,
+                date_range=date_range
             )
             st.plotly_chart(biomass_fig, use_container_width=True, config=biomass_config, key='biomass_chart')
 
