@@ -62,8 +62,8 @@ class GraphGenerator:
             'Herbivore Density': {'min': 0, 'max': 5000},  # ind/ha - with 1k intervals
             'Herbivore': {'min': 0, 'max': 5000},          # ind/ha - with 1k intervals
             'Carnivore': {'min': 0, 'max': 5000},           # ind/ha
-            'Omnivore Density': {'min': 0, 'max': 1000},    # ind/ha - reduced from 3000
-            'Omnivore': {'min': 0, 'max': 1000},            # ind/ha - reduced from 3000
+            'Omnivore Density': {'min': 0, 'max': 300},    # ind/ha - reduced from 1000
+            'Omnivore': {'min': 0, 'max': 300},            # ind/ha - reduced from 1000
             'Corallivore': {'min': 0, 'max': 300},          # ind/ha - reduced from 600
             'Corallivore Density': {'min': 0, 'max': 300},  # ind/ha - reduced from 600
             'Rubble': {'min': 0, 'max': 100},               # percentage
@@ -383,7 +383,7 @@ class GraphGenerator:
         elif 'Omnivore' in metric_name:
             layout_updates['yaxis']['tickmode'] = 'linear'
             layout_updates['yaxis']['tick0'] = 0
-            layout_updates['yaxis']['dtick'] = 200  # 200 unit intervals for Omnivore (reduced from 500)
+            layout_updates['yaxis']['dtick'] = 50  # 50 unit intervals for Omnivore (reduced from 200)
         elif 'Herbivore' in metric_name:
             layout_updates['yaxis']['tickmode'] = 'linear'
             layout_updates['yaxis']['tick0'] = 0
@@ -411,8 +411,8 @@ class GraphGenerator:
             fig.update_yaxes(
                 tickmode='linear',
                 tick0=0,
-                dtick=200,  # 200 unit intervals (reduced from 500)
-                range=[0, 1000]  # Reduced from 3000 to better fit actual data
+                dtick=50,  # 50 unit intervals (reduced from 200)
+                range=[0, 300]  # Reduced from 1000 to better fit actual data
             )
             
         return fig, config
