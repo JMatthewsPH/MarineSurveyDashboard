@@ -364,7 +364,12 @@ st.markdown(custom_css, unsafe_allow_html=True)
 
 # CSS for mobile-responsive layout
 def load_css():
+    # Load the main styles
     with open('assets/site_styles.css') as f:
+        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+    
+    # Load the force black text CSS for better contrast in light mode
+    with open('assets/force_black_text.css') as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
 # Load custom CSS

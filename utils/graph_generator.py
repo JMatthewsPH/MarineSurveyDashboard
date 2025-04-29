@@ -160,24 +160,26 @@ class GraphGenerator:
         if date_range and len(date_range) == 2:
             start_date, end_date = date_range
             
-            # Convert dates to pandas Timestamp for proper comparison
+            # Ensure dates are properly converted for comparison
             try:
-                if isinstance(start_date, (datetime, date)) and not isinstance(start_date, pd.Timestamp):
+                # Make sure filtered_data['date'] is a datetime column
+                if not pd.api.types.is_datetime64_dtype(filtered_data['date']):
+                    filtered_data['date'] = pd.to_datetime(filtered_data['date'])
+                
+                # Convert input dates to pandas Timestamp
+                if not isinstance(start_date, pd.Timestamp):
                     start_date = pd.Timestamp(start_date)
                     
-                if isinstance(end_date, (datetime, date)) and not isinstance(end_date, pd.Timestamp):
+                if not isinstance(end_date, pd.Timestamp):
                     end_date = pd.Timestamp(end_date)
-                    
+                
+                # Filter with converted timestamps
                 filtered_data = filtered_data[(filtered_data['date'] >= start_date) & 
                                              (filtered_data['date'] <= end_date)]
             except Exception as e:
-                print(f"DEBUG - Error filtering date range: {e}")
-                
-                # Fallback approach: convert DataFrame dates to Python dates
-                filtered_data = filtered_data[
-                    (filtered_data['date'].dt.date >= start_date.date() if hasattr(start_date, 'date') else start_date) & 
-                    (filtered_data['date'].dt.date <= end_date.date() if hasattr(end_date, 'date') else end_date)
-                ]
+                print(f"DEBUG - Date filtering error: {e}")
+                # If all else fails, just return the original data
+                pass
         
         # Sort by date for proper trend lines
         filtered_data = filtered_data.sort_values('date')
@@ -186,8 +188,16 @@ class GraphGenerator:
         covid_start = datetime.strptime('2020-03-01', '%Y-%m-%d').date()
         covid_end = datetime.strptime('2020-09-30', '%Y-%m-%d').date()
         
-        pre_covid = filtered_data[filtered_data['date'] < covid_start]
-        post_covid = filtered_data[filtered_data['date'] > covid_end]
+        # Convert date column to datetime if it's not already
+        if not pd.api.types.is_datetime64_dtype(filtered_data['date']):
+            filtered_data['date'] = pd.to_datetime(filtered_data['date'])
+            
+        # Convert comparison dates to Timestamp
+        covid_start_ts = pd.Timestamp(covid_start)
+        covid_end_ts = pd.Timestamp(covid_end)
+            
+        pre_covid = filtered_data[filtered_data['date'] < covid_start_ts]
+        post_covid = filtered_data[filtered_data['date'] > covid_end_ts]
         
         # Add primary data trace (pre-COVID)
         fig.add_trace(go.Scatter(
@@ -228,29 +238,35 @@ class GraphGenerator:
             if date_range and len(date_range) == 2:
                 start_date, end_date = date_range
                 
-                # Convert dates to pandas Timestamp for proper comparison
+                # Ensure dates are properly converted for comparison
                 try:
-                    if isinstance(start_date, (datetime, date)) and not isinstance(start_date, pd.Timestamp):
+                    # Make sure filtered_secondary['date'] is a datetime column
+                    if not pd.api.types.is_datetime64_dtype(filtered_secondary['date']):
+                        filtered_secondary['date'] = pd.to_datetime(filtered_secondary['date'])
+                    
+                    # Convert input dates to pandas Timestamp
+                    if not isinstance(start_date, pd.Timestamp):
                         start_date = pd.Timestamp(start_date)
                         
-                    if isinstance(end_date, (datetime, date)) and not isinstance(end_date, pd.Timestamp):
+                    if not isinstance(end_date, pd.Timestamp):
                         end_date = pd.Timestamp(end_date)
-                        
+                    
+                    # Filter with converted timestamps
                     filtered_secondary = filtered_secondary[(filtered_secondary['date'] >= start_date) & 
                                                           (filtered_secondary['date'] <= end_date)]
                 except Exception as e:
-                    print(f"DEBUG - Error filtering secondary date range: {e}")
-                    
-                    # Fallback approach: convert DataFrame dates to Python dates
-                    filtered_secondary = filtered_secondary[
-                        (filtered_secondary['date'].dt.date >= start_date.date() if hasattr(start_date, 'date') else start_date) & 
-                        (filtered_secondary['date'].dt.date <= end_date.date() if hasattr(end_date, 'date') else end_date)
-                    ]
+                    print(f"DEBUG - Secondary date filtering error: {e}")
+                    # If all else fails, just return the original data
+                    pass
             
             filtered_secondary = filtered_secondary.sort_values('date')
             
-            pre_covid_secondary = filtered_secondary[filtered_secondary['date'] < covid_start]
-            post_covid_secondary = filtered_secondary[filtered_secondary['date'] > covid_end]
+            # Convert date column to datetime if it's not already
+            if not pd.api.types.is_datetime64_dtype(filtered_secondary['date']):
+                filtered_secondary['date'] = pd.to_datetime(filtered_secondary['date'])
+                
+            pre_covid_secondary = filtered_secondary[filtered_secondary['date'] < covid_start_ts]
+            post_covid_secondary = filtered_secondary[filtered_secondary['date'] > covid_end_ts]
             
             # Add secondary metric pre-COVID
             fig.add_trace(go.Scatter(
@@ -296,29 +312,35 @@ class GraphGenerator:
             if date_range and len(date_range) == 2:
                 start_date, end_date = date_range
                 
-                # Convert dates to pandas Timestamp for proper comparison
+                # Ensure dates are properly converted for comparison
                 try:
-                    if isinstance(start_date, (datetime, date)) and not isinstance(start_date, pd.Timestamp):
+                    # Make sure filtered_tertiary['date'] is a datetime column
+                    if not pd.api.types.is_datetime64_dtype(filtered_tertiary['date']):
+                        filtered_tertiary['date'] = pd.to_datetime(filtered_tertiary['date'])
+                    
+                    # Convert input dates to pandas Timestamp
+                    if not isinstance(start_date, pd.Timestamp):
                         start_date = pd.Timestamp(start_date)
                         
-                    if isinstance(end_date, (datetime, date)) and not isinstance(end_date, pd.Timestamp):
+                    if not isinstance(end_date, pd.Timestamp):
                         end_date = pd.Timestamp(end_date)
-                        
+                    
+                    # Filter with converted timestamps
                     filtered_tertiary = filtered_tertiary[(filtered_tertiary['date'] >= start_date) & 
                                                         (filtered_tertiary['date'] <= end_date)]
                 except Exception as e:
-                    print(f"DEBUG - Error filtering tertiary date range: {e}")
-                    
-                    # Fallback approach: convert DataFrame dates to Python dates
-                    filtered_tertiary = filtered_tertiary[
-                        (filtered_tertiary['date'].dt.date >= start_date.date() if hasattr(start_date, 'date') else start_date) & 
-                        (filtered_tertiary['date'].dt.date <= end_date.date() if hasattr(end_date, 'date') else end_date)
-                    ]
+                    print(f"DEBUG - Tertiary date filtering error: {e}")
+                    # If all else fails, just return the original data
+                    pass
             
             filtered_tertiary = filtered_tertiary.sort_values('date')
             
-            pre_covid_tertiary = filtered_tertiary[filtered_tertiary['date'] < covid_start]
-            post_covid_tertiary = filtered_tertiary[filtered_tertiary['date'] > covid_end]
+            # Convert date column to datetime if it's not already
+            if not pd.api.types.is_datetime64_dtype(filtered_tertiary['date']):
+                filtered_tertiary['date'] = pd.to_datetime(filtered_tertiary['date'])
+                
+            pre_covid_tertiary = filtered_tertiary[filtered_tertiary['date'] < covid_start_ts]
+            post_covid_tertiary = filtered_tertiary[filtered_tertiary['date'] > covid_end_ts]
             
             # Add tertiary metric pre-COVID
             fig.add_trace(go.Scatter(
@@ -373,29 +395,35 @@ class GraphGenerator:
                     if date_range and len(date_range) == 2:
                         start_date, end_date = date_range
                         
-                        # Convert dates to pandas Timestamp for proper comparison
+                        # Ensure dates are properly converted for comparison
                         try:
-                            if isinstance(start_date, (datetime, date)) and not isinstance(start_date, pd.Timestamp):
+                            # Make sure filtered_comp['date'] is a datetime column
+                            if not pd.api.types.is_datetime64_dtype(filtered_comp['date']):
+                                filtered_comp['date'] = pd.to_datetime(filtered_comp['date'])
+                            
+                            # Convert input dates to pandas Timestamp
+                            if not isinstance(start_date, pd.Timestamp):
                                 start_date = pd.Timestamp(start_date)
                                 
-                            if isinstance(end_date, (datetime, date)) and not isinstance(end_date, pd.Timestamp):
+                            if not isinstance(end_date, pd.Timestamp):
                                 end_date = pd.Timestamp(end_date)
-                                
+                            
+                            # Filter with converted timestamps
                             filtered_comp = filtered_comp[(filtered_comp['date'] >= start_date) & 
                                                         (filtered_comp['date'] <= end_date)]
                         except Exception as e:
-                            print(f"DEBUG - Error filtering comparison date range: {e}")
-                            
-                            # Fallback approach: convert DataFrame dates to Python dates
-                            filtered_comp = filtered_comp[
-                                (filtered_comp['date'].dt.date >= start_date.date() if hasattr(start_date, 'date') else start_date) & 
-                                (filtered_comp['date'].dt.date <= end_date.date() if hasattr(end_date, 'date') else end_date)
-                            ]
+                            print(f"DEBUG - Comparison date filtering error: {e}")
+                            # If all else fails, just return the original data
+                            pass
                     
                     filtered_comp = filtered_comp.sort_values('date')
                     
-                    pre_covid_comp = filtered_comp[filtered_comp['date'] < covid_start]
-                    post_covid_comp = filtered_comp[filtered_comp['date'] > covid_end]
+                    # Convert date column to datetime if it's not already
+                    if not pd.api.types.is_datetime64_dtype(filtered_comp['date']):
+                        filtered_comp['date'] = pd.to_datetime(filtered_comp['date'])
+                        
+                    pre_covid_comp = filtered_comp[filtered_comp['date'] < covid_start_ts]
+                    post_covid_comp = filtered_comp[filtered_comp['date'] > covid_end_ts]
                     
                     color_idx = i % len(colors)
                     

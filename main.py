@@ -16,7 +16,12 @@ st.set_page_config(
 # Load custom CSS
 @st.cache_data
 def load_css():
-    css_files = ['assets/site_styles.css', 'assets/light_mode_fixes.css', '.streamlit/streamlit_clean.css']
+    css_files = [
+        'assets/site_styles.css', 
+        'assets/light_mode_fixes.css', 
+        'assets/force_black_text.css',
+        '.streamlit/streamlit_clean.css'
+    ]
     css_content = ""
     for css_file in css_files:
         try:

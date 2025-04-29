@@ -1,104 +1,58 @@
-/* Force ALL text to be pure black in light mode */
-[data-theme="light"] *, 
-.light-mode *, 
-body:not(.dark-mode) * {
-    color: #000000 !important;
-    opacity: 1 !important;
-}
-
-/* Target specific elements */
+/* Force black text in light mode for key elements */
+[data-theme="light"] .site-description-text,
+[data-theme="light"] .stMarkdown p,
 [data-theme="light"] h1, 
 [data-theme="light"] h2, 
 [data-theme="light"] h3, 
 [data-theme="light"] h4,
-[data-theme="light"] h5,
-[data-theme="light"] h6,
-[data-theme="light"] p,
+[data-theme="light"] .stTitle p,
+[data-theme="light"] .stHeader p,
+[data-theme="light"] .stSubheader p,
+[data-theme="light"] div[data-testid="stMarkdownContainer"] p,
 [data-theme="light"] span,
-[data-theme="light"] div,
-[data-theme="light"] label,
-[data-theme="light"] strong,
-[data-theme="light"] em,
-[data-theme="light"] a,
-[data-theme="light"] li,
-[data-theme="light"] .site-header h2,
-[data-theme="light"] .site-description-title,
-[data-theme="light"] .site-description-text,
-[data-theme="light"] .site-metrics-title,
-[data-theme="light"] .site-metrics-content,
-[data-theme="light"] .stMarkdown p,
-[data-theme="light"] .stText p,
-[data-theme="light"] .stMarkdown h1,
-[data-theme="light"] .stMarkdown h2,
-[data-theme="light"] .stMarkdown h3 {
+[data-theme="light"] div.stText p {
     color: #000000 !important;
     opacity: 1 !important;
+}
+
+/* Ensure chart titles and labels have pure black text in light mode */
+[data-theme="light"] .js-plotly-plot .plotly .gtitle, 
+[data-theme="light"] .js-plotly-plot .plotly .xtitle, 
+[data-theme="light"] .js-plotly-plot .plotly .ytitle,
+[data-theme="light"] .js-plotly-plot .plotly .xtick text, 
+[data-theme="light"] .js-plotly-plot .plotly .ytick text,
+[data-theme="light"] .js-plotly-plot .plotly .legendtext {
+    fill: #000000 !important;
     font-weight: 500 !important;
 }
 
-/* Target streamlit specific elements */
-[data-theme="light"] .stHeading,
-[data-theme="light"] .stText,
-[data-theme="light"] .stMarkdown,
-[data-theme="light"] [data-testid="stHeader"],
-[data-theme="light"] [data-testid="stMarkdown"],
-[data-theme="light"] [data-testid="stHeading"],
-[data-theme="light"] .css-10trblm,
-[data-theme="light"] .css-ulpx6n,
-[data-theme="light"] .stMarkdownContainer,
-[data-theme="light"] [data-testid="stVerticalBlock"] div {
+/* Target chart annotations specifically */
+[data-theme="light"] .js-plotly-plot .plotly .annotation-text {
     color: #000000 !important;
-    opacity: 1 !important;
-}
-
-/* Target specifically site description and metrics */
-.site-description h3,
-.site-description p,
-.site-description-title,
-.site-description-text,
-.site-metrics-title,
-.site-metrics-content {
-    color: #000000 !important;
-    opacity: 1 !important;
-    font-weight: 500 !important;
-}
-
-/* Target all plotly chart text */
-.js-plotly-plot .plotly text,
-.js-plotly-plot .plotly .gtitle,
-.js-plotly-plot .plotly .xtitle,
-.js-plotly-plot .plotly .ytitle,
-.js-plotly-plot .plotly .xtick text,
-.js-plotly-plot .plotly .ytick text,
-.js-plotly-plot .plotly .annotation-text,
-.js-plotly-plot .plotly .annotation-text-g text,
-.js-plotly-plot .plotly .legendtext {
     fill: #000000 !important;
 }
 
-/* Force dark text on all elements */
-.stTextInput label,
-.stNumberInput label,
-.stSelectbox label,
-.stDateInput label,
-.stSlider label,
-.stSlider .stSliderValue,
-.stRadio label,
-.stCheckbox label,
-.stExpander span,
-.stExpander details,
-.stExpander summary,
-.stTabs label,
-.stWidgetLabel,
-.stAlert,
-.stWarning,
-.stError,
-.stInfo,
-.stSuccess {
+/* Force black background for dropdown options in light mode */
+[data-theme="light"] div[role="listbox"],
+[data-theme="light"] ul[role="listbox"],
+[data-theme="light"] [data-baseweb="popover"],
+[data-theme="light"] [data-baseweb="select"] [role="listbox"],
+[data-theme="light"] [data-baseweb="menu"] {
+    background-color: white !important;
+}
+
+/* Force black text for dropdown options in light mode */
+[data-theme="light"] div[role="option"],
+[data-theme="light"] li[role="option"],
+[data-theme="light"] [data-baseweb="menu"] div,
+[data-theme="light"] [data-baseweb="select-dropdown"] div {
     color: #000000 !important;
 }
 
-/* Target any inline CSS-styled elements with style attribute */
-[style*="color"] {
+/* Add these to make default text inputs have black text in light mode */
+[data-theme="light"] input,
+[data-theme="light"] textarea,
+[data-theme="light"] .stTextInput input,
+[data-theme="light"] .stNumberInput input {
     color: #000000 !important;
 }
