@@ -40,7 +40,33 @@ site_names = zamboanguita_sites + siaton_sites + santa_catalina_sites
 @st.cache_data
 def load_css():
     with open('assets/site_styles.css') as f:
-        return f'<style>{f.read()}</style>'
+        css_content = f.read()
+        # Add custom JavaScript to remove "main" text
+        js_code = """
+        <script>
+        // Function to remove "main" text from sidebar navigation
+        function hideMainText() {
+            // Wait for DOM to fully load
+            const sidebarNavs = document.querySelectorAll('[data-testid="stSidebarNav"]');
+            if (sidebarNavs.length > 0) {
+                // Find and remove the "main" text element
+                const navItems = sidebarNavs[0].querySelectorAll('li');
+                if (navItems.length > 0) {
+                    navItems[0].style.display = 'none';
+                }
+            }
+            
+            // Keep checking for a few seconds in case of delayed rendering
+            setTimeout(hideMainText, 500);
+        }
+        
+        // Start checking once the page loads
+        document.addEventListener('DOMContentLoaded', hideMainText);
+        // Also try immediately
+        hideMainText();
+        </script>
+        """
+        return f'<style>{css_content}</style>{js_code}'
 
 st.markdown(load_css(), unsafe_allow_html=True)
 
