@@ -54,18 +54,39 @@ class GraphGenerator:
 
     def get_metric_range(self, metric_name):
         """Define standard ranges for each metric type"""
-        ranges = {
-            'Commercial Biomass': {'min': 0, 'max': 3000},  # kg/ha
-            'Hard Coral Cover': {'min': 0, 'max': 100},     # percentage
-            'Fleshy Algae': {'min': 0, 'max': 100},         # percentage
-            'Bleaching': {'min': 0, 'max': 100},            # percentage
-            'Herbivore': {'min': 0, 'max': 10000},          # ind/ha
-            'Carnivore': {'min': 0, 'max': 5000},           # ind/ha
-            'Omnivore': {'min': 0, 'max': 8000},            # ind/ha
-            'Corallivore': {'min': 0, 'max': 1500},         # ind/ha
-            'Rubble': {'min': 0, 'max': 100}                # percentage
+        # Standardize metric names to match chart titles
+        metric_ranges = {
+            'Commercial Fish Biomass': {'min': 0, 'max': 3000},  # kg/ha
+            'Commercial Biomass': {'min': 0, 'max': 3000},       # kg/ha (alternative naming)
+            'Hard Coral Cover': {'min': 0, 'max': 100},          # percentage
+            'Fleshy Algae Cover': {'min': 0, 'max': 100},        # percentage
+            'Fleshy Algae': {'min': 0, 'max': 100},              # percentage (alternative naming)
+            'Bleaching': {'min': 0, 'max': 100},                 # percentage
+            'Herbivore Density': {'min': 0, 'max': 10000},       # ind/ha
+            'Herbivore': {'min': 0, 'max': 10000},               # ind/ha (alternative naming)
+            'Carnivore Density': {'min': 0, 'max': 5000},        # ind/ha
+            'Carnivore': {'min': 0, 'max': 5000},                # ind/ha (alternative naming)
+            'Omnivore Density': {'min': 0, 'max': 8000},         # ind/ha
+            'Omnivore': {'min': 0, 'max': 8000},                 # ind/ha (alternative naming)
+            'Corallivore Density': {'min': 0, 'max': 1500},      # ind/ha
+            'Corallivore': {'min': 0, 'max': 1500},              # ind/ha (alternative naming)
+            'Rubble': {'min': 0, 'max': 100}                     # percentage
         }
-        return ranges.get(metric_name, {'min': 0, 'max': 100})  # default range
+        
+        # First try direct lookup
+        if metric_name in metric_ranges:
+            return metric_ranges[metric_name]
+        
+        # If not found, try with common variations (removing "Cover", "Density" etc.)
+        for key in metric_ranges.keys():
+            if key in metric_name:
+                return metric_ranges[key]
+        
+        # Default range for unknown metrics
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.warning(f"No range defined for metric '{metric_name}', using default range (0-100)")
+        return {'min': 0, 'max': 100}
 
     def create_time_series(self, data, title, y_label, comparison_data=None, comparison_labels=None, date_range=None, secondary_data=None, secondary_label=None, tertiary_data=None, tertiary_label=None):
         """
