@@ -98,7 +98,7 @@ add_favicon()
 with st.sidebar:
     # Back to main link first - using HTML with target="_self" to prevent opening in new tab
     back_text = TRANSLATIONS[st.session_state.language]['back_to_main']
-    st.markdown(f'<a href="../" target="_self">🏠 {back_text}</a>', unsafe_allow_html=True)
+    st.markdown(f'<a href="../" target="_self" class="back-to-main">{back_text}</a>', unsafe_allow_html=True)
 
     st.markdown("---")  # Add separator
 

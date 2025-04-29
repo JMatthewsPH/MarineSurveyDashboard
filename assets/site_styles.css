@@ -380,3 +380,111 @@ div[data-testid="stSidebarNav"] ul li:first-child {
     padding: 0 !important;
     opacity: 0 !important;
 }
+
+/* Modern Back to Main button styling */
+.back-to-main {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: white !important;
+    text-decoration: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 500;
+    margin-top: 0.75rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.back-to-main:hover {
+    background-color: var(--hover-color);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transform: translateY(-1px);
+}
+
+.back-to-main:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Back to Main button icon */
+.back-to-main::before {
+    content: "←";
+    display: inline-block;
+    margin-right: 0.5rem;
+    font-weight: bold;
+}
+
+/* Mobile-specific back button adjustments */
+@media (max-width: 768px) {
+    .back-to-main {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Site card styling for main page */
+.site-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--box-shadow);
+    border: 1px solid var(--border-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 220px;
+}
+
+.site-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--hover-shadow);
+}
+
+.site-card h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+}
+
+.site-card p {
+    margin-bottom: 0.7rem;
+    flex-grow: 1;
+}
+
+/* Modern button for site cards */
+.site-button {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 500;
+    margin-top: auto;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.site-button:hover {
+    background-color: var(--hover-color);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+}
+
+.site-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
