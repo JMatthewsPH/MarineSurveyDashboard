@@ -62,10 +62,10 @@ class GraphGenerator:
             'Herbivore Density': {'min': 0, 'max': 5000},  # ind/ha - with 1k intervals
             'Herbivore': {'min': 0, 'max': 5000},          # ind/ha - with 1k intervals
             'Carnivore': {'min': 0, 'max': 5000},           # ind/ha
-            'Omnivore Density': {'min': 0, 'max': 3000},    # ind/ha - reduced from 8000
-            'Omnivore': {'min': 0, 'max': 3000},            # ind/ha - reduced from 8000
-            'Corallivore': {'min': 0, 'max': 600},          # ind/ha - reduced from 1500
-            'Corallivore Density': {'min': 0, 'max': 600},  # ind/ha - reduced from 1500
+            'Omnivore Density': {'min': 0, 'max': 1000},    # ind/ha - reduced from 3000
+            'Omnivore': {'min': 0, 'max': 1000},            # ind/ha - reduced from 3000
+            'Corallivore': {'min': 0, 'max': 300},          # ind/ha - reduced from 600
+            'Corallivore Density': {'min': 0, 'max': 300},  # ind/ha - reduced from 600
             'Rubble': {'min': 0, 'max': 100},               # percentage
             'Rubble Cover': {'min': 0, 'max': 100}          # percentage
         }
@@ -175,7 +175,7 @@ class GraphGenerator:
             y_axis_settings.update({
                 'tickmode': 'linear',
                 'tick0': 0,
-                'dtick': 100  # 100 unit intervals for Corallivore (reduced from 300)
+                'dtick': 50  # 50 unit intervals for Corallivore (reduced from 100)
             })
         elif 'Bleaching' in metric_name:
             y_axis_settings.update({
@@ -379,11 +379,11 @@ class GraphGenerator:
         if 'Corallivore' in metric_name:
             layout_updates['yaxis']['tickmode'] = 'linear'
             layout_updates['yaxis']['tick0'] = 0
-            layout_updates['yaxis']['dtick'] = 100  # 100 unit intervals for Corallivore (reduced from 300)
+            layout_updates['yaxis']['dtick'] = 50  # 50 unit intervals for Corallivore
         elif 'Omnivore' in metric_name:
             layout_updates['yaxis']['tickmode'] = 'linear'
             layout_updates['yaxis']['tick0'] = 0
-            layout_updates['yaxis']['dtick'] = 500  # 500 unit intervals for Omnivore
+            layout_updates['yaxis']['dtick'] = 200  # 200 unit intervals for Omnivore (reduced from 500)
         elif 'Herbivore' in metric_name:
             layout_updates['yaxis']['tickmode'] = 'linear'
             layout_updates['yaxis']['tick0'] = 0
@@ -404,15 +404,15 @@ class GraphGenerator:
             fig.update_yaxes(
                 tickmode='linear',
                 tick0=0,
-                dtick=100,  # 100 unit intervals (reduced from 300)
-                range=[0, 600]  # Reduced from 1500 to better fit actual data
+                dtick=50,  # 50 unit intervals 
+                range=[0, 300]  # Reduced from 600 to better fit actual data
             )
         elif 'Omnivore' in metric_name:
             fig.update_yaxes(
                 tickmode='linear',
                 tick0=0,
-                dtick=500,  # 500 unit intervals
-                range=[0, 3000]  # Reduced from 8000 to better fit actual data
+                dtick=200,  # 200 unit intervals (reduced from 500)
+                range=[0, 1000]  # Reduced from 3000 to better fit actual data
             )
             
         return fig, config
