@@ -142,13 +142,10 @@ class GraphGenerator:
         if data is None or data.empty:
             return go.Figure(), {}
             
-        # Check if we're in dark mode
-        is_dark_mode = st.session_state.get('theme', 'light') == 'dark'
-        
-        # Define colors based on theme - using high contrast options
-        text_color = '#FFFFFF' if is_dark_mode else '#000000'  # Pure white in dark mode, pure black in light mode
-        grid_color = '#4a5568' if is_dark_mode else '#e0e0e0'  # Dark / Light grid
-        legend_bg = 'rgba(45, 55, 72, 0.7)' if is_dark_mode else 'rgba(255, 255, 255, 0.7)'
+        # Use light mode colors for better consistency with Streamlit's native theme
+        text_color = '#000000'  # Black text for better readability
+        grid_color = '#e0e0e0'  # Light grid
+        legend_bg = 'rgba(255, 255, 255, 0.7)'  # Semi-transparent legend
         
         # Use optimized layout for mobile
         fig = go.Figure()
@@ -201,7 +198,7 @@ class GraphGenerator:
         
         # Add primary data trace (pre-COVID)
         fig.add_trace(go.Scatter(
-            x=pre_covid['season'],
+            x=pre_covid['date'],
             y=pre_covid[pre_covid.columns[1]],
             name=y_label,
             line=dict(color='#0077b6', dash='solid'),
@@ -210,7 +207,7 @@ class GraphGenerator:
         
         # Add post-COVID data
         fig.add_trace(go.Scatter(
-            x=post_covid['season'],
+            x=post_covid['date'],
             y=post_covid[post_covid.columns[1]],
             name=y_label,
             line=dict(color='#0077b6', dash='solid'),
@@ -223,7 +220,7 @@ class GraphGenerator:
             last_pre_covid = pre_covid.iloc[-1]
             first_post_covid = post_covid.iloc[0]
             fig.add_trace(go.Scatter(
-                x=[last_pre_covid['season'], first_post_covid['season']],
+                x=[last_pre_covid['date'], first_post_covid['date']],
                 y=[last_pre_covid[pre_covid.columns[1]], first_post_covid[post_covid.columns[1]]],
                 name='COVID-19 Period (No Data)',
                 line=dict(color='#0077b6', dash='dot', width=1),
@@ -270,7 +267,7 @@ class GraphGenerator:
             
             # Add secondary metric pre-COVID
             fig.add_trace(go.Scatter(
-                x=pre_covid_secondary['season'],
+                x=pre_covid_secondary['date'],
                 y=pre_covid_secondary[pre_covid_secondary.columns[1]],
                 name=secondary_label,
                 line=dict(color='#f4a261', dash='solid'),
@@ -280,7 +277,7 @@ class GraphGenerator:
             
             # Add secondary metric post-COVID
             fig.add_trace(go.Scatter(
-                x=post_covid_secondary['season'],
+                x=post_covid_secondary['date'],
                 y=post_covid_secondary[post_covid_secondary.columns[1]],
                 name=secondary_label,
                 line=dict(color='#f4a261', dash='solid'),
@@ -294,7 +291,7 @@ class GraphGenerator:
                 last_pre_covid_secondary = pre_covid_secondary.iloc[-1]
                 first_post_covid_secondary = post_covid_secondary.iloc[0]
                 fig.add_trace(go.Scatter(
-                    x=[last_pre_covid_secondary['season'], first_post_covid_secondary['season']],
+                    x=[last_pre_covid_secondary['date'], first_post_covid_secondary['date']],
                     y=[last_pre_covid_secondary[pre_covid_secondary.columns[1]], 
                        first_post_covid_secondary[post_covid_secondary.columns[1]]],
                     name='COVID-19 Period (No Data)',
@@ -344,7 +341,7 @@ class GraphGenerator:
             
             # Add tertiary metric pre-COVID
             fig.add_trace(go.Scatter(
-                x=pre_covid_tertiary['season'],
+                x=pre_covid_tertiary['date'],
                 y=pre_covid_tertiary[pre_covid_tertiary.columns[1]],
                 name=tertiary_label,
                 line=dict(color='#e76f51', dash='solid'),
@@ -354,7 +351,7 @@ class GraphGenerator:
             
             # Add tertiary metric post-COVID
             fig.add_trace(go.Scatter(
-                x=post_covid_tertiary['season'],
+                x=post_covid_tertiary['date'],
                 y=post_covid_tertiary[post_covid_tertiary.columns[1]],
                 name=tertiary_label,
                 line=dict(color='#e76f51', dash='solid'),
@@ -368,7 +365,7 @@ class GraphGenerator:
                 last_pre_covid_tertiary = pre_covid_tertiary.iloc[-1]
                 first_post_covid_tertiary = post_covid_tertiary.iloc[0]
                 fig.add_trace(go.Scatter(
-                    x=[last_pre_covid_tertiary['season'], first_post_covid_tertiary['season']],
+                    x=[last_pre_covid_tertiary['date'], first_post_covid_tertiary['date']],
                     y=[last_pre_covid_tertiary[pre_covid_tertiary.columns[1]], 
                        first_post_covid_tertiary[post_covid_tertiary.columns[1]]],
                     name='COVID-19 Period (No Data)',
@@ -429,7 +426,7 @@ class GraphGenerator:
                     
                     # Add comparison pre-COVID
                     fig.add_trace(go.Scatter(
-                        x=pre_covid_comp['season'],
+                        x=pre_covid_comp['date'],
                         y=pre_covid_comp[pre_covid_comp.columns[1]],
                         name=label,
                         line=dict(color=colors[color_idx], dash='solid'),
@@ -438,7 +435,7 @@ class GraphGenerator:
                     
                     # Add comparison post-COVID
                     fig.add_trace(go.Scatter(
-                        x=post_covid_comp['season'],
+                        x=post_covid_comp['date'],
                         y=post_covid_comp[post_covid_comp.columns[1]],
                         name=label,
                         line=dict(color=colors[color_idx], dash='solid'),
@@ -451,7 +448,7 @@ class GraphGenerator:
                         last_pre_covid_comp = pre_covid_comp.iloc[-1]
                         first_post_covid_comp = post_covid_comp.iloc[0]
                         fig.add_trace(go.Scatter(
-                            x=[last_pre_covid_comp['season'], first_post_covid_comp['season']],
+                            x=[last_pre_covid_comp['date'], first_post_covid_comp['date']],
                             y=[last_pre_covid_comp[pre_covid_comp.columns[1]], 
                                first_post_covid_comp[post_covid_comp.columns[1]]],
                             name='COVID-19 Period (No Data)',
@@ -463,7 +460,7 @@ class GraphGenerator:
         
         # Add COVID period rectangle annotation
         fig.add_vrect(
-            x0="DEC-FEB 2020", x1="JUN-AUG 2020",
+            x0=pd.Timestamp('2020-03-01'), x1=pd.Timestamp('2020-09-30'),
             fillcolor="red", opacity=0.1,
             layer="below", line_width=0,
             annotation_text="COVID-19",
@@ -575,12 +572,9 @@ class GraphGenerator:
         if data is None or data.empty:
             return go.Figure(), {}
         
-        # Check if we're in dark mode
-        is_dark_mode = st.session_state.get('theme', 'light') == 'dark'
-        
-        # Define colors based on theme
-        text_color = '#FFFFFF' if is_dark_mode else '#000000'  # Pure white in dark mode, pure black in light mode
-        grid_color = '#4a5568' if is_dark_mode else '#e0e0e0'  # Dark / Light grid
+        # Use light mode colors for better consistency with Streamlit's native theme
+        text_color = '#000000'  # Black text for better readability
+        grid_color = '#e0e0e0'  # Light grid
         
         fig = go.Figure()
         
