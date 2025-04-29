@@ -5,8 +5,8 @@ port = 5000
 
 [theme]
 base = "light"
-primaryColor = "#2b6cb0"
+primaryColor = "#0077b6"
 backgroundColor = "#ffffff"
 secondaryBackgroundColor = "#f0f2f6"
-textColor = "#000000"
+textColor = "#262730"
 font = "sans serif"

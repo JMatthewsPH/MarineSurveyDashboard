@@ -16,16 +16,9 @@ st.set_page_config(
 # Load custom CSS
 @st.cache_data
 def load_css():
-    css_files = ['assets/site_styles.css']
-    css_content = ""
-    for css_file in css_files:
-        try:
-            with open(css_file) as f:
-                css_content += f.read() + "\n"
-        except Exception as e:
-            st.warning(f"Could not load CSS file: {css_file}")
-    
-    return f'<style>{css_content}</style>'
+    with open('assets/site_styles.css') as f:
+        css_content = f.read()
+        return f'<style>{css_content}</style>'
 
 # Include CSS for loading states and skeleton UI
 from utils.ui_helpers import add_loading_css
@@ -33,10 +26,9 @@ from utils.ui_helpers import add_loading_css
 st.markdown(load_css(), unsafe_allow_html=True)
 st.markdown(add_loading_css(), unsafe_allow_html=True)
 
-# Add JavaScript to hide "main" text in navigation
-js_code = """
+# Add JavaScript to hide "main" text (hidden in an HTML comment to prevent display)
+hide_main_js = """
 <script type="text/javascript">
-    // Hide "main" text in nav
     (function() {
         function hideMainText() {
             var sidebarNavs = document.querySelectorAll('[data-testid="stSidebarNav"]');
@@ -56,7 +48,7 @@ js_code = """
 """
 
 # Use a div with display:none to hide the JS code from being shown
-st.markdown(f'<div style="display:none">{js_code}</div>', unsafe_allow_html=True)
+st.markdown(f'<div style="display:none">{hide_main_js}</div>', unsafe_allow_html=True)
 
 # Initialize language in session state if not present
 if 'language' not in st.session_state:
@@ -68,35 +60,6 @@ LANGUAGE_DISPLAY = {
     "tl": "Tagalog",
     "ceb": "Cebuano"
 }
-
-# Adding basic CSS for consistent style
-custom_css = """
-<style>
-/* Basic styling for site components */
-.site-header, .site-card, .site-description {
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-/* Ensure site description text is readable */
-.site-description-text {
-    font-size: 1rem;
-    line-height: 1.5;
-}
-
-/* Mobile responsive adjustments */
-@media (max-width: 768px) {
-    .site-header, .site-card, .site-description {
-        padding: 10px;
-    }
-}
-</style>
-"""
-
-# Apply the basic CSS
-st.markdown(custom_css, unsafe_allow_html=True)
 
 # Sidebar for language selection
 with st.sidebar:
@@ -138,10 +101,10 @@ add_favicon()
 # Display the logo using our branding utility
 display_logo(size="medium")
 
-# Display the site header with forced black text in light mode
+# Display the site header
 st.markdown(f"""
     <div class="site-header">
-        <h2 style="color: #000000 !important; opacity: 1 !important; font-weight: 600 !important;">{subheader_text}</h2>
+        <h2>{subheader_text}</h2>
     </div>
 """, unsafe_allow_html=True)
 
@@ -194,11 +157,11 @@ def create_site_card(site):
 
     st.markdown(f"""
         <div class="site-card">
-            <h3 style="color: #000000 !important; opacity: 1 !important; font-weight: 600 !important;">{site.name}</h3>
-            <p style="color: #000000 !important; opacity: 1 !important;"><strong style="color: #000000 !important;">{municipality_label}</strong> {site.municipality}</p>
-            <p style="color: #000000 !important; opacity: 1 !important;">{truncated_description}</p>
-            <a href="/Site_Dashboard?site={site.name}" target="_self">
-                <button class="site-button" style="color: white !important;">{view_details_text}</button>
+            <h3>{site.name}</h3>
+            <p><strong>{municipality_label}</strong> {site.municipality}</p>
+            <p>{truncated_description}</p>
+            <a href="1_Site_Dashboard?site={site.name}" target="_self">
+                <button class="site-button">{view_details_text}</button>
             </a>
         </div>
     """, unsafe_allow_html=True)
@@ -224,24 +187,21 @@ municipality_names = {
 }
 
 if zamboanguita_sites:
-    # Using markdown with inline style to ensure black text
-    st.markdown(f"<h2 style='color: #000000 !important; opacity: 1 !important; font-weight: 600 !important;'>{municipality_names[language_code]['Zamboanguita']}</h2>", unsafe_allow_html=True)
+    st.header(municipality_names[language_code]["Zamboanguita"])
     cols = st.columns(3)
     for idx, site in enumerate(zamboanguita_sites):
         with cols[idx % 3]:
             create_site_card(site)
 
 if siaton_sites:
-    # Using markdown with inline style to ensure black text
-    st.markdown(f"<h2 style='color: #000000 !important; opacity: 1 !important; font-weight: 600 !important;'>{municipality_names[language_code]['Siaton']}</h2>", unsafe_allow_html=True)
+    st.header(municipality_names[language_code]["Siaton"])
     cols = st.columns(3)
     for idx, site in enumerate(siaton_sites):
         with cols[idx % 3]:
             create_site_card(site)
 
 if santa_catalina_sites:
-    # Using markdown with inline style to ensure black text
-    st.markdown(f"<h2 style='color: #000000 !important; opacity: 1 !important; font-weight: 600 !important;'>{municipality_names[language_code]['Santa Catalina']}</h2>", unsafe_allow_html=True)
+    st.header(municipality_names[language_code]["Santa Catalina"])
     cols = st.columns(3)
     for idx, site in enumerate(santa_catalina_sites):
         with cols[idx % 3]:

@@ -27,47 +27,10 @@ st.set_page_config(
 # Initialize session state for language if not already set
 if 'language' not in st.session_state:
     st.session_state.language = 'en'  # Default to English
-    
-# Basic styling to ensure readability regardless of Streamlit's theme
-custom_css = """
-<style>
-/* Basic styling for site components */
-.site-header, .site-card, .site-description {
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-/* Ensure site description text is readable */
-.site-description-text {
-    font-size: 1rem;
-    line-height: 1.5;
-    color: inherit;
-}
-
-/* Mobile responsive adjustments */
-@media (max-width: 768px) {
-    .site-header, .site-card, .site-description {
-        padding: 10px;
-    }
-}
-</style>
-"""
-        
-# Keep using the basic CSS defined earlier
-
-# Apply the theme CSS
-st.markdown(custom_css, unsafe_allow_html=True)
 
 # CSS for mobile-responsive layout
 def load_css():
-    # Load the main styles
     with open('assets/site_styles.css') as f:
-        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-    
-    # Load the force black text CSS for better contrast in light mode
-    with open('assets/force_black_text.css') as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
 # Load custom CSS
