@@ -61,8 +61,74 @@ LANGUAGE_DISPLAY = {
     "ceb": "Cebuano"
 }
 
+# Initialize theme in session state if not present
+if 'theme' not in st.session_state:
+    st.session_state.theme = "light"  # Default to light mode
+
+# Add JavaScript for theme toggling
+theme_toggle_js = """
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        // Apply the theme
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.body.classList.remove('light-theme');
+            } else {
+                document.body.classList.add('light-theme');
+                document.body.classList.remove('dark-theme');
+            }
+        }
+        
+        // Monitor for theme changes in localStorage
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'streamlit_theme') {
+                applyTheme(e.newValue);
+            }
+        });
+        
+        // Initialize theme
+        const currentTheme = localStorage.getItem('streamlit_theme') || 'light';
+        applyTheme(currentTheme);
+    });
+    
+    // Function to toggle theme
+    function toggleTheme() {
+        const currentTheme = localStorage.getItem('streamlit_theme') || 'light';
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        localStorage.setItem('streamlit_theme', newTheme);
+        
+        // Apply immediately for current window
+        if (newTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+            document.body.classList.remove('light-theme');
+        } else {
+            document.body.classList.add('light-theme');
+            document.body.classList.remove('dark-theme');
+        }
+    }
+</script>
+"""
+
+st.markdown(theme_toggle_js, unsafe_allow_html=True)
+
 # Sidebar for language selection
 with st.sidebar:
+    # Create a container for the theme toggle at the top of sidebar
+    theme_container = st.container()
+    
+    with theme_container:
+        # Add a theme toggle button that uses JavaScript (with text instead of emojis)
+        theme_toggle_html = """
+        <div class="theme-toggle-wrapper">
+            <button onclick="toggleTheme()" class="theme-toggle-button">
+                <span class="light-icon">Light</span>
+                <span class="dark-icon">Dark</span>
+            </button>
+        </div>
+        """
+        st.markdown(theme_toggle_html, unsafe_allow_html=True)
+    
     st.title(TRANSLATIONS[st.session_state.language]['settings'])
     
     # Update session state when language changes
