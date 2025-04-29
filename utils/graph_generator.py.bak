@@ -344,7 +344,7 @@ class GraphGenerator:
         is_dark_mode = st.session_state.get('theme', 'light') == 'dark'
         
         # Define colors based on theme
-        text_color = '#e2e8f0' if is_dark_mode else '#000000'  # Light / Dark text - using black in light mode
+        text_color = '#e2e8f0' if is_dark_mode else '#2d3748'  # Light / Dark text
         grid_color = '#4a5568' if is_dark_mode else '#e0e0e0'  # Dark / Light grid
         legend_bg = 'rgba(45, 55, 72, 0.7)' if is_dark_mode else 'rgba(255, 255, 255, 0.7)'
 
@@ -462,7 +462,7 @@ class GraphGenerator:
         is_dark_mode = st.session_state.get('theme', 'light') == 'dark'
         
         # Define colors based on theme
-        text_color = '#e2e8f0' if is_dark_mode else '#000000'  # Light / Dark text - using black in light mode
+        text_color = '#e2e8f0' if is_dark_mode else '#2d3748'  # Light / Dark text
         grid_color = '#4a5568' if is_dark_mode else '#e0e0e0'  # Dark / Light grid
         
         fig.update_layout(

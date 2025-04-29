@@ -1,0 +1,20 @@
+--- utils/graph_generator.py	2025-04-29 04:10:36
++++ utils/graph_generator.py.new	2025-04-29 04:10:36
+@@ -344,7 +344,7 @@
+         is_dark_mode = st.session_state.get('theme', 'light') == 'dark'
+         
+         # Define colors based on theme
+-        text_color = '#e2e8f0' if is_dark_mode else '#2d3748'  # Light / Dark text
++        text_color = '#e2e8f0' if is_dark_mode else '#000000'  # Light / Dark text - using black in light mode
+         grid_color = '#4a5568' if is_dark_mode else '#e0e0e0'  # Dark / Light grid
+         legend_bg = 'rgba(45, 55, 72, 0.7)' if is_dark_mode else 'rgba(255, 255, 255, 0.7)'
+ 
+@@ -462,7 +462,7 @@
+         is_dark_mode = st.session_state.get('theme', 'light') == 'dark'
+         
+         # Define colors based on theme
+-        text_color = '#e2e8f0' if is_dark_mode else '#2d3748'  # Light / Dark text
++        text_color = '#e2e8f0' if is_dark_mode else '#000000'  # Light / Dark text - using black in light mode
+         grid_color = '#4a5568' if is_dark_mode else '#e0e0e0'  # Dark / Light grid
+         
+         fig.update_layout(

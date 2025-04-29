@@ -363,6 +363,33 @@ else:
     .stApp[data-theme="light"] .stCheckbox label span p {
         color: #2d3748 !important;
     }
+    
+    /* Target ALL Streamlit elements in light mode */
+    [data-theme="light"] [data-testid="stHeader"],
+    [data-theme="light"] [data-testid="stMarkdown"],
+    [data-theme="light"] [data-testid="stText"],
+    [data-theme="light"] [data-testid="stSubheader"],
+    [data-theme="light"] .element-container,
+    [data-theme="light"] .stMarkdown,
+    [data-theme="light"] span,
+    [data-theme="light"] div,
+    [data-theme="light"] p {
+        color: #000000 !important;
+    }
+    
+    /* Ultra specific selectors for chart titles and metrics */
+    [data-theme="light"] h1, 
+    [data-theme="light"] h2, 
+    [data-theme="light"] h3, 
+    [data-theme="light"] h4,
+    [data-theme="light"] .stTitle p,
+    [data-theme="light"] .stHeader p,
+    [data-theme="light"] .stSubheader p,
+    [data-theme="light"] .stMarkdownContainer div p,
+    [data-theme="light"] .site-description-text {
+        color: #000000 !important;
+        opacity: 1 !important;
+    }
     </style>
     """
 
