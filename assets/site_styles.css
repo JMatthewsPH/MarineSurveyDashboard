@@ -12,8 +12,9 @@
     margin-bottom: 1rem;
 }
 
-/* Modern color palette */
+/* Modern color palette with dark mode support */
 :root {
+    /* Light mode variables */
     --primary-color: #2b6cb0;
     --secondary-color: #48bb78;
     --background-color: #f7fafc;
@@ -22,6 +23,51 @@
     --hover-color: #4299e1;
     --box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     --hover-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    --card-bg-color: white;
+    --grid-line-color: #e0e0e0;
+    --tooltip-bg-color: white;
+    --tooltip-text-color: #333;
+    --chart-bg-color: white;
+    --chart-line-color: #2b6cb0;
+    --chart-text-color: #2d3748;
+    
+    /* Dark mode variables */
+    --dark-primary-color: #4299e1;
+    --dark-secondary-color: #68d391;
+    --dark-background-color: #1a202c;
+    --dark-text-color: #e2e8f0;
+    --dark-border-color: #4a5568;
+    --dark-hover-color: #63b3ed;
+    --dark-box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    --dark-hover-shadow: 0 4px 8px rgba(0,0,0,0.4);
+    --dark-card-bg-color: #2d3748;
+    --dark-grid-line-color: #4a5568;
+    --dark-tooltip-bg-color: #4a5568;
+    --dark-tooltip-text-color: #e2e8f0;
+    --dark-chart-bg-color: #2d3748;
+    --dark-chart-line-color: #63b3ed;
+    --dark-chart-text-color: #e2e8f0;
+}
+
+/* Dark mode detection */
+@media (prefers-color-scheme: dark) {
+    .stApp, html, body {
+        --primary-color: var(--dark-primary-color);
+        --secondary-color: var(--dark-secondary-color);
+        --background-color: var(--dark-background-color);
+        --text-color: var(--dark-text-color);
+        --border-color: var(--dark-border-color);
+        --hover-color: var(--dark-hover-color);
+        --box-shadow: var(--dark-box-shadow);
+        --hover-shadow: var(--dark-hover-shadow);
+        --card-bg-color: var(--dark-card-bg-color);
+        --grid-line-color: var(--dark-grid-line-color);
+        --tooltip-bg-color: var(--dark-tooltip-bg-color);
+        --tooltip-text-color: var(--dark-tooltip-text-color);
+        --chart-bg-color: var(--dark-chart-bg-color);
+        --chart-line-color: var(--dark-chart-line-color);
+        --chart-text-color: var(--dark-chart-text-color);
+    }
 }
 
 /* Base styles */
@@ -51,11 +97,11 @@
 
 /* Header styling */
 .site-header {
-    background: white;
+    background: var(--card-bg-color);
     border-radius: 15px;
     padding: 1rem;
     margin-bottom: 1rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: var(--box-shadow);
     transition: box-shadow 0.3s ease;
     border: 1px solid var(--border-color);
     width: 100%;
@@ -63,7 +109,7 @@
 }
 
 .site-header:hover {
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: var(--hover-shadow);
 }
 
 /* Responsive styles for logo */
@@ -81,11 +127,11 @@
 
 /* Graph containers */
 .graph-container {
-    background: white;
+    background: var(--card-bg-color);
     border-radius: 15px;
     padding: 0.75rem;  /* Reduced padding */
     margin: 0.5rem 0;  /* Reduced margin */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: var(--box-shadow);
     border: 1px solid var(--border-color);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     width: 100%;
@@ -96,12 +142,12 @@
 
 .graph-container:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    box-shadow: var(--hover-shadow);
 }
 
 /* Site description card */
 .site-description {
-    background: white;
+    background: var(--card-bg-color);
     border-radius: 15px;
     padding: 1rem;
     margin: 0.5rem 0;
@@ -333,7 +379,10 @@
 /* Skeleton loading elements */
 .skeleton-text {
     height: 1.2em;
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background: linear-gradient(90deg, 
+        var(--border-color) 25%, 
+        var(--grid-line-color) 50%, 
+        var(--border-color) 75%);
     background-size: 200% 100%;
     animation: loading 1.5s infinite;
     border-radius: 4px;
@@ -356,11 +405,11 @@
 
 /* Skeleton graph container */
 .skeleton-graph {
-    background: white;
+    background: var(--card-bg-color);
     border-radius: 15px;
     padding: 0.75rem;
     margin: 0.5rem 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: var(--box-shadow);
     border: 1px solid var(--border-color);
     width: 100%;
     min-height: 380px;
@@ -379,4 +428,60 @@ div[data-testid="stSidebarNav"] ul li:first-child {
     margin: 0 !important;
     padding: 0 !important;
     opacity: 0 !important;
+}
+
+/* Dark mode specific adjustments for Streamlit elements */
+@media (prefers-color-scheme: dark) {
+    /* Sidebar background */
+    section[data-testid="stSidebar"] > div {
+        background-color: var(--dark-background-color);
+    }
+    
+    /* Streamlit text elements */
+    .stMarkdown, .stText, p, h1, h2, h3, h4, h5, h6 {
+        color: var(--dark-text-color) !important;
+    }
+    
+    /* Plotly chart colors */
+    .js-plotly-plot .plotly .main-svg {
+        background-color: var(--dark-chart-bg-color) !important;
+    }
+    
+    .js-plotly-plot .plotly .gridlayer path {
+        stroke: var(--dark-grid-line-color) !important;
+    }
+    
+    .js-plotly-plot .plotly .gtitle, 
+    .js-plotly-plot .plotly .xtitle, 
+    .js-plotly-plot .plotly .ytitle,
+    .js-plotly-plot .plotly .xtick text, 
+    .js-plotly-plot .plotly .ytick text {
+        fill: var(--dark-text-color) !important;
+    }
+    
+    /* Streamlit inputs and dropdowns */
+    .stSelectbox > div > div[data-baseweb="select"] {
+        background-color: var(--dark-card-bg-color);
+        color: var(--dark-text-color);
+        border-color: var(--dark-border-color);
+    }
+    
+    .stDateInput input, .stTextInput input, .stNumberInput input {
+        background-color: var(--dark-card-bg-color) !important;
+        color: var(--dark-text-color) !important;
+        border-color: var(--dark-border-color) !important;
+    }
+    
+    /* Tooltip background */
+    .tooltip, .js-plotly-plot .plotly .hoverlayer .hover {
+        background-color: var(--dark-tooltip-bg-color) !important;
+        color: var(--dark-tooltip-text-color) !important;
+        border-color: var(--dark-border-color) !important;
+    }
+    
+    /* Loader colors */
+    .loader {
+        border-color: var(--dark-border-color);
+        border-top-color: var(--dark-primary-color);
+    }
 }
