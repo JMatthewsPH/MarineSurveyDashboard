@@ -20,7 +20,7 @@ from utils.database import get_db
 # Page configuration
 st.set_page_config(
     page_title="Site Dashboard | Marine Conservation Dashboard",
-    page_icon=None,
+    page_icon="📊",
     layout="wide"
 )
 
