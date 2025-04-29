@@ -163,14 +163,22 @@ class GraphGenerator:
         if date_range and len(date_range) == 2:
             start_filter, end_filter = date_range
             if start_filter and end_filter:
-                # Filter the primary data
-                data = data[(data['date'] >= start_filter) & (data['date'] <= end_filter)]
-                pre_covid = data[data['date'] < covid_start]
-                post_covid = data[data['date'] > covid_end]
-                
-                # Update chart title with date range info
-                date_range_str = f"{start_filter.strftime('%b %Y')} - {end_filter.strftime('%b %Y')}"
-                title = f"{title} ({date_range_str})"
+                # Convert data['date'] to datetime64 for consistent comparison
+                if not data.empty:
+                    data['date'] = pd.to_datetime(data['date'])
+                    
+                    # Convert filter dates to datetime64 for consistent comparison
+                    start_dt = pd.to_datetime(start_filter).tz_localize(None)
+                    end_dt = pd.to_datetime(end_filter).tz_localize(None)
+                    
+                    # Filter the primary data
+                    data = data[(data['date'] >= start_dt) & (data['date'] <= end_dt)]
+                    pre_covid = data[data['date'] < covid_start]
+                    post_covid = data[data['date'] > covid_end]
+                    
+                    # Update chart title with date range info
+                    date_range_str = f"{start_dt.strftime('%b %Y')} - {end_dt.strftime('%b %Y')}"
+                    title = f"{title} ({date_range_str})"
         
         # Define a list of colors for multiple comparison sites
         comparison_colors = ['#ef476f', '#ffd166', '#06d6a0', '#118ab2', '#073b4c', '#9b5de5', '#f15bb5']
@@ -201,8 +209,12 @@ class GraphGenerator:
                 # Apply date range filter if specified
                 if date_range and len(date_range) == 2:
                     start_filter, end_filter = date_range
-                    if start_filter and end_filter:
-                        comp_df = comp_df[(comp_df['date'] >= start_filter) & (comp_df['date'] <= end_filter)]
+                    if start_filter and end_filter and not comp_df.empty:
+                        # Convert to datetime for consistent comparison
+                        comp_df['date'] = pd.to_datetime(comp_df['date'])
+                        start_dt = pd.to_datetime(start_filter).tz_localize(None)
+                        end_dt = pd.to_datetime(end_filter).tz_localize(None)
+                        comp_df = comp_df[(comp_df['date'] >= start_dt) & (comp_df['date'] <= end_dt)]
                 
                 # Sort and format data
                 comp_df = comp_df.sort_values('date')

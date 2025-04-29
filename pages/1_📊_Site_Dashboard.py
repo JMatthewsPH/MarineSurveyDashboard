@@ -468,7 +468,8 @@ if selected_site:
                 coral_data,
                 f"Hard Coral Cover - {selected_site}",
                 "Cover (%)",
-                comparison_data=coral_comparison_data
+                comparison_data=coral_comparison_data,
+                date_range=date_range
             )
             st.plotly_chart(coral_fig, use_container_width=True, config=coral_config, key='coral_chart')
 
@@ -491,7 +492,8 @@ if selected_site:
                 algae_data,
                 f"Fleshy Algae Cover - {selected_site}",
                 "Cover (%)",
-                comparison_data=algae_comparison_data
+                comparison_data=algae_comparison_data,
+                date_range=date_range
             )
             st.plotly_chart(algae_fig, use_container_width=True, config=algae_config, key='algae_chart')
 
@@ -514,7 +516,8 @@ if selected_site:
                 herbivore_data,
                 f"Herbivore Density - {selected_site}",
                 "Density (ind/ha)",
-                comparison_data=herbivore_comparison_data
+                comparison_data=herbivore_comparison_data,
+                date_range=date_range
             )
             st.plotly_chart(herbivore_fig, use_container_width=True, config=herbivore_config, key='herbivore_chart')
 
@@ -537,7 +540,8 @@ if selected_site:
                 omnivore_data,
                 f"Omnivore Density - {selected_site}",
                 "Density (ind/ha)",
-                comparison_data=omnivore_comparison_data
+                comparison_data=omnivore_comparison_data,
+                date_range=date_range
             )
             st.plotly_chart(omnivore_fig, use_container_width=True, config=omnivore_config, key='omnivore_chart')
 
@@ -560,7 +564,8 @@ if selected_site:
                 corallivore_data,
                 f"Corallivore Density - {selected_site}",
                 "Density (ind/ha)",
-                comparison_data=corallivore_comparison_data
+                comparison_data=corallivore_comparison_data,
+                date_range=date_range
             )
             st.plotly_chart(corallivore_fig, use_container_width=True, config=corallivore_config, key='corallivore_chart')
 
@@ -583,7 +588,8 @@ if selected_site:
                 bleaching_data,
                 f"Bleaching - {selected_site}",
                 "Bleaching (%)",
-                comparison_data=bleaching_comparison_data
+                comparison_data=bleaching_comparison_data,
+                date_range=date_range
             )
             st.plotly_chart(bleaching_fig, use_container_width=True, config=bleaching_config, key='bleaching_chart')
 
@@ -606,6 +612,7 @@ if selected_site:
                 rubble_data,
                 f"Rubble Cover - {selected_site}",
                 "Rubble Cover (%)",
-                comparison_data=rubble_comparison_data
+                comparison_data=rubble_comparison_data,
+                date_range=date_range
             )
             st.plotly_chart(rubble_fig, use_container_width=True, config=rubble_config, key='rubble_chart')
