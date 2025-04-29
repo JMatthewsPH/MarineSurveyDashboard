@@ -20,6 +20,8 @@
     --text-color: #2d3748;
     --border-color: #e2e8f0;
     --hover-color: #4299e1;
+    --box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    --hover-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
 /* Base styles */
@@ -30,6 +32,21 @@
     max-width: 100vw;
     margin: 0;
     padding: 0.5rem;
+    overflow-x: hidden; /* Prevent horizontal scrolling on mobile */
+}
+
+/* Mobile-specific base styles */
+@media (max-width: 768px) {
+    .stApp {
+        padding: 0.25rem;
+    }
+    
+    /* Make the main content area take full width on mobile */
+    .main .block-container {
+        max-width: 100% !important;
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
 }
 
 /* Header styling */
@@ -88,10 +105,37 @@
     border-radius: 15px;
     padding: 1rem;
     margin: 0.5rem 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: var(--box-shadow);
     border: 1px solid var(--border-color);
     line-height: 1.6;
     width: 100%;
+}
+
+/* Site description text styling */
+.site-description-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-color);
+}
+
+/* Mobile styles for the site description section */
+@media (max-width: 768px) {
+    /* Make columns stack vertically on mobile */
+    .main .row-widget.stHorizontal [data-testid="column"] {
+        width: 100% !important;
+        flex: 1 1 100% !important;
+        margin-bottom: 1rem;
+    }
+    
+    /* Adjust font size for mobile */
+    .site-description-text {
+        font-size: 0.95rem;
+    }
+    
+    /* Add some extra spacing for readability */
+    .stImage {
+        margin-bottom: 1rem;
+    }
 }
 
 /* Make all Streamlit elements full width */
@@ -129,6 +173,50 @@
     padding: 1rem 0.5rem;
 }
 
+/* Mobile sidebar optimizations */
+@media (max-width: 768px) {
+    /* Make the sidebar more compact on mobile */
+    .sidebar .sidebar-content {
+        padding: 0.5rem 0.25rem;
+    }
+    
+    /* Reduce spacing in sidebar elements */
+    .sidebar .block-container {
+        padding-top: 0.25rem !important;
+        padding-bottom: 0.25rem !important;
+    }
+    
+    /* Improve selectbox size on mobile */
+    .sidebar .stSelectbox > div > div {
+        min-height: 35px !important;
+        font-size: 0.9rem !important;
+    }
+    
+    /* Improve multiselect size on mobile */
+    .sidebar .stMultiSelect > div > div {
+        min-height: 35px !important;
+        font-size: 0.9rem !important;
+    }
+    
+    /* Adjust date input size on mobile */
+    .sidebar .stDateInput input {
+        font-size: 0.9rem !important;
+        padding: 0.25rem !important;
+    }
+    
+    /* Make sidebar headers more compact */
+    .sidebar h1, .sidebar h2, .sidebar h3 {
+        margin-top: 0.75rem !important;
+        margin-bottom: 0.25rem !important;
+        font-size: 90% !important;
+    }
+    
+    /* Ensure sidebar width isn't too narrow */
+    section[data-testid="stSidebar"] {
+        min-width: 18rem !important;
+    }
+}
+
 /* Ensure proper spacing in radio buttons and dropdowns */
 .stRadio > div {
     margin-bottom: 0.25rem !important;
@@ -142,12 +230,68 @@
 .js-plotly-plot, .plot-container {
     width: 100% !important;
     margin-top: 0.5rem !important;  /* Reduced space between title and plot */
+    touch-action: manipulation; /* Improve touch handling */
 }
 
 /* Adjust modebar (Plotly buttons) positioning */
 .modebar {
     top: 0 !important;
     right: 0 !important;
+}
+
+/* Mobile-responsive charts container */
+.mobile-responsive-charts {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* Mobile-specific chart adjustments */
+@media (max-width: 768px) {
+    /* Make plot buttons larger for easier tapping */
+    .modebar-btn {
+        padding: 6px !important;
+    }
+    
+    /* Adjust chart height for better mobile viewing */
+    .js-plotly-plot {
+        height: auto !important;
+        min-height: 300px;
+    }
+    
+    /* Ensure plot legends are readable on small screens */
+    .legend {
+        font-size: 10px !important;
+    }
+    
+    /* Optimize chart margins for mobile */
+    .plot-container .main-svg {
+        margin: 0 auto !important;
+    }
+    
+    /* Ensure tooltips are clearly visible on mobile */
+    .hover-info, .tooltip {
+        font-size: 12px !important;
+        max-width: 80vw !important;
+        white-space: normal !important;
+    }
+    
+    /* Adjust spacing between charts on mobile */
+    .mobile-responsive-charts > div {
+        margin-bottom: 1.5rem;
+    }
+    
+    /* Reduce subheader size on mobile */
+    .mobile-responsive-charts .stSubheader {
+        font-size: 90% !important;
+        margin-top: 1rem !important;
+        margin-bottom: 0.25rem !important;
+    }
+    
+    /* Adjust spacing for charts on mobile */
+    .mobile-responsive-charts .element-container {
+        margin-bottom: 0.5rem !important;
+    }
 }
 
 /* Make sure subheaders don't overlap with plots */

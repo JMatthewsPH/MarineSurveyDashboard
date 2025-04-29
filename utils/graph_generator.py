@@ -86,7 +86,7 @@ class GraphGenerator:
         # Create base figure
         fig = go.Figure()
 
-        # Configure basic download settings
+        # Configure basic download settings with mobile-friendly options
         config = {
             'toImageButtonOptions': {
                 'format': 'png',
@@ -98,7 +98,11 @@ class GraphGenerator:
             'displaylogo': False,
             'responsive': True,
             'displayModeBar': True,
-            'modeBarButtonsToRemove': ['lasso2d', 'select2d']
+            'modeBarButtonsToRemove': ['lasso2d', 'select2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d'],
+            'scrollZoom': False,  # Disable scroll zoom on mobile to prevent accidental zooming
+            'doubleClick': 'reset',  # Double tap to reset the view
+            'showTips': True,  # Show tips for better usability
+            'displayModeBar': 'hover'  # Only show mode bar on hover to save space
         }
 
         # If no data, return empty figure with basic config
@@ -352,7 +356,11 @@ class GraphGenerator:
                 'displaylogo': False,
                 'responsive': True,
                 'displayModeBar': True,
-                'modeBarButtonsToRemove': ['lasso2d', 'select2d']
+                'modeBarButtonsToRemove': ['lasso2d', 'select2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d'],
+                'scrollZoom': False,  # Disable scroll zoom on mobile to prevent accidental zooming
+                'doubleClick': 'reset',  # Double tap to reset the view
+                'showTips': True,  # Show tips for better usability
+                'displayModeBar': 'hover'  # Only show mode bar on hover to save space
             }
             return fig, config
 
@@ -393,6 +401,10 @@ class GraphGenerator:
             'displaylogo': False,
             'responsive': True,
             'displayModeBar': True,
-            'modeBarButtonsToRemove': ['lasso2d', 'select2d']
+            'modeBarButtonsToRemove': ['lasso2d', 'select2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d'],
+            'scrollZoom': False,  # Disable scroll zoom on mobile to prevent accidental zooming
+            'doubleClick': 'reset',  # Double tap to reset the view
+            'showTips': True,  # Show tips for better usability
+            'displayModeBar': 'hover'  # Only show mode bar on hover to save space
         }
         return fig, config

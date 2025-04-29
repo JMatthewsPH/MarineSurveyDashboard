@@ -130,15 +130,22 @@ if selected_site:
         # Site Description Section
         st.header("Site Description")
 
+        # Use different column ratios based on screen size (CSS will handle the actual responsiveness)
+        # For larger screens, we use a 1:2 ratio
+        # For mobile, CSS will stack these vertically
+
         cols = st.columns([1, 2])
 
         with cols[0]:
-            st.image("https://via.placeholder.com/400x300", use_container_width=True)
+            st.image("https://via.placeholder.com/400x300", use_container_width=True, 
+                     output_format="JPEG", caption=selected_site)
 
         with cols[1]:
             selected_language = st.session_state.language
             description = selected_site_obj.description_en if selected_language == "English" else selected_site_obj.description_fil
-            st.markdown(description or f"Description for {selected_site}")
+            st.markdown(f"""<div class="site-description-text">
+                           {description or f"Description for {selected_site}"}
+                         </div>""", unsafe_allow_html=True)
 
 
         # Get current site's municipality
@@ -398,13 +405,18 @@ if selected_site:
         if selected_site_obj:
             st.header("Site Metrics")
 
-            # Configure Plotly chart settings
+            # Configure Plotly chart settings with mobile optimizations
             plotly_config = {
                 'responsive': True,
-                'displayModeBar': True,
+                'displayModeBar': 'hover',  # Only show on hover to save space
                 'displaylogo': False,
-                'modeBarButtonsToRemove': ['lasso2d', 'select2d']
+                'modeBarButtonsToRemove': ['lasso2d', 'select2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d'],
+                'scrollZoom': False,  # Disable scroll zoom on mobile
+                'doubleClick': 'reset'  # Double tap to reset view
             }
+            
+            # Add wrapper with mobile-responsive class
+            st.markdown('<div class="mobile-responsive-charts">', unsafe_allow_html=True)
 
             # Add spacing before first chart
             st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
@@ -619,3 +631,6 @@ if selected_site:
                 date_range=date_range
             )
             st.plotly_chart(rubble_fig, use_container_width=True, config=rubble_config, key='rubble_chart')
+            
+            # Close the mobile-responsive charts container
+            st.markdown('</div>', unsafe_allow_html=True)
