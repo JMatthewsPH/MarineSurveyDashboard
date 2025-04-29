@@ -120,21 +120,31 @@ with st.sidebar:
 
     # Site selection with municipality grouping
     st.subheader(TRANSLATIONS[st.session_state.language]['select_site'])
+    
+    # Create a format_func to display municipalities in bold
+    def format_site_option(option):
+        if option in ["Zamboanguita", "Siaton", "Santa Catalina"]:
+            return f"**{option}**"
+        else:
+            return option.strip()  # Remove leading spaces for site names
+    
+    # Create the options list with municipalities as headers and alphabetically sorted sites
     site_options = []
     if zamboanguita_sites:
         site_options.append("Zamboanguita")
-        site_options.extend([f"  {site}" for site in zamboanguita_sites])
+        site_options.extend([f"  {site}" for site in sorted(zamboanguita_sites)])
     if siaton_sites:
         site_options.append("Siaton")
-        site_options.extend([f"  {site}" for site in siaton_sites])
+        site_options.extend([f"  {site}" for site in sorted(siaton_sites)])
     if santa_catalina_sites:
         site_options.append("Santa Catalina")
-        site_options.extend([f"  {site}" for site in santa_catalina_sites])
+        site_options.extend([f"  {site}" for site in sorted(santa_catalina_sites)])
 
     selected_option = st.selectbox(
         TRANSLATIONS[st.session_state.language]['choose_site'],
         site_options,
-        index=site_options.index(f"  {st.query_params.get('site')}") if st.query_params.get('site') in [s.strip() for s in site_options] else 0
+        index=site_options.index(f"  {st.query_params.get('site')}") if st.query_params.get('site') in [s.strip() for s in site_options] else 0,
+        format_func=format_site_option
     )
 
     # Extract actual site name (remove leading spaces if it's a site)

@@ -226,6 +226,17 @@
     margin-bottom: 0.5rem !important;
 }
 
+/* Style for the selectbox options */
+.stSelectbox div[data-baseweb="select"] ul {
+    max-height: 400px !important;
+}
+
+/* Separate municipality site groups in dropdown */
+.stSelectbox div[data-baseweb="select"] strong {
+    color: var(--primary-color);
+    font-size: 1.1em;
+}
+
 /* Ensure Plotly charts take full width and have proper spacing */
 .js-plotly-plot, .plot-container {
     width: 100% !important;
