@@ -360,6 +360,24 @@ class GraphGenerator:
             },
             'yaxis': y_axis_settings
         }
+        
+        # Special handling for specific metrics to ensure they always show properly
+        if 'Corallivore' in metric_name:
+            layout_updates['yaxis']['tickmode'] = 'linear'
+            layout_updates['yaxis']['tick0'] = 0
+            layout_updates['yaxis']['dtick'] = 300
+        elif 'Herbivore' in metric_name:
+            layout_updates['yaxis']['tickmode'] = 'linear'
+            layout_updates['yaxis']['tick0'] = 0
+            layout_updates['yaxis']['dtick'] = 1000
+        elif 'Bleaching' in metric_name:
+            layout_updates['yaxis']['tickmode'] = 'linear'
+            layout_updates['yaxis']['tick0'] = 0
+            layout_updates['yaxis']['dtick'] = 20
+        elif 'Rubble' in metric_name:
+            layout_updates['yaxis']['tickmode'] = 'linear'
+            layout_updates['yaxis']['tick0'] = 0
+            layout_updates['yaxis']['dtick'] = 20
 
         fig.update_layout(**layout_updates)
         return fig, config
