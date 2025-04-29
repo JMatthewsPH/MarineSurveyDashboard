@@ -141,8 +141,8 @@ with st.sidebar:
             # Use uppercase for municipality headers
             return f"{option.upper()}"
         else:
-            # Indent site names with spacing for better hierarchy
-            return f"     {option.strip()}"
+            # Increase indentation for site names to improve visual hierarchy
+            return f"          {option.strip()}"
     
     # Create the options list with municipalities as headers and alphabetically sorted sites
     site_options = []
