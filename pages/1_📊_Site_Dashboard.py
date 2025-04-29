@@ -183,21 +183,20 @@ if selected_site:
             with desc_placeholder:
                 skeleton_text_placeholder(lines=5)
             
-            # Load the site description with simulated delay
-            with loading_spinner("Loading site description..."):
-                language_code = st.session_state.language
+            # Process the site description without spinner
+            language_code = st.session_state.language
+            
+            # Get description based on language
+            if language_code == 'en':
+                description = selected_site_obj.description_en
+            elif language_code == 'tl':
+                description = selected_site_obj.description_fil  # Using Filipino description for Tagalog
+            else:  # Cebuano - fallback to English for now
+                description = selected_site_obj.description_en
                 
-                # Get description based on language
-                if language_code == 'en':
-                    description = selected_site_obj.description_en
-                elif language_code == 'tl':
-                    description = selected_site_obj.description_fil  # Using Filipino description for Tagalog
-                else:  # Cebuano - fallback to English for now
-                    description = selected_site_obj.description_en
-                    
-                # Default description if not available
-                if not description:
-                    description = f"{TRANSLATIONS[language_code]['site_desc_placeholder']} ({selected_site})"
+            # Default description if not available
+            if not description:
+                description = f"{TRANSLATIONS[language_code]['site_desc_placeholder']} ({selected_site})"
             
             # Replace the placeholder with the actual content
             desc_placeholder.markdown(f"""<div class="site-description-text">
@@ -498,48 +497,47 @@ if selected_site:
                     key='biomass_skeleton'
                 )
             
-            # Get biomass data and comparison with loading indicator
-            with loading_spinner("Processing fish biomass data..."):
-                biomass_data = data_processor.get_biomass_data(selected_site)
-                biomass_comparison_data = None
-                biomass_comparison_labels = None
+            # Get biomass data and comparison
+            biomass_data = data_processor.get_biomass_data(selected_site)
+            biomass_comparison_data = None
+            biomass_comparison_labels = None
+            
+            if biomass_comparison == "Compare with Sites" and biomass_compare_sites:
+                # Get data for multiple comparison sites
+                comparison_data_list = []
+                for site_name in biomass_compare_sites:
+                    site_data = data_processor.get_biomass_data(site_name)
+                    if not site_data.empty:
+                        comparison_data_list.append(site_data)
                 
-                if biomass_comparison == "Compare with Sites" and biomass_compare_sites:
-                    # Get data for multiple comparison sites
-                    comparison_data_list = []
-                    for site_name in biomass_compare_sites:
-                        site_data = data_processor.get_biomass_data(site_name)
-                        if not site_data.empty:
-                            comparison_data_list.append(site_data)
-                    
-                    if comparison_data_list:
-                        biomass_comparison_data = comparison_data_list
-                        # Use custom labels if provided
-                        if biomass_compare_labels:
-                            biomass_comparison_labels = biomass_compare_labels
-                        else:
-                            biomass_comparison_labels = biomass_compare_sites
-                            
-                elif biomass_comparison == "Compare with Average":
-                    municipality = site_municipality if biomass_compare_scope == "Municipality Average" else None
-                    avg_data = data_processor.get_average_biomass_data(
-                        exclude_site=selected_site,
-                        municipality=municipality
-                    )
-                    if not avg_data.empty:
-                        biomass_comparison_data = avg_data
-                        label = f"{site_municipality} Average" if biomass_compare_scope == "Municipality Average" else "All Sites Average"
-                        biomass_comparison_labels = [label]
+                if comparison_data_list:
+                    biomass_comparison_data = comparison_data_list
+                    # Use custom labels if provided
+                    if biomass_compare_labels:
+                        biomass_comparison_labels = biomass_compare_labels
+                    else:
+                        biomass_comparison_labels = biomass_compare_sites
                         
-                # Create the time series chart with date range filtering
-                biomass_fig, biomass_config = graph_generator.create_time_series(
-                    biomass_data,
-                    f"Commercial Fish Biomass - {selected_site}",
-                    "Biomass (kg/ha)",
-                    comparison_data=biomass_comparison_data,
-                    comparison_labels=biomass_comparison_labels,
-                    date_range=date_range
+            elif biomass_comparison == "Compare with Average":
+                municipality = site_municipality if biomass_compare_scope == "Municipality Average" else None
+                avg_data = data_processor.get_average_biomass_data(
+                    exclude_site=selected_site,
+                    municipality=municipality
                 )
+                if not avg_data.empty:
+                    biomass_comparison_data = avg_data
+                    label = f"{site_municipality} Average" if biomass_compare_scope == "Municipality Average" else "All Sites Average"
+                    biomass_comparison_labels = [label]
+                    
+            # Create the time series chart with date range filtering
+            biomass_fig, biomass_config = graph_generator.create_time_series(
+                biomass_data,
+                f"Commercial Fish Biomass - {selected_site}",
+                "Biomass (kg/ha)",
+                comparison_data=biomass_comparison_data,
+                comparison_labels=biomass_comparison_labels,
+                date_range=date_range
+            )
             
             # Replace the placeholder with the actual chart
             with biomass_chart_container:
@@ -577,26 +575,25 @@ if selected_site:
                     key='coral_skeleton'
                 )
             
-            # Get coral cover data and comparison with loading indicator
-            with loading_spinner("Processing coral cover data..."):
-                coral_data = data_processor.get_metric_data(selected_site, 'hard_coral')
-                coral_comparison_data = None
-                if coral_comparison == "Compare with Site" and coral_compare_site:
-                    coral_comparison_data = data_processor.get_metric_data(coral_compare_site, 'hard_coral')
-                elif coral_comparison == "Compare with Average":
-                    municipality = site_municipality if coral_compare_scope == "Municipality Average" else None
-                    coral_comparison_data = data_processor.get_average_metric_data(
-                        'hard_coral',
-                        exclude_site=selected_site,
-                        municipality=municipality
-                    )
-                coral_fig, coral_config = graph_generator.create_time_series(
-                    coral_data,
-                    f"Hard Coral Cover - {selected_site}",
-                    "Cover (%)",
-                    comparison_data=coral_comparison_data,
-                    date_range=date_range
+            # Get coral cover data and comparison
+            coral_data = data_processor.get_metric_data(selected_site, 'hard_coral')
+            coral_comparison_data = None
+            if coral_comparison == "Compare with Site" and coral_compare_site:
+                coral_comparison_data = data_processor.get_metric_data(coral_compare_site, 'hard_coral')
+            elif coral_comparison == "Compare with Average":
+                municipality = site_municipality if coral_compare_scope == "Municipality Average" else None
+                coral_comparison_data = data_processor.get_average_metric_data(
+                    'hard_coral',
+                    exclude_site=selected_site,
+                    municipality=municipality
                 )
+            coral_fig, coral_config = graph_generator.create_time_series(
+                coral_data,
+                f"Hard Coral Cover - {selected_site}",
+                "Cover (%)",
+                comparison_data=coral_comparison_data,
+                date_range=date_range
+            )
             
             # Replace the placeholder with the actual chart
             with coral_chart_container:

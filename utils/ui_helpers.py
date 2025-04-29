@@ -16,11 +16,11 @@ def loading_spinner(text="Loading data..."):
     
     Args:
         text: Text to display with the spinner
+    
+    Returns:
+        Streamlit spinner context manager
     """
-    with st.spinner(text):
-        # This is a placeholder for actual loading
-        # In real usage, this will be wrapped around actual data fetching code
-        pass
+    return st.spinner(text)
 
 def skeleton_chart(height=400, chart_type="line"):
     """
