@@ -64,8 +64,17 @@ class GraphGenerator:
             'Carnivore': {'min': 0, 'max': 5000},           # ind/ha
             'Omnivore': {'min': 0, 'max': 8000},            # ind/ha
             'Corallivore': {'min': 0, 'max': 1500},         # ind/ha
-            'Rubble': {'min': 0, 'max': 100}                # percentage
+            'Corallivore Density': {'min': 0, 'max': 1500},  # ind/ha
+            'Rubble': {'min': 0, 'max': 100},                # percentage
+            'Rubble Cover': {'min': 0, 'max': 100}           # percentage
         }
+        
+        # If exact match not found, look for partial matches
+        if metric_name not in ranges:
+            for key in ranges:
+                if key in metric_name:
+                    return ranges[key]
+        
         return ranges.get(metric_name, {'min': 0, 'max': 100})  # default range
 
     def create_time_series(self, data, title, y_label, comparison_data=None, comparison_labels=None, date_range=None, secondary_data=None, secondary_label=None, tertiary_data=None, tertiary_label=None):
@@ -137,6 +146,10 @@ class GraphGenerator:
         # Get the metric name from the title
         metric_name = title.split(' - ')[0].strip()
         print(f"DEBUG - Metric name: {metric_name}")
+        
+        # Force specific settings for Corallivore Density
+        if 'Corallivore' in metric_name:
+            print("APPLYING SPECIAL CORALLIVORE SETTINGS")
         y_range = self.get_metric_range(metric_name)
         
         # Set custom tick intervals for specific metrics
@@ -380,6 +393,16 @@ class GraphGenerator:
             layout_updates['yaxis']['dtick'] = 20
 
         fig.update_layout(**layout_updates)
+        
+        # Final direct fix for Corallivore Density - ensures that the visualization always shows ticks properly
+        if 'Corallivore' in metric_name:
+            fig.update_yaxes(
+                tickmode='linear',
+                tick0=0,
+                dtick=300,
+                range=[0, 1500]
+            )
+            
         return fig, config
 
     def create_eco_tourism_chart(self, data, title, observation_type='percentage'):
