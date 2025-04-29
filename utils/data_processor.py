@@ -71,9 +71,13 @@ class DataProcessor:
             'fleshy_algae': 'fleshy_macro_algae_cover',
             'bleaching': 'bleaching',
             'herbivore': 'herbivore_density',
+            'herbivore_density': 'herbivore_density',
             'carnivore': 'carnivore_density',
+            'carnivore_density': 'carnivore_density',
             'omnivore': 'omnivore_density',
+            'omnivore_density': 'omnivore_density',
             'corallivore': 'corallivore_density',
+            'corallivore_density': 'corallivore_density',
             'rubble': 'rubble'
         }
 
@@ -114,9 +118,13 @@ class DataProcessor:
             'fleshy_algae': 'fleshy_macro_algae_cover',
             'bleaching': 'bleaching',
             'herbivore': 'herbivore_density',
+            'herbivore_density': 'herbivore_density',
             'carnivore': 'carnivore_density',
+            'carnivore_density': 'carnivore_density',
             'omnivore': 'omnivore_density',
+            'omnivore_density': 'omnivore_density',
             'corallivore': 'corallivore_density',
+            'corallivore_density': 'corallivore_density',
             'rubble': 'rubble'
         }
 

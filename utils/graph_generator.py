@@ -138,21 +138,42 @@ class GraphGenerator:
         # Update filename with date range
         config['toImageButtonOptions']['filename'] = generate_filename(title, start_date, end_date)
 
-        # Format dates as seasons
-        data['season'] = data['date'].apply(format_season)
-
-        # Split data into pre and post COVID
-        covid_start = pd.Timestamp(date(2019, 9, 1))
-        covid_end = pd.Timestamp(date(2022, 3, 1))
-        
         # Ensure data['date'] is in datetime64 format
         if not data.empty:
             data['date'] = pd.to_datetime(data['date'])
+            
+            # Format dates as seasons with explicit text
+            data['season'] = data['date'].apply(format_season)
+            
+            # Create categorical order for seasons to ensure they're displayed in chronological order
+            all_dates = data['date'].tolist()
+            
+            # Add comparison data dates if available
+            if comparison_data is not None:
+                if isinstance(comparison_data, list):
+                    for comp_df in comparison_data:
+                        if not comp_df.empty:
+                            comp_df['date'] = pd.to_datetime(comp_df['date'])
+                            all_dates.extend(comp_df['date'].tolist())
+                else:
+                    if not comparison_data.empty:
+                        comparison_data['date'] = pd.to_datetime(comparison_data['date'])
+                        all_dates.extend(comparison_data['date'].tolist())
+            
+            # Sort all dates and create season labels in order
+            all_dates = sorted(list(set(all_dates)))
+            season_order = [format_season(d) for d in all_dates]
+            
+            # Split data into pre and post COVID
+            covid_start = pd.Timestamp(date(2019, 9, 1))
+            covid_end = pd.Timestamp(date(2022, 3, 1))
+            
             pre_covid = data[data['date'] < covid_start]
             post_covid = data[data['date'] > covid_end]
         else:
             pre_covid = data
             post_covid = data
+            season_order = []
 
         # Get the metric name from the title
         metric_name = title.split(' - ')[0].strip()

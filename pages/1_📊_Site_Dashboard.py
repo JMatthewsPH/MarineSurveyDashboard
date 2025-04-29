@@ -566,16 +566,16 @@ def main():
             
             # Get fleshy algae data and comparison
             with loading_spinner("Processing fleshy algae data..."):
-                algae_data = data_processor.get_metric_data(selected_site, 'fleshy_macro_algae')
+                algae_data = data_processor.get_metric_data(selected_site, 'fleshy_algae')
                 algae_comparison_data = None
                 
                 if algae_comparison == "Compare with Site" and algae_compare_site:
-                    algae_comparison_data = data_processor.get_metric_data(algae_compare_site, 'fleshy_macro_algae')
+                    algae_comparison_data = data_processor.get_metric_data(algae_compare_site, 'fleshy_algae')
                     algae_comparison_label = [algae_compare_site]
                 elif algae_comparison == "Compare with Average":
                     municipality = site_municipality if algae_compare_scope == "Municipality Average" else None
                     algae_comparison_data = data_processor.get_average_metric_data(
-                        'fleshy_macro_algae',
+                        'fleshy_algae',
                         exclude_site=selected_site,
                         municipality=municipality
                     )
