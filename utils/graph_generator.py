@@ -77,6 +77,11 @@ class GraphGenerator:
             'Rubble': {'min': 0, 'max': 100}                # percentage
         }
         
+        # Print metric name for debugging
+        print(f"DEBUG - Metric name received: '{metric_name}'")
+        if metric_name == 'Herbivore':
+            print("DEBUG - Confirmed herbivore will use dynamic scaling")
+        
         # Get the default range or None if dynamic scaling should be used
         default_range = fixed_ranges.get(metric_name, {'min': 0, 'max': 100})
         
@@ -105,7 +110,8 @@ class GraphGenerator:
             # Calculate range with 10% padding
             if all_values:
                 data_min = 0  # Always start at 0 for most ecological metrics
-                data_max = max(all_values) * 1.1  # Add 10% padding
+                data_max = max(all_values) * 1.2  # Add 20% padding
+                print(f"DEBUG - Dynamic scaling for {metric_name}: max value = {max(all_values)}, Y-axis max = {data_max}")
                 return {'min': data_min, 'max': data_max}
         
         # Fallback ranges if dynamic calculation can't be done
