@@ -346,7 +346,7 @@ def create_site_card(site):
             <h3>{site.name}</h3>
             <p><strong>{municipality_label}</strong> {site.municipality}</p>
             <p>{truncated_description}</p>
-            <a href="1_Site_Dashboard?site={site.name}" target="_self">
+            <a href="/1_Site_Dashboard?site={site.name}" target="_self">
                 <button class="site-button">{view_details_text}</button>
             </a>
         </div>
