@@ -27,6 +27,80 @@ st.set_page_config(
 # Initialize session state for language if not already set
 if 'language' not in st.session_state:
     st.session_state.language = 'en'  # Default to English
+    
+# Initialize theme in session state if not present
+if 'theme' not in st.session_state:
+    st.session_state.theme = "light"  # Default to light mode
+
+# Define theme toggle callback
+def toggle_theme():
+    # Toggle between light and dark
+    if st.session_state.theme == "light":
+        st.session_state.theme = "dark"
+    else:
+        st.session_state.theme = "light"
+        
+# Apply the theme using custom CSS based on session state
+if st.session_state.theme == "dark":
+    dark_mode_css = """
+    <style>
+    /* Apply dark theme to root elements */
+    :root {
+        --primary-color: #4299e1;
+        --secondary-color: #68d391;
+        --background-color: #1a202c;
+        --text-color: #e2e8f0;
+        --border-color: #4a5568;
+        --hover-color: #63b3ed;
+        --box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        --hover-shadow: 0 4px 8px rgba(0,0,0,0.4);
+        --card-bg-color: #2d3748;
+        --grid-line-color: #4a5568;
+        --tooltip-bg-color: #4a5568;
+        --tooltip-text-color: #e2e8f0;
+        --chart-bg-color: #2d3748;
+        --chart-line-color: #63b3ed;
+        --chart-text-color: #e2e8f0;
+    }
+    
+    /* Dark mode for main content */
+    .main {
+        background-color: var(--background-color);
+        color: var(--text-color);
+    }
+    
+    /* Dark mode for sidebar */
+    [data-testid="stSidebar"] {
+        background-color: var(--background-color);
+        color: var(--text-color);
+    }
+    
+    /* Dark mode for text elements */
+    .stMarkdown, .stText, p, h1, h2, h3, h4, h5, h6 {
+        color: var(--text-color) !important;
+    }
+    
+    /* Chart elements */
+    .js-plotly-plot .plotly .gridlayer path {
+        stroke: var(--grid-line-color) !important;
+    }
+    
+    .js-plotly-plot .plotly .xaxis .zerolinelayer path,
+    .js-plotly-plot .plotly .yaxis .zerolinelayer path {
+        stroke: var(--border-color) !important;
+    }
+    
+    .js-plotly-plot .plotly .gtitle, 
+    .js-plotly-plot .plotly .xtitle, 
+    .js-plotly-plot .plotly .ytitle,
+    .js-plotly-plot .plotly .xtick text, 
+    .js-plotly-plot .plotly .ytick text {
+        fill: var(--text-color) !important;
+    }
+    
+    </style>
+    """
+    st.markdown(dark_mode_css, unsafe_allow_html=True)
 
 # CSS for mobile-responsive layout
 def load_css():
@@ -136,6 +210,14 @@ def main():
 
         # Sidebar metric comparisons and date range selection
         with st.sidebar:
+            # Create a container for the theme toggle at the top of sidebar
+            theme_container = st.container()
+            
+            with theme_container:
+                # Add a theme toggle button using Streamlit's built-in components
+                toggle_label = "Switch to Light Mode" if st.session_state.theme == "dark" else "Switch to Dark Mode"
+                st.button(toggle_label, key="theme_toggle", on_click=toggle_theme)
+                
             st.title(TRANSLATIONS[st.session_state.language]['analysis_options'])
             
             # Date Range Selection
