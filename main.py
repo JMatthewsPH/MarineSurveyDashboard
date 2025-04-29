@@ -257,22 +257,44 @@ else:
     /* Fix ALL selectbox elements in light mode */
     div[data-baseweb="select"] {
         background-color: white !important;
-        color: #2d3748 !important;
         border-color: #cbd5e0 !important;
     }
     
-    /* Ensure the selectbox text is visible */
-    div[data-baseweb="select"] span {
+    /* Ensure the selectbox text color is dark */
+    div[data-baseweb="select"] span,
+    div[data-baseweb="select"] div,
+    div[data-baseweb="select"] input {
         color: #2d3748 !important;
     }
     
-    /* Fix dropdown options to be clearly visible */
-    div[role="listbox"] {
+    /* Fix dropdown popups and options */
+    div[role="listbox"],
+    ul[role="listbox"],
+    [data-baseweb="popover"],
+    [data-baseweb="select"] [role="listbox"],
+    [data-baseweb="menu"] {
         background-color: white !important;
     }
     
-    div[role="option"] {
+    /* Fix dropdown individual options */
+    div[role="option"],
+    li[role="option"],
+    [data-baseweb="menu"] div,
+    [data-baseweb="select-dropdown"] div {
+        background-color: white !important;
         color: #2d3748 !important;
+    }
+    
+    /* Fix hover state for options */
+    div[role="option"]:hover,
+    li[role="option"]:hover {
+        background-color: #f0f5fa !important;
+    }
+    
+    /* Fix selected state for options */
+    div[aria-selected="true"],
+    li[aria-selected="true"] {
+        background-color: #e2e8f0 !important;
     }
     
     /* Fix the top bar menu */
@@ -283,6 +305,23 @@ else:
     /* Fix all inputs to have proper text color */
     input, textarea, .stTextInput input, .stNumberInput input, .stDateInput input {
         color: #2d3748 !important;
+    }
+    
+    /* Fix chart text color in light mode */
+    .js-plotly-plot .plotly .main-svg .xaxislayer-above text,
+    .js-plotly-plot .plotly .main-svg .yaxislayer-above text,
+    .js-plotly-plot .plotly .main-svg .zaxislayer-above text,
+    .js-plotly-plot .plotly .main-svg .infolayer text,
+    .js-plotly-plot .plotly .main-svg .legendtext,
+    .js-plotly-plot .plotly .main-svg .legendtitle,
+    .js-plotly-plot .plotly .main-svg .annotation-text {
+        fill: #2d3748 !important;
+        color: #2d3748 !important;
+    }
+    
+    /* Fix chart backgrounds in light mode */
+    .js-plotly-plot .plotly .main-svg .bg {
+        fill: white !important;
     }
     </style>
     """
