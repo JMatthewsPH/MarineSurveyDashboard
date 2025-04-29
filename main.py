@@ -323,6 +323,46 @@ else:
     .js-plotly-plot .plotly .main-svg .bg {
         fill: white !important;
     }
+    
+    /* Fix ALL text in light mode to be dark */
+    .stApp[data-theme="light"] h1,
+    .stApp[data-theme="light"] h2,
+    .stApp[data-theme="light"] h3,
+    .stApp[data-theme="light"] h4,
+    .stApp[data-theme="light"] h5,
+    .stApp[data-theme="light"] h6,
+    .stApp[data-theme="light"] p,
+    .stApp[data-theme="light"] li,
+    .stApp[data-theme="light"] span,
+    .stApp[data-theme="light"] div:not([class*="st-"]) {
+        color: #2d3748 !important;
+    }
+    
+    /* Fix sidebar headings */
+    .stApp[data-theme="light"] .sidebar .stMarkdown h1,
+    .stApp[data-theme="light"] .sidebar .stMarkdown h2,
+    .stApp[data-theme="light"] .sidebar .stMarkdown h3,
+    .stApp[data-theme="light"] header p,
+    .stApp[data-theme="light"] header div,
+    .stApp[data-theme="light"] .stMarkdown.stMarkdownContainer p {
+        color: #2d3748 !important;
+    }
+    
+    /* Fix Streamlit component text - most specific selectors */
+    .stApp[data-theme="light"] .css-1aehpvj, /* Main headers */
+    .stApp[data-theme="light"] .css-10trblm, /* Sidebar headers */
+    .stApp[data-theme="light"] .css-16idsys, /* Regular text */
+    .stApp[data-theme="light"] .css-1vbkxwb,
+    .stApp[data-theme="light"] .css-1fttcpj,
+    .stApp[data-theme="light"] .stMarkdown p, 
+    .stApp[data-theme="light"] .stText p,
+    .stApp[data-theme="light"] .stSubheader,
+    .stApp[data-theme="light"] .stHeader,
+    .stApp[data-theme="light"] .stTitle,
+    .stApp[data-theme="light"] label,
+    .stApp[data-theme="light"] .stCheckbox label span p {
+        color: #2d3748 !important;
+    }
     </style>
     """
 
