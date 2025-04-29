@@ -13,10 +13,10 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Load custom CSS and JavaScript
+# Load custom CSS
 @st.cache_data
 def load_css():
-    css_files = ['assets/site_styles.css', '.streamlit/style.css', 'assets/force_black_text.css']
+    css_files = ['assets/site_styles.css', 'assets/light_mode_fixes.css', '.streamlit/streamlit_clean.css']
     css_content = ""
     for css_file in css_files:
         try:
@@ -25,49 +25,15 @@ def load_css():
         except Exception as e:
             st.warning(f"Could not load CSS file: {css_file}")
     
-    # Add the inline force black CSS for extra emphasis
-    css_content += """
-    /* Aggressive black text forcing */
-    [data-theme="light"] *, body:not(.dark-mode) * {
-        color: #000000 !important;
-        opacity: 1 !important;
-    }
-    
-    /* Site descriptions and headers */
-    .site-header h2, 
-    .site-description h3,
-    .site-description p,
-    .site-card h3,
-    .site-card p {
-        color: #000000 !important;
-        opacity: 1 !important;
-        font-weight: 500 !important;
-    }
-    """
-    
     return f'<style>{css_content}</style>'
-
-@st.cache_data
-def load_js():
-    js_files = ['assets/force_black_text.js']
-    js_content = ""
-    for js_file in js_files:
-        try:
-            with open(js_file) as f:
-                js_content += f.read() + "\n"
-        except Exception as e:
-            st.warning(f"Could not load JavaScript file: {js_file}")
-    
-    return f'<script type="text/javascript">{js_content}</script>'
 
 # Include CSS for loading states and skeleton UI
 from utils.ui_helpers import add_loading_css
 
 st.markdown(load_css(), unsafe_allow_html=True)
 st.markdown(add_loading_css(), unsafe_allow_html=True)
-st.markdown(load_js(), unsafe_allow_html=True)
 
-# Add JavaScript to hide "main" text and force text color
+# Add JavaScript to hide "main" text in navigation
 js_code = """
 <script type="text/javascript">
     // Hide "main" text in nav
@@ -85,46 +51,6 @@ js_code = """
         
         window.addEventListener('load', hideMainText);
         hideMainText();
-    })();
-    
-    // Force text color to pure black in light mode
-    (function() {
-        function forceTextColor() {
-            // Check if we're in light mode
-            const isLightMode = document.body.classList.contains('light-mode') || 
-                              (!document.body.classList.contains('dark-mode') && 
-                               !document.body.getAttribute('data-theme') === 'dark');
-            
-            if (isLightMode) {
-                // Apply to all text elements
-                const textElements = document.querySelectorAll('p, h1, h2, h3, h4, h5, h6, span, div, label, .stMarkdown, .stText');
-                textElements.forEach(el => {
-                    el.style.color = '#000000';
-                    el.style.opacity = '1';
-                });
-                
-                // Apply to all chart text
-                const chartTexts = document.querySelectorAll('.js-plotly-plot .plotly text, .gtitle, .xtitle, .ytitle, .xtick text, .ytick text');
-                chartTexts.forEach(el => {
-                    el.style.fill = '#000000';
-                });
-                
-                // Apply to site descriptions
-                const siteDesc = document.querySelectorAll('.site-description, .site-description p, .site-card p');
-                siteDesc.forEach(el => {
-                    el.style.color = '#000000';
-                    el.style.opacity = '1';
-                });
-            }
-            
-            // Run again after a short delay to catch dynamically loaded content
-            setTimeout(forceTextColor, 1000);
-        }
-        
-        // Run on page load
-        window.addEventListener('load', forceTextColor);
-        // Start immediately
-        forceTextColor();
     })();
 </script>
 """

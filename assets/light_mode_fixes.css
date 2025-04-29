@@ -1,0 +1,80 @@
+/* ====== Light mode theme fixes ======= */
+
+/* Ensure dropdown background is white and text is black */
+[data-theme="light"] div[data-baseweb="select"] {
+    background-color: white !important;
+    color: black !important;
+}
+
+/* Fix dropdown options */
+[data-theme="light"] div[role="listbox"],
+[data-theme="light"] ul[role="listbox"],
+[data-theme="light"] [data-baseweb="popover"],
+[data-theme="light"] [data-baseweb="menu"] {
+    background-color: white !important;
+}
+
+[data-theme="light"] div[role="option"],
+[data-theme="light"] li[role="option"] {
+    background-color: white !important;
+    color: black !important;
+}
+
+/* Selected option */
+[data-theme="light"] div[aria-selected="true"],
+[data-theme="light"] li[aria-selected="true"] {
+    background-color: #f0f0f0 !important;
+}
+
+/* Fix headings */
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3,
+[data-theme="light"] h4,
+[data-theme="light"] h5,
+[data-theme="light"] h6 {
+    color: black !important;
+    opacity: 1 !important;
+}
+
+/* Main text and site descriptions */
+[data-theme="light"] p,
+[data-theme="light"] .site-description p,
+[data-theme="light"] .site-card p,
+[data-theme="light"] span,
+[data-theme="light"] .stText p,
+[data-theme="light"] .stMarkdown p {
+    color: black !important;
+    opacity: 1 !important;
+}
+
+/* Site cards, site headers, and buttons */
+.site-header h2,
+.site-card h3,
+.site-description-title,
+.site-metrics-title {
+    color: black !important;
+    opacity: 1 !important;
+    font-weight: 500 !important;
+}
+
+/* Chart text */
+[data-theme="light"] .js-plotly-plot .plotly .gtitle,
+[data-theme="light"] .js-plotly-plot .plotly .xtitle,
+[data-theme="light"] .js-plotly-plot .plotly .ytitle,
+[data-theme="light"] .js-plotly-plot .plotly .xtick text,
+[data-theme="light"] .js-plotly-plot .plotly .ytick text,
+[data-theme="light"] .js-plotly-plot .plotly .legend text {
+    fill: black !important;
+}
+
+/* Fix buttons in dropdowns */
+[data-theme="light"] div[role="button"],
+[data-theme="light"] button {
+    color: inherit !important;
+}
+
+/* Specific fix for site buttons */
+.site-button {
+    color: white !important;
+}
