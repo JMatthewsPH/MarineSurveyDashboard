@@ -71,11 +71,11 @@ st.markdown(f'<div style="display:none">{hide_main_js}</div>', unsafe_allow_html
 
 # Sidebar for site selection and language
 with st.sidebar:
-    # Back to main link first
+    # Back to main link first - using HTML with target="_self" to prevent opening in new tab
     if st.session_state.language == "English":
-        st.markdown("[🏠 Back to Main](../)")
+        st.markdown('<a href="../" target="_self">🏠 Back to Main</a>', unsafe_allow_html=True)
     else:
-        st.markdown("[🏠 Balik sa Main](../)")
+        st.markdown('<a href="../" target="_self">🏠 Balik sa Main</a>', unsafe_allow_html=True)
 
     st.markdown("---")  # Add separator
 
