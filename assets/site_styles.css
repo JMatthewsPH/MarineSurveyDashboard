@@ -174,3 +174,21 @@
         transform: rotate(360deg);
     }
 }
+
+/* Adjust the page navigation in the sidebar */
+.sidebar .sidebar-content [data-testid="stSidebarNav"] {
+    margin-bottom: 0.5rem;
+}
+
+/* Hide the main text in navigation */
+.sidebar .sidebar-content [data-testid="stSidebarNav"] > div:first-child {
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+/* Fix navigation link spacing */
+.sidebar .sidebar-content [data-testid="stSidebarNav"] a {
+    margin-bottom: 0.25rem;
+    padding-left: 0.5rem;
+}
