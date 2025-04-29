@@ -61,11 +61,11 @@ def main():
     alphabetical_site_names = sorted([site.name for site in sites])
     
     # Top navigation
-    st.title(TRANSLATIONS[language_code]['site_dashboard_title'])
+    st.title(TRANSLATIONS[language_code]['dashboard'])
     
     # Site selection in main area (more prominent)
     selected_site = st.selectbox(
-        TRANSLATIONS[language_code]['select_site_prompt'],
+        TRANSLATIONS[language_code]['select_site'],
         alphabetical_site_names,
         key="site_selector"
     )
@@ -78,7 +78,7 @@ def main():
         st.markdown('<div class="chart-container">', unsafe_allow_html=True)
         
         # Site Information Section
-        st.header(f"{TRANSLATIONS[language_code]['site_info']} - {selected_site}")
+        st.header(f"{TRANSLATIONS[language_code]['site_description']} - {selected_site}")
         
         # For desktop, use columns with 1:2 ratio
         # For mobile, CSS will stack these vertically
@@ -385,7 +385,7 @@ def main():
                 )
 
         # Create graphs section
-        st.header(TRANSLATIONS[language_code]['data_visualizations'])
+        st.header(TRANSLATIONS[language_code]['site_metrics'])
         
         # Biomass Section with loading states
         if selected_site:
