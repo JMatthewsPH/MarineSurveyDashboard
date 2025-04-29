@@ -137,6 +137,43 @@ class GraphGenerator:
         # Get the metric name from the title
         metric_name = title.split(' - ')[0].strip()
         y_range = self.get_metric_range(metric_name)
+        
+        # Set custom tick intervals for specific metrics
+        y_axis_settings = {
+            'automargin': True,
+            'title': {
+                'text': y_label,
+                'standoff': 10
+            },
+            'side': 'left',
+            'range': [y_range['min'], y_range['max']]  # Set fixed y-axis range
+        }
+        
+        # Add specific tick settings for different metrics
+        if 'Herbivore' in metric_name:
+            y_axis_settings.update({
+                'tickmode': 'linear',
+                'tick0': 0,
+                'dtick': 1000  # 1k intervals for Herbivore density
+            })
+        elif 'Corallivore' in metric_name:
+            y_axis_settings.update({
+                'tickmode': 'linear',
+                'tick0': 0,
+                'dtick': 300  # 300 unit intervals for Corallivore
+            })
+        elif 'Bleaching' in metric_name:
+            y_axis_settings.update({
+                'tickmode': 'linear',
+                'tick0': 0,
+                'dtick': 20  # 20% intervals for Bleaching
+            })
+        elif 'Rubble' in metric_name:
+            y_axis_settings.update({
+                'tickmode': 'linear',
+                'tick0': 0,
+                'dtick': 20  # 20% intervals for Rubble
+            })
 
         # Add pre-COVID data
         fig.add_trace(go.Scatter(
@@ -320,18 +357,7 @@ class GraphGenerator:
                 'tickfont': {'size': 10},
                 'title': {'standoff': 50}
             },
-            'yaxis': {
-                'automargin': True,
-                'title': {
-                    'text': y_label,
-                    'standoff': 10
-                },
-                'side': 'left',
-                'range': [y_range['min'], y_range['max']],  # Set fixed y-axis range
-                'tickmode': 'linear',  # Use linear tick mode for evenly spaced ticks
-                'tick0': 0,  # Start ticks at 0
-                'dtick': 1000  # 1k intervals for herbivore density
-            }
+            'yaxis': y_axis_settings
         }
 
         fig.update_layout(**layout_updates)
