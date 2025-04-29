@@ -61,11 +61,11 @@ def main():
     alphabetical_site_names = sorted([site.name for site in sites])
     
     # Top navigation
-    st.title(TRANSLATIONS[language_code]['dashboard'])
+    st.title(TRANSLATIONS[language_code]['site_dashboard_title'])
     
     # Site selection in main area (more prominent)
     selected_site = st.selectbox(
-        TRANSLATIONS[language_code]['select_site'],
+        TRANSLATIONS[language_code]['select_site_prompt'],
         alphabetical_site_names,
         key="site_selector"
     )
@@ -78,7 +78,7 @@ def main():
         st.markdown('<div class="chart-container">', unsafe_allow_html=True)
         
         # Site Information Section
-        st.header(f"{TRANSLATIONS[language_code]['site_description']} - {selected_site}")
+        st.header(f"{TRANSLATIONS[language_code]['site_info']} - {selected_site}")
         
         # For desktop, use columns with 1:2 ratio
         # For mobile, CSS will stack these vertically
@@ -385,7 +385,7 @@ def main():
                 )
 
         # Create graphs section
-        st.header(TRANSLATIONS[language_code]['site_metrics'])
+        st.header(TRANSLATIONS[language_code]['data_visualizations'])
         
         # Biomass Section with loading states
         if selected_site:
@@ -446,7 +446,7 @@ def main():
             # Create biomass visualization
             with loading_spinner("Generating biomass chart..."):
                 # Generate the plotly figure
-                biomass_fig, biomass_config = graph_generator.create_time_series(
+                biomass_fig = graph_generator.create_time_series(
                     biomass_data,
                     f"Commercial Fish Biomass - {selected_site}",
                     "Biomass (kg/ha)",
@@ -455,8 +455,18 @@ def main():
                     date_range=date_range
                 )
                 
-                # Update filename in config
-                biomass_config['toImageButtonOptions']['filename'] = f'biomass_{selected_site}'
+                # Set download button configuration
+                biomass_config = {
+                    'toImageButtonOptions': {
+                        'format': 'png', 
+                        'filename': f'biomass_{selected_site}',
+                        'height': 600,
+                        'width': 1200,
+                        'scale': 2
+                    },
+                    'displayModeBar': True,
+                    'displaylogo': False,
+                }
                 
                 # Replace the placeholder with the real chart
                 biomass_chart_placeholder.empty()  # Clear the placeholder
@@ -520,7 +530,7 @@ def main():
                         coral_comparison_label = ["Avg. All Sites"]
                 
                 # Generate the plotly figure
-                coral_fig, coral_config = graph_generator.create_time_series(
+                coral_fig = graph_generator.create_time_series(
                     coral_data,
                     f"Hard Coral Cover - {selected_site}",
                     "Cover (%)",
@@ -529,8 +539,18 @@ def main():
                     date_range=date_range
                 )
                 
-                # Update filename in config
-                coral_config['toImageButtonOptions']['filename'] = f'coral_cover_{selected_site}'
+                # Set download button configuration
+                coral_config = {
+                    'toImageButtonOptions': {
+                        'format': 'png', 
+                        'filename': f'coral_cover_{selected_site}',
+                        'height': 600,
+                        'width': 1200,
+                        'scale': 2
+                    },
+                    'displayModeBar': True,
+                    'displaylogo': False,
+                }
                 
                 # Replace the placeholder with the real chart
                 coral_chart_placeholder.empty()  # Clear the placeholder
@@ -546,16 +566,16 @@ def main():
             
             # Get fleshy algae data and comparison
             with loading_spinner("Processing fleshy algae data..."):
-                algae_data = data_processor.get_metric_data(selected_site, 'fleshy_algae')
+                algae_data = data_processor.get_metric_data(selected_site, 'fleshy_macro_algae')
                 algae_comparison_data = None
                 
                 if algae_comparison == "Compare with Site" and algae_compare_site:
-                    algae_comparison_data = data_processor.get_metric_data(algae_compare_site, 'fleshy_algae')
+                    algae_comparison_data = data_processor.get_metric_data(algae_compare_site, 'fleshy_macro_algae')
                     algae_comparison_label = [algae_compare_site]
                 elif algae_comparison == "Compare with Average":
                     municipality = site_municipality if algae_compare_scope == "Municipality Average" else None
                     algae_comparison_data = data_processor.get_average_metric_data(
-                        'fleshy_algae',
+                        'fleshy_macro_algae',
                         exclude_site=selected_site,
                         municipality=municipality
                     )
@@ -568,7 +588,7 @@ def main():
                     algae_comparison_label = None
                 
                 # Generate the plotly figure
-                algae_fig, algae_config = graph_generator.create_time_series(
+                algae_fig = graph_generator.create_time_series(
                     algae_data,
                     f"Fleshy Algae Cover - {selected_site}",
                     "Cover (%)",
@@ -577,8 +597,18 @@ def main():
                     date_range=date_range
                 )
                 
-                # Update filename in config
-                algae_config['toImageButtonOptions']['filename'] = f'algae_cover_{selected_site}'
+                # Set download button configuration
+                algae_config = {
+                    'toImageButtonOptions': {
+                        'format': 'png', 
+                        'filename': f'algae_cover_{selected_site}',
+                        'height': 600,
+                        'width': 1200,
+                        'scale': 2
+                    },
+                    'displayModeBar': True,
+                    'displaylogo': False,
+                }
             
             # Display the fleshy algae chart
             st.subheader(f"Fleshy Algae Cover - {selected_site}")
@@ -589,16 +619,16 @@ def main():
 
             # Get herbivore data and comparison
             with loading_spinner("Processing herbivore density data..."):
-                herbivore_data = data_processor.get_metric_data(selected_site, 'herbivore')
+                herbivore_data = data_processor.get_metric_data(selected_site, 'herbivore_density')
                 herbivore_comparison_data = None
                 
                 if herbivore_comparison == "Compare with Site" and herbivore_compare_site:
-                    herbivore_comparison_data = data_processor.get_metric_data(herbivore_compare_site, 'herbivore')
+                    herbivore_comparison_data = data_processor.get_metric_data(herbivore_compare_site, 'herbivore_density')
                     herbivore_comparison_label = [herbivore_compare_site]
                 elif herbivore_comparison == "Compare with Average":
                     municipality = site_municipality if herbivore_compare_scope == "Municipality Average" else None
                     herbivore_comparison_data = data_processor.get_average_metric_data(
-                        'herbivore',
+                        'herbivore_density',
                         exclude_site=selected_site,
                         municipality=municipality
                     )
@@ -611,7 +641,7 @@ def main():
                     herbivore_comparison_label = None
                 
                 # Generate the plotly figure
-                herbivore_fig, herbivore_config = graph_generator.create_time_series(
+                herbivore_fig = graph_generator.create_time_series(
                     herbivore_data,
                     f"Herbivore Density - {selected_site}",
                     "Density (ind/ha)",
@@ -620,8 +650,18 @@ def main():
                     date_range=date_range
                 )
                 
-                # Update filename in config
-                herbivore_config['toImageButtonOptions']['filename'] = f'herbivore_density_{selected_site}'
+                # Set download button configuration
+                herbivore_config = {
+                    'toImageButtonOptions': {
+                        'format': 'png', 
+                        'filename': f'herbivore_density_{selected_site}',
+                        'height': 600,
+                        'width': 1200,
+                        'scale': 2
+                    },
+                    'displayModeBar': True,
+                    'displaylogo': False,
+                }
             
             # Display the herbivore chart
             st.subheader(f"Herbivore Density - {selected_site}")
@@ -632,16 +672,16 @@ def main():
 
             # Get omnivore data and comparison
             with loading_spinner("Processing omnivore density data..."):
-                omnivore_data = data_processor.get_metric_data(selected_site, 'omnivore')
+                omnivore_data = data_processor.get_metric_data(selected_site, 'omnivore_density')
                 omnivore_comparison_data = None
                 
                 if omnivore_comparison == "Compare with Site" and omnivore_compare_site:
-                    omnivore_comparison_data = data_processor.get_metric_data(omnivore_compare_site, 'omnivore')
+                    omnivore_comparison_data = data_processor.get_metric_data(omnivore_compare_site, 'omnivore_density')
                     omnivore_comparison_label = [omnivore_compare_site]
                 elif omnivore_comparison == "Compare with Average":
                     municipality = site_municipality if omnivore_compare_scope == "Municipality Average" else None
                     omnivore_comparison_data = data_processor.get_average_metric_data(
-                        'omnivore',
+                        'omnivore_density',
                         exclude_site=selected_site,
                         municipality=municipality
                     )
@@ -654,7 +694,7 @@ def main():
                     omnivore_comparison_label = None
                 
                 # Generate the plotly figure
-                omnivore_fig, omnivore_config = graph_generator.create_time_series(
+                omnivore_fig = graph_generator.create_time_series(
                     omnivore_data,
                     f"Omnivore Density - {selected_site}",
                     "Density (ind/ha)",
@@ -663,8 +703,18 @@ def main():
                     date_range=date_range
                 )
                 
-                # Update filename in config
-                omnivore_config['toImageButtonOptions']['filename'] = f'omnivore_density_{selected_site}'
+                # Set download button configuration
+                omnivore_config = {
+                    'toImageButtonOptions': {
+                        'format': 'png', 
+                        'filename': f'omnivore_density_{selected_site}',
+                        'height': 600,
+                        'width': 1200,
+                        'scale': 2
+                    },
+                    'displayModeBar': True,
+                    'displaylogo': False,
+                }
             
             # Display the omnivore chart
             st.subheader(f"Omnivore Density - {selected_site}")
@@ -675,16 +725,16 @@ def main():
 
             # Get corallivore data and comparison
             with loading_spinner("Processing corallivore density data..."):
-                corallivore_data = data_processor.get_metric_data(selected_site, 'corallivore')
+                corallivore_data = data_processor.get_metric_data(selected_site, 'corallivore_density')
                 corallivore_comparison_data = None
                 
                 if corallivore_comparison == "Compare with Site" and corallivore_compare_site:
-                    corallivore_comparison_data = data_processor.get_metric_data(corallivore_compare_site, 'corallivore')
+                    corallivore_comparison_data = data_processor.get_metric_data(corallivore_compare_site, 'corallivore_density')
                     corallivore_comparison_label = [corallivore_compare_site]
                 elif corallivore_comparison == "Compare with Average":
                     municipality = site_municipality if corallivore_compare_scope == "Municipality Average" else None
                     corallivore_comparison_data = data_processor.get_average_metric_data(
-                        'corallivore',
+                        'corallivore_density',
                         exclude_site=selected_site,
                         municipality=municipality
                     )
@@ -697,7 +747,7 @@ def main():
                     corallivore_comparison_label = None
                 
                 # Generate the plotly figure
-                corallivore_fig, corallivore_config = graph_generator.create_time_series(
+                corallivore_fig = graph_generator.create_time_series(
                     corallivore_data,
                     f"Corallivore Density - {selected_site}",
                     "Density (ind/ha)",
@@ -706,8 +756,18 @@ def main():
                     date_range=date_range
                 )
                 
-                # Update filename in config
-                corallivore_config['toImageButtonOptions']['filename'] = f'corallivore_density_{selected_site}'
+                # Set download button configuration
+                corallivore_config = {
+                    'toImageButtonOptions': {
+                        'format': 'png', 
+                        'filename': f'corallivore_density_{selected_site}',
+                        'height': 600,
+                        'width': 1200,
+                        'scale': 2
+                    },
+                    'displayModeBar': True,
+                    'displaylogo': False,
+                }
             
             # Display the corallivore chart
             st.subheader(f"Corallivore Density - {selected_site}")
@@ -739,7 +799,7 @@ def main():
                 else:
                     bleaching_comparison_label = None
                 
-                bleaching_fig, bleaching_config = graph_generator.create_time_series(
+                bleaching_fig = graph_generator.create_time_series(
                     bleaching_data,
                     f"Bleaching - {selected_site}",
                     "Bleaching (%)",
@@ -748,8 +808,17 @@ def main():
                     date_range=date_range
                 )
                 
-                # Update filename in config
-                bleaching_config['toImageButtonOptions']['filename'] = f'bleaching_{selected_site}'
+                bleaching_config = {
+                    'toImageButtonOptions': {
+                        'format': 'png', 
+                        'filename': f'bleaching_{selected_site}',
+                        'height': 600,
+                        'width': 1200,
+                        'scale': 2
+                    },
+                    'displayModeBar': True,
+                    'displaylogo': False,
+                }
             
             st.subheader(f"Bleaching - {selected_site}")
             st.plotly_chart(bleaching_fig, use_container_width=True, config=bleaching_config, key='bleaching_chart')
@@ -780,7 +849,7 @@ def main():
                 else:
                     rubble_comparison_label = None
                 
-                rubble_fig, rubble_config = graph_generator.create_time_series(
+                rubble_fig = graph_generator.create_time_series(
                     rubble_data,
                     f"Rubble Cover - {selected_site}",
                     "Rubble Cover (%)",
@@ -789,8 +858,17 @@ def main():
                     date_range=date_range
                 )
                 
-                # Update filename in config
-                rubble_config['toImageButtonOptions']['filename'] = f'rubble_{selected_site}'
+                rubble_config = {
+                    'toImageButtonOptions': {
+                        'format': 'png', 
+                        'filename': f'rubble_{selected_site}',
+                        'height': 600,
+                        'width': 1200,
+                        'scale': 2
+                    },
+                    'displayModeBar': True,
+                    'displaylogo': False,
+                }
             
             st.subheader(f"Rubble Cover - {selected_site}")
             st.plotly_chart(rubble_fig, use_container_width=True, config=rubble_config, key='rubble_chart')
