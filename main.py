@@ -16,34 +16,33 @@ st.set_page_config(
 def load_css():
     with open('assets/site_styles.css') as f:
         css_content = f.read()
-        # Add custom JavaScript to remove "main" text
-        js_code = """
-        <script>
-        // Function to remove "main" text from sidebar navigation
+        return f'<style>{css_content}</style>'
+
+st.markdown(load_css(), unsafe_allow_html=True)
+
+# Add JavaScript to hide "main" text (hidden in an HTML comment to prevent display)
+hide_main_js = """
+<script type="text/javascript">
+    (function() {
         function hideMainText() {
-            // Wait for DOM to fully load
-            const sidebarNavs = document.querySelectorAll('[data-testid="stSidebarNav"]');
+            var sidebarNavs = document.querySelectorAll('[data-testid="stSidebarNav"]');
             if (sidebarNavs.length > 0) {
-                // Find and remove the "main" text element
-                const navItems = sidebarNavs[0].querySelectorAll('li');
+                var navItems = sidebarNavs[0].querySelectorAll('li');
                 if (navItems.length > 0) {
                     navItems[0].style.display = 'none';
                 }
             }
-            
-            // Keep checking for a few seconds in case of delayed rendering
             setTimeout(hideMainText, 500);
         }
         
-        // Start checking once the page loads
-        document.addEventListener('DOMContentLoaded', hideMainText);
-        // Also try immediately
+        window.addEventListener('load', hideMainText);
         hideMainText();
-        </script>
-        """
-        return f'<style>{css_content}</style>{js_code}'
+    })();
+</script>
+"""
 
-st.markdown(load_css(), unsafe_allow_html=True)
+# Use a div with display:none to hide the JS code from being shown
+st.markdown(f'<div style="display:none">{hide_main_js}</div>', unsafe_allow_html=True)
 
 # Initialize language in session state if not present
 if 'language' not in st.session_state:
