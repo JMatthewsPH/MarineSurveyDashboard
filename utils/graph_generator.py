@@ -59,10 +59,10 @@ class GraphGenerator:
             'Hard Coral Cover': {'min': 0, 'max': 100},     # percentage
             'Fleshy Algae': {'min': 0, 'max': 100},         # percentage
             'Bleaching': {'min': 0, 'max': 100},            # percentage
-            'Herbivore': {'min': 0, 'max': 5000},           # ind/ha
+            'Herbivore': {'min': 0, 'max': 10000},          # ind/ha
             'Carnivore': {'min': 0, 'max': 5000},           # ind/ha
-            'Omnivore': {'min': 0, 'max': 5000},            # ind/ha
-            'Corallivore': {'min': 0, 'max': 5000},         # ind/ha
+            'Omnivore': {'min': 0, 'max': 8000},            # ind/ha
+            'Corallivore': {'min': 0, 'max': 1500},         # ind/ha
             'Rubble': {'min': 0, 'max': 100}                # percentage
         }
         return ranges.get(metric_name, {'min': 0, 'max': 100})  # default range
