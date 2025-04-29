@@ -59,8 +59,8 @@ class GraphGenerator:
             'Hard Coral Cover': {'min': 0, 'max': 100},     # percentage
             'Fleshy Algae': {'min': 0, 'max': 100},         # percentage
             'Bleaching': {'min': 0, 'max': 100},            # percentage
-            'Herbivore Density': {'min': 0, 'max': 15000},  # ind/ha - optimized for Basak data
-            'Herbivore': {'min': 0, 'max': 15000},          # ind/ha - optimized for Basak data
+            'Herbivore Density': {'min': 0, 'max': 5000},  # ind/ha - with 1k intervals
+            'Herbivore': {'min': 0, 'max': 5000},          # ind/ha - with 1k intervals
             'Carnivore': {'min': 0, 'max': 5000},           # ind/ha
             'Omnivore': {'min': 0, 'max': 8000},            # ind/ha
             'Corallivore': {'min': 0, 'max': 1500},         # ind/ha
@@ -327,7 +327,10 @@ class GraphGenerator:
                     'standoff': 10
                 },
                 'side': 'left',
-                'range': [y_range['min'], y_range['max']]  # Set fixed y-axis range
+                'range': [y_range['min'], y_range['max']],  # Set fixed y-axis range
+                'tickmode': 'linear',  # Use linear tick mode for evenly spaced ticks
+                'tick0': 0,  # Start ticks at 0
+                'dtick': 1000  # 1k intervals for herbivore density
             }
         }
 
