@@ -3,6 +3,7 @@ import streamlit as st
 # Page configuration must be the first Streamlit command
 st.set_page_config(
     page_title="Site Dashboard",
+    page_icon="assets/branding/favicon.png",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -14,6 +15,7 @@ from utils.data_processor import DataProcessor
 from utils.graph_generator import GraphGenerator
 from utils.translations import TRANSLATIONS
 from utils.database import get_db
+from utils.branding import display_logo, add_favicon
 
 # Initialize language in session state if not present
 if 'language' not in st.session_state:
@@ -74,6 +76,9 @@ hide_main_js = """
 # Use a div with display:none to hide the JS code from being shown
 st.markdown(f'<div style="display:none">{hide_main_js}</div>', unsafe_allow_html=True)
 
+# Add favicon to the page
+add_favicon()
+
 # Sidebar for site selection and language
 with st.sidebar:
     # Back to main link first - using HTML with target="_self" to prevent opening in new tab
@@ -125,6 +130,10 @@ with st.sidebar:
 if selected_site:
     selected_site_obj = next((site for site in sites if site.name == selected_site), None)
     if selected_site_obj:
+        # Display small logo at the top of the dashboard
+        display_logo(size="small")
+        
+        # Display the site title
         st.title(f"{selected_site} Dashboard")
 
         # Site Description Section

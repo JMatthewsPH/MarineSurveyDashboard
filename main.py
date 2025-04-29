@@ -3,10 +3,12 @@ import os
 from utils.data_processor import DataProcessor
 from utils.database import get_db
 from utils.translations import TRANSLATIONS
+from utils.branding import display_logo, add_favicon
 
 # Page configuration
 st.set_page_config(
     page_title="Marine Conservation Philippines",
+    page_icon="assets/branding/favicon.png",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -84,27 +86,18 @@ subheader_text = "Marine Monitoring Dashboard" if language == "English" else "Da
 # Add some padding at the top
 st.markdown("<div style='padding-top: 20px;'></div>", unsafe_allow_html=True)
 
-# Get logo path
-logo_path = os.path.join("attached_assets", "MCP_Data", "Logo Text Color.png")
+# Add favicon to the page
+add_favicon()
 
-if os.path.exists(logo_path):
-    # Create columns to center and resize the logo
-    cols = st.columns([1.5, 1, 1.5])  # This creates a larger center column than before
-    with cols[1]:
-        st.image(logo_path, use_container_width=True)
+# Display the logo using our branding utility
+display_logo(size="medium")
 
-    st.markdown(f"""
-        <div class="site-header">
-            <h2>{subheader_text}</h2>
-        </div>
-    """, unsafe_allow_html=True)
-else:
-    st.error(f"Logo not found at path: {logo_path}")
-    st.markdown(f"""
-        <div class="site-header">
-            <h2>{subheader_text}</h2>
-        </div>
-    """, unsafe_allow_html=True)
+# Display the site header
+st.markdown(f"""
+    <div class="site-header">
+        <h2>{subheader_text}</h2>
+    </div>
+""", unsafe_allow_html=True)
 
 
 
