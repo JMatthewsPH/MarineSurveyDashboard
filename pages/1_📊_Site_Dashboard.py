@@ -483,19 +483,23 @@ if selected_site:
                 # Show title for chart
                 st.subheader(f"Commercial Fish Biomass - {selected_site}")
                 
-                # Create a loading placeholder for the biomass chart
-                biomass_placeholder = create_loading_placeholder(
-                    st, 
-                    message="Loading biomass data...", 
-                    height=400
-                )
+                # Create a container for the skeleton chart that we can replace later
+                biomass_skeleton_container = st.empty()
                 
                 # Display a skeleton chart while data is loading
-                st.plotly_chart(
-                    skeleton_chart(height=400, chart_type="line"),
-                    use_container_width=True,
-                    key='biomass_skeleton'
-                )
+                with biomass_skeleton_container:
+                    # Create a loading placeholder for the biomass chart
+                    create_loading_placeholder(
+                        st, 
+                        message="Loading biomass data...", 
+                        height=400
+                    )
+                    
+                    st.plotly_chart(
+                        skeleton_chart(height=400, chart_type="line"),
+                        use_container_width=True,
+                        key='biomass_skeleton'
+                    )
             
             # Get biomass data and comparison
             biomass_data = data_processor.get_biomass_data(selected_site)
@@ -540,10 +544,10 @@ if selected_site:
             )
             
             # Replace the placeholder with the actual chart
+            # Clear the skeleton and display the actual chart
+            biomass_skeleton_container.empty()
+            
             with biomass_chart_container:
-                # Clear the placeholder and skeleton
-                biomass_placeholder.empty()
-                
                 # Display the actual chart
                 st.plotly_chart(
                     biomass_fig, 
@@ -561,19 +565,23 @@ if selected_site:
                 # Show title for chart
                 st.subheader(f"Hard Coral Cover - {selected_site}")
                 
-                # Create a loading placeholder for the coral cover chart
-                coral_placeholder = create_loading_placeholder(
-                    st, 
-                    message="Loading coral cover data...", 
-                    height=400
-                )
+                # Create a container for the skeleton chart that we can replace later
+                coral_skeleton_container = st.empty()
                 
                 # Display a skeleton chart while data is loading
-                st.plotly_chart(
-                    skeleton_chart(height=400, chart_type="line"),
-                    use_container_width=True,
-                    key='coral_skeleton'
-                )
+                with coral_skeleton_container:
+                    # Create a loading placeholder for the coral cover chart
+                    create_loading_placeholder(
+                        st, 
+                        message="Loading coral cover data...", 
+                        height=400
+                    )
+                    
+                    st.plotly_chart(
+                        skeleton_chart(height=400, chart_type="line"),
+                        use_container_width=True,
+                        key='coral_skeleton'
+                    )
             
             # Get coral cover data and comparison
             coral_data = data_processor.get_metric_data(selected_site, 'hard_coral')
@@ -596,10 +604,10 @@ if selected_site:
             )
             
             # Replace the placeholder with the actual chart
+            # Clear the skeleton and display the actual chart
+            coral_skeleton_container.empty()
+            
             with coral_chart_container:
-                # Clear the placeholder and skeleton
-                coral_placeholder.empty()
-                
                 # Display the actual chart
                 st.plotly_chart(
                     coral_fig, 
