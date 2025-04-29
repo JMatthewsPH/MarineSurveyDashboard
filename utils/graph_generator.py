@@ -54,39 +54,18 @@ class GraphGenerator:
 
     def get_metric_range(self, metric_name):
         """Define standard ranges for each metric type"""
-        # Standardize metric names to match chart titles
-        metric_ranges = {
-            'Commercial Fish Biomass': {'min': 0, 'max': 3000},  # kg/ha
-            'Commercial Biomass': {'min': 0, 'max': 3000},       # kg/ha (alternative naming)
-            'Hard Coral Cover': {'min': 0, 'max': 100},          # percentage
-            'Fleshy Algae Cover': {'min': 0, 'max': 100},        # percentage
-            'Fleshy Algae': {'min': 0, 'max': 100},              # percentage (alternative naming)
-            'Bleaching': {'min': 0, 'max': 100},                 # percentage
-            'Herbivore Density': {'min': 0, 'max': 10000},       # ind/ha
-            'Herbivore': {'min': 0, 'max': 10000},               # ind/ha (alternative naming)
-            'Carnivore Density': {'min': 0, 'max': 5000},        # ind/ha
-            'Carnivore': {'min': 0, 'max': 5000},                # ind/ha (alternative naming)
-            'Omnivore Density': {'min': 0, 'max': 8000},         # ind/ha
-            'Omnivore': {'min': 0, 'max': 8000},                 # ind/ha (alternative naming)
-            'Corallivore Density': {'min': 0, 'max': 1500},      # ind/ha
-            'Corallivore': {'min': 0, 'max': 1500},              # ind/ha (alternative naming)
-            'Rubble': {'min': 0, 'max': 100}                     # percentage
+        ranges = {
+            'Commercial Biomass': {'min': 0, 'max': 3000},  # kg/ha
+            'Hard Coral Cover': {'min': 0, 'max': 100},     # percentage
+            'Fleshy Algae': {'min': 0, 'max': 100},         # percentage
+            'Bleaching': {'min': 0, 'max': 100},            # percentage
+            'Herbivore': {'min': 0, 'max': 10000},          # ind/ha
+            'Carnivore': {'min': 0, 'max': 5000},           # ind/ha
+            'Omnivore': {'min': 0, 'max': 8000},            # ind/ha
+            'Corallivore': {'min': 0, 'max': 1500},         # ind/ha
+            'Rubble': {'min': 0, 'max': 100}                # percentage
         }
-        
-        # First try direct lookup
-        if metric_name in metric_ranges:
-            return metric_ranges[metric_name]
-        
-        # If not found, try with common variations (removing "Cover", "Density" etc.)
-        for key in metric_ranges.keys():
-            if key in metric_name:
-                return metric_ranges[key]
-        
-        # Default range for unknown metrics
-        import logging
-        logger = logging.getLogger(__name__)
-        logger.warning(f"No range defined for metric '{metric_name}', using default range (0-100)")
-        return {'min': 0, 'max': 100}
+        return ranges.get(metric_name, {'min': 0, 'max': 100})  # default range
 
     def create_time_series(self, data, title, y_label, comparison_data=None, comparison_labels=None, date_range=None, secondary_data=None, secondary_label=None, tertiary_data=None, tertiary_label=None):
         """
@@ -126,9 +105,9 @@ class GraphGenerator:
             'displayModeBar': 'hover'  # Only show mode bar on hover to save space
         }
 
-        # If no data, return empty figure
+        # If no data, return empty figure with basic config
         if data.empty:
-            return fig
+            return fig, config
 
         # Sort data by date and get date range for filename
         data = data.sort_values('date')
@@ -138,42 +117,21 @@ class GraphGenerator:
         # Update filename with date range
         config['toImageButtonOptions']['filename'] = generate_filename(title, start_date, end_date)
 
+        # Format dates as seasons
+        data['season'] = data['date'].apply(format_season)
+
+        # Split data into pre and post COVID
+        covid_start = pd.Timestamp(date(2019, 9, 1))
+        covid_end = pd.Timestamp(date(2022, 3, 1))
+        
         # Ensure data['date'] is in datetime64 format
         if not data.empty:
             data['date'] = pd.to_datetime(data['date'])
-            
-            # Format dates as seasons with explicit text
-            data['season'] = data['date'].apply(format_season)
-            
-            # Create categorical order for seasons to ensure they're displayed in chronological order
-            all_dates = data['date'].tolist()
-            
-            # Add comparison data dates if available
-            if comparison_data is not None:
-                if isinstance(comparison_data, list):
-                    for comp_df in comparison_data:
-                        if not comp_df.empty:
-                            comp_df['date'] = pd.to_datetime(comp_df['date'])
-                            all_dates.extend(comp_df['date'].tolist())
-                else:
-                    if not comparison_data.empty:
-                        comparison_data['date'] = pd.to_datetime(comparison_data['date'])
-                        all_dates.extend(comparison_data['date'].tolist())
-            
-            # Sort all dates and create season labels in order
-            all_dates = sorted(list(set(all_dates)))
-            season_order = [format_season(d) for d in all_dates]
-            
-            # Split data into pre and post COVID
-            covid_start = pd.Timestamp(date(2019, 9, 1))
-            covid_end = pd.Timestamp(date(2022, 3, 1))
-            
             pre_covid = data[data['date'] < covid_start]
             post_covid = data[data['date'] > covid_end]
         else:
             pre_covid = data
             post_covid = data
-            season_order = []
 
         # Get the metric name from the title
         metric_name = title.split(' - ')[0].strip()
@@ -373,7 +331,7 @@ class GraphGenerator:
         }
 
         fig.update_layout(**layout_updates)
-        return fig
+        return fig, config
 
     def create_eco_tourism_chart(self, data, title, observation_type='percentage'):
         """Create bar chart for eco-tourism data"""
@@ -404,7 +362,7 @@ class GraphGenerator:
                 'showTips': True,  # Show tips for better usability
                 'displayModeBar': 'hover'  # Only show mode bar on hover to save space
             }
-            return fig
+            return fig, config
 
         fig = go.Figure(go.Bar(
             y=data.index,
@@ -449,4 +407,4 @@ class GraphGenerator:
             'showTips': True,  # Show tips for better usability
             'displayModeBar': 'hover'  # Only show mode bar on hover to save space
         }
-        return fig
+        return fig, config

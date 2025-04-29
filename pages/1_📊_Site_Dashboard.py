@@ -1,107 +1,181 @@
-"""
-Site Dashboard Page with detailed metrics for selected marine sites
-
-This page displays detailed ecological metrics for a selected marine site,
-including commercial fish biomass, hard coral cover, and other indicators.
-"""
-
 import streamlit as st
-import pandas as pd
-from datetime import datetime
 
-# Import utilities
-from utils.data_processor import DataProcessor
-from utils.graph_generator import GraphGenerator
-from utils.branding import display_logo
-from utils.ui_helpers import loading_spinner, skeleton_chart, create_loading_placeholder, skeleton_text_placeholder
-from utils.translations import TRANSLATIONS
-from utils.database import get_db
-
-# Page configuration
+# Page configuration must be the first Streamlit command
 st.set_page_config(
-    page_title="Site Dashboard | Marine Conservation Dashboard",
-    page_icon="📊",
-    layout="wide"
+    page_title="Site Dashboard",
+    page_icon="assets/branding/favicon.png",
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-# Initialize session state for language if not already set
+import os
+import pandas as pd
+from datetime import datetime, date
+from utils.data_processor import DataProcessor
+from utils.graph_generator import GraphGenerator
+from utils.translations import TRANSLATIONS
+from utils.database import get_db
+from utils.branding import display_logo, add_favicon
+from utils.ui_helpers import (
+    loading_spinner, 
+    skeleton_chart, 
+    create_loading_placeholder, 
+    add_loading_css, 
+    skeleton_text_placeholder
+)
+
+# Initialize language in session state if not present
 if 'language' not in st.session_state:
-    st.session_state.language = 'en'  # Default to English
+    st.session_state.language = "en"  # Default to English
 
-# CSS for mobile-responsive layout
-def load_css():
-    with open('assets/site_styles.css') as f:
-        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+# Language code mapping
+LANGUAGE_DISPLAY = {
+    "en": "English",
+    "tl": "Tagalog",
+    "ceb": "Cebuano"
+}
 
-# Load custom CSS
-load_css()
-
-# Initialize data processor with database connection
+# Initialize processors
 @st.cache_resource
 def get_data_processor():
     db = next(get_db())
-    return DataProcessor(db)
+    return DataProcessor(db), GraphGenerator(DataProcessor(db))
 
-# Main function to run the dashboard
-def main():
-    # Display logo and header
-    display_logo()
-    
-    # Set language code for translations
-    language_code = st.session_state.language
-    
-    # Get data processor and graph generator
-    data_processor = get_data_processor()
-    graph_generator = GraphGenerator(data_processor)
-    
-    # Get all sites
-    sites = data_processor.get_sites()
-    
-    # Create alphabetically sorted site names for dropdown
-    alphabetical_site_names = sorted([site.name for site in sites])
-    
-    # Top navigation
-    st.title(TRANSLATIONS[language_code]['dashboard'])
-    
-    # Site selection in main area (more prominent)
-    selected_site = st.selectbox(
-        TRANSLATIONS[language_code]['select_site'],
-        alphabetical_site_names,
-        key="site_selector"
+data_processor, graph_generator = get_data_processor()
+
+# Get all sites
+sites = data_processor.get_sites()
+
+# Create ordered groups by municipality
+zamboanguita_sites = sorted([site.name for site in sites if site.municipality == "Zamboanguita"])
+siaton_sites = sorted([site.name for site in sites if site.municipality == "Siaton"])
+santa_catalina_sites = sorted([site.name for site in sites if site.municipality == "Santa Catalina"])
+
+# Combine in desired order for display in sidebar
+site_names = zamboanguita_sites + siaton_sites + santa_catalina_sites
+
+# Create alphabetical list for comparison dropdowns
+alphabetical_site_names = sorted([site.name for site in sites])
+
+# Load custom CSS
+@st.cache_data
+def load_css():
+    with open('assets/site_styles.css') as f:
+        css_content = f.read()
+        return f'<style>{css_content}</style>'
+
+st.markdown(load_css(), unsafe_allow_html=True)
+st.markdown(add_loading_css(), unsafe_allow_html=True)
+
+# Add JavaScript to hide "main" text (hidden in a div with display:none)
+hide_main_js = """
+<script type="text/javascript">
+    (function() {
+        function hideMainText() {
+            var sidebarNavs = document.querySelectorAll('[data-testid="stSidebarNav"]');
+            if (sidebarNavs.length > 0) {
+                var navItems = sidebarNavs[0].querySelectorAll('li');
+                if (navItems.length > 0) {
+                    navItems[0].style.display = 'none';
+                }
+            }
+            setTimeout(hideMainText, 500);
+        }
+        
+        window.addEventListener('load', hideMainText);
+        hideMainText();
+    })();
+</script>
+"""
+
+# Use a div with display:none to hide the JS code from being shown
+st.markdown(f'<div style="display:none">{hide_main_js}</div>', unsafe_allow_html=True)
+
+# Add favicon to the page
+add_favicon()
+
+# Sidebar for site selection and language
+with st.sidebar:
+    # Back to main link first - using HTML with target="_self" to prevent opening in new tab
+    back_text = TRANSLATIONS[st.session_state.language]['back_to_main']
+    st.markdown(f'<a href="../" target="_self">🏠 {back_text}</a>', unsafe_allow_html=True)
+
+    st.markdown("---")  # Add separator
+
+    # Language selection
+    selected_language = st.selectbox(
+        TRANSLATIONS[st.session_state.language]['lang_toggle'],
+        list(LANGUAGE_DISPLAY.values()),
+        key="language_selector",
+        index=list(LANGUAGE_DISPLAY.values()).index(LANGUAGE_DISPLAY.get(st.session_state.language, "English"))
     )
     
-    # Find the selected site object
+    # Convert display language back to language code
+    for code, name in LANGUAGE_DISPLAY.items():
+        if name == selected_language:
+            st.session_state.language = code
+            break
+
+    st.markdown("---")  # Add separator
+
+    # Site selection with municipality grouping
+    st.subheader(TRANSLATIONS[st.session_state.language]['select_site'])
+    site_options = []
+    if zamboanguita_sites:
+        site_options.append("Zamboanguita")
+        site_options.extend([f"  {site}" for site in zamboanguita_sites])
+    if siaton_sites:
+        site_options.append("Siaton")
+        site_options.extend([f"  {site}" for site in siaton_sites])
+    if santa_catalina_sites:
+        site_options.append("Santa Catalina")
+        site_options.extend([f"  {site}" for site in santa_catalina_sites])
+
+    selected_option = st.selectbox(
+        TRANSLATIONS[st.session_state.language]['choose_site'],
+        site_options,
+        index=site_options.index(f"  {st.query_params.get('site')}") if st.query_params.get('site') in [s.strip() for s in site_options] else 0
+    )
+
+    # Extract actual site name (remove leading spaces if it's a site)
+    selected_site = selected_option.strip() if selected_option.startswith("  ") else None
+
+    if selected_site and selected_site in site_names:
+        # Update URL when site is selected
+        st.query_params["site"] = selected_site
+
+
+# Display site content
+if selected_site:
     selected_site_obj = next((site for site in sites if site.name == selected_site), None)
-    
-    if selected_site:
-        # Mobile-responsive container for all charts
-        st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+    if selected_site_obj:
+        # Display small logo at the top of the dashboard
+        display_logo(size="small")
         
-        # Site Information Section
-        st.header(f"{TRANSLATIONS[language_code]['site_description']} - {selected_site}")
-        
-        # For desktop, use columns with 1:2 ratio
+        # Display the site title
+        st.title(f"{selected_site} {TRANSLATIONS[st.session_state.language]['dashboard']}")
+
+        # Site Description Section
+        st.header(TRANSLATIONS[st.session_state.language]['site_description'])
+
+        # Use different column ratios based on screen size (CSS will handle the actual responsiveness)
+        # For larger screens, we use a 1:2 ratio
         # For mobile, CSS will stack these vertically
 
         cols = st.columns([1, 2])
 
         with cols[0]:
             # Create a placeholder for the image while it loads
-            image_placeholder = st.empty()
-            with image_placeholder:
-                create_loading_placeholder(
-                    st, 
-                    message="Loading site image...", 
-                    height=300
-                )
-            
-            # Replace with the actual image
-            image_placeholder.image(
-                "https://via.placeholder.com/400x300", 
-                use_container_width=True, 
-                output_format="JPEG", 
-                caption=selected_site
+            image_placeholder = create_loading_placeholder(
+                st, 
+                message="Loading site image...", 
+                height=300
             )
+            
+            # Display the image (in a real app, this would be loaded asynchronously)
+            image_placeholder.empty()
+            st.image("https://via.placeholder.com/400x300", use_container_width=True, 
+                     output_format="JPEG", caption=selected_site)
 
         with cols[1]:
             # Show a loading placeholder for the description
@@ -109,7 +183,7 @@ def main():
             with desc_placeholder:
                 skeleton_text_placeholder(lines=5)
             
-            # Load the site description with spinner
+            # Load the site description with simulated delay
             with loading_spinner("Loading site description..."):
                 language_code = st.session_state.language
                 
@@ -363,7 +437,7 @@ def main():
             # Add Rubble comparison options
             st.subheader("Rubble Cover")
             rubble_comparison = st.selectbox(
-                "Compare rubble with:",
+                "Compare rubble cover with:",
                 ["No Comparison", "Compare with Site", "Compare with Average"],
                 key="rubble_comparison"
             )
@@ -373,7 +447,7 @@ def main():
             if rubble_comparison == "Compare with Site":
                 compare_sites = [site for site in alphabetical_site_names if site != selected_site]
                 rubble_compare_site = st.selectbox(
-                    "Select site to compare rubble:",
+                    "Select site to compare rubble cover:",
                     compare_sites,
                     key="rubble_compare_site"
                 )
@@ -384,33 +458,45 @@ def main():
                     key="rubble_compare_scope"
                 )
 
-        # Create graphs section
-        st.header(TRANSLATIONS[language_code]['site_metrics'])
-        
-        # Biomass Section with loading states
-        if selected_site:
+        # Display metrics section with comparisons
+        if selected_site_obj:
+            st.header(TRANSLATIONS[st.session_state.language]['site_metrics'])
+
+            # Configure Plotly chart settings with mobile optimizations
+            plotly_config = {
+                'responsive': True,
+                'displayModeBar': 'hover',  # Only show on hover to save space
+                'displaylogo': False,
+                'modeBarButtonsToRemove': ['lasso2d', 'select2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d'],
+                'scrollZoom': False,  # Disable scroll zoom on mobile
+                'doubleClick': 'reset'  # Double tap to reset view
+            }
+            
+            # Add wrapper with mobile-responsive class
+            st.markdown('<div class="mobile-responsive-charts">', unsafe_allow_html=True)
+
+            # Add spacing before first chart
+            st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
+
             # Create a placeholder for the biomass chart with loading indicator
             biomass_chart_container = st.container()
             with biomass_chart_container:
                 # Show title for chart
                 st.subheader(f"Commercial Fish Biomass - {selected_site}")
                 
-                # Create a loading placeholder and skeleton chart that we'll replace later
-                biomass_chart_placeholder = st.empty()
-                with biomass_chart_placeholder:
-                    # Create a loading indicator within the placeholder
-                    create_loading_placeholder(
-                        st, 
-                        message="Loading biomass data...", 
-                        height=400
-                    )
-                    
-                    # Display a skeleton chart while data is loading
-                    st.plotly_chart(
-                        skeleton_chart(height=400, chart_type="line"),
-                        use_container_width=True,
-                        key="biomass_skeleton_chart" 
-                    )
+                # Create a loading placeholder for the biomass chart
+                biomass_placeholder = create_loading_placeholder(
+                    st, 
+                    message="Loading biomass data...", 
+                    height=400
+                )
+                
+                # Display a skeleton chart while data is loading
+                st.plotly_chart(
+                    skeleton_chart(height=400, chart_type="line"),
+                    use_container_width=True,
+                    key='biomass_skeleton'
+                )
             
             # Get biomass data and comparison with loading indicator
             with loading_spinner("Processing fish biomass data..."):
@@ -420,33 +506,33 @@ def main():
                 
                 if biomass_comparison == "Compare with Sites" and biomass_compare_sites:
                     # Get data for multiple comparison sites
-                    biomass_comparison_data = []
-                    for compare_site in biomass_compare_sites:
-                        site_data = data_processor.get_biomass_data(compare_site)
+                    comparison_data_list = []
+                    for site_name in biomass_compare_sites:
+                        site_data = data_processor.get_biomass_data(site_name)
                         if not site_data.empty:
-                            biomass_comparison_data.append(site_data)
+                            comparison_data_list.append(site_data)
                     
-                    # Set comparison labels (either plain site names or with municipality)
-                    if not biomass_compare_labels:
-                        biomass_compare_labels = biomass_compare_sites
-                        
+                    if comparison_data_list:
+                        biomass_comparison_data = comparison_data_list
+                        # Use custom labels if provided
+                        if biomass_compare_labels:
+                            biomass_comparison_labels = biomass_compare_labels
+                        else:
+                            biomass_comparison_labels = biomass_compare_sites
+                            
                 elif biomass_comparison == "Compare with Average":
                     municipality = site_municipality if biomass_compare_scope == "Municipality Average" else None
-                    biomass_comparison_data = data_processor.get_average_biomass_data(
+                    avg_data = data_processor.get_average_biomass_data(
                         exclude_site=selected_site,
                         municipality=municipality
                     )
-                    
-                    # Set label for the average
-                    if biomass_compare_scope == "Municipality Average" and site_municipality:
-                        biomass_comparison_labels = [f"Avg. {site_municipality}"]
-                    else:
-                        biomass_comparison_labels = ["Avg. All Sites"]
-            
-            # Create biomass visualization
-            with loading_spinner("Generating biomass chart..."):
-                # Generate the plotly figure
-                biomass_fig = graph_generator.create_time_series(
+                    if not avg_data.empty:
+                        biomass_comparison_data = avg_data
+                        label = f"{site_municipality} Average" if biomass_compare_scope == "Municipality Average" else "All Sites Average"
+                        biomass_comparison_labels = [label]
+                        
+                # Create the time series chart with date range filtering
+                biomass_fig, biomass_config = graph_generator.create_time_series(
                     biomass_data,
                     f"Commercial Fish Biomass - {selected_site}",
                     "Biomass (kg/ha)",
@@ -454,54 +540,42 @@ def main():
                     comparison_labels=biomass_comparison_labels,
                     date_range=date_range
                 )
+            
+            # Replace the placeholder with the actual chart
+            with biomass_chart_container:
+                # Clear the placeholder and skeleton
+                biomass_placeholder.empty()
                 
-                # Set download button configuration
-                biomass_config = {
-                    'toImageButtonOptions': {
-                        'format': 'png', 
-                        'filename': f'biomass_{selected_site}',
-                        'height': 600,
-                        'width': 1200,
-                        'scale': 2
-                    },
-                    'displayModeBar': True,
-                    'displaylogo': False,
-                }
-                
-                # Replace the placeholder with the real chart
-                biomass_chart_placeholder.empty()  # Clear the placeholder
-                biomass_chart_placeholder.plotly_chart(
+                # Display the actual chart
+                st.plotly_chart(
                     biomass_fig, 
                     use_container_width=True, 
-                    config=biomass_config,
-                    key="biomass_chart"
+                    config=biomass_config, 
+                    key='biomass_chart'
                 )
-            
+
             # Add spacing between charts
             st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
-            
-            # Coral Cover Section
+
+            # Create a placeholder for the coral cover chart with loading indicator
             coral_chart_container = st.container()
             with coral_chart_container:
                 # Show title for chart
                 st.subheader(f"Hard Coral Cover - {selected_site}")
                 
-                # Create a loading placeholder that we'll replace later
-                coral_chart_placeholder = st.empty()
-                with coral_chart_placeholder:
-                    # Create a loading indicator within the placeholder
-                    create_loading_placeholder(
-                        st, 
-                        message="Loading coral cover data...", 
-                        height=400
-                    )
-                    
-                    # Display a skeleton chart while data is loading
-                    st.plotly_chart(
-                        skeleton_chart(height=400, chart_type="line"),
-                        use_container_width=True,
-                        key="coral_skeleton_chart"
-                    )
+                # Create a loading placeholder for the coral cover chart
+                coral_placeholder = create_loading_placeholder(
+                    st, 
+                    message="Loading coral cover data...", 
+                    height=400
+                )
+                
+                # Display a skeleton chart while data is loading
+                st.plotly_chart(
+                    skeleton_chart(height=400, chart_type="line"),
+                    use_container_width=True,
+                    key='coral_skeleton'
+                )
             
             # Get coral cover data and comparison with loading indicator
             with loading_spinner("Processing coral cover data..."):
@@ -516,370 +590,170 @@ def main():
                         exclude_site=selected_site,
                         municipality=municipality
                     )
-            
-            # Create coral cover visualization
-            with loading_spinner("Generating coral cover chart..."):
-                # Get the comparison label
-                coral_comparison_label = None
-                if coral_comparison == "Compare with Site" and coral_compare_site:
-                    coral_comparison_label = [coral_compare_site]
-                elif coral_comparison == "Compare with Average":
-                    if coral_compare_scope == "Municipality Average" and site_municipality:
-                        coral_comparison_label = [f"Avg. {site_municipality}"]
-                    else:
-                        coral_comparison_label = ["Avg. All Sites"]
-                
-                # Generate the plotly figure
-                coral_fig = graph_generator.create_time_series(
+                coral_fig, coral_config = graph_generator.create_time_series(
                     coral_data,
                     f"Hard Coral Cover - {selected_site}",
                     "Cover (%)",
                     comparison_data=coral_comparison_data,
-                    comparison_labels=coral_comparison_label,
                     date_range=date_range
                 )
+            
+            # Replace the placeholder with the actual chart
+            with coral_chart_container:
+                # Clear the placeholder and skeleton
+                coral_placeholder.empty()
                 
-                # Set download button configuration
-                coral_config = {
-                    'toImageButtonOptions': {
-                        'format': 'png', 
-                        'filename': f'coral_cover_{selected_site}',
-                        'height': 600,
-                        'width': 1200,
-                        'scale': 2
-                    },
-                    'displayModeBar': True,
-                    'displaylogo': False,
-                }
-                
-                # Replace the placeholder with the real chart
-                coral_chart_placeholder.empty()  # Clear the placeholder
-                coral_chart_placeholder.plotly_chart(
+                # Display the actual chart
+                st.plotly_chart(
                     coral_fig, 
                     use_container_width=True, 
-                    config=coral_config,
-                    key="coral_chart"
+                    config=coral_config, 
+                    key='coral_chart'
                 )
-            
-            # Add spacing between charts  
+
+            # Add spacing between charts
             st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
-            
+
             # Get fleshy algae data and comparison
-            with loading_spinner("Processing fleshy algae data..."):
-                algae_data = data_processor.get_metric_data(selected_site, 'fleshy_algae')
-                algae_comparison_data = None
-                
-                if algae_comparison == "Compare with Site" and algae_compare_site:
-                    algae_comparison_data = data_processor.get_metric_data(algae_compare_site, 'fleshy_algae')
-                    algae_comparison_label = [algae_compare_site]
-                elif algae_comparison == "Compare with Average":
-                    municipality = site_municipality if algae_compare_scope == "Municipality Average" else None
-                    algae_comparison_data = data_processor.get_average_metric_data(
-                        'fleshy_algae',
-                        exclude_site=selected_site,
-                        municipality=municipality
-                    )
-                    
-                    if algae_compare_scope == "Municipality Average" and site_municipality:
-                        algae_comparison_label = [f"Avg. {site_municipality}"]
-                    else:
-                        algae_comparison_label = ["Avg. All Sites"]
-                else:
-                    algae_comparison_label = None
-                
-                # Generate the plotly figure
-                algae_fig = graph_generator.create_time_series(
-                    algae_data,
-                    f"Fleshy Algae Cover - {selected_site}",
-                    "Cover (%)",
-                    comparison_data=algae_comparison_data,
-                    comparison_labels=algae_comparison_label,
-                    date_range=date_range
+            algae_data = data_processor.get_metric_data(selected_site, 'fleshy_algae')
+            algae_comparison_data = None
+            if algae_comparison == "Compare with Site" and algae_compare_site:
+                algae_comparison_data = data_processor.get_metric_data(algae_compare_site, 'fleshy_algae')
+            elif algae_comparison == "Compare with Average":
+                municipality = site_municipality if algae_compare_scope == "Municipality Average" else None
+                algae_comparison_data = data_processor.get_average_metric_data(
+                    'fleshy_algae',
+                    exclude_site=selected_site,
+                    municipality=municipality
                 )
-                
-                # Set download button configuration
-                algae_config = {
-                    'toImageButtonOptions': {
-                        'format': 'png', 
-                        'filename': f'algae_cover_{selected_site}',
-                        'height': 600,
-                        'width': 1200,
-                        'scale': 2
-                    },
-                    'displayModeBar': True,
-                    'displaylogo': False,
-                }
-            
-            # Display the fleshy algae chart
-            st.subheader(f"Fleshy Algae Cover - {selected_site}")
+            algae_fig, algae_config = graph_generator.create_time_series(
+                algae_data,
+                f"Fleshy Algae Cover - {selected_site}",
+                "Cover (%)",
+                comparison_data=algae_comparison_data,
+                date_range=date_range
+            )
             st.plotly_chart(algae_fig, use_container_width=True, config=algae_config, key='algae_chart')
 
             # Add spacing between charts
             st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
 
             # Get herbivore data and comparison
-            with loading_spinner("Processing herbivore density data..."):
-                herbivore_data = data_processor.get_metric_data(selected_site, 'herbivore_density')
-                herbivore_comparison_data = None
-                
-                if herbivore_comparison == "Compare with Site" and herbivore_compare_site:
-                    herbivore_comparison_data = data_processor.get_metric_data(herbivore_compare_site, 'herbivore_density')
-                    herbivore_comparison_label = [herbivore_compare_site]
-                elif herbivore_comparison == "Compare with Average":
-                    municipality = site_municipality if herbivore_compare_scope == "Municipality Average" else None
-                    herbivore_comparison_data = data_processor.get_average_metric_data(
-                        'herbivore_density',
-                        exclude_site=selected_site,
-                        municipality=municipality
-                    )
-                    
-                    if herbivore_compare_scope == "Municipality Average" and site_municipality:
-                        herbivore_comparison_label = [f"Avg. {site_municipality}"]
-                    else:
-                        herbivore_comparison_label = ["Avg. All Sites"]
-                else:
-                    herbivore_comparison_label = None
-                
-                # Generate the plotly figure
-                herbivore_fig = graph_generator.create_time_series(
-                    herbivore_data,
-                    f"Herbivore Density - {selected_site}",
-                    "Density (ind/ha)",
-                    comparison_data=herbivore_comparison_data,
-                    comparison_labels=herbivore_comparison_label,
-                    date_range=date_range
+            herbivore_data = data_processor.get_metric_data(selected_site, 'herbivore')
+            herbivore_comparison_data = None
+            if herbivore_comparison == "Compare with Site" and herbivore_compare_site:
+                herbivore_comparison_data = data_processor.get_metric_data(herbivore_compare_site, 'herbivore')
+            elif herbivore_comparison == "Compare with Average":
+                municipality = site_municipality if herbivore_compare_scope == "Municipality Average" else None
+                herbivore_comparison_data = data_processor.get_average_metric_data(
+                    'herbivore',
+                    exclude_site=selected_site,
+                    municipality=municipality
                 )
-                
-                # Set download button configuration
-                herbivore_config = {
-                    'toImageButtonOptions': {
-                        'format': 'png', 
-                        'filename': f'herbivore_density_{selected_site}',
-                        'height': 600,
-                        'width': 1200,
-                        'scale': 2
-                    },
-                    'displayModeBar': True,
-                    'displaylogo': False,
-                }
-            
-            # Display the herbivore chart
-            st.subheader(f"Herbivore Density - {selected_site}")
+            herbivore_fig, herbivore_config = graph_generator.create_time_series(
+                herbivore_data,
+                f"Herbivore Density - {selected_site}",
+                "Density (ind/ha)",
+                comparison_data=herbivore_comparison_data,
+                date_range=date_range
+            )
             st.plotly_chart(herbivore_fig, use_container_width=True, config=herbivore_config, key='herbivore_chart')
 
             # Add spacing between charts
             st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
 
             # Get omnivore data and comparison
-            with loading_spinner("Processing omnivore density data..."):
-                omnivore_data = data_processor.get_metric_data(selected_site, 'omnivore_density')
-                omnivore_comparison_data = None
-                
-                if omnivore_comparison == "Compare with Site" and omnivore_compare_site:
-                    omnivore_comparison_data = data_processor.get_metric_data(omnivore_compare_site, 'omnivore_density')
-                    omnivore_comparison_label = [omnivore_compare_site]
-                elif omnivore_comparison == "Compare with Average":
-                    municipality = site_municipality if omnivore_compare_scope == "Municipality Average" else None
-                    omnivore_comparison_data = data_processor.get_average_metric_data(
-                        'omnivore_density',
-                        exclude_site=selected_site,
-                        municipality=municipality
-                    )
-                    
-                    if omnivore_compare_scope == "Municipality Average" and site_municipality:
-                        omnivore_comparison_label = [f"Avg. {site_municipality}"]
-                    else:
-                        omnivore_comparison_label = ["Avg. All Sites"]
-                else:
-                    omnivore_comparison_label = None
-                
-                # Generate the plotly figure
-                omnivore_fig = graph_generator.create_time_series(
-                    omnivore_data,
-                    f"Omnivore Density - {selected_site}",
-                    "Density (ind/ha)",
-                    comparison_data=omnivore_comparison_data,
-                    comparison_labels=omnivore_comparison_label,
-                    date_range=date_range
+            omnivore_data = data_processor.get_metric_data(selected_site, 'omnivore')
+            omnivore_comparison_data = None
+            if omnivore_comparison == "Compare with Site" and omnivore_compare_site:
+                omnivore_comparison_data = data_processor.get_metric_data(omnivore_compare_site, 'omnivore')
+            elif omnivore_comparison == "Compare with Average":
+                municipality = site_municipality if omnivore_compare_scope == "Municipality Average" else None
+                omnivore_comparison_data = data_processor.get_average_metric_data(
+                    'omnivore',
+                    exclude_site=selected_site,
+                    municipality=municipality
                 )
-                
-                # Set download button configuration
-                omnivore_config = {
-                    'toImageButtonOptions': {
-                        'format': 'png', 
-                        'filename': f'omnivore_density_{selected_site}',
-                        'height': 600,
-                        'width': 1200,
-                        'scale': 2
-                    },
-                    'displayModeBar': True,
-                    'displaylogo': False,
-                }
-            
-            # Display the omnivore chart
-            st.subheader(f"Omnivore Density - {selected_site}")
+            omnivore_fig, omnivore_config = graph_generator.create_time_series(
+                omnivore_data,
+                f"Omnivore Density - {selected_site}",
+                "Density (ind/ha)",
+                comparison_data=omnivore_comparison_data,
+                date_range=date_range
+            )
             st.plotly_chart(omnivore_fig, use_container_width=True, config=omnivore_config, key='omnivore_chart')
 
             # Add spacing between charts
             st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
 
             # Get corallivore data and comparison
-            with loading_spinner("Processing corallivore density data..."):
-                corallivore_data = data_processor.get_metric_data(selected_site, 'corallivore_density')
-                corallivore_comparison_data = None
-                
-                if corallivore_comparison == "Compare with Site" and corallivore_compare_site:
-                    corallivore_comparison_data = data_processor.get_metric_data(corallivore_compare_site, 'corallivore_density')
-                    corallivore_comparison_label = [corallivore_compare_site]
-                elif corallivore_comparison == "Compare with Average":
-                    municipality = site_municipality if corallivore_compare_scope == "Municipality Average" else None
-                    corallivore_comparison_data = data_processor.get_average_metric_data(
-                        'corallivore_density',
-                        exclude_site=selected_site,
-                        municipality=municipality
-                    )
-                    
-                    if corallivore_compare_scope == "Municipality Average" and site_municipality:
-                        corallivore_comparison_label = [f"Avg. {site_municipality}"]
-                    else:
-                        corallivore_comparison_label = ["Avg. All Sites"]
-                else:
-                    corallivore_comparison_label = None
-                
-                # Generate the plotly figure
-                corallivore_fig = graph_generator.create_time_series(
-                    corallivore_data,
-                    f"Corallivore Density - {selected_site}",
-                    "Density (ind/ha)",
-                    comparison_data=corallivore_comparison_data,
-                    comparison_labels=corallivore_comparison_label,
-                    date_range=date_range
+            corallivore_data = data_processor.get_metric_data(selected_site, 'corallivore')
+            corallivore_comparison_data = None
+            if corallivore_comparison == "Compare with Site" and corallivore_compare_site:
+                corallivore_comparison_data = data_processor.get_metric_data(corallivore_compare_site, 'corallivore')
+            elif corallivore_comparison == "Compare with Average":
+                municipality = site_municipality if corallivore_compare_scope == "Municipality Average" else None
+                corallivore_comparison_data = data_processor.get_average_metric_data(
+                    'corallivore',
+                    exclude_site=selected_site,
+                    municipality=municipality
                 )
-                
-                # Set download button configuration
-                corallivore_config = {
-                    'toImageButtonOptions': {
-                        'format': 'png', 
-                        'filename': f'corallivore_density_{selected_site}',
-                        'height': 600,
-                        'width': 1200,
-                        'scale': 2
-                    },
-                    'displayModeBar': True,
-                    'displaylogo': False,
-                }
-            
-            # Display the corallivore chart
-            st.subheader(f"Corallivore Density - {selected_site}")
+            corallivore_fig, corallivore_config = graph_generator.create_time_series(
+                corallivore_data,
+                f"Corallivore Density - {selected_site}",
+                "Density (ind/ha)",
+                comparison_data=corallivore_comparison_data,
+                date_range=date_range
+            )
             st.plotly_chart(corallivore_fig, use_container_width=True, config=corallivore_config, key='corallivore_chart')
 
             # Add spacing between charts
             st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
 
             # Add bleaching visualization
-            with loading_spinner("Processing bleaching data..."):
-                bleaching_data = data_processor.get_metric_data(selected_site, 'bleaching')
-                bleaching_comparison_data = None
-                
-                if bleaching_comparison == "Compare with Site" and bleaching_compare_site:
-                    bleaching_comparison_data = data_processor.get_metric_data(bleaching_compare_site, 'bleaching')
-                    bleaching_comparison_label = [bleaching_compare_site]
-                elif bleaching_comparison == "Compare with Average":
-                    municipality = site_municipality if bleaching_compare_scope == "Municipality Average" else None
-                    bleaching_comparison_data = data_processor.get_average_metric_data(
-                        'bleaching',
-                        exclude_site=selected_site,
-                        municipality=municipality
-                    )
-                    
-                    if bleaching_compare_scope == "Municipality Average" and site_municipality:
-                        bleaching_comparison_label = [f"Avg. {site_municipality}"]
-                    else:
-                        bleaching_comparison_label = ["Avg. All Sites"]
-                else:
-                    bleaching_comparison_label = None
-                
-                bleaching_fig = graph_generator.create_time_series(
-                    bleaching_data,
-                    f"Bleaching - {selected_site}",
-                    "Bleaching (%)",
-                    comparison_data=bleaching_comparison_data,
-                    comparison_labels=bleaching_comparison_label,
-                    date_range=date_range
+            bleaching_data = data_processor.get_metric_data(selected_site, 'bleaching')
+            bleaching_comparison_data = None
+            if bleaching_comparison == "Compare with Site" and bleaching_compare_site:
+                bleaching_comparison_data = data_processor.get_metric_data(bleaching_compare_site, 'bleaching')
+            elif bleaching_comparison == "Compare with Average":
+                municipality = site_municipality if bleaching_compare_scope == "Municipality Average" else None
+                bleaching_comparison_data = data_processor.get_average_metric_data(
+                    'bleaching',
+                    exclude_site=selected_site,
+                    municipality=municipality
                 )
-                
-                bleaching_config = {
-                    'toImageButtonOptions': {
-                        'format': 'png', 
-                        'filename': f'bleaching_{selected_site}',
-                        'height': 600,
-                        'width': 1200,
-                        'scale': 2
-                    },
-                    'displayModeBar': True,
-                    'displaylogo': False,
-                }
-            
-            st.subheader(f"Bleaching - {selected_site}")
+            bleaching_fig, bleaching_config = graph_generator.create_time_series(
+                bleaching_data,
+                f"Bleaching - {selected_site}",
+                "Bleaching (%)",
+                comparison_data=bleaching_comparison_data,
+                date_range=date_range
+            )
             st.plotly_chart(bleaching_fig, use_container_width=True, config=bleaching_config, key='bleaching_chart')
 
             # Add spacing between charts
             st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
 
             # Add rubble visualization
-            with loading_spinner("Processing rubble data..."):
-                rubble_data = data_processor.get_metric_data(selected_site, 'rubble')
-                rubble_comparison_data = None
-                
-                if rubble_comparison == "Compare with Site" and rubble_compare_site:
-                    rubble_comparison_data = data_processor.get_metric_data(rubble_compare_site, 'rubble')
-                    rubble_comparison_label = [rubble_compare_site]
-                elif rubble_comparison == "Compare with Average":
-                    municipality = site_municipality if rubble_compare_scope == "Municipality Average" else None
-                    rubble_comparison_data = data_processor.get_average_metric_data(
-                        'rubble',
-                        exclude_site=selected_site,
-                        municipality=municipality
-                    )
-                    
-                    if rubble_compare_scope == "Municipality Average" and site_municipality:
-                        rubble_comparison_label = [f"Avg. {site_municipality}"]
-                    else:
-                        rubble_comparison_label = ["Avg. All Sites"]
-                else:
-                    rubble_comparison_label = None
-                
-                rubble_fig = graph_generator.create_time_series(
-                    rubble_data,
-                    f"Rubble Cover - {selected_site}",
-                    "Rubble Cover (%)",
-                    comparison_data=rubble_comparison_data,
-                    comparison_labels=rubble_comparison_label,
-                    date_range=date_range
+            rubble_data = data_processor.get_metric_data(selected_site, 'rubble')
+            rubble_comparison_data = None
+            if rubble_comparison == "Compare with Site" and rubble_compare_site:
+                rubble_comparison_data = data_processor.get_metric_data(rubble_compare_site, 'rubble')
+            elif rubble_comparison == "Compare with Average":
+                municipality = site_municipality if rubble_compare_scope == "Municipality Average" else None
+                rubble_comparison_data = data_processor.get_average_metric_data(
+                    'rubble',
+                    exclude_site=selected_site,
+                    municipality=municipality
                 )
-                
-                rubble_config = {
-                    'toImageButtonOptions': {
-                        'format': 'png', 
-                        'filename': f'rubble_{selected_site}',
-                        'height': 600,
-                        'width': 1200,
-                        'scale': 2
-                    },
-                    'displayModeBar': True,
-                    'displaylogo': False,
-                }
-            
-            st.subheader(f"Rubble Cover - {selected_site}")
+            rubble_fig, rubble_config = graph_generator.create_time_series(
+                rubble_data,
+                f"Rubble Cover - {selected_site}",
+                "Rubble Cover (%)",
+                comparison_data=rubble_comparison_data,
+                date_range=date_range
+            )
             st.plotly_chart(rubble_fig, use_container_width=True, config=rubble_config, key='rubble_chart')
             
             # Close the mobile-responsive charts container
             st.markdown('</div>', unsafe_allow_html=True)
-    
-    else:
-        # No site selected (this shouldn't happen with the default selection)
-        st.info(TRANSLATIONS[language_code]['select_site_prompt'])
-
-# Run the main function when this file is executed
-if __name__ == "__main__":
-    main()
