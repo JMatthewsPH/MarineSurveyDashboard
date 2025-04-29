@@ -3,6 +3,7 @@ import plotly.express as px
 from datetime import datetime, timedelta, date
 import pandas as pd
 import numpy as np
+import streamlit as st
 
 def format_season(date_obj):
     """Convert date to season format"""
@@ -339,7 +340,15 @@ class GraphGenerator:
                         showlegend=False
                     ))
 
-        # Update layout with fixed y-axis range
+        # Get current theme
+        is_dark_mode = st.session_state.get('theme', 'light') == 'dark'
+        
+        # Define colors based on theme
+        text_color = '#e2e8f0' if is_dark_mode else '#2d3748'  # Light / Dark text
+        grid_color = '#4a5568' if is_dark_mode else '#e0e0e0'  # Dark / Light grid
+        legend_bg = 'rgba(45, 55, 72, 0.7)' if is_dark_mode else 'rgba(255, 255, 255, 0.7)'
+
+        # Update layout with fixed y-axis range and theme-aware colors
         layout_updates = {
             'title': {
                 'text': title,
@@ -347,7 +356,10 @@ class GraphGenerator:
                 'x': 0.5,
                 'xanchor': 'center',
                 'yanchor': 'top',
-                'font': {'size': 16}
+                'font': {
+                    'size': 16,
+                    'color': text_color
+                }
             },
             'xaxis_title': 'Season',
             'yaxis_title': y_label,
@@ -360,7 +372,8 @@ class GraphGenerator:
                 'y': -0.6,
                 'xanchor': 'center',
                 'x': 0.5,
-                'bgcolor': 'rgba(255, 255, 255, 0.1)'  # More transparent background
+                'bgcolor': legend_bg,
+                'font': {'color': text_color}
             },
             'paper_bgcolor': 'rgba(0,0,0,0)',  # Transparent background
             'plot_bgcolor': 'rgba(0,0,0,0)',   # Transparent background
@@ -376,17 +389,29 @@ class GraphGenerator:
                 'tickangle': 45,
                 'automargin': True,
                 'type': 'category',
-                'tickfont': {'size': 10},
-                'title': {'standoff': 50}
+                'tickfont': {
+                    'size': 10,
+                    'color': text_color
+                },
+                'title': {
+                    'standoff': 50,
+                    'font': {'color': text_color}
+                },
+                'gridcolor': grid_color,
+                'zerolinecolor': grid_color
             },
             'yaxis': {
                 'automargin': True,
                 'title': {
                     'text': y_label,
-                    'standoff': 10
+                    'standoff': 10,
+                    'font': {'color': text_color}
                 },
+                'tickfont': {'color': text_color},
                 'side': 'left',
-                'range': [y_range['min'], y_range['max']]  # Set fixed y-axis range
+                'range': [y_range['min'], y_range['max']],  # Set fixed y-axis range
+                'gridcolor': grid_color,
+                'zerolinecolor': grid_color
             }
         }
 
@@ -433,13 +458,21 @@ class GraphGenerator:
 
         x_title = 'Success Rate (%)' if observation_type == 'percentage' else 'Average Count'
 
+        # Get current theme
+        is_dark_mode = st.session_state.get('theme', 'light') == 'dark'
+        
+        # Define colors based on theme
+        text_color = '#e2e8f0' if is_dark_mode else '#2d3748'  # Light / Dark text
+        grid_color = '#4a5568' if is_dark_mode else '#e0e0e0'  # Dark / Light grid
+        
         fig.update_layout(
             title=dict(
                 text=title,
                 y=0.95,
                 x=0.5,
                 xanchor='center',
-                yanchor='top'
+                yanchor='top',
+                font={'color': text_color}
             ),
             xaxis_title=x_title,
             yaxis_title='Species',
@@ -449,7 +482,19 @@ class GraphGenerator:
             showlegend=False,
             autosize=True,
             paper_bgcolor='rgba(0,0,0,0)',  # Transparent background
-            plot_bgcolor='rgba(0,0,0,0)',   # Transparent background
+            plot_bgcolor='rgba(0,0,0,0)',   # Transparent background,
+            xaxis=dict(
+                gridcolor=grid_color,
+                zerolinecolor=grid_color,
+                tickfont={'color': text_color},
+                title={'font': {'color': text_color}}
+            ),
+            yaxis=dict(
+                gridcolor=grid_color,
+                zerolinecolor=grid_color,
+                tickfont={'color': text_color},
+                title={'font': {'color': text_color}}
+            )
         )
 
         config = {
