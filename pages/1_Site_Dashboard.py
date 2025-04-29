@@ -34,60 +34,59 @@ if 'theme' not in st.session_state:
 
 # Define theme toggle callback
 def toggle_theme():
-    # Toggle between light and dark
-    if st.session_state.theme == "light":
-        st.session_state.theme = "dark"
-    else:
-        st.session_state.theme = "light"
+    # Toggle between light and dark with debug output
+    current_theme = st.session_state.theme
+    st.session_state.theme = "light" if current_theme == "dark" else "dark"
+    st.write(f"Theme changed from {current_theme} to {st.session_state.theme}")
+    # Force rerun to apply theme change immediately
+    st.rerun()
         
-# Apply the theme using custom CSS based on session state
+# Use custom CSS to enforce theme
 if st.session_state.theme == "dark":
-    dark_mode_css = """
+    # Apply dark theme
+    custom_css = """
     <style>
-    /* Apply dark theme to root elements */
+    /* Force dark theme */
     :root {
-        --primary-color: #4299e1;
-        --secondary-color: #68d391;
-        --background-color: #1a202c;
-        --text-color: #e2e8f0;
-        --border-color: #4a5568;
-        --hover-color: #63b3ed;
-        --box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        --hover-shadow: 0 4px 8px rgba(0,0,0,0.4);
-        --card-bg-color: #2d3748;
-        --grid-line-color: #4a5568;
-        --tooltip-bg-color: #4a5568;
-        --tooltip-text-color: #e2e8f0;
-        --chart-bg-color: #2d3748;
-        --chart-line-color: #63b3ed;
-        --chart-text-color: #e2e8f0;
+        --primary-color: #4299e1 !important;
+        --secondary-color: #68d391 !important;
+        --background-color: #1a202c !important;
+        --text-color: #e2e8f0 !important;
+        --border-color: #4a5568 !important;
+        --hover-color: #63b3ed !important;
+        --box-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
+        --hover-shadow: 0 4px 8px rgba(0,0,0,0.4) !important;
+        --card-bg-color: #2d3748 !important;
+        --grid-line-color: #4a5568 !important;
+        --tooltip-bg-color: #4a5568 !important;
+        --tooltip-text-color: #e2e8f0 !important;
+        --chart-bg-color: #2d3748 !important;
+        --chart-line-color: #63b3ed !important;
+        --chart-text-color: #e2e8f0 !important;
     }
     
-    /* Dark mode for main content */
-    .main {
-        background-color: var(--background-color);
-        color: var(--text-color);
+    /* Dark mode overrides */
+    body, .main, .stApp {
+        background-color: #1a202c !important;
+        color: #e2e8f0 !important;
     }
     
-    /* Dark mode for sidebar */
     [data-testid="stSidebar"] {
-        background-color: var(--background-color);
-        color: var(--text-color);
+        background-color: #1a202c !important;
+        color: #e2e8f0 !important;
     }
     
-    /* Dark mode for text elements */
     .stMarkdown, .stText, p, h1, h2, h3, h4, h5, h6 {
-        color: var(--text-color) !important;
+        color: #e2e8f0 !important;
     }
     
-    /* Chart elements */
     .js-plotly-plot .plotly .gridlayer path {
-        stroke: var(--grid-line-color) !important;
+        stroke: #4a5568 !important;
     }
     
     .js-plotly-plot .plotly .xaxis .zerolinelayer path,
     .js-plotly-plot .plotly .yaxis .zerolinelayer path {
-        stroke: var(--border-color) !important;
+        stroke: #4a5568 !important;
     }
     
     .js-plotly-plot .plotly .gtitle, 
@@ -95,12 +94,79 @@ if st.session_state.theme == "dark":
     .js-plotly-plot .plotly .ytitle,
     .js-plotly-plot .plotly .xtick text, 
     .js-plotly-plot .plotly .ytick text {
-        fill: var(--text-color) !important;
+        fill: #e2e8f0 !important;
     }
     
+    .site-header, .site-card, .site-description, .graph-container {
+        background-color: #2d3748 !important;
+        border-color: #4a5568 !important;
+    }
     </style>
     """
-    st.markdown(dark_mode_css, unsafe_allow_html=True)
+else:
+    # Apply light theme explicitly with !important flags
+    custom_css = """
+    <style>
+    /* Force light theme */
+    :root {
+        --primary-color: #2b6cb0 !important;
+        --secondary-color: #48bb78 !important;
+        --background-color: #f7fafc !important;
+        --text-color: #2d3748 !important;
+        --border-color: #e2e8f0 !important;
+        --hover-color: #4299e1 !important;
+        --box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+        --hover-shadow: 0 4px 8px rgba(0,0,0,0.15) !important;
+        --card-bg-color: white !important;
+        --grid-line-color: #e0e0e0 !important;
+        --tooltip-bg-color: white !important;
+        --tooltip-text-color: #333 !important;
+        --chart-bg-color: white !important;
+        --chart-line-color: #2b6cb0 !important;
+        --chart-text-color: #2d3748 !important;
+    }
+    
+    /* Light mode overrides */
+    body, .main, .stApp {
+        background-color: #f7fafc !important;
+        color: #2d3748 !important;
+    }
+    
+    [data-testid="stSidebar"] {
+        background-color: #f7fafc !important;
+        color: #2d3748 !important;
+    }
+    
+    .stMarkdown, .stText, p, h1, h2, h3, h4, h5, h6 {
+        color: #2d3748 !important;
+    }
+    
+    .js-plotly-plot .plotly .gridlayer path {
+        stroke: #e0e0e0 !important;
+    }
+    
+    .js-plotly-plot .plotly .xaxis .zerolinelayer path,
+    .js-plotly-plot .plotly .yaxis .zerolinelayer path {
+        stroke: #e2e8f0 !important;
+    }
+    
+    .js-plotly-plot .plotly .gtitle, 
+    .js-plotly-plot .plotly .xtitle, 
+    .js-plotly-plot .plotly .ytitle,
+    .js-plotly-plot .plotly .xtick text, 
+    .js-plotly-plot .plotly .ytick text {
+        fill: #2d3748 !important;
+    }
+    
+    .site-header, .site-card, .site-description, .graph-container {
+        background-color: white !important;
+        border-color: #e2e8f0 !important;
+    }
+    </style>
+    """
+
+# Apply the theme CSS
+st.markdown(custom_css, unsafe_allow_html=True)
 
 # CSS for mobile-responsive layout
 def load_css():
