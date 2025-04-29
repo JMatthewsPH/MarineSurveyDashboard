@@ -1,0 +1,59 @@
+/* Force text color to black in light mode */
+.light-mode {
+    color: #000000 !important;
+}
+
+.light-mode p, 
+.light-mode h1, 
+.light-mode h2, 
+.light-mode h3,
+.light-mode span,
+.light-mode div,
+.light-mode li,
+.light-mode label,
+.light-mode .stText,
+.light-mode .stMarkdown,
+.light-mode .css-18e3th9 {
+    color: #000000 !important;
+    opacity: 1 !important;
+}
+
+/* Force dropdown menu text to be black on white in light mode */
+.light-mode .stSelectbox div[data-baseweb="select"] div {
+    background-color: white !important;
+    color: black !important;
+}
+
+/* Force chart text to be black in light mode */
+.light-mode .js-plotly-plot .plotly .xtick text,
+.light-mode .js-plotly-plot .plotly .ytick text,
+.light-mode .js-plotly-plot .plotly .gtitle,
+.light-mode .js-plotly-plot .plotly .ztick text {
+    fill: #000000 !important;
+}
+
+/* Make all labels and metric text black in light mode */
+.light-mode .stMetric label,
+.light-mode .stMetric div[data-testid="stMetricValue"] {
+    color: #000000 !important;
+}
+
+/* Ensure card text is black in light mode */
+.light-mode .card-content p,
+.light-mode .card-content h3,
+.light-mode .site-card-title,
+.light-mode .site-card-text {
+    color: #000000 !important;
+}
+
+/* Make site descriptions black */
+.light-mode .site-description {
+    color: #000000 !important;
+    opacity: 1 !important;
+}
+
+/* Make chart titles and subtitles black */
+.light-mode .js-plotly-plot .plotly .gtitle,
+.light-mode .js-plotly-plot .plotly .annotation-text {
+    fill: #000000 !important;
+}
