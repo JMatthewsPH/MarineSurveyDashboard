@@ -220,10 +220,16 @@ else:
         border-color: #e2e8f0 !important;
     }
     
-    /* Ensure selectbox elements have proper styling */
-    .stSelectbox > div > div[data-baseweb="select"] {
+    /* Fix ALL selectbox elements in light mode */
+    div[data-baseweb="select"] {
         background-color: white !important;
+        color: #2d3748 !important;
         border-color: #cbd5e0 !important;
+    }
+    
+    /* Ensure the selectbox text is visible */
+    div[data-baseweb="select"] span {
+        color: #2d3748 !important;
     }
     
     /* Fix dropdown options to be clearly visible */
@@ -232,6 +238,16 @@ else:
     }
     
     div[role="option"] {
+        color: #2d3748 !important;
+    }
+    
+    /* Fix the top bar menu */
+    .stApp header[data-testid="stHeader"] {
+        background-color: #f7fafc !important;
+    }
+    
+    /* Fix all inputs to have proper text color */
+    input, textarea, .stTextInput input, .stNumberInput input, .stDateInput input {
         color: #2d3748 !important;
     }
     </style>
