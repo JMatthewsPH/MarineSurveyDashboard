@@ -159,8 +159,25 @@ class GraphGenerator:
         # Apply date range filtering if specified
         if date_range and len(date_range) == 2:
             start_date, end_date = date_range
-            filtered_data = filtered_data[(filtered_data['date'] >= start_date) & 
-                                         (filtered_data['date'] <= end_date)]
+            
+            # Convert dates to pandas Timestamp for proper comparison
+            try:
+                if isinstance(start_date, (datetime, date)) and not isinstance(start_date, pd.Timestamp):
+                    start_date = pd.Timestamp(start_date)
+                    
+                if isinstance(end_date, (datetime, date)) and not isinstance(end_date, pd.Timestamp):
+                    end_date = pd.Timestamp(end_date)
+                    
+                filtered_data = filtered_data[(filtered_data['date'] >= start_date) & 
+                                             (filtered_data['date'] <= end_date)]
+            except Exception as e:
+                print(f"DEBUG - Error filtering date range: {e}")
+                
+                # Fallback approach: convert DataFrame dates to Python dates
+                filtered_data = filtered_data[
+                    (filtered_data['date'].dt.date >= start_date.date() if hasattr(start_date, 'date') else start_date) & 
+                    (filtered_data['date'].dt.date <= end_date.date() if hasattr(end_date, 'date') else end_date)
+                ]
         
         # Sort by date for proper trend lines
         filtered_data = filtered_data.sort_values('date')
@@ -210,8 +227,25 @@ class GraphGenerator:
             
             if date_range and len(date_range) == 2:
                 start_date, end_date = date_range
-                filtered_secondary = filtered_secondary[(filtered_secondary['date'] >= start_date) & 
-                                                      (filtered_secondary['date'] <= end_date)]
+                
+                # Convert dates to pandas Timestamp for proper comparison
+                try:
+                    if isinstance(start_date, (datetime, date)) and not isinstance(start_date, pd.Timestamp):
+                        start_date = pd.Timestamp(start_date)
+                        
+                    if isinstance(end_date, (datetime, date)) and not isinstance(end_date, pd.Timestamp):
+                        end_date = pd.Timestamp(end_date)
+                        
+                    filtered_secondary = filtered_secondary[(filtered_secondary['date'] >= start_date) & 
+                                                          (filtered_secondary['date'] <= end_date)]
+                except Exception as e:
+                    print(f"DEBUG - Error filtering secondary date range: {e}")
+                    
+                    # Fallback approach: convert DataFrame dates to Python dates
+                    filtered_secondary = filtered_secondary[
+                        (filtered_secondary['date'].dt.date >= start_date.date() if hasattr(start_date, 'date') else start_date) & 
+                        (filtered_secondary['date'].dt.date <= end_date.date() if hasattr(end_date, 'date') else end_date)
+                    ]
             
             filtered_secondary = filtered_secondary.sort_values('date')
             
@@ -261,8 +295,25 @@ class GraphGenerator:
             
             if date_range and len(date_range) == 2:
                 start_date, end_date = date_range
-                filtered_tertiary = filtered_tertiary[(filtered_tertiary['date'] >= start_date) & 
-                                                    (filtered_tertiary['date'] <= end_date)]
+                
+                # Convert dates to pandas Timestamp for proper comparison
+                try:
+                    if isinstance(start_date, (datetime, date)) and not isinstance(start_date, pd.Timestamp):
+                        start_date = pd.Timestamp(start_date)
+                        
+                    if isinstance(end_date, (datetime, date)) and not isinstance(end_date, pd.Timestamp):
+                        end_date = pd.Timestamp(end_date)
+                        
+                    filtered_tertiary = filtered_tertiary[(filtered_tertiary['date'] >= start_date) & 
+                                                        (filtered_tertiary['date'] <= end_date)]
+                except Exception as e:
+                    print(f"DEBUG - Error filtering tertiary date range: {e}")
+                    
+                    # Fallback approach: convert DataFrame dates to Python dates
+                    filtered_tertiary = filtered_tertiary[
+                        (filtered_tertiary['date'].dt.date >= start_date.date() if hasattr(start_date, 'date') else start_date) & 
+                        (filtered_tertiary['date'].dt.date <= end_date.date() if hasattr(end_date, 'date') else end_date)
+                    ]
             
             filtered_tertiary = filtered_tertiary.sort_values('date')
             
@@ -321,8 +372,25 @@ class GraphGenerator:
                     
                     if date_range and len(date_range) == 2:
                         start_date, end_date = date_range
-                        filtered_comp = filtered_comp[(filtered_comp['date'] >= start_date) & 
-                                                    (filtered_comp['date'] <= end_date)]
+                        
+                        # Convert dates to pandas Timestamp for proper comparison
+                        try:
+                            if isinstance(start_date, (datetime, date)) and not isinstance(start_date, pd.Timestamp):
+                                start_date = pd.Timestamp(start_date)
+                                
+                            if isinstance(end_date, (datetime, date)) and not isinstance(end_date, pd.Timestamp):
+                                end_date = pd.Timestamp(end_date)
+                                
+                            filtered_comp = filtered_comp[(filtered_comp['date'] >= start_date) & 
+                                                        (filtered_comp['date'] <= end_date)]
+                        except Exception as e:
+                            print(f"DEBUG - Error filtering comparison date range: {e}")
+                            
+                            # Fallback approach: convert DataFrame dates to Python dates
+                            filtered_comp = filtered_comp[
+                                (filtered_comp['date'].dt.date >= start_date.date() if hasattr(start_date, 'date') else start_date) & 
+                                (filtered_comp['date'].dt.date <= end_date.date() if hasattr(end_date, 'date') else end_date)
+                            ]
                     
                     filtered_comp = filtered_comp.sort_values('date')
                     
