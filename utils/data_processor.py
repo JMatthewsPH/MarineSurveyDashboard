@@ -3,17 +3,36 @@ from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from .database import Site, Survey, get_db_session
+from .query_builder import QueryBuilder
 import streamlit as st
 from contextlib import contextmanager
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, 
+                   format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 class DataProcessor:
+    """
+    Processes marine conservation data from the database
+    
+    This class handles data retrieval, transformation, and caching for the 
+    Marine Conservation Dashboard. It serves as an intermediary between the
+    database and the visualization layer.
+    """
+    
     def __init__(self, db: Session):
+        """Initialize with a database session"""
         self._db = db
+        self.query_builder = QueryBuilder()
+        logger.info("DataProcessor initialized")
 
     @property
     def db(self) -> Session:
         """Ensures db session is active"""
         if not self._db.is_active:
+            logger.info("Refreshing inactive database session")
             with get_db_session() as new_db:
                 self._db = new_db
         return self._db
@@ -21,14 +40,32 @@ class DataProcessor:
     @st.cache_data(ttl=3600, show_spinner=False)
     def get_sites(_self):  # Added underscore to ignore self in caching
         """Get all sites with their municipalities"""
-        with get_db_session() as db:
-            return db.query(Site).all()
+        try:
+            with get_db_session() as db:
+                logger.info("Fetching all sites from database")
+                # Use the query builder to get sites
+                return QueryBuilder.all_sites(db)
+        except Exception as e:
+            logger.error(f"Error fetching sites: {str(e)}")
+            # Return empty list on error to prevent app crashes
+            return []
 
     @st.cache_data(ttl=3600, show_spinner=False)
     def get_metric_data(_self, site_name: str, metric: str, start_date='2017-01-01'):
-        """Process data for any metric"""
-        print(f"Fetching {metric} data for site: {site_name}")
+        """
+        Process data for any metric
+        
+        Args:
+            site_name: Name of the site to fetch data for
+            metric: Metric type ('hard_coral', 'fleshy_algae', etc.)
+            start_date: Start date for filtering data (YYYY-MM-DD format)
+            
+        Returns:
+            DataFrame with date and metric columns
+        """
+        logger.info(f"Fetching {metric} data for site: {site_name}")
 
+        # Define metric mapping for column names
         metric_map = {
             'hard_coral': 'hard_coral_cover',
             'fleshy_algae': 'fleshy_macro_algae_cover',
@@ -40,28 +77,31 @@ class DataProcessor:
             'rubble': 'rubble'
         }
 
+        # Validate metric
         column_name = metric_map.get(metric)
         if not column_name:
-            print(f"Invalid metric: {metric}")
+            logger.error(f"Invalid metric requested: {metric}")
             return pd.DataFrame(columns=['date', metric])
 
         try:
             with get_db_session() as db:
-                site = db.query(Site).filter(Site.name == site_name).first()
+                # Get site using query builder
+                site = QueryBuilder.site_by_name(db, site_name)
                 if not site:
-                    print(f"Site not found: {site_name}")
+                    logger.warning(f"Site not found: {site_name}")
                     return pd.DataFrame(columns=['date', metric])
 
-                surveys = (db.query(Survey.date, getattr(Survey, column_name))
-                          .filter(Survey.site_id == site.id)
-                          .filter(Survey.date >= start_date)
-                          .order_by(Survey.date)
-                          .all())
+                # Get metric data from database
+                surveys = QueryBuilder.metric_data(db, site.id, column_name, start_date)
 
-                print(f"Found {len(surveys)} {metric} surveys for {site_name}")
+                # Log results
+                logger.info(f"Found {len(surveys)} {metric} surveys for {site_name}")
+                
+                # Process results
                 return pd.DataFrame(surveys, columns=['date', metric])
         except Exception as e:
-            print(f"Error fetching metric data: {str(e)}")
+            logger.error(f"Error fetching metric data: {str(e)}")
+            # Return empty DataFrame to prevent application crashes
             return pd.DataFrame(columns=['date', metric])
 
     @st.cache_data(ttl=3600, show_spinner=False)
@@ -188,47 +228,43 @@ class DataProcessor:
     @st.cache_data(ttl=3600, show_spinner=False)
     def get_biomass_data(_self, site_name, start_date='2017-01-01'):
         """Process commercial fish biomass data"""
-        print(f"Fetching biomass data for site: {site_name}")
+        logger.info(f"Fetching biomass data for site: {site_name}")
         try:
             with get_db_session() as db:
-                site = db.query(Site).filter(Site.name == site_name).first()
+                # Get site using QueryBuilder
+                site = QueryBuilder.site_by_name(db, site_name)
                 if not site:
-                    print(f"Site not found: {site_name}")
+                    logger.warning(f"Site not found: {site_name}")
                     return pd.DataFrame(columns=['date', 'Commercial Biomass'])
 
-                surveys = (db.query(Survey.date, Survey.commercial_biomass)
-                          .filter(Survey.site_id == site.id)
-                          .filter(Survey.date >= start_date)
-                          .order_by(Survey.date)
-                          .all())
+                # Use specialized biomass query
+                surveys = QueryBuilder.biomass_data(db, site.id, start_date)
 
-                print(f"Found {len(surveys)} biomass surveys for {site_name}")
+                logger.info(f"Found {len(surveys)} biomass surveys for {site_name}")
                 return pd.DataFrame(surveys, columns=['date', 'Commercial Biomass'])
         except Exception as e:
-            print(f"Error fetching biomass data: {str(e)}")
+            logger.error(f"Error fetching biomass data: {str(e)}")
             return pd.DataFrame(columns=['date', 'Commercial Biomass'])
 
     @st.cache_data(ttl=3600, show_spinner=False)
     def get_coral_cover_data(_self, site_name, start_date='2017-01-01'):
         """Process hard coral cover data"""
-        print(f"Fetching coral cover data for site: {site_name}")
+        logger.info(f"Fetching coral cover data for site: {site_name}")
         try:
             with get_db_session() as db:
-                site = db.query(Site).filter(Site.name == site_name).first()
+                # Get site using QueryBuilder
+                site = QueryBuilder.site_by_name(db, site_name)
                 if not site:
-                    print(f"Site not found: {site_name}")
+                    logger.warning(f"Site not found: {site_name}")
                     return pd.DataFrame(columns=['date', 'Hard Coral Cover'])
 
-                surveys = (db.query(Survey.date, Survey.hard_coral_cover)
-                          .filter(Survey.site_id == site.id)
-                          .filter(Survey.date >= start_date)
-                          .order_by(Survey.date)
-                          .all())
+                # Use specialized coral cover query
+                surveys = QueryBuilder.coral_cover_data(db, site.id, start_date)
 
-                print(f"Found {len(surveys)} coral cover surveys for {site_name}")
+                logger.info(f"Found {len(surveys)} coral cover surveys for {site_name}")
                 return pd.DataFrame(surveys, columns=['date', 'Hard Coral Cover'])
         except Exception as e:
-            print(f"Error fetching coral cover data: {str(e)}")
+            logger.error(f"Error fetching coral cover data: {str(e)}")
             return pd.DataFrame(columns=['date', 'Hard Coral Cover'])
 
     def get_fish_length_data(self, site_name, species, start_date='2017-01-01'):

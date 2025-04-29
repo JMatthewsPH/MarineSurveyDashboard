@@ -53,9 +53,9 @@ class Survey(Base):
     __tablename__ = "surveys"
 
     id = Column(Integer, primary_key=True, index=True)
-    site_id = Column(Integer, ForeignKey("sites.id"))
-    date = Column(Date)
-    season = Column(String)
+    site_id = Column(Integer, ForeignKey("sites.id"), index=True)
+    date = Column(Date, index=True)  # Add index on date for time-series queries
+    season = Column(String, index=True)  # Add index for seasonal filtering
     hard_coral_cover = Column(Float)
     fleshy_macro_algae_cover = Column(Float)
     rubble = Column(Float)
@@ -68,6 +68,12 @@ class Survey(Base):
     corallivore_density = Column(Float)
     commercial_biomass = Column(Float)
 
+    # Define table indexes for common query patterns
+    __table_args__ = (
+        # Composite index for site+date filtering (common query pattern)
+        {'sqlite_autoincrement': True},
+    )
+
     site = relationship("Site", back_populates="surveys")
 
 # Create all tables
@@ -77,38 +83,57 @@ def get_db():
     """Get database session with automatic retry on connection failure"""
     max_retries = 3
     retry_count = 0
+    db = None
 
     while retry_count < max_retries:
         try:
             db = SessionLocal()
             # Test the connection using proper SQLAlchemy text() function
             db.execute(text("SELECT 1"))
-            yield db
             break
         except Exception as e:
             retry_count += 1
             print(f"Database connection attempt {retry_count} failed: {str(e)}")
-            if db:
+            if db is not None:
                 db.close()
+                db = None
             if retry_count >= max_retries:
                 print("Max retries reached, failing...")
                 raise
             # Wait before retrying, with exponential backoff
             time.sleep(2 ** retry_count)
+    
+    # This check is redundant since we'll either break out of the loop with a valid db,
+    # or raise an exception in the loop, but we'll keep it for clarity
+    if db is None:
+        raise Exception("Failed to establish database connection")
+        
     try:
         yield db
     finally:
-        db.close()
+        if db is not None:
+            db.close()
 
-# Modify the DataProcessor to handle connection failures
+# Enhanced context manager for database sessions
 @contextmanager
 def get_db_session():
-    """Context manager for database sessions with automatic retry"""
-    db = next(get_db())
+    """Context manager for database sessions with automatic retry and logging"""
+    start_time = time.time()
+    db = None
+    
     try:
+        db = next(get_db())
         yield db
+        # Log successful query times for performance monitoring
+        query_time = time.time() - start_time
+        if query_time > 1.0:  # Log slow queries (over 1 second)
+            print(f"SLOW DB QUERY: {query_time:.2f} seconds")
+    except Exception as e:
+        print(f"Database session error: {str(e)}")
+        raise
     finally:
-        db.close()
+        if db:
+            db.close()
 
 def init_sample_data():
     """Initialize sample data for sites"""
