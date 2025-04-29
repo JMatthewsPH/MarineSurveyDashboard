@@ -2,12 +2,21 @@ TRANSLATIONS = {
     'en': {
         'title': 'Marine Conservation Dashboard',
         'site_description': 'Site Description',
-        'lang_toggle': 'Switch to Filipino',
+        'lang_toggle': 'Language',
+        'about': 'About',
+        'settings': 'Settings',
+        'dashboard': 'Marine Monitoring Dashboard',
+        'back_to_main': 'Back to Main',
+        'select_site': 'Select Site',
+        'municipality': 'Municipality:',
+        'view_details': 'View Details',
+        'choose_site': 'Choose a site to view',
         'fish_biomass': 'Commercial Fish Biomass',
         'coral_cover': 'Hard Coral Cover',
         'fish_length': 'Fish Average Length',
         'compare_none': 'No Comparison',
         'compare_site': 'Compare with Site',
+        'compare_sites': 'Compare with Sites',
         'compare_avg': 'Compare with Average',
         'select_species': 'Select Fish Species',
         'additional_metrics': 'Additional Metrics',
@@ -21,17 +30,39 @@ TRANSLATIONS = {
         'carnivore': 'Carnivore Density',
         'omnivore': 'Omnivore Density',
         'corallivore': 'Corallivore Density',
-        'rubble': 'Rubble Cover'
+        'rubble': 'Rubble Cover',
+        'analysis_options': 'Analysis Options',
+        'date_range': 'Date Range',
+        'start_date': 'Start Date',
+        'end_date': 'End Date',
+        'date_range_error': 'Start date must be before end date',
+        'metric_comparisons': 'Metric Comparisons',
+        'site_metrics': 'Site Metrics',
+        'site_desc_placeholder': 'Site description coming soon...',
+        'about_text': '''
+        The Marine Conservation Dashboard provides a comprehensive visualization platform for monitoring marine protected areas (MPAs) across different municipalities. It displays critical ecological data including coral cover, fish biomass, and various marine species density measurements.
+
+        Users can compare data between sites or against municipal averages, track changes over time, and analyze the impact of conservation efforts. The interactive graphs include markers for significant events like the COVID-19 period, helping researchers and conservationists understand long-term ecological trends.
+        '''
     },
-    'fil': {
+    'tl': {  # Tagalog (Filipino)
         'title': 'Dashboard ng Konserbasyon ng Dagat',
         'site_description': 'Deskripsyon ng Lugar',
-        'lang_toggle': 'Switch to English',
+        'lang_toggle': 'Wika',
+        'about': 'Tungkol',
+        'settings': 'Mga Setting',
+        'dashboard': 'Dashboard ng Pagsubaybay sa Karagatan',
+        'back_to_main': 'Balik sa Main',
+        'select_site': 'Pumili ng Lugar',
+        'municipality': 'Munisipyo:',
+        'view_details': 'Tingnan ang Detalye',
+        'choose_site': 'Pumili ng lugar na titingnan',
         'fish_biomass': 'Biomass ng Pangkomersyong Isda',
         'coral_cover': 'Takip ng Hard Coral',
         'fish_length': 'Average na Haba ng Isda',
         'compare_none': 'Walang Paghahambing',
         'compare_site': 'Ihambing sa Site',
+        'compare_sites': 'Ihambing sa Ibang Sites',
         'compare_avg': 'Ihambing sa Average',
         'select_species': 'Pumili ng Uri ng Isda',
         'additional_metrics': 'Karagdagang Sukat',
@@ -45,6 +76,65 @@ TRANSLATIONS = {
         'carnivore': 'Dami ng Carnivore',
         'omnivore': 'Dami ng Omnivore',
         'corallivore': 'Dami ng Corallivore',
-        'rubble': 'Takip ng Rubble'
+        'rubble': 'Takip ng Rubble',
+        'analysis_options': 'Mga Opsyon sa Pagsusuri',
+        'date_range': 'Saklaw ng Petsa',
+        'start_date': 'Petsa ng Simula',
+        'end_date': 'Petsa ng Pagtatapos',
+        'date_range_error': 'Ang petsa ng simula ay dapat na mas mauna sa petsa ng pagtatapos',
+        'metric_comparisons': 'Mga Paghahambing ng Sukatan',
+        'site_metrics': 'Mga Sukatan ng Lugar',
+        'site_desc_placeholder': 'Paglalarawan ng lugar ay darating sa lalong madaling panahon...',
+        'about_text': '''
+        Ang Dashboard ng Pangangalaga sa Karagatan ay nagbibigay ng komprehensibong plataporma para sa pagsubaybay sa mga Protected Marine Areas (MPAs) sa iba't ibang munisipyo. Ipinapakita nito ang mahahalagang datos tungkol sa ecological system tulad ng saklaw ng coral, dami ng isda, at iba't ibang sukat ng densidad ng mga species sa dagat.
+
+        Maaaring ihambing ang datos sa pagitan ng mga lugar o sa average ng munisipyo, subaybayan ang mga pagbabago sa paglipas ng panahon, at suriin ang epekto ng mga pagsisikap sa pangangalaga. Ang mga interactive na graph ay may marka para sa mahahalagang pangyayari tulad ng panahon ng COVID-19, na tumutulong sa mga mananaliksik at conservationist na maintindihan ang pangmatagalang ecological trends.
+        '''
+    },
+    'ceb': {  # Cebuano
+        'title': 'Dashboard sa Konserbasyon sa Kadagatan',
+        'site_description': 'Deskripsyon sa Lugar',
+        'lang_toggle': 'Pinulongan',
+        'about': 'Bahin',
+        'settings': 'Mga Setting',
+        'dashboard': 'Dashboard sa Pagmonitor sa Kadagatan',
+        'back_to_main': 'Balik sa Main',
+        'select_site': 'Pagpili og Lugar',
+        'municipality': 'Munisipyo:',
+        'view_details': 'Tan-awa ang Detalye',
+        'choose_site': 'Pagpili og lugar nga tan-awon',
+        'fish_biomass': 'Biomass sa Komersyal nga Isda',
+        'coral_cover': 'Tabon sa Hard Coral',
+        'fish_length': 'Average nga Gitas-on sa Isda',
+        'compare_none': 'Walay Pagtandi',
+        'compare_site': 'Itandi sa Site',
+        'compare_sites': 'Itandi sa Ubang Sites',
+        'compare_avg': 'Itandi sa Average',
+        'select_species': 'Pagpili og Klase sa Isda',
+        'additional_metrics': 'Dugang nga Sukod',
+        'metric_comparison': 'Pagtandi sa Sukod',
+        'primary_metric': 'Pangunahang Sukod',
+        'secondary_metric': 'Ikaduhang Sukod (Opsyonal)',
+        'tertiary_metric': 'Ikatulong Sukod (Opsyonal)',
+        'fleshy_algae': 'Tabon sa Fleshy Macro Algae',
+        'bleaching': 'Pagkaputi',
+        'herbivore': 'Kadaghan sa Herbivore',
+        'carnivore': 'Kadaghan sa Carnivore',
+        'omnivore': 'Kadaghan sa Omnivore',
+        'corallivore': 'Kadaghan sa Corallivore',
+        'rubble': 'Tabon sa Rubble',
+        'analysis_options': 'Mga Opsyon sa Pagtuki',
+        'date_range': 'Sakop sa Petsa',
+        'start_date': 'Petsa sa Pagsugod',
+        'end_date': 'Petsa sa Pagtapos',
+        'date_range_error': 'Ang petsa sa pagsugod kinahanglan una sa petsa sa pagtapos',
+        'metric_comparisons': 'Mga Pagtandi sa Sukod',
+        'site_metrics': 'Mga Sukod sa Lugar',
+        'site_desc_placeholder': 'Deskripsyon sa lugar moabot sa dili madugay...',
+        'about_text': '''
+        Ang Dashboard sa Konserbasyon sa Kadagatan naghatag og komprehensibong plataporma alang sa pagmonitor sa Marine Protected Areas (MPAs) sa lain-laing munisipyo. Nagpakita kini sa importanteng datos kabahin sa ecosystem sama sa tabon sa coral, kadaghan sa isda, ug lain-laing sukod sa density sa mga species sa dagat.
+
+        Mahimong itandi ang datos tali sa mga lugar o sa average sa munisipyo, subay sa mga kausaban sa paglabay sa panahon, ug susihon ang epekto sa mga paningkamot sa konserbasyon. Ang mga interactive nga graph adunay marka para sa importanteng panghitabo sama sa panahon sa COVID-19, nga nakatabang sa mga tigdukiduki ug conservationist nga masabtan ang ecological trends sa dugay nga panahon.
+        '''
     }
 }

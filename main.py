@@ -48,40 +48,45 @@ st.markdown(f'<div style="display:none">{hide_main_js}</div>', unsafe_allow_html
 
 # Initialize language in session state if not present
 if 'language' not in st.session_state:
-    st.session_state.language = "English"
+    st.session_state.language = "en"  # Default to English
+
+# Language code mapping
+LANGUAGE_DISPLAY = {
+    "en": "English",
+    "tl": "Tagalog",
+    "ceb": "Cebuano"
+}
 
 # Sidebar for language selection
 with st.sidebar:
-    st.title("Settings")
+    st.title(TRANSLATIONS[st.session_state.language]['settings'])
+    
     # Update session state when language changes
-    st.session_state.language = st.selectbox(
-        "Language / Wika",
-        ["English", "Filipino"],
+    selected_language = st.selectbox(
+        TRANSLATIONS[st.session_state.language]['lang_toggle'],
+        list(LANGUAGE_DISPLAY.values()),
         key="language_selector",
-        index=0 if st.session_state.language == "English" else 1
+        index=list(LANGUAGE_DISPLAY.values()).index(LANGUAGE_DISPLAY.get(st.session_state.language, "English"))
     )
+    
+    # Convert display language back to language code
+    for code, name in LANGUAGE_DISPLAY.items():
+        if name == selected_language:
+            st.session_state.language = code
+            break
 
     # Add site description based on selected language
     st.markdown("---")  # Add a visual separator
-    st.title("About")
-    if st.session_state.language == "English":
-        st.markdown("""
-        The Marine Conservation Dashboard provides a comprehensive visualization platform for monitoring marine protected areas (MPAs) across different municipalities. It displays critical ecological data including coral cover, fish biomass, and various marine species density measurements.
-
-        Users can compare data between sites or against municipal averages, track changes over time, and analyze the impact of conservation efforts. The interactive graphs include markers for significant events like the COVID-19 period, helping researchers and conservationists understand long-term ecological trends.
-        """)
-    else:
-        st.markdown("""
-        Ang Dashboard ng Pangangalaga sa Karagatan ay nagbibigay ng komprehensibong plataporma para sa pagsubaybay sa mga Protected Marine Areas (MPAs) sa iba't ibang munisipyo. Ipinapakita nito ang mahahalagang datos tungkol sa ecological system tulad ng saklaw ng coral, dami ng isda, at iba't ibang sukat ng densidad ng mga species sa dagat.
-
-        Maaaring ihambing ang datos sa pagitan ng mga lugar o sa average ng munisipyo, subaybayan ang mga pagbabago sa paglipas ng panahon, at suriin ang epekto ng mga pagsisikap sa pangangalaga. Ang mga interactive na graph ay may marka para sa mahahalagang pangyayari tulad ng panahon ng COVID-19, na tumutulong sa mga mananaliksik at conservationist na maintindihan ang pangmatagalang ecological trends.
-        """)
+    st.title(TRANSLATIONS[st.session_state.language]['about'])
+    
+    # Display about text from translations
+    st.markdown(TRANSLATIONS[st.session_state.language]['about_text'])
 
 # Use session state language for content
-language = st.session_state.language
+language_code = st.session_state.language
 
 # Header
-subheader_text = "Marine Monitoring Dashboard" if language == "English" else "Dashboard ng Pagsubaybay sa Karagatan"
+subheader_text = TRANSLATIONS[language_code]['dashboard']
 
 # Add some padding at the top
 st.markdown("<div style='padding-top: 20px;'></div>", unsafe_allow_html=True)
@@ -128,13 +133,23 @@ santa_catalina_sites = sorted(
 
 # Function to create site card with translations
 def create_site_card(site):
-    description = site.description_fil if language == "Filipino" else site.description_en
-    description = description or ("Paglalarawan ng lugar ay darating sa lalong madaling panahon..." 
-                                 if language == "Filipino" else "Site description coming soon...")
+    # Get description based on language
+    if language_code == 'en':
+        description = site.description_en
+    elif language_code == 'tl':
+        description = site.description_fil  # Using Filipino description for Tagalog
+    else:  # Cebuano - fallback to English for now
+        description = site.description_en
+        
+    # Default description if not available
+    description = description or TRANSLATIONS[language_code]['site_desc_placeholder']
+    
     # Truncate description to 200 characters and add ellipsis
     truncated_description = description[:200] + "..." if len(description) > 200 else description
-    municipality_label = "Munisipyo:" if language == "Filipino" else "Municipality:"
-    view_details_text = "Tingnan ang Detalye" if language == "Filipino" else "View Details"
+    
+    # Get translations for labels
+    municipality_label = TRANSLATIONS[language_code]['municipality']
+    view_details_text = TRANSLATIONS[language_code]['view_details']
 
     st.markdown(f"""
         <div class="site-card">
@@ -148,37 +163,41 @@ def create_site_card(site):
     """, unsafe_allow_html=True)
 
 # Display sites by municipality with translations
-municipality_headers = {
-    "Zamboanguita": {
-        "English": "Zamboanguita Sites",
-        "Filipino": "Mga Lugar sa Zamboanguita"
+# Add municipality headers to translations
+municipality_names = {
+    "en": {
+        "Zamboanguita": "Zamboanguita Sites",
+        "Siaton": "Siaton Sites",
+        "Santa Catalina": "Santa Catalina Sites"
     },
-    "Siaton": {
-        "English": "Siaton Sites",
-        "Filipino": "Mga Lugar sa Siaton"
+    "tl": {
+        "Zamboanguita": "Mga Lugar sa Zamboanguita",
+        "Siaton": "Mga Lugar sa Siaton",
+        "Santa Catalina": "Mga Lugar sa Santa Catalina"
     },
-    "Santa Catalina": {
-        "English": "Santa Catalina Sites",
-        "Filipino": "Mga Lugar sa Santa Catalina"
+    "ceb": {
+        "Zamboanguita": "Mga Lugar sa Zamboanguita",
+        "Siaton": "Mga Lugar sa Siaton",
+        "Santa Catalina": "Mga Lugar sa Santa Catalina"
     }
 }
 
 if zamboanguita_sites:
-    st.header(municipality_headers["Zamboanguita"][language])
+    st.header(municipality_names[language_code]["Zamboanguita"])
     cols = st.columns(3)
     for idx, site in enumerate(zamboanguita_sites):
         with cols[idx % 3]:
             create_site_card(site)
 
 if siaton_sites:
-    st.header(municipality_headers["Siaton"][language])
+    st.header(municipality_names[language_code]["Siaton"])
     cols = st.columns(3)
     for idx, site in enumerate(siaton_sites):
         with cols[idx % 3]:
             create_site_card(site)
 
 if santa_catalina_sites:
-    st.header(municipality_headers["Santa Catalina"][language])
+    st.header(municipality_names[language_code]["Santa Catalina"])
     cols = st.columns(3)
     for idx, site in enumerate(santa_catalina_sites):
         with cols[idx % 3]:

@@ -19,7 +19,14 @@ from utils.branding import display_logo, add_favicon
 
 # Initialize language in session state if not present
 if 'language' not in st.session_state:
-    st.session_state.language = "English"
+    st.session_state.language = "en"  # Default to English
+
+# Language code mapping
+LANGUAGE_DISPLAY = {
+    "en": "English",
+    "tl": "Tagalog",
+    "ceb": "Cebuano"
+}
 
 # Initialize processors
 @st.cache_resource
@@ -82,25 +89,29 @@ add_favicon()
 # Sidebar for site selection and language
 with st.sidebar:
     # Back to main link first - using HTML with target="_self" to prevent opening in new tab
-    if st.session_state.language == "English":
-        st.markdown('<a href="../" target="_self">🏠 Back to Main</a>', unsafe_allow_html=True)
-    else:
-        st.markdown('<a href="../" target="_self">🏠 Balik sa Main</a>', unsafe_allow_html=True)
+    back_text = TRANSLATIONS[st.session_state.language]['back_to_main']
+    st.markdown(f'<a href="../" target="_self">🏠 {back_text}</a>', unsafe_allow_html=True)
 
     st.markdown("---")  # Add separator
 
     # Language selection
-    st.session_state.language = st.selectbox(
-        "Language / Wika",
-        ["English", "Filipino"],
+    selected_language = st.selectbox(
+        TRANSLATIONS[st.session_state.language]['lang_toggle'],
+        list(LANGUAGE_DISPLAY.values()),
         key="language_selector",
-        index=0 if st.session_state.language == "English" else 1
+        index=list(LANGUAGE_DISPLAY.values()).index(LANGUAGE_DISPLAY.get(st.session_state.language, "English"))
     )
+    
+    # Convert display language back to language code
+    for code, name in LANGUAGE_DISPLAY.items():
+        if name == selected_language:
+            st.session_state.language = code
+            break
 
     st.markdown("---")  # Add separator
 
     # Site selection with municipality grouping
-    st.subheader("Select Site")
+    st.subheader(TRANSLATIONS[st.session_state.language]['select_site'])
     site_options = []
     if zamboanguita_sites:
         site_options.append("Zamboanguita")
@@ -113,7 +124,7 @@ with st.sidebar:
         site_options.extend([f"  {site}" for site in santa_catalina_sites])
 
     selected_option = st.selectbox(
-        "Choose a site to view",
+        TRANSLATIONS[st.session_state.language]['choose_site'],
         site_options,
         index=site_options.index(f"  {st.query_params.get('site')}") if st.query_params.get('site') in [s.strip() for s in site_options] else 0
     )
@@ -134,10 +145,10 @@ if selected_site:
         display_logo(size="small")
         
         # Display the site title
-        st.title(f"{selected_site} Dashboard")
+        st.title(f"{selected_site} {TRANSLATIONS[st.session_state.language]['dashboard']}")
 
         # Site Description Section
-        st.header("Site Description")
+        st.header(TRANSLATIONS[st.session_state.language]['site_description'])
 
         # Use different column ratios based on screen size (CSS will handle the actual responsiveness)
         # For larger screens, we use a 1:2 ratio
@@ -150,10 +161,22 @@ if selected_site:
                      output_format="JPEG", caption=selected_site)
 
         with cols[1]:
-            selected_language = st.session_state.language
-            description = selected_site_obj.description_en if selected_language == "English" else selected_site_obj.description_fil
+            language_code = st.session_state.language
+            
+            # Get description based on language
+            if language_code == 'en':
+                description = selected_site_obj.description_en
+            elif language_code == 'tl':
+                description = selected_site_obj.description_fil  # Using Filipino description for Tagalog
+            else:  # Cebuano - fallback to English for now
+                description = selected_site_obj.description_en
+                
+            # Default description if not available
+            if not description:
+                description = f"{TRANSLATIONS[language_code]['site_desc_placeholder']} ({selected_site})"
+                
             st.markdown(f"""<div class="site-description-text">
-                           {description or f"Description for {selected_site}"}
+                           {description}
                          </div>""", unsafe_allow_html=True)
 
 
@@ -162,10 +185,10 @@ if selected_site:
 
         # Sidebar metric comparisons and date range selection
         with st.sidebar:
-            st.title("Analysis Options")
+            st.title(TRANSLATIONS[st.session_state.language]['analysis_options'])
             
             # Date Range Selection
-            st.header("Date Range")
+            st.header(TRANSLATIONS[st.session_state.language]['date_range'])
             
             # Get the min and max dates from all surveys 
             all_surveys = []
@@ -187,12 +210,12 @@ if selected_site:
             # Date range selection
             col1, col2 = st.columns(2)
             with col1:
-                start_date = st.date_input("Start Date", 
+                start_date = st.date_input(TRANSLATIONS[st.session_state.language]['start_date'], 
                                           value=min_date,
                                           min_value=min_date,
                                           max_value=max_date)
             with col2:
-                end_date = st.date_input("End Date", 
+                end_date = st.date_input(TRANSLATIONS[st.session_state.language]['end_date'], 
                                         value=max_date,
                                         min_value=min_date,
                                         max_value=max_date)
@@ -200,11 +223,11 @@ if selected_site:
             # Set date range only if valid selection
             date_range = (pd.to_datetime(start_date), pd.to_datetime(end_date)) if start_date <= end_date else None
             if start_date > end_date:
-                st.error("Start date must be before end date")
+                st.error(TRANSLATIONS[st.session_state.language]['date_range_error'])
                 
             st.markdown("---")
             
-            st.title("Metric Comparisons")
+            st.title(TRANSLATIONS[st.session_state.language]['metric_comparisons'])
 
             # Biomass comparison options
             st.subheader("Commercial Fish Biomass")
@@ -412,7 +435,7 @@ if selected_site:
 
         # Display metrics section with comparisons
         if selected_site_obj:
-            st.header("Site Metrics")
+            st.header(TRANSLATIONS[st.session_state.language]['site_metrics'])
 
             # Configure Plotly chart settings with mobile optimizations
             plotly_config = {
