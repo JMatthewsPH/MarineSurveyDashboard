@@ -117,11 +117,17 @@ class GraphGenerator:
         data['season'] = data['date'].apply(format_season)
 
         # Split data into pre and post COVID
-        covid_start = date(2019, 9, 1)
-        covid_end = date(2022, 3, 1)
-
-        pre_covid = data[data['date'] < covid_start]
-        post_covid = data[data['date'] > covid_end]
+        covid_start = pd.Timestamp(date(2019, 9, 1))
+        covid_end = pd.Timestamp(date(2022, 3, 1))
+        
+        # Ensure data['date'] is in datetime64 format
+        if not data.empty:
+            data['date'] = pd.to_datetime(data['date'])
+            pre_covid = data[data['date'] < covid_start]
+            post_covid = data[data['date'] > covid_end]
+        else:
+            pre_covid = data
+            post_covid = data
 
         # Get the metric name from the title
         metric_name = title.split(' - ')[0].strip()
@@ -218,11 +224,21 @@ class GraphGenerator:
                 
                 # Sort and format data
                 comp_df = comp_df.sort_values('date')
-                comp_df['season'] = comp_df['date'].apply(format_season)
                 
-                # Split into pre/post COVID periods
-                pre_covid_comp = comp_df[comp_df['date'] < covid_start]
-                post_covid_comp = comp_df[comp_df['date'] > covid_end]
+                # Ensure comp_df['date'] is in datetime64 format
+                if not comp_df.empty:
+                    comp_df['date'] = pd.to_datetime(comp_df['date'])
+                    comp_df['season'] = comp_df['date'].apply(format_season)
+                    
+                    # Split into pre/post COVID periods
+                    pre_covid_comp = comp_df[comp_df['date'] < covid_start]
+                    post_covid_comp = comp_df[comp_df['date'] > covid_end]
+                else:
+                    # For empty dataframes, ensure we have a season column
+                    if 'season' not in comp_df.columns:
+                        comp_df['season'] = pd.Series(dtype='object')
+                    pre_covid_comp = comp_df
+                    post_covid_comp = comp_df
                 
                 # Pick a color (cycle through the available colors)
                 color = comparison_colors[i % len(comparison_colors)]
