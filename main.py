@@ -16,12 +16,7 @@ st.set_page_config(
 # Load custom CSS
 @st.cache_data
 def load_css():
-    css_files = [
-        'assets/site_styles.css', 
-        'assets/light_mode_fixes.css', 
-        'assets/force_black_text.css',
-        '.streamlit/streamlit_clean.css'
-    ]
+    css_files = ['assets/site_styles.css']
     css_content = ""
     for css_file in css_files:
         try:
@@ -74,351 +69,37 @@ LANGUAGE_DISPLAY = {
     "ceb": "Cebuano"
 }
 
-# Initialize theme in session state if not present
-if 'theme' not in st.session_state:
-    # Default to light mode at first
-    st.session_state.theme = "light"
+# Adding basic CSS for consistent style
+custom_css = """
+<style>
+/* Basic styling for site components */
+.site-header, .site-card, .site-description {
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
 
-# Define theme toggle callback
-def toggle_theme():
-    # Toggle between light and dark with debug output
-    current_theme = st.session_state.theme
-    st.session_state.theme = "light" if current_theme == "dark" else "dark"
-    st.write(f"Theme changed from {current_theme} to {st.session_state.theme}")
-    # Force rerun to apply theme change immediately
-    st.rerun()
+/* Ensure site description text is readable */
+.site-description-text {
+    font-size: 1rem;
+    line-height: 1.5;
+}
 
-# Use custom CSS to enforce theme
-if st.session_state.theme == "dark":
-    # Apply dark theme
-    custom_css = """
-    <style>
-    /* Force dark theme */
-    :root {
-        --primary-color: #4299e1 !important;
-        --secondary-color: #68d391 !important;
-        --background-color: #1a202c !important;
-        --text-color: #e2e8f0 !important;
-        --border-color: #4a5568 !important;
-        --hover-color: #63b3ed !important;
-        --box-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
-        --hover-shadow: 0 4px 8px rgba(0,0,0,0.4) !important;
-        --card-bg-color: #2d3748 !important;
-        --grid-line-color: #4a5568 !important;
-        --tooltip-bg-color: #4a5568 !important;
-        --tooltip-text-color: #e2e8f0 !important;
-        --chart-bg-color: #2d3748 !important;
-        --chart-line-color: #63b3ed !important;
-        --chart-text-color: #e2e8f0 !important;
-    }
-    
-    /* Dark mode overrides */
-    body, .main, .stApp {
-        background-color: #1a202c !important;
-        color: #e2e8f0 !important;
-    }
-    
-    /* Target sidebar specifically with stronger selectors in dark mode */
-    [data-testid="stSidebar"], 
-    [data-testid="stSidebar"] > div:first-child,
-    div[data-testid="stSidebarUserContent"],
-    .css-6qob1r.e1fqkh3o3,
-    .css-10oheav.e1fqkh3o4,
-    section[data-testid="stSidebar"] {
-        background-color: #1a202c !important;
-        color: #e2e8f0 !important;
-    }
-    
-    /* Target sidebar elements in dark mode */
-    [data-testid="stSidebar"] h1, 
-    [data-testid="stSidebar"] h2, 
-    [data-testid="stSidebar"] h3, 
-    [data-testid="stSidebar"] h4,
-    [data-testid="stSidebar"] p,
-    [data-testid="stSidebar"] span,
-    [data-testid="stSidebar"] label,
-    [data-testid="stSidebar"] div,
-    div[data-testid="stMarkdownContainer"],
-    div[data-baseweb="select"] {
-        color: #e2e8f0 !important;
-    }
-    
-    .stMarkdown, .stText, p, h1, h2, h3, h4, h5, h6 {
-        color: #e2e8f0 !important;
-    }
-    
-    .js-plotly-plot .plotly .gridlayer path {
-        stroke: #4a5568 !important;
-    }
-    
-    .js-plotly-plot .plotly .xaxis .zerolinelayer path,
-    .js-plotly-plot .plotly .yaxis .zerolinelayer path {
-        stroke: #4a5568 !important;
-    }
-    
-    .js-plotly-plot .plotly .gtitle, 
-    .js-plotly-plot .plotly .xtitle, 
-    .js-plotly-plot .plotly .ytitle,
-    .js-plotly-plot .plotly .xtick text, 
-    .js-plotly-plot .plotly .ytick text {
-        fill: #e2e8f0 !important;
-    }
-    
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
     .site-header, .site-card, .site-description {
-        background-color: #2d3748 !important;
-        border-color: #4a5568 !important;
+        padding: 10px;
     }
-    </style>
-    """
-else:
-    # Apply light theme explicitly with !important flags
-    custom_css = """
-    <style>
-    /* Force light theme */
-    :root {
-        --primary-color: #2b6cb0 !important;
-        --secondary-color: #48bb78 !important;
-        --background-color: #f7fafc !important;
-        --text-color: #000000 !important;
-        --border-color: #e2e8f0 !important;
-        --hover-color: #4299e1 !important;
-        --box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
-        --hover-shadow: 0 4px 8px rgba(0,0,0,0.15) !important;
-        --card-bg-color: white !important;
-        --grid-line-color: #a0aec0 !important;  /* Darker grid for better contrast */
-        --tooltip-bg-color: white !important;
-        --tooltip-text-color: #333 !important;
-        --chart-bg-color: white !important;
-        --chart-line-color: #2b6cb0 !important;
-        --chart-text-color: #2d3748 !important;
-    }
-    
-    /* Light mode overrides */
-    body, .main, .stApp {
-        background-color: #f7fafc !important;
-        color: #2d3748 !important;
-    }
-    
-    /* Target sidebar specifically with stronger selectors */
-    [data-testid="stSidebar"], 
-    [data-testid="stSidebar"] > div:first-child,
-    div[data-testid="stSidebarUserContent"],
-    section[data-testid="stSidebar"],
-    .css-6qob1r.e1fqkh3o3,
-    .css-10oheav.e1fqkh3o4 {
-        background-color: #f7fafc !important;
-        color: #2d3748 !important;
-    }
-    
-    /* Target sidebar elements */
-    [data-testid="stSidebar"] h1, 
-    [data-testid="stSidebar"] h2, 
-    [data-testid="stSidebar"] h3, 
-    [data-testid="stSidebar"] h4,
-    [data-testid="stSidebar"] p,
-    [data-testid="stSidebar"] span,
-    [data-testid="stSidebar"] label,
-    [data-testid="stSidebar"] div,
-    div[data-testid="stMarkdownContainer"],
-    div[data-baseweb="select"] {
-        color: #2d3748 !important;
-    }
-    
-    /* Ensure all Streamlit text elements have proper contrast */
-    .stMarkdown, .stText, p, h1, h2, h3, h4, h5, h6 {
-        color: #2d3748 !important;
-    }
-    
-    /* Improve chart elements contrast in light mode */
-    .js-plotly-plot .plotly .gridlayer path {
-        stroke: #a0aec0 !important;
-        stroke-width: 1px !important;
-    }
-    
-    .js-plotly-plot .plotly .xaxis .zerolinelayer path,
-    .js-plotly-plot .plotly .yaxis .zerolinelayer path {
-        stroke: #4a5568 !important;
-        stroke-width: 1.5px !important;
-    }
-    
-    /* Make chart text darker and bolder for better contrast */
-    .js-plotly-plot .plotly .gtitle, 
-    .js-plotly-plot .plotly .xtitle, 
-    .js-plotly-plot .plotly .ytitle {
-        fill: #1a202c !important;
-        font-weight: 600 !important;
-    }
-    
-    .js-plotly-plot .plotly .xtick text, 
-    .js-plotly-plot .plotly .ytick text {
-        fill: #2d3748 !important;
-        font-weight: 500 !important;
-    }
-    
-    /* Improved legend readability in light mode */
-    .js-plotly-plot .plotly .legend text {
-        fill: #2d3748 !important;
-        font-weight: 500 !important;
-    }
-    
-    /* Improve layout containers */
-    .site-header, .site-card, .site-description, .graph-container {
-        background-color: white !important;
-        border-color: #e2e8f0 !important;
-    }
-    
-    /* Fix ALL selectbox elements in light mode */
-    div[data-baseweb="select"] {
-        background-color: white !important;
-        border-color: #cbd5e0 !important;
-    }
-    
-    /* Ensure the selectbox text color is dark */
-    div[data-baseweb="select"] span,
-    div[data-baseweb="select"] div,
-    div[data-baseweb="select"] input {
-        color: #2d3748 !important;
-    }
-    
-    /* Fix dropdown popups and options */
-    div[role="listbox"],
-    ul[role="listbox"],
-    [data-baseweb="popover"],
-    [data-baseweb="select"] [role="listbox"],
-    [data-baseweb="menu"] {
-        background-color: white !important;
-    }
-    
-    /* Fix dropdown individual options */
-    div[role="option"],
-    li[role="option"],
-    [data-baseweb="menu"] div,
-    [data-baseweb="select-dropdown"] div {
-        background-color: white !important;
-        color: #2d3748 !important;
-    }
-    
-    /* Fix hover state for options */
-    div[role="option"]:hover,
-    li[role="option"]:hover {
-        background-color: #f0f5fa !important;
-    }
-    
-    /* Fix selected state for options */
-    div[aria-selected="true"],
-    li[aria-selected="true"] {
-        background-color: #e2e8f0 !important;
-    }
-    
-    /* Fix the top bar menu */
-    .stApp header[data-testid="stHeader"] {
-        background-color: #f7fafc !important;
-    }
-    
-    /* Fix all inputs to have proper text color */
-    input, textarea, .stTextInput input, .stNumberInput input, .stDateInput input {
-        color: #2d3748 !important;
-    }
-    
-    /* Fix chart text color in light mode */
-    .js-plotly-plot .plotly .main-svg .xaxislayer-above text,
-    .js-plotly-plot .plotly .main-svg .yaxislayer-above text,
-    .js-plotly-plot .plotly .main-svg .zaxislayer-above text,
-    .js-plotly-plot .plotly .main-svg .infolayer text,
-    .js-plotly-plot .plotly .main-svg .legendtext,
-    .js-plotly-plot .plotly .main-svg .legendtitle,
-    .js-plotly-plot .plotly .main-svg .annotation-text {
-        fill: #2d3748 !important;
-        color: #2d3748 !important;
-    }
-    
-    /* Fix chart backgrounds in light mode */
-    .js-plotly-plot .plotly .main-svg .bg {
-        fill: white !important;
-    }
-    
-    /* Fix ALL text in light mode to be dark */
-    .stApp[data-theme="light"] h1,
-    .stApp[data-theme="light"] h2,
-    .stApp[data-theme="light"] h3,
-    .stApp[data-theme="light"] h4,
-    .stApp[data-theme="light"] h5,
-    .stApp[data-theme="light"] h6,
-    .stApp[data-theme="light"] p,
-    .stApp[data-theme="light"] li,
-    .stApp[data-theme="light"] span,
-    .stApp[data-theme="light"] div:not([class*="st-"]) {
-        color: #2d3748 !important;
-    }
-    
-    /* Fix sidebar headings */
-    .stApp[data-theme="light"] .sidebar .stMarkdown h1,
-    .stApp[data-theme="light"] .sidebar .stMarkdown h2,
-    .stApp[data-theme="light"] .sidebar .stMarkdown h3,
-    .stApp[data-theme="light"] header p,
-    .stApp[data-theme="light"] header div,
-    .stApp[data-theme="light"] .stMarkdown.stMarkdownContainer p {
-        color: #2d3748 !important;
-    }
-    
-    /* Fix Streamlit component text - most specific selectors */
-    .stApp[data-theme="light"] .css-1aehpvj, /* Main headers */
-    .stApp[data-theme="light"] .css-10trblm, /* Sidebar headers */
-    .stApp[data-theme="light"] .css-16idsys, /* Regular text */
-    .stApp[data-theme="light"] .css-1vbkxwb,
-    .stApp[data-theme="light"] .css-1fttcpj,
-    .stApp[data-theme="light"] .stMarkdown p, 
-    .stApp[data-theme="light"] .stText p,
-    .stApp[data-theme="light"] .stSubheader,
-    .stApp[data-theme="light"] .stHeader,
-    .stApp[data-theme="light"] .stTitle,
-    .stApp[data-theme="light"] label,
-    .stApp[data-theme="light"] .stCheckbox label span p {
-        color: #2d3748 !important;
-    }
-    
-    /* Target ALL Streamlit elements in light mode */
-    [data-theme="light"] [data-testid="stHeader"],
-    [data-theme="light"] [data-testid="stMarkdown"],
-    [data-theme="light"] [data-testid="stText"],
-    [data-theme="light"] [data-testid="stSubheader"],
-    [data-theme="light"] .element-container,
-    [data-theme="light"] .stMarkdown,
-    [data-theme="light"] span,
-    [data-theme="light"] div,
-    [data-theme="light"] p {
-        color: #000000 !important;
-    }
-    
-    /* Ultra specific selectors for chart titles and metrics */
-    [data-theme="light"] h1, 
-    [data-theme="light"] h2, 
-    [data-theme="light"] h3, 
-    [data-theme="light"] h4,
-    [data-theme="light"] .stTitle p,
-    [data-theme="light"] .stHeader p,
-    [data-theme="light"] .stSubheader p,
-    [data-theme="light"] .stMarkdownContainer div p,
-    [data-theme="light"] .site-description-text {
-        color: #000000 !important;
-        opacity: 1 !important;
-    }
-    </style>
-    """
+}
+</style>
+"""
 
-# Apply the theme CSS
+# Apply the basic CSS
 st.markdown(custom_css, unsafe_allow_html=True)
 
 # Sidebar for language selection
 with st.sidebar:
-    # Create a container for the theme toggle at the top of sidebar
-    theme_container = st.container()
-    
-    with theme_container:
-        # Add a theme toggle button using Streamlit's built-in components
-        toggle_label = "Switch to Light Mode" if st.session_state.theme == "dark" else "Switch to Dark Mode"
-        st.button(toggle_label, key="theme_toggle", on_click=toggle_theme)
-    
     st.title(TRANSLATIONS[st.session_state.language]['settings'])
     
     # Update session state when language changes
