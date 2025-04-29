@@ -105,9 +105,9 @@ class GraphGenerator:
             'displayModeBar': 'hover'  # Only show mode bar on hover to save space
         }
 
-        # If no data, return empty figure with basic config
+        # If no data, return empty figure
         if data.empty:
-            return fig, config
+            return fig
 
         # Sort data by date and get date range for filename
         data = data.sort_values('date')
@@ -331,7 +331,7 @@ class GraphGenerator:
         }
 
         fig.update_layout(**layout_updates)
-        return fig, config
+        return fig
 
     def create_eco_tourism_chart(self, data, title, observation_type='percentage'):
         """Create bar chart for eco-tourism data"""
@@ -362,7 +362,7 @@ class GraphGenerator:
                 'showTips': True,  # Show tips for better usability
                 'displayModeBar': 'hover'  # Only show mode bar on hover to save space
             }
-            return fig, config
+            return fig
 
         fig = go.Figure(go.Bar(
             y=data.index,
@@ -407,4 +407,4 @@ class GraphGenerator:
             'showTips': True,  # Show tips for better usability
             'displayModeBar': 'hover'  # Only show mode bar on hover to save space
         }
-        return fig, config
+        return fig
