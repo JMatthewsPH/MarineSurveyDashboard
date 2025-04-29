@@ -319,6 +319,57 @@
     }
 }
 
+/* Advanced loading indicators */
+.loader {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+/* Skeleton loading elements */
+.skeleton-text {
+    height: 1.2em;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    width: 100%;
+}
+
+.skeleton-text.short {
+    width: 60%;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Skeleton graph container */
+.skeleton-graph {
+    background: white;
+    border-radius: 15px;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 1px solid var(--border-color);
+    width: 100%;
+    min-height: 380px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 /* Hide Streamlit's default navigation elements */
 div[data-testid="stSidebarNav"] ul li:first-child {
     display: none !important;

@@ -16,6 +16,13 @@ from utils.graph_generator import GraphGenerator
 from utils.translations import TRANSLATIONS
 from utils.database import get_db
 from utils.branding import display_logo, add_favicon
+from utils.ui_helpers import (
+    loading_spinner, 
+    skeleton_chart, 
+    create_loading_placeholder, 
+    add_loading_css, 
+    skeleton_text_placeholder
+)
 
 # Initialize language in session state if not present
 if 'language' not in st.session_state:
@@ -58,6 +65,7 @@ def load_css():
         return f'<style>{css_content}</style>'
 
 st.markdown(load_css(), unsafe_allow_html=True)
+st.markdown(add_loading_css(), unsafe_allow_html=True)
 
 # Add JavaScript to hide "main" text (hidden in a div with display:none)
 hide_main_js = """
@@ -157,27 +165,44 @@ if selected_site:
         cols = st.columns([1, 2])
 
         with cols[0]:
+            # Create a placeholder for the image while it loads
+            image_placeholder = create_loading_placeholder(
+                st, 
+                message="Loading site image...", 
+                height=300
+            )
+            
+            # Display the image (in a real app, this would be loaded asynchronously)
+            image_placeholder.empty()
             st.image("https://via.placeholder.com/400x300", use_container_width=True, 
                      output_format="JPEG", caption=selected_site)
 
         with cols[1]:
-            language_code = st.session_state.language
+            # Show a loading placeholder for the description
+            desc_placeholder = st.empty()
+            with desc_placeholder:
+                skeleton_text_placeholder(lines=5)
             
-            # Get description based on language
-            if language_code == 'en':
-                description = selected_site_obj.description_en
-            elif language_code == 'tl':
-                description = selected_site_obj.description_fil  # Using Filipino description for Tagalog
-            else:  # Cebuano - fallback to English for now
-                description = selected_site_obj.description_en
+            # Load the site description with simulated delay
+            with loading_spinner("Loading site description..."):
+                language_code = st.session_state.language
                 
-            # Default description if not available
-            if not description:
-                description = f"{TRANSLATIONS[language_code]['site_desc_placeholder']} ({selected_site})"
-                
-            st.markdown(f"""<div class="site-description-text">
-                           {description}
-                         </div>""", unsafe_allow_html=True)
+                # Get description based on language
+                if language_code == 'en':
+                    description = selected_site_obj.description_en
+                elif language_code == 'tl':
+                    description = selected_site_obj.description_fil  # Using Filipino description for Tagalog
+                else:  # Cebuano - fallback to English for now
+                    description = selected_site_obj.description_en
+                    
+                # Default description if not available
+                if not description:
+                    description = f"{TRANSLATIONS[language_code]['site_desc_placeholder']} ({selected_site})"
+            
+            # Replace the placeholder with the actual content
+            desc_placeholder.markdown(f"""<div class="site-description-text">
+                               {description}
+                             </div>""", unsafe_allow_html=True)
 
 
         # Get current site's municipality
@@ -453,72 +478,138 @@ if selected_site:
             # Add spacing before first chart
             st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
 
-            # Get biomass data and comparison
-            biomass_data = data_processor.get_biomass_data(selected_site)
-            biomass_comparison_data = None
-            biomass_comparison_labels = None
-            
-            if biomass_comparison == "Compare with Sites" and biomass_compare_sites:
-                # Get data for multiple comparison sites
-                comparison_data_list = []
-                for site_name in biomass_compare_sites:
-                    site_data = data_processor.get_biomass_data(site_name)
-                    if not site_data.empty:
-                        comparison_data_list.append(site_data)
+            # Create a placeholder for the biomass chart with loading indicator
+            biomass_chart_container = st.container()
+            with biomass_chart_container:
+                # Show title for chart
+                st.subheader(f"Commercial Fish Biomass - {selected_site}")
                 
-                if comparison_data_list:
-                    biomass_comparison_data = comparison_data_list
-                    # Use custom labels if provided
-                    if biomass_compare_labels:
-                        biomass_comparison_labels = biomass_compare_labels
-                    else:
-                        biomass_comparison_labels = biomass_compare_sites
-                        
-            elif biomass_comparison == "Compare with Average":
-                municipality = site_municipality if biomass_compare_scope == "Municipality Average" else None
-                avg_data = data_processor.get_average_biomass_data(
-                    exclude_site=selected_site,
-                    municipality=municipality
+                # Create a loading placeholder for the biomass chart
+                biomass_placeholder = create_loading_placeholder(
+                    st, 
+                    message="Loading biomass data...", 
+                    height=400
                 )
-                if not avg_data.empty:
-                    biomass_comparison_data = avg_data
-                    label = f"{site_municipality} Average" if biomass_compare_scope == "Municipality Average" else "All Sites Average"
-                    biomass_comparison_labels = [label]
+                
+                # Display a skeleton chart while data is loading
+                st.plotly_chart(
+                    skeleton_chart(height=400, chart_type="line"),
+                    use_container_width=True,
+                    key='biomass_skeleton'
+                )
+            
+            # Get biomass data and comparison with loading indicator
+            with loading_spinner("Processing fish biomass data..."):
+                biomass_data = data_processor.get_biomass_data(selected_site)
+                biomass_comparison_data = None
+                biomass_comparison_labels = None
+                
+                if biomass_comparison == "Compare with Sites" and biomass_compare_sites:
+                    # Get data for multiple comparison sites
+                    comparison_data_list = []
+                    for site_name in biomass_compare_sites:
+                        site_data = data_processor.get_biomass_data(site_name)
+                        if not site_data.empty:
+                            comparison_data_list.append(site_data)
                     
-            # Create the time series chart with date range filtering
-            biomass_fig, biomass_config = graph_generator.create_time_series(
-                biomass_data,
-                f"Commercial Fish Biomass - {selected_site}",
-                "Biomass (kg/ha)",
-                comparison_data=biomass_comparison_data,
-                comparison_labels=biomass_comparison_labels,
-                date_range=date_range
-            )
-            st.plotly_chart(biomass_fig, use_container_width=True, config=biomass_config, key='biomass_chart')
+                    if comparison_data_list:
+                        biomass_comparison_data = comparison_data_list
+                        # Use custom labels if provided
+                        if biomass_compare_labels:
+                            biomass_comparison_labels = biomass_compare_labels
+                        else:
+                            biomass_comparison_labels = biomass_compare_sites
+                            
+                elif biomass_comparison == "Compare with Average":
+                    municipality = site_municipality if biomass_compare_scope == "Municipality Average" else None
+                    avg_data = data_processor.get_average_biomass_data(
+                        exclude_site=selected_site,
+                        municipality=municipality
+                    )
+                    if not avg_data.empty:
+                        biomass_comparison_data = avg_data
+                        label = f"{site_municipality} Average" if biomass_compare_scope == "Municipality Average" else "All Sites Average"
+                        biomass_comparison_labels = [label]
+                        
+                # Create the time series chart with date range filtering
+                biomass_fig, biomass_config = graph_generator.create_time_series(
+                    biomass_data,
+                    f"Commercial Fish Biomass - {selected_site}",
+                    "Biomass (kg/ha)",
+                    comparison_data=biomass_comparison_data,
+                    comparison_labels=biomass_comparison_labels,
+                    date_range=date_range
+                )
+            
+            # Replace the placeholder with the actual chart
+            with biomass_chart_container:
+                # Clear the placeholder and skeleton
+                biomass_placeholder.empty()
+                
+                # Display the actual chart
+                st.plotly_chart(
+                    biomass_fig, 
+                    use_container_width=True, 
+                    config=biomass_config, 
+                    key='biomass_chart'
+                )
 
             # Add spacing between charts
             st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
 
-            # Get coral cover data and comparison
-            coral_data = data_processor.get_metric_data(selected_site, 'hard_coral')
-            coral_comparison_data = None
-            if coral_comparison == "Compare with Site" and coral_compare_site:
-                coral_comparison_data = data_processor.get_metric_data(coral_compare_site, 'hard_coral')
-            elif coral_comparison == "Compare with Average":
-                municipality = site_municipality if coral_compare_scope == "Municipality Average" else None
-                coral_comparison_data = data_processor.get_average_metric_data(
-                    'hard_coral',
-                    exclude_site=selected_site,
-                    municipality=municipality
+            # Create a placeholder for the coral cover chart with loading indicator
+            coral_chart_container = st.container()
+            with coral_chart_container:
+                # Show title for chart
+                st.subheader(f"Hard Coral Cover - {selected_site}")
+                
+                # Create a loading placeholder for the coral cover chart
+                coral_placeholder = create_loading_placeholder(
+                    st, 
+                    message="Loading coral cover data...", 
+                    height=400
                 )
-            coral_fig, coral_config = graph_generator.create_time_series(
-                coral_data,
-                f"Hard Coral Cover - {selected_site}",
-                "Cover (%)",
-                comparison_data=coral_comparison_data,
-                date_range=date_range
-            )
-            st.plotly_chart(coral_fig, use_container_width=True, config=coral_config, key='coral_chart')
+                
+                # Display a skeleton chart while data is loading
+                st.plotly_chart(
+                    skeleton_chart(height=400, chart_type="line"),
+                    use_container_width=True,
+                    key='coral_skeleton'
+                )
+            
+            # Get coral cover data and comparison with loading indicator
+            with loading_spinner("Processing coral cover data..."):
+                coral_data = data_processor.get_metric_data(selected_site, 'hard_coral')
+                coral_comparison_data = None
+                if coral_comparison == "Compare with Site" and coral_compare_site:
+                    coral_comparison_data = data_processor.get_metric_data(coral_compare_site, 'hard_coral')
+                elif coral_comparison == "Compare with Average":
+                    municipality = site_municipality if coral_compare_scope == "Municipality Average" else None
+                    coral_comparison_data = data_processor.get_average_metric_data(
+                        'hard_coral',
+                        exclude_site=selected_site,
+                        municipality=municipality
+                    )
+                coral_fig, coral_config = graph_generator.create_time_series(
+                    coral_data,
+                    f"Hard Coral Cover - {selected_site}",
+                    "Cover (%)",
+                    comparison_data=coral_comparison_data,
+                    date_range=date_range
+                )
+            
+            # Replace the placeholder with the actual chart
+            with coral_chart_container:
+                # Clear the placeholder and skeleton
+                coral_placeholder.empty()
+                
+                # Display the actual chart
+                st.plotly_chart(
+                    coral_fig, 
+                    use_container_width=True, 
+                    config=coral_config, 
+                    key='coral_chart'
+                )
 
             # Add spacing between charts
             st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)

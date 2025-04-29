@@ -20,7 +20,11 @@ def load_css():
         css_content = f.read()
         return f'<style>{css_content}</style>'
 
+# Include CSS for loading states and skeleton UI
+from utils.ui_helpers import add_loading_css
+
 st.markdown(load_css(), unsafe_allow_html=True)
+st.markdown(add_loading_css(), unsafe_allow_html=True)
 
 # Add JavaScript to hide "main" text (hidden in an HTML comment to prevent display)
 hide_main_js = """
