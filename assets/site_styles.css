@@ -285,6 +285,19 @@
     right: 0 !important;
 }
 
+/* Chart styling for light mode */
+.js-plotly-plot .plotly .main-svg {
+    background-color: transparent !important;
+}
+
+.js-plotly-plot .plotly .scatter .lines path {
+    stroke-width: 2 !important;
+}
+
+.js-plotly-plot .plotly .scatter .points path {
+    stroke-width: 1.5 !important;
+}
+
 /* Mobile-responsive charts container */
 .mobile-responsive-charts {
     display: flex;
@@ -442,21 +455,48 @@ div[data-testid="stSidebarNav"] ul li:first-child {
         color: var(--dark-text-color) !important;
     }
     
-    /* Plotly chart colors */
+    /* Plotly chart enhancements for dark mode */
     .js-plotly-plot .plotly .main-svg {
-        background-color: var(--dark-chart-bg-color) !important;
+        background-color: transparent !important;
     }
     
+    /* Improve grid line visibility */
     .js-plotly-plot .plotly .gridlayer path {
         stroke: var(--dark-grid-line-color) !important;
+        stroke-width: 1 !important;
     }
     
+    /* Improve axis line visibility */
+    .js-plotly-plot .plotly .xaxis .zerolinelayer path,
+    .js-plotly-plot .plotly .yaxis .zerolinelayer path {
+        stroke: var(--dark-border-color) !important;
+        stroke-width: 1.5 !important;
+    }
+    
+    /* Ensure text is readable */
     .js-plotly-plot .plotly .gtitle, 
     .js-plotly-plot .plotly .xtitle, 
     .js-plotly-plot .plotly .ytitle,
     .js-plotly-plot .plotly .xtick text, 
     .js-plotly-plot .plotly .ytick text {
         fill: var(--dark-text-color) !important;
+        font-weight: 500 !important;
+    }
+    
+    /* Make plotly lines more visible */
+    .js-plotly-plot .plotly .scatter .lines path {
+        stroke-width: 3 !important;
+    }
+    
+    /* Make plotly points more visible */
+    .js-plotly-plot .plotly .scatter .points path {
+        stroke-width: 2 !important;
+    }
+    
+    /* Improve legend visibility */
+    .js-plotly-plot .plotly .legend text {
+        fill: var(--dark-text-color) !important;
+        font-weight: 500 !important;
     }
     
     /* Streamlit inputs and dropdowns */

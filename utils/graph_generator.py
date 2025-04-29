@@ -293,7 +293,7 @@ class GraphGenerator:
             },
             'xaxis_title': 'Season',
             'yaxis_title': y_label,
-            'template': 'plotly_white',
+            'template': 'plotly',  # Neutral template that works in both modes
             'hovermode': 'x unified',
             'showlegend': True,
             'legend': {
@@ -302,8 +302,10 @@ class GraphGenerator:
                 'y': -0.6,
                 'xanchor': 'center',
                 'x': 0.5,
-                'bgcolor': 'rgba(255, 255, 255, 1)'
+                'bgcolor': 'rgba(255, 255, 255, 0.1)'  # More transparent background
             },
+            'paper_bgcolor': 'rgba(0,0,0,0)',  # Transparent background
+            'plot_bgcolor': 'rgba(0,0,0,0)',   # Transparent background
             'autosize': True,
             'height': 550,
             'margin': {
@@ -383,11 +385,13 @@ class GraphGenerator:
             ),
             xaxis_title=x_title,
             yaxis_title='Species',
-            template='plotly_white',
+            template='plotly',  # Neutral template that works in both modes
             height=500,
             margin=dict(l=80, r=30, t=100, b=50),
             showlegend=False,
-            autosize=True
+            autosize=True,
+            paper_bgcolor='rgba(0,0,0,0)',  # Transparent background
+            plot_bgcolor='rgba(0,0,0,0)',   # Transparent background
         )
 
         config = {
