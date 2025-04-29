@@ -52,20 +52,71 @@ class GraphGenerator:
     def __init__(self, data_processor):
         self.data_processor = data_processor
 
-    def get_metric_range(self, metric_name):
-        """Define standard ranges for each metric type"""
-        ranges = {
+    def get_metric_range(self, metric_name, data=None, comparison_data=None):
+        """
+        Define ranges for each metric type, with dynamic scaling option
+        
+        Args:
+            metric_name: The name of the metric (e.g., 'Herbivore')
+            data: Primary data DataFrame
+            comparison_data: Optional comparison data
+            
+        Returns:
+            Dictionary with min and max values for the Y-axis
+        """
+        # Default fixed ranges
+        fixed_ranges = {
             'Commercial Biomass': {'min': 0, 'max': 3000},  # kg/ha
             'Hard Coral Cover': {'min': 0, 'max': 100},     # percentage
             'Fleshy Algae': {'min': 0, 'max': 100},         # percentage
             'Bleaching': {'min': 0, 'max': 100},            # percentage
-            'Herbivore': {'min': 0, 'max': 1000},           # ind/ha
-            'Carnivore': {'min': 0, 'max': 5000},           # ind/ha
-            'Omnivore': {'min': 0, 'max': 8000},            # ind/ha
-            'Corallivore': {'min': 0, 'max': 1500},         # ind/ha
+            'Herbivore': None,                              # Dynamic
+            'Carnivore': None,                              # Dynamic
+            'Omnivore': None,                               # Dynamic
+            'Corallivore': None,                            # Dynamic
             'Rubble': {'min': 0, 'max': 100}                # percentage
         }
-        return ranges.get(metric_name, {'min': 0, 'max': 100})  # default range
+        
+        # Get the default range or None if dynamic scaling should be used
+        default_range = fixed_ranges.get(metric_name, {'min': 0, 'max': 100})
+        
+        # If a fixed range is specified, return it
+        if default_range is not None:
+            return default_range
+            
+        # Otherwise, calculate dynamic range based on data
+        if data is not None and not data.empty:
+            # Get all values for calculation
+            all_values = []
+            
+            # Add primary data values
+            if len(data.columns) > 1:
+                all_values.extend(data[data.columns[1]].tolist())
+            
+            # Add comparison data values if provided
+            if comparison_data is not None:
+                if isinstance(comparison_data, list):
+                    for df in comparison_data:
+                        if df is not None and not df.empty and len(df.columns) > 1:
+                            all_values.extend(df[df.columns[1]].tolist())
+                elif not comparison_data.empty and len(comparison_data.columns) > 1:
+                    all_values.extend(comparison_data[comparison_data.columns[1]].tolist())
+            
+            # Calculate range with 10% padding
+            if all_values:
+                data_min = 0  # Always start at 0 for most ecological metrics
+                data_max = max(all_values) * 1.1  # Add 10% padding
+                return {'min': data_min, 'max': data_max}
+        
+        # Fallback ranges if dynamic calculation can't be done
+        fallback_ranges = {
+            'Herbivore': {'min': 0, 'max': 5000},
+            'Carnivore': {'min': 0, 'max': 5000},
+            'Omnivore': {'min': 0, 'max': 8000},
+            'Corallivore': {'min': 0, 'max': 1500}
+        }
+        
+        return fallback_ranges.get(metric_name, {'min': 0, 'max': 100})
 
     def create_time_series(self, data, title, y_label, comparison_data=None, comparison_labels=None, date_range=None, secondary_data=None, secondary_label=None, tertiary_data=None, tertiary_label=None):
         """
@@ -135,7 +186,8 @@ class GraphGenerator:
 
         # Get the metric name from the title
         metric_name = title.split(' - ')[0].strip()
-        y_range = self.get_metric_range(metric_name)
+        # Pass data for dynamic scaling
+        y_range = self.get_metric_range(metric_name, data, comparison_data)
 
         # Add pre-COVID data
         fig.add_trace(go.Scatter(
