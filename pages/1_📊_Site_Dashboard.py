@@ -24,6 +24,17 @@ from utils.ui_helpers import (
     skeleton_text_placeholder
 )
 
+# Custom CSS for municipality styling in dropdown
+st.markdown("""
+<style>
+.municipality {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #0178e4;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # Initialize language in session state if not present
 if 'language' not in st.session_state:
     st.session_state.language = "en"  # Default to English
@@ -121,12 +132,17 @@ with st.sidebar:
     # Site selection with municipality grouping
     st.subheader(TRANSLATIONS[st.session_state.language]['select_site'])
     
-    # Create a format_func to display municipalities in bold
+    # Create a custom CSS class for municipality options
+    municipalities = ["Zamboanguita", "Siaton", "Santa Catalina"]
+    
+    # Create a custom formatting function for the dropdown
     def format_site_option(option):
-        if option in ["Zamboanguita", "Siaton", "Santa Catalina"]:
-            return f"**{option}**"
+        if option in municipalities:
+            # Use emoji and different formatting to distinguish municipalities
+            return f"🏝️ {option.upper()}"
         else:
-            return option.strip()  # Remove leading spaces for site names
+            # Indent site names with spacing for better hierarchy
+            return f"     {option.strip()}"
     
     # Create the options list with municipalities as headers and alphabetically sorted sites
     site_options = []
