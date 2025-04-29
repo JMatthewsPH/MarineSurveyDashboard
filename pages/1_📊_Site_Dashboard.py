@@ -166,16 +166,21 @@ if selected_site:
 
         with cols[0]:
             # Create a placeholder for the image while it loads
-            image_placeholder = create_loading_placeholder(
-                st, 
-                message="Loading site image...", 
-                height=300
-            )
+            image_placeholder = st.empty()
+            with image_placeholder:
+                create_loading_placeholder(
+                    st, 
+                    message="Loading site image...", 
+                    height=300
+                )
             
-            # Display the image (in a real app, this would be loaded asynchronously)
-            image_placeholder.empty()
-            st.image("https://via.placeholder.com/400x300", use_container_width=True, 
-                     output_format="JPEG", caption=selected_site)
+            # Replace with the actual image
+            image_placeholder.image(
+                "https://via.placeholder.com/400x300", 
+                use_container_width=True, 
+                output_format="JPEG", 
+                caption=selected_site
+            )
 
         with cols[1]:
             # Show a loading placeholder for the description
@@ -183,7 +188,7 @@ if selected_site:
             with desc_placeholder:
                 skeleton_text_placeholder(lines=5)
             
-            # Load the site description with simulated delay
+            # Load the site description with spinner
             with loading_spinner("Loading site description..."):
                 language_code = st.session_state.language
                 
@@ -484,19 +489,21 @@ if selected_site:
                 # Show title for chart
                 st.subheader(f"Commercial Fish Biomass - {selected_site}")
                 
-                # Create a loading placeholder for the biomass chart
-                biomass_placeholder = create_loading_placeholder(
-                    st, 
-                    message="Loading biomass data...", 
-                    height=400
-                )
-                
-                # Display a skeleton chart while data is loading
-                st.plotly_chart(
-                    skeleton_chart(height=400, chart_type="line"),
-                    use_container_width=True,
-                    key='biomass_skeleton'
-                )
+                # Create a loading placeholder and skeleton chart that we'll replace later
+                biomass_chart_placeholder = st.empty()
+                with biomass_chart_placeholder:
+                    # Create a loading indicator within the placeholder
+                    create_loading_placeholder(
+                        st, 
+                        message="Loading biomass data...", 
+                        height=400
+                    )
+                    
+                    # Display a skeleton chart while data is loading
+                    st.plotly_chart(
+                        skeleton_chart(height=400, chart_type="line"),
+                        use_container_width=True
+                    )
             
             # Get biomass data and comparison with loading indicator
             with loading_spinner("Processing fish biomass data..."):
@@ -541,18 +548,12 @@ if selected_site:
                     date_range=date_range
                 )
             
-            # Replace the placeholder with the actual chart
-            with biomass_chart_container:
-                # Clear the placeholder and skeleton
-                biomass_placeholder.empty()
-                
-                # Display the actual chart
-                st.plotly_chart(
-                    biomass_fig, 
-                    use_container_width=True, 
-                    config=biomass_config, 
-                    key='biomass_chart'
-                )
+            # Replace the entire placeholder with the actual chart
+            biomass_chart_placeholder.plotly_chart(
+                biomass_fig, 
+                use_container_width=True, 
+                config=biomass_config
+            )
 
             # Add spacing between charts
             st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
@@ -563,19 +564,21 @@ if selected_site:
                 # Show title for chart
                 st.subheader(f"Hard Coral Cover - {selected_site}")
                 
-                # Create a loading placeholder for the coral cover chart
-                coral_placeholder = create_loading_placeholder(
-                    st, 
-                    message="Loading coral cover data...", 
-                    height=400
-                )
-                
-                # Display a skeleton chart while data is loading
-                st.plotly_chart(
-                    skeleton_chart(height=400, chart_type="line"),
-                    use_container_width=True,
-                    key='coral_skeleton'
-                )
+                # Create a loading placeholder and skeleton chart that we'll replace later
+                coral_chart_placeholder = st.empty()
+                with coral_chart_placeholder:
+                    # Create a loading indicator within the placeholder
+                    create_loading_placeholder(
+                        st, 
+                        message="Loading coral cover data...", 
+                        height=400
+                    )
+                    
+                    # Display a skeleton chart while data is loading
+                    st.plotly_chart(
+                        skeleton_chart(height=400, chart_type="line"),
+                        use_container_width=True
+                    )
             
             # Get coral cover data and comparison with loading indicator
             with loading_spinner("Processing coral cover data..."):
@@ -598,18 +601,12 @@ if selected_site:
                     date_range=date_range
                 )
             
-            # Replace the placeholder with the actual chart
-            with coral_chart_container:
-                # Clear the placeholder and skeleton
-                coral_placeholder.empty()
-                
-                # Display the actual chart
-                st.plotly_chart(
-                    coral_fig, 
-                    use_container_width=True, 
-                    config=coral_config, 
-                    key='coral_chart'
-                )
+            # Replace the entire placeholder with the actual chart
+            coral_chart_placeholder.plotly_chart(
+                coral_fig, 
+                use_container_width=True, 
+                config=coral_config
+            )
 
             # Add spacing between charts
             st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
