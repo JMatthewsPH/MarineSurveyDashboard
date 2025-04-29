@@ -172,7 +172,7 @@ else:
         --box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
         --hover-shadow: 0 4px 8px rgba(0,0,0,0.15) !important;
         --card-bg-color: white !important;
-        --grid-line-color: #e0e0e0 !important;
+        --grid-line-color: #a0aec0 !important;  /* Darker grid for better contrast */
         --tooltip-bg-color: white !important;
         --tooltip-text-color: #333 !important;
         --chart-bg-color: white !important;
@@ -190,6 +190,7 @@ else:
     [data-testid="stSidebar"], 
     [data-testid="stSidebar"] > div:first-child,
     div[data-testid="stSidebarUserContent"],
+    section[data-testid="stSidebar"],
     .css-6qob1r.e1fqkh3o3,
     .css-10oheav.e1fqkh3o4 {
         background-color: #f7fafc !important;
@@ -204,34 +205,68 @@ else:
     [data-testid="stSidebar"] p,
     [data-testid="stSidebar"] span,
     [data-testid="stSidebar"] label,
-    [data-testid="stSidebar"] div {
+    [data-testid="stSidebar"] div,
+    div[data-testid="stMarkdownContainer"],
+    div[data-baseweb="select"] {
         color: #2d3748 !important;
     }
     
+    /* Ensure all Streamlit text elements have proper contrast */
     .stMarkdown, .stText, p, h1, h2, h3, h4, h5, h6 {
         color: #2d3748 !important;
     }
     
+    /* Improve chart elements contrast in light mode */
     .js-plotly-plot .plotly .gridlayer path {
-        stroke: #e0e0e0 !important;
+        stroke: #a0aec0 !important;
+        stroke-width: 1px !important;
     }
     
     .js-plotly-plot .plotly .xaxis .zerolinelayer path,
     .js-plotly-plot .plotly .yaxis .zerolinelayer path {
-        stroke: #e2e8f0 !important;
+        stroke: #4a5568 !important;
+        stroke-width: 1.5px !important;
     }
     
+    /* Make chart text darker and bolder for better contrast */
     .js-plotly-plot .plotly .gtitle, 
     .js-plotly-plot .plotly .xtitle, 
-    .js-plotly-plot .plotly .ytitle,
+    .js-plotly-plot .plotly .ytitle {
+        fill: #1a202c !important;
+        font-weight: 600 !important;
+    }
+    
     .js-plotly-plot .plotly .xtick text, 
     .js-plotly-plot .plotly .ytick text {
         fill: #2d3748 !important;
+        font-weight: 500 !important;
     }
     
-    .site-header, .site-card, .site-description {
+    /* Improved legend readability in light mode */
+    .js-plotly-plot .plotly .legend text {
+        fill: #2d3748 !important;
+        font-weight: 500 !important;
+    }
+    
+    /* Improve layout containers */
+    .site-header, .site-card, .site-description, .graph-container {
         background-color: white !important;
         border-color: #e2e8f0 !important;
+    }
+    
+    /* Ensure selectbox elements have proper styling */
+    .stSelectbox > div > div[data-baseweb="select"] {
+        background-color: white !important;
+        border-color: #cbd5e0 !important;
+    }
+    
+    /* Fix dropdown options to be clearly visible */
+    div[role="listbox"] {
+        background-color: white !important;
+    }
+    
+    div[role="option"] {
+        color: #2d3748 !important;
     }
     </style>
     """
