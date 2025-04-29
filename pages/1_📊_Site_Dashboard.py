@@ -138,8 +138,8 @@ with st.sidebar:
     # Create a custom formatting function for the dropdown
     def format_site_option(option):
         if option in municipalities:
-            # Use emoji and different formatting to distinguish municipalities
-            return f"🏝️ {option.upper()}"
+            # Use uppercase for municipality headers
+            return f"{option.upper()}"
         else:
             # Indent site names with spacing for better hierarchy
             return f"     {option.strip()}"
