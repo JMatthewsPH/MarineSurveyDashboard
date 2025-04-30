@@ -144,7 +144,7 @@ overall_stats_container = st.container()
 with overall_stats_container:
     stats_placeholder = st.empty()
     with stats_placeholder:
-        stats_loading = skeleton_text_placeholder(lines=4)
+        stats_loading = skeleton_text_placeholder(lines=2)
 
 # Get summary metrics
 summary_metrics = data_processor.get_all_sites_summary_metrics()
@@ -153,7 +153,7 @@ summary_metrics = data_processor.get_all_sites_summary_metrics()
 stats_placeholder.empty()
 
 with overall_stats_container:
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2 = st.columns(2)
     
     with col1:
         st.metric(
@@ -162,25 +162,12 @@ with overall_stats_container:
         )
     
     with col2:
-        st.metric(
-            label="Total Surveys", 
-            value=summary_metrics["survey_count"]
-        )
-    
-    with col3:
         start = summary_metrics["start_date"]
         end = summary_metrics["end_date"]
         date_text = f"{start.strftime('%b %Y')} - {end.strftime('%b %Y')}" if start and end else "No data"
         st.metric(
             label="Data Range", 
             value=date_text
-        )
-    
-    with col4:
-        frequency = f"{summary_metrics['avg_survey_frequency']:.1f}/year" if summary_metrics["avg_survey_frequency"] > 0 else "No data"
-        st.metric(
-            label="Avg Survey Frequency", 
-            value=frequency
         )
 
 # Section 2: Key Ecological Health Indicators
