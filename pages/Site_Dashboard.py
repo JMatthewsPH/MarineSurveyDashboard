@@ -250,18 +250,7 @@ if selected_site:
                 result_df = pd.DataFrame(columns=["date"])
                 
                 # Get all the metrics data
-                # Commercial biomass is handled separately
-                biomass_df = data_processor.get_biomass_data(site_name)
-                if not biomass_df.empty:
-                    # Create a copy of the dataframe with just the columns we need
-                    biomass_data = biomass_df[["date", "commercial_biomass"]].copy()
-                    # Merge with the result dataframe
-                    if result_df.empty:
-                        result_df = biomass_data.copy()
-                    else:
-                        result_df = result_df.merge(biomass_data, on="date", how="outer")
-                
-                # List of all other metrics to process
+                # First, let's get all available metrics
                 metrics = ["hard_coral", "fleshy_algae", "herbivore", "carnivore", 
                            "omnivore", "corallivore", "bleaching", "rubble"]
                 
@@ -271,15 +260,49 @@ if selected_site:
                     metric_column = data_processor.METRIC_MAP[metric]
                     df = data_processor.get_metric_data(site_name, metric)
                     
-                    if not df.empty and metric_column in df.columns:
-                        # Create a copy of just the columns we need
-                        metric_data = df[["date", metric_column]].copy()
+                    if not df.empty:
+                        # Check the actual columns in the DataFrame
+                        available_columns = df.columns.tolist()
+                        
+                        # If we have the metric column, add it to the result
+                        if metric_column in available_columns:
+                            # Create a copy of just the columns we need
+                            metric_data = df[["date", metric_column]].copy()
+                            
+                            # Merge with the result dataframe
+                            if result_df.empty:
+                                result_df = metric_data.copy()
+                            else:
+                                result_df = result_df.merge(metric_data, on="date", how="outer")
+                
+                # Commercial biomass is handled separately
+                biomass_df = data_processor.get_biomass_data(site_name)
+                if not biomass_df.empty:
+                    # Check columns actually in the DataFrame
+                    biomass_columns = biomass_df.columns.tolist()
+                    
+                    # Print the available columns for debugging
+                    st.write(f"Biomass DataFrame columns: {biomass_columns}")
+                    
+                    # Find the column that contains 'biomass' in the name
+                    biomass_col = None
+                    for col in biomass_columns:
+                        if 'biomass' in col.lower():
+                            biomass_col = col
+                            break
+                    
+                    if biomass_col:
+                        # Use the actual column name from the DataFrame
+                        biomass_data = biomass_df[["date", biomass_col]].copy()
+                        
+                        # Rename to standard name for merging
+                        biomass_data.rename(columns={biomass_col: "commercial_biomass"}, inplace=True)
                         
                         # Merge with the result dataframe
                         if result_df.empty:
-                            result_df = metric_data.copy()
+                            result_df = biomass_data.copy()
                         else:
-                            result_df = result_df.merge(metric_data, on="date", how="outer")
+                            result_df = result_df.merge(biomass_data, on="date", how="outer")
                 
                 # If we have data, sort it by date (newest first)
                 if not result_df.empty:
