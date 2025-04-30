@@ -88,9 +88,9 @@
     box-shadow: 0 4px 6px rgba(43, 108, 176, 0.35);
 }
 
-/* Back arrow icon for Back to Main button */
-.back-arrow {
-    margin-right: 0.5rem;
+/* Back to Main button spacing */
+.back-to-main-btn {
+    padding: 0.5rem 1rem;
 }
 
 /* Mobile responsiveness */

@@ -15,15 +15,15 @@ def display_navigation(current_page=None):
     navigation = {
         "Main": {
             "url": "/",
-            "icon": "🏠"
+            "icon": ""
         },
         "Site Dashboard": {
             "url": "/Site_Dashboard",
-            "icon": "📊"
+            "icon": ""
         },
         "Summary Dashboard": {
             "url": "/Summary_Dashboard",
-            "icon": "📈"
+            "icon": ""
         }
     }
     
@@ -109,7 +109,6 @@ def add_back_to_main_button(lang="en"):
     st.markdown(
         f"""
         <a href="/" class="back-to-main-btn">
-            <span class="back-arrow">←</span>
             {text}
         </a>
         """,
