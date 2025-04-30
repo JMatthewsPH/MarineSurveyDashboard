@@ -11,7 +11,7 @@ from utils.graph_generator import GraphGenerator
 from utils.translations import TRANSLATIONS
 from utils.database import get_db_session
 from utils.branding import display_logo, add_favicon
-from utils.ui_helpers import loading_spinner, create_loading_placeholder, add_loading_css, skeleton_text_placeholder
+from utils.ui_helpers import loading_spinner, create_loading_placeholder, load_css, skeleton_text_placeholder
 from utils.navigation import display_navigation
 
 # Set page config
@@ -29,8 +29,6 @@ if 'language' not in st.session_state:
 # Add favicon
 add_favicon()
 
-# Add custom CSS for loading animations
-add_loading_css()
 
 
 
@@ -45,19 +43,7 @@ data_processor = get_data_processor()
 # Get graph generator
 graph_generator = GraphGenerator(data_processor)
 
-# Load custom CSS
-@st.cache_data
-def load_css():
-    # Load main site styles
-    with open('assets/site_styles.css') as f:
-        site_css = f.read()
-    
-    # Load navigation styles
-    with open('assets/navigation.css') as f:
-        nav_css = f.read()
-    
-    return f'<style>{site_css}\n{nav_css}</style>'
-
+# Apply consolidated CSS
 st.markdown(load_css(), unsafe_allow_html=True)
 
 # Display logo at the top

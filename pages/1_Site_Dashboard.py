@@ -20,24 +20,15 @@ from utils.ui_helpers import (
     loading_spinner, 
     skeleton_chart, 
     create_loading_placeholder, 
-    add_loading_css, 
+    load_css, 
     skeleton_text_placeholder
 )
-
-# Custom CSS for municipality styling in dropdown
-st.markdown("""
-<style>
-.municipality {
-    font-weight: bold;
-    font-size: 1.1rem;
-    color: #0178e4;
-}
-</style>
-""", unsafe_allow_html=True)
 
 # Import navigation utilities
 from utils.navigation import display_navigation
 
+# Apply centralized CSS styles
+st.markdown(load_css(), unsafe_allow_html=True)
 
 
 # Initialize language in session state if not present
@@ -73,15 +64,6 @@ site_names = zamboanguita_sites + siaton_sites + santa_catalina_sites
 # Create alphabetical list for comparison dropdowns
 alphabetical_site_names = sorted([site.name for site in sites])
 
-# Load custom CSS
-@st.cache_data
-def load_css():
-    with open('assets/site_styles.css') as f:
-        css_content = f.read()
-        return f'<style>{css_content}</style>'
-
-st.markdown(load_css(), unsafe_allow_html=True)
-st.markdown(add_loading_css(), unsafe_allow_html=True)
 
 
 
