@@ -773,9 +773,8 @@ class GraphGenerator:
                 hovertemplate=f"{site} ({municipality})<br>Date: %{{x}}<br>{metric_name}: %{{y:.1f}}<extra></extra>"
             ))
         
-        # Format the y-axis range based on metric type
-        y_range = self.get_metric_range(metric_name)
-        y_min, y_max = y_range['min'], y_range['max']
+        # Format the y-axis range based on metric type - use fixed range of 0-100 with 10 unit spacing
+        y_min, y_max = 0, 100
         
         # Get an appropriate label based on the metric
         if 'biomass' in metric_name.lower():
@@ -803,7 +802,13 @@ class GraphGenerator:
                 xanchor="right",
                 x=1
             ),
-            yaxis=dict(range=[y_min, y_max])
+            yaxis=dict(
+                range=[y_min, y_max],
+                tickmode='linear',
+                tick0=0,
+                dtick=10,  # 10 unit spacing between ticks
+                gridcolor='lightgray'
+            )
         )
         
         # Configure download settings
