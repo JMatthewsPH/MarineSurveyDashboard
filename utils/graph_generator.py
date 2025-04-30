@@ -759,7 +759,7 @@ class GraphGenerator:
                 color = color_map[site]
                 name = site
                 
-            # Add the trace
+            # Add the trace with improved styling
             fig.add_trace(go.Scatter(
                 x=site_data['date'],
                 y=site_data[metric_name],
@@ -769,7 +769,10 @@ class GraphGenerator:
                     **line_props
                 ),
                 mode='lines+markers',
-                marker=dict(size=6),
+                marker=dict(
+                    size=8,
+                    line=dict(width=1, color='white')  # Add white outline to markers
+                ),
                 hovertemplate=f"{site} ({municipality})<br>Date: %{{x}}<br>{metric_name}: %{{y:.1f}}<extra></extra>"
             ))
         
@@ -793,14 +796,17 @@ class GraphGenerator:
             xaxis_title="Date",
             yaxis_title=y_title,
             template="plotly_white",
-            height=500,
-            margin=dict(l=40, r=40, t=60, b=60),
+            height=600,  # Increased height for better visualization
+            margin=dict(l=40, r=120, t=60, b=60),  # Increased right margin for legend
             legend=dict(
-                orientation="h",
-                yanchor="bottom",
-                y=1.02,
-                xanchor="right",
-                x=1
+                orientation="v",  # Change to vertical orientation
+                yanchor="top",
+                y=1,
+                xanchor="left",
+                x=1.02,  # Position legend to the right of the chart
+                bgcolor="rgba(255,255,255,0.8)",  # Add semi-transparent background
+                bordercolor="lightgray",
+                borderwidth=1
             ),
             yaxis=dict(
                 range=[y_min, y_max],
