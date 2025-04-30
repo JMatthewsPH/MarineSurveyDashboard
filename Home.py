@@ -32,6 +32,31 @@ from utils.ui_helpers import add_loading_css
 st.markdown(load_css(), unsafe_allow_html=True)
 st.markdown(add_loading_css(), unsafe_allow_html=True)
 
+# Add debug JavaScript to inspect navigation
+debug_js = """
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Wait for Streamlit to load completely
+  setTimeout(function() {
+    console.log('Debug: Checking navigation elements');
+    const navElement = document.querySelector('[data-testid="stSidebarNav"]');
+    if (navElement) {
+      console.log('Navigation element found:', navElement);
+      const linkElements = navElement.querySelectorAll('li');
+      console.log('Navigation links count:', linkElements.length);
+      for (let i = 0; i < linkElements.length; i++) {
+        console.log(`Link ${i}:`, linkElements[i]);
+        console.log(`Link ${i} visibility:`, window.getComputedStyle(linkElements[i]).display);
+      }
+    } else {
+      console.log('Navigation element not found');
+    }
+  }, 3000); // Wait 3 seconds for everything to load
+});
+</script>
+"""
+st.markdown(debug_js, unsafe_allow_html=True)
+
 
 
 # Initialize language in session state if not present
