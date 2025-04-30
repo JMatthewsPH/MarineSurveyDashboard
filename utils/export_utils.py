@@ -149,6 +149,9 @@ def convert_plotly_to_matplotlib(fig):
     Returns:
         Matplotlib figure object
     """
+    # Import season formatting function
+    from utils.graph_generator import format_season
+    
     # Create Matplotlib figure
     mpl_fig, ax = plt.subplots(figsize=(8, 5))
     
@@ -165,6 +168,14 @@ def convert_plotly_to_matplotlib(fig):
     post_covid_x = []
     post_covid_y = []
     
+    # Check if we have seasons in the x-axis
+    has_seasons = False
+    for trace in fig.data:
+        if hasattr(trace, 'x') and isinstance(trace.x, list) and len(trace.x) > 0:
+            if isinstance(trace.x[0], str) and any(month in trace.x[0] for month in ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']):
+                has_seasons = True
+                break
+    
     # Check multiple data traces for possible COVID marker
     for trace in fig.data:
         if trace.name == 'COVID-19 Period (No Data)' and trace.line.dash == 'dot':
@@ -175,29 +186,64 @@ def convert_plotly_to_matplotlib(fig):
         elif trace.mode == 'lines+markers' or trace.type == 'scatter':
             # Regular data points - check if they might be pre or post COVID
             if isinstance(trace.x, list) and len(trace.x) > 0:
-                # Try to parse x values as dates to determine pre/post COVID
-                try:
-                    x_dates = [pd.to_datetime(x) for x in trace.x]
-                    # Sort points by date
-                    points = sorted(zip(x_dates, trace.y), key=lambda p: p[0])
-                    x_dates = [p[0] for p in points]
-                    y_values = [p[1] for p in points]
-                    
-                    # Split into pre and post COVID
-                    for i, date in enumerate(x_dates):
-                        if date < covid_start:
-                            pre_covid_x.append(date)
-                            pre_covid_y.append(y_values[i])
-                        elif date > covid_end:
-                            post_covid_x.append(date)
-                            post_covid_y.append(y_values[i])
-                except:
-                    # Not date data or other issue, plot as is
-                    if not has_covid_period:  # Only plot if not already handling COVID period
-                        if trace.type == 'scatter':
-                            ax.plot(trace.x, trace.y, marker='o')
-                        elif trace.type == 'bar':
-                            ax.bar(trace.x, trace.y)
+                if has_seasons:
+                    # We already have seasons, just use them
+                    for i, x_val in enumerate(trace.x):
+                        # Try to extract year to determine if pre or post COVID
+                        try:
+                            if '-' in x_val:
+                                year_str = x_val.split(' ')[-1]
+                                year = int(year_str)
+                                
+                                # Use the middle month to estimate the date
+                                month_range = x_val.split(' ')[0]
+                                if 'MAR-MAY' in month_range:
+                                    month = 4  # April
+                                elif 'JUN-AUG' in month_range:
+                                    month = 7  # July
+                                elif 'SEP-NOV' in month_range:
+                                    month = 10  # October
+                                else:  # DEC-FEB
+                                    month = 1  # January
+                                    
+                                date = pd.Timestamp(year=year, month=month, day=15)
+                                
+                                if date < covid_start:
+                                    pre_covid_x.append(x_val)
+                                    pre_covid_y.append(trace.y[i])
+                                elif date > covid_end:
+                                    post_covid_x.append(x_val)
+                                    post_covid_y.append(trace.y[i])
+                        except:
+                            # Can't determine if pre or post COVID, just use as is
+                            pass
+                else:
+                    # Try to parse x values as dates to determine pre/post COVID and convert to seasons
+                    try:
+                        x_dates = [pd.to_datetime(x) for x in trace.x]
+                        # Sort points by date
+                        points = sorted(zip(x_dates, trace.y), key=lambda p: p[0])
+                        x_dates = [p[0] for p in points]
+                        y_values = [p[1] for p in points]
+                        
+                        # Convert dates to seasons
+                        x_seasons = [format_season(date) for date in x_dates]
+                        
+                        # Split into pre and post COVID
+                        for i, date in enumerate(x_dates):
+                            if date < covid_start:
+                                pre_covid_x.append(x_seasons[i])
+                                pre_covid_y.append(y_values[i])
+                            elif date > covid_end:
+                                post_covid_x.append(x_seasons[i])
+                                post_covid_y.append(y_values[i])
+                    except:
+                        # Not date data or other issue, plot as is
+                        if not has_covid_period:  # Only plot if not already handling COVID period
+                            if trace.type == 'scatter':
+                                ax.plot(trace.x, trace.y, marker='o')
+                            elif trace.type == 'bar':
+                                ax.bar(trace.x, trace.y)
     
     # Plot with special COVID handling if needed, otherwise plot the first trace
     if has_covid_period:
@@ -211,10 +257,31 @@ def convert_plotly_to_matplotlib(fig):
             
         # Plot COVID dotted line
         if covid_line_x and len(covid_line_x) >= 2:
-            ax.plot([pd.to_datetime(covid_line_x[0]), pd.to_datetime(covid_line_x[1])], 
-                    [covid_line_y[0], covid_line_y[1]], 
-                    linestyle='--', color='#0077b6', alpha=0.5, 
-                    label='COVID-19 Period (No Data)')
+            if has_seasons:
+                # Use season strings as is
+                ax.plot([covid_line_x[0], covid_line_x[1]], 
+                        [covid_line_y[0], covid_line_y[1]], 
+                        linestyle='--', color='#0077b6', alpha=0.5, 
+                        label='COVID-19 Period (No Data)')
+            else:
+                # Convert dates to seasons
+                try:
+                    covid_start_date = pd.to_datetime(covid_line_x[0])
+                    covid_end_date = pd.to_datetime(covid_line_x[1])
+                    covid_start_season = format_season(covid_start_date)
+                    covid_end_season = format_season(covid_end_date)
+                    
+                    ax.plot([covid_start_season, covid_end_season], 
+                            [covid_line_y[0], covid_line_y[1]], 
+                            linestyle='--', color='#0077b6', alpha=0.5, 
+                            label='COVID-19 Period (No Data)')
+                except:
+                    # Fallback if we can't convert to seasons
+                    ax.plot([covid_line_x[0], covid_line_x[1]], 
+                            [covid_line_y[0], covid_line_y[1]], 
+                            linestyle='--', color='#0077b6', alpha=0.5, 
+                            label='COVID-19 Period (No Data)')
+            
             ax.legend(loc='best')
     else:
         # If no COVID period found and we haven't plotted yet, use the first trace
@@ -224,6 +291,10 @@ def convert_plotly_to_matplotlib(fig):
                 ax.plot(trace.x, trace.y, marker='o', color='#0077b6')
             elif trace.type == 'bar':
                 ax.bar(trace.x, trace.y, color='#0077b6')
+            
+    # Rotate x-axis labels if we likely have seasonal labels
+    if has_seasons or pre_covid_x or post_covid_x:
+        plt.xticks(rotation=45, ha='right')
     
     # Set title and labels
     if fig.layout.title.text:
@@ -399,32 +470,41 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
                 covid_start = pd.Timestamp('2019-09-01')
                 covid_end = pd.Timestamp('2022-03-01')
                 
+                # Import season formatting function
+                from utils.graph_generator import format_season
+                
                 # Ensure date column is in datetime format
                 biomass_data['date'] = pd.to_datetime(biomass_data['date'])
                 
+                # Add season column for x-axis
+                biomass_data['season'] = biomass_data['date'].apply(format_season)
+                
                 # Split data for pre-COVID and post-COVID
-                pre_covid = biomass_data[biomass_data['date'] < covid_start]
-                post_covid = biomass_data[biomass_data['date'] > covid_end]
+                pre_covid = biomass_data[biomass_data['date'] < covid_start].sort_values('date')
+                post_covid = biomass_data[biomass_data['date'] > covid_end].sort_values('date')
                 
-                # Plot pre-COVID data
+                # Plot pre-COVID data with seasons
                 if not pre_covid.empty:
-                    ax.plot(pre_covid['date'], pre_covid[biomass_column], marker='o', color='#0077b6')
+                    ax.plot(pre_covid['season'], pre_covid[biomass_column], marker='o', color='#0077b6')
                 
-                # Plot post-COVID data
+                # Plot post-COVID data with seasons
                 if not post_covid.empty:
-                    ax.plot(post_covid['date'], post_covid[biomass_column], marker='o', color='#0077b6')
+                    ax.plot(post_covid['season'], post_covid[biomass_column], marker='o', color='#0077b6')
                 
                 # Add dotted line for COVID period if applicable
                 if not pre_covid.empty and not post_covid.empty:
                     last_pre_covid = pre_covid.iloc[-1]
                     first_post_covid = post_covid.iloc[0]
-                    ax.plot([last_pre_covid['date'], first_post_covid['date']], 
+                    ax.plot([last_pre_covid['season'], first_post_covid['season']], 
                             [last_pre_covid[biomass_column], first_post_covid[biomass_column]], 
                             linestyle='--', color='#0077b6', alpha=0.5, label='COVID-19 Period (No Data)')
                     
                 ax.set_title(f"Commercial Fish Biomass - {site_name}")
-                ax.set_xlabel("Date")
+                ax.set_xlabel("Season")
                 ax.set_ylabel("Biomass (kg/ha)")
+                
+                # Rotate x-axis labels for better readability
+                plt.xticks(rotation=45, ha='right')
                 
                 # Get Y-axis range from graph generator to match web display
                 y_range = graph_generator.get_metric_range('Commercial Fish Biomass')
@@ -482,31 +562,40 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
                 covid_start = pd.Timestamp('2019-09-01')
                 covid_end = pd.Timestamp('2022-03-01')
                 
+                # Import season formatting function
+                from utils.graph_generator import format_season
+                
                 # Ensure date column is in datetime format
                 metric_data['date'] = pd.to_datetime(metric_data['date'])
                 
+                # Add season column for x-axis
+                metric_data['season'] = metric_data['date'].apply(format_season)
+                
                 # Split data for pre-COVID and post-COVID
-                pre_covid = metric_data[metric_data['date'] < covid_start]
-                post_covid = metric_data[metric_data['date'] > covid_end]
+                pre_covid = metric_data[metric_data['date'] < covid_start].sort_values('date')
+                post_covid = metric_data[metric_data['date'] > covid_end].sort_values('date')
                 
-                # Plot pre-COVID data
+                # Plot pre-COVID data with seasons
                 if not pre_covid.empty:
-                    ax.plot(pre_covid['date'], pre_covid[metric_col], marker='o', color='#0077b6')
+                    ax.plot(pre_covid['season'], pre_covid[metric_col], marker='o', color='#0077b6')
                 
-                # Plot post-COVID data
+                # Plot post-COVID data with seasons
                 if not post_covid.empty:
-                    ax.plot(post_covid['date'], post_covid[metric_col], marker='o', color='#0077b6')
+                    ax.plot(post_covid['season'], post_covid[metric_col], marker='o', color='#0077b6')
                 
                 # Add dotted line for COVID period if applicable
                 if not pre_covid.empty and not post_covid.empty:
                     last_pre_covid = pre_covid.iloc[-1]
                     first_post_covid = post_covid.iloc[0]
-                    ax.plot([last_pre_covid['date'], first_post_covid['date']], 
+                    ax.plot([last_pre_covid['season'], first_post_covid['season']], 
                             [last_pre_covid[metric_col], first_post_covid[metric_col]], 
                             linestyle='--', color='#0077b6', alpha=0.5, label='COVID-19 Period (No Data)')
                 
                 ax.set_title(f"{display_name} - {site_name}")
-                ax.set_xlabel("Date")
+                ax.set_xlabel("Season")
+                
+                # Rotate x-axis labels for better readability
+                plt.xticks(rotation=45, ha='right')
                 
                 # Set appropriate y-axis label
                 if 'cover' in metric_column.lower():
