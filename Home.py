@@ -32,29 +32,7 @@ from utils.ui_helpers import add_loading_css
 st.markdown(load_css(), unsafe_allow_html=True)
 st.markdown(add_loading_css(), unsafe_allow_html=True)
 
-# Add JavaScript to hide Streamlit's default navigation elements
-hide_streamlit_elements_js = """
-<script type="text/javascript">
-    (function() {
-        function hideStreamlitElements() {
-            // Hide the default sidebar navigation
-            var sidebarNavs = document.querySelectorAll('[data-testid="stSidebarNav"]');
-            if (sidebarNavs.length > 0) {
-                sidebarNavs[0].style.display = 'none';
-            }
-            
-            // In case elements are added dynamically, check periodically
-            setTimeout(hideStreamlitElements, 500);
-        }
-        
-        window.addEventListener('load', hideStreamlitElements);
-        hideStreamlitElements();
-    })();
-</script>
-"""
 
-# Use a div with display:none to hide the JS code from being shown
-st.markdown(f'<div style="display:none">{hide_streamlit_elements_js}</div>', unsafe_allow_html=True)
 
 # Initialize language in session state if not present
 if 'language' not in st.session_state:
@@ -88,8 +66,7 @@ with st.sidebar:
             st.session_state.language = code
             break
 
-    # Display modern navigation menu
-    display_navigation(current_page="Main")
+    # Streamlit navigation is now automatically handled in the sidebar
             
     # Add site description based on selected language
     st.title(TRANSLATIONS[st.session_state.language]['about'])

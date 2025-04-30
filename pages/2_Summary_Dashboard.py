@@ -32,24 +32,7 @@ add_favicon()
 # Add custom CSS for loading animations
 add_loading_css()
 
-# Hide Streamlit's default navigation elements
-hide_streamlit_elements_js = """
-<script type="text/javascript">
-    (function() {
-        function hideStreamlitElements() {
-            // Hide the default sidebar navigation
-            var sidebarNavs = document.querySelectorAll('[data-testid="stSidebarNav"]');
-            if (sidebarNavs.length > 0) {
-                sidebarNavs[0].style.display = 'none';
-            }
-            setTimeout(hideStreamlitElements, 500);
-        }
-        window.addEventListener('load', hideStreamlitElements);
-        hideStreamlitElements();
-    })();
-</script>
-"""
-st.markdown(f'<div style="display:none">{hide_streamlit_elements_js}</div>', unsafe_allow_html=True)
+
 
 # Initialize data processor
 @st.cache_resource(ttl=3600)
@@ -108,8 +91,7 @@ with st.sidebar:
             st.session_state.language = code
             break
     
-    # Display modern navigation menu
-    display_navigation(current_page="Summary Dashboard")
+    # Streamlit navigation is now automatically handled in the sidebar
     
     st.title(TRANSLATIONS[st.session_state.language]['analysis_options'])
     

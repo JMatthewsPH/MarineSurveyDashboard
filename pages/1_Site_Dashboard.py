@@ -38,24 +38,7 @@ st.markdown("""
 # Import navigation utilities
 from utils.navigation import display_navigation
 
-# Hide Streamlit's default navigation elements
-hide_streamlit_elements_js = """
-<script type="text/javascript">
-    (function() {
-        function hideStreamlitElements() {
-            // Hide the default sidebar navigation
-            var sidebarNavs = document.querySelectorAll('[data-testid="stSidebarNav"]');
-            if (sidebarNavs.length > 0) {
-                sidebarNavs[0].style.display = 'none';
-            }
-            setTimeout(hideStreamlitElements, 500);
-        }
-        window.addEventListener('load', hideStreamlitElements);
-        hideStreamlitElements();
-    })();
-</script>
-"""
-st.markdown(f'<div style="display:none">{hide_streamlit_elements_js}</div>', unsafe_allow_html=True)
+
 
 # Initialize language in session state if not present
 if 'language' not in st.session_state:
@@ -123,8 +106,7 @@ with st.sidebar:
             st.session_state.language = code
             break
 
-    # Display modern navigation menu
-    display_navigation(current_page="Site Dashboard")
+    # Streamlit navigation is now automatically handled in the sidebar
 
     # Site selection with municipality grouping
     st.subheader(TRANSLATIONS[st.session_state.language]['select_site'])
