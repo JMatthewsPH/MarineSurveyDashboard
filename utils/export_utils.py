@@ -326,8 +326,8 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
                 # Set the y-axis limits using the same ranges as the web display
                 ax.set_ylim(y_range['min'], y_range['max'])
                 
-                # Add consistent tick spacing (0, 20, 40, 60, 80, 100)
-                ax.set_yticks(range(0, 101, 20))
+                # Add consistent tick spacing (0, 200, 400, 600, etc.)
+                ax.set_yticks(range(0, 2001, 200))
                 
                 ax.grid(True, alpha=0.3)
                 plt.tight_layout()
