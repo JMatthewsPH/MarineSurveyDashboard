@@ -564,14 +564,15 @@ if selected_site:
                     label = f"{site_municipality} Average" if biomass_compare_scope == "Municipality Average" else "All Sites Average"
                     biomass_comparison_labels = [label]
                     
-            # Create the time series chart with date range filtering
+            # Create the time series chart with date range filtering and confidence interval
             biomass_fig, biomass_config = graph_generator.create_time_series(
                 biomass_data,
                 f"Commercial Fish Biomass - {selected_site}",
                 "Biomass (kg/ha)",
                 comparison_data=biomass_comparison_data,
                 comparison_labels=biomass_comparison_labels,
-                date_range=date_range
+                date_range=date_range,
+                show_confidence_interval=show_confidence_interval  # Use the checkbox value
             )
             
             # Replace the placeholder with the actual chart
@@ -631,7 +632,8 @@ if selected_site:
                 f"Hard Coral Cover - {selected_site}",
                 "Cover (%)",
                 comparison_data=coral_comparison_data,
-                date_range=date_range
+                date_range=date_range,
+                show_confidence_interval=show_confidence_interval
             )
             
             # Replace the placeholder with the actual chart
@@ -667,7 +669,8 @@ if selected_site:
                 f"Fleshy Algae Cover - {selected_site}",
                 "Cover (%)",
                 comparison_data=algae_comparison_data,
-                date_range=date_range
+                date_range=date_range,
+                show_confidence_interval=show_confidence_interval
             )
             st.plotly_chart(algae_fig, use_container_width=True, config=algae_config, key='algae_chart')
 
@@ -691,7 +694,8 @@ if selected_site:
                 f"Herbivore Density - {selected_site}",
                 "Density (ind/ha)",
                 comparison_data=herbivore_comparison_data,
-                date_range=date_range
+                date_range=date_range,
+                show_confidence_interval=show_confidence_interval
             )
             st.plotly_chart(herbivore_fig, use_container_width=True, config=herbivore_config, key='herbivore_chart')
 
@@ -715,7 +719,8 @@ if selected_site:
                 f"Omnivore Density - {selected_site}",
                 "Density (ind/ha)",
                 comparison_data=omnivore_comparison_data,
-                date_range=date_range
+                date_range=date_range,
+                show_confidence_interval=show_confidence_interval
             )
             st.plotly_chart(omnivore_fig, use_container_width=True, config=omnivore_config, key='omnivore_chart')
 

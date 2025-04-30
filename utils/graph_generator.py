@@ -78,7 +78,7 @@ class GraphGenerator:
         
         return ranges.get(metric_name, {'min': 0, 'max': 100})  # default range
 
-    def create_time_series(self, data, title, y_label, comparison_data=None, comparison_labels=None, date_range=None, secondary_data=None, secondary_label=None, tertiary_data=None, tertiary_label=None):
+    def create_time_series(self, data, title, y_label, comparison_data=None, comparison_labels=None, date_range=None, secondary_data=None, secondary_label=None, tertiary_data=None, tertiary_label=None, show_confidence_interval=False):
         """
         Create time series graph with optional multiple comparison sites and date range
         
@@ -93,6 +93,7 @@ class GraphGenerator:
             secondary_label: Label for secondary data
             tertiary_data: Optional tertiary metric data
             tertiary_label: Label for tertiary data
+            show_confidence_interval: Whether to show confidence interval bands (95% CI)
         """
         # Create base figure
         fig = go.Figure()
@@ -192,6 +193,90 @@ class GraphGenerator:
                 'dtick': 20  # 20% intervals for Rubble
             })
 
+        # Calculate confidence intervals if requested
+        if show_confidence_interval and not pre_covid.empty:
+            # Get the y-values (second column) for calculations
+            y_values_pre = pre_covid[pre_covid.columns[1]].values
+            # Calculate confidence interval (95%)
+            mean_pre = np.mean(y_values_pre)
+            std_pre = np.std(y_values_pre)
+            n_pre = len(y_values_pre)
+            
+            # Standard error of the mean
+            sem_pre = std_pre / np.sqrt(n_pre) if n_pre > 0 else 0
+            # 95% confidence interval (1.96 is the z-value for 95% confidence)
+            ci_95_lower_pre = mean_pre - 1.96 * sem_pre
+            ci_95_upper_pre = mean_pre + 1.96 * sem_pre
+            
+            # Create arrays for upper and lower confidence bounds
+            # Apply bounds to each data point
+            ci_lower_pre = np.maximum(y_values_pre - 1.96 * sem_pre, 0)  # Don't go below 0
+            ci_upper_pre = y_values_pre + 1.96 * sem_pre
+            
+            # Add confidence interval for pre-COVID data
+            fig.add_trace(go.Scatter(
+                x=pre_covid['season'],
+                y=ci_upper_pre,
+                mode='lines',
+                line=dict(width=0),
+                showlegend=False,
+                hoverinfo='skip'
+            ))
+            
+            fig.add_trace(go.Scatter(
+                x=pre_covid['season'],
+                y=ci_lower_pre,
+                mode='lines',
+                line=dict(width=0),
+                fill='tonexty',
+                fillcolor='rgba(0, 119, 182, 0.2)',  # Light blue with transparency
+                showlegend=False,
+                name='95% Confidence Interval',
+                hoverinfo='skip'
+            ))
+            
+        # Calculate confidence intervals for post-COVID if requested
+        if show_confidence_interval and not post_covid.empty:
+            # Get the y-values (second column) for calculations
+            y_values_post = post_covid[post_covid.columns[1]].values
+            # Calculate confidence interval (95%)
+            mean_post = np.mean(y_values_post)
+            std_post = np.std(y_values_post)
+            n_post = len(y_values_post)
+            
+            # Standard error of the mean
+            sem_post = std_post / np.sqrt(n_post) if n_post > 0 else 0
+            # 95% confidence interval (1.96 is the z-value for 95% confidence)
+            ci_95_lower_post = mean_post - 1.96 * sem_post
+            ci_95_upper_post = mean_post + 1.96 * sem_post
+            
+            # Create arrays for upper and lower confidence bounds
+            # Apply bounds to each data point
+            ci_lower_post = np.maximum(y_values_post - 1.96 * sem_post, 0)  # Don't go below 0
+            ci_upper_post = y_values_post + 1.96 * sem_post
+            
+            # Add confidence interval for post-COVID data
+            fig.add_trace(go.Scatter(
+                x=post_covid['season'],
+                y=ci_upper_post,
+                mode='lines',
+                line=dict(width=0),
+                showlegend=False,
+                hoverinfo='skip'
+            ))
+            
+            fig.add_trace(go.Scatter(
+                x=post_covid['season'],
+                y=ci_lower_post,
+                mode='lines',
+                line=dict(width=0),
+                fill='tonexty',
+                fillcolor='rgba(0, 119, 182, 0.2)',  # Light blue with transparency
+                showlegend=False,
+                name='95% Confidence Interval',
+                hoverinfo='skip'
+            ))
+        
         # Add pre-COVID data
         fig.add_trace(go.Scatter(
             x=pre_covid['season'],
