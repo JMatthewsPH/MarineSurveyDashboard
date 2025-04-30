@@ -330,8 +330,8 @@ if selected_site:
             # PDF Report Export Section
             st.subheader("Export PDF Report")
             
-            # Metric selection - only include metrics that are displayed on the webpage
-            available_metrics = ["hard_coral", "fleshy_algae", "herbivore", 
+            # Metric selection - include all metrics displayed on the webpage
+            available_metrics = ["hard_coral", "fleshy_algae", "herbivore", "carnivore",
                                "omnivore", "corallivore", "bleaching", "rubble"]
             
             # Display names for the metrics for friendly selection
@@ -544,6 +544,30 @@ if selected_site:
                     "Select average scope:",
                     ["Municipality Average", "All Sites Average"],
                     key="herbivore_compare_scope"
+                )
+                
+            # Carnivore comparison options
+            st.subheader("Carnivore Density")
+            carnivore_comparison = st.selectbox(
+                "Compare carnivore density with:",
+                ["No Comparison", "Compare with Site", "Compare with Average"],
+                key="carnivore_comparison"
+            )
+
+            carnivore_compare_site = None
+            carnivore_compare_scope = None
+            if carnivore_comparison == "Compare with Site":
+                compare_sites = [site for site in alphabetical_site_names if site != selected_site]
+                carnivore_compare_site = st.selectbox(
+                    "Select site to compare carnivore density:",
+                    compare_sites,
+                    key="carnivore_compare_site"
+                )
+            elif carnivore_comparison == "Compare with Average":
+                carnivore_compare_scope = st.selectbox(
+                    "Select average scope:",
+                    ["Municipality Average", "All Sites Average"],
+                    key="carnivore_compare_scope"
                 )
 
             # Omnivore comparison options
@@ -852,6 +876,31 @@ if selected_site:
                 show_confidence_interval=show_confidence_interval
             )
             st.plotly_chart(herbivore_fig, use_container_width=True, config=herbivore_config, key='herbivore_chart')
+
+            # Add spacing between charts
+            st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
+            
+            # Get carnivore data and comparison
+            carnivore_data = data_processor.get_metric_data(selected_site, 'carnivore')
+            carnivore_comparison_data = None
+            if carnivore_comparison == "Compare with Site" and carnivore_compare_site:
+                carnivore_comparison_data = data_processor.get_metric_data(carnivore_compare_site, 'carnivore')
+            elif carnivore_comparison == "Compare with Average":
+                municipality = site_municipality if carnivore_compare_scope == "Municipality Average" else None
+                carnivore_comparison_data = data_processor.get_average_metric_data(
+                    'carnivore',
+                    exclude_site=selected_site,
+                    municipality=municipality
+                )
+            carnivore_fig, carnivore_config = graph_generator.create_time_series(
+                carnivore_data,
+                f"Carnivore Density - {selected_site}",
+                "Density (ind/ha)",
+                comparison_data=carnivore_comparison_data,
+                date_range=date_range,
+                show_confidence_interval=show_confidence_interval
+            )
+            st.plotly_chart(carnivore_fig, use_container_width=True, config=carnivore_config, key='carnivore_chart')
 
             # Add spacing between charts
             st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)

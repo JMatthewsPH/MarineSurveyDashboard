@@ -274,7 +274,7 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
     graph_generator = GraphGenerator(data_processor)
     # If no metrics specified, use standard set matching what's shown on the website
     if metrics is None:
-        metrics = ["hard_coral", "fleshy_algae", "herbivore", 
+        metrics = ["hard_coral", "fleshy_algae", "herbivore", "carnivore",
                   "omnivore", "corallivore", "bleaching", "rubble"]
     
     # Create buffer for PDF
