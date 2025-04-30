@@ -59,8 +59,8 @@ class GraphGenerator:
             'Hard Coral Cover': {'min': 0, 'max': 100},     # percentage
             'Fleshy Algae': {'min': 0, 'max': 100},         # percentage
             'Bleaching': {'min': 0, 'max': 100},            # percentage
-            'Herbivore Density': {'min': 0, 'max': 5000},  # ind/ha - with 1k intervals
-            'Herbivore': {'min': 0, 'max': 5000},          # ind/ha - with 1k intervals
+            'Herbivore Density': {'min': 0, 'max': 2500},  # ind/ha - reduced from 5000
+            'Herbivore': {'min': 0, 'max': 2500},          # ind/ha - reduced from 5000
             'Carnivore': {'min': 0, 'max': 300},           # ind/ha - match omnivore scale
             'Carnivore Density': {'min': 0, 'max': 300},   # ind/ha - match omnivore scale
             'Omnivore Density': {'min': 0, 'max': 300},    # ind/ha - reduced from 1000
@@ -174,7 +174,7 @@ class GraphGenerator:
             y_axis_settings.update({
                 'tickmode': 'linear',
                 'tick0': 0,
-                'dtick': 1000  # 1k intervals for Herbivore density
+                'dtick': 500  # 500 unit intervals for Herbivore density
             })
         elif 'Carnivore' in metric_name:
             y_axis_settings.update({
