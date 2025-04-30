@@ -54,6 +54,7 @@ from utils.graph_generator import GraphGenerator
 from utils.translations import TRANSLATIONS
 from utils.database import get_db
 from utils.branding import display_logo, add_favicon
+from utils.export_utils import create_export_section
 from utils.ui_helpers import (
     loading_spinner, 
     skeleton_chart, 
@@ -241,6 +242,73 @@ if selected_site:
                 "Show Confidence Interval",
                 value=False  # Default to unchecked
             )
+            
+            # Helper function to get all site data for export
+            def get_site_data_for_export(site_name):
+                """Get all metrics data for the selected site in a single DataFrame"""
+                metrics_data = {}
+                
+                # Get all the different metrics
+                metrics = ["hard_coral", "fleshy_algae", "herbivore", "carnivore", 
+                          "omnivore", "corallivore", "bleaching", "rubble"]
+                
+                # Commercial biomass is handled separately
+                biomass_df = data_processor.get_biomass_data(site_name)
+                if not biomass_df.empty:
+                    metrics_data["commercial_biomass"] = biomass_df
+                
+                # Get data for each metric
+                for metric in metrics:
+                    df = data_processor.get_metric_data(site_name, metric)
+                    if not df.empty:
+                        # Use the standardized metric name from the map
+                        metrics_data[data_processor.METRIC_MAP[metric]] = df
+                
+                # Combine all metrics into a single DataFrame
+                if not metrics_data:
+                    return pd.DataFrame()  # Return empty DataFrame if no data
+                
+                # Start with dates from biomass as the base
+                if "commercial_biomass" in metrics_data:
+                    result_df = metrics_data["commercial_biomass"][["date"]].copy()
+                else:
+                    # Use the first available metric's dates
+                    first_key = list(metrics_data.keys())[0]
+                    result_df = metrics_data[first_key][["date"]].copy()
+                
+                # Add each metric's values to the result DataFrame
+                for metric_name, df in metrics_data.items():
+                    # Get the display name for the column header
+                    display_name = data_processor.DISPLAY_NAMES.get(metric_name, metric_name.replace('_', ' ').title())
+                    
+                    # Add the metric column, matching by date
+                    result_df = result_df.merge(
+                        df[["date", metric_name]], 
+                        on="date", 
+                        how="outer"
+                    )
+                
+                # Sort by date (newest first)
+                result_df = result_df.sort_values("date", ascending=False)
+                
+                return result_df
+            
+            # Export Section
+            st.subheader("Export Data")
+            
+            export_container = st.container()
+            export_button = st.button("Prepare Site Data for Export")
+            
+            if export_button:
+                with st.spinner("Preparing data for export..."):
+                    export_data = get_site_data_for_export(selected_site)
+                    if not export_data.empty:
+                        # Format column names for better readability
+                        export_data = export_data.rename(columns=data_processor.DISPLAY_NAMES)
+                        create_export_section(export_data, export_container, prefix=f"{selected_site}_data")
+                        st.success(f"Data for {selected_site} is ready for export.")
+                    else:
+                        st.warning(f"No data available for {selected_site}.")
             
             # Date Range Selection
             st.header(TRANSLATIONS[st.session_state.language]['date_range'])
