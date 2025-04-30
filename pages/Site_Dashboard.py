@@ -54,7 +54,7 @@ from utils.graph_generator import GraphGenerator
 from utils.translations import TRANSLATIONS
 from utils.database import get_db
 from utils.branding import display_logo, add_favicon
-from utils.export_utils import create_export_section, generate_site_report_pdf
+from utils.export_utils import generate_site_report_pdf
 from utils.ui_helpers import (
     loading_spinner, 
     skeleton_chart, 
@@ -310,22 +310,8 @@ if selected_site:
                 
                 return result_df
             
-            # Export Section
-            st.subheader("Export Data")
-            
-            export_container = st.container()
-            export_button = st.button("Prepare Site Data for Export")
-            
-            if export_button:
-                with st.spinner("Preparing data for export..."):
-                    export_data = get_site_data_for_export(selected_site)
-                    if not export_data.empty:
-                        # Format column names for better readability
-                        export_data = export_data.rename(columns=data_processor.DISPLAY_NAMES)
-                        create_export_section(export_data, export_container, prefix=f"{selected_site}_data")
-                        st.success(f"Data for {selected_site} is ready for export.")
-                    else:
-                        st.warning(f"No data available for {selected_site}.")
+            # Export Data section removed per user request
+            # Will be rethought and reimplemented later
             
             # PDF Report Export Section
             st.subheader("Export PDF Report")
