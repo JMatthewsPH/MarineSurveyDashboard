@@ -54,7 +54,7 @@ from utils.graph_generator import GraphGenerator
 from utils.translations import TRANSLATIONS
 from utils.database import get_db
 from utils.branding import display_logo, add_favicon
-from utils.export_utils import create_export_section
+from utils.export_utils import create_export_section, generate_site_report_pdf, add_chart_export_button
 from utils.ui_helpers import (
     loading_spinner, 
     skeleton_chart, 
@@ -326,6 +326,75 @@ if selected_site:
                         st.success(f"Data for {selected_site} is ready for export.")
                     else:
                         st.warning(f"No data available for {selected_site}.")
+            
+            # PDF Report Export Section
+            st.subheader("Export PDF Report")
+            
+            # Metric selection
+            available_metrics = ["hard_coral", "fleshy_algae", "herbivore", "carnivore", 
+                               "omnivore", "corallivore", "bleaching", "rubble"]
+            
+            # Display names for the metrics for friendly selection
+            metric_display = {
+                "hard_coral": "Hard Coral Cover",
+                "fleshy_algae": "Fleshy Algae Cover",
+                "herbivore": "Herbivore Density",
+                "carnivore": "Carnivore Density",
+                "omnivore": "Omnivore Density",
+                "corallivore": "Corallivore Density",
+                "bleaching": "Bleaching",
+                "rubble": "Rubble"
+            }
+            
+            # Include biomass by default
+            st.markdown("Select charts to include in the PDF report:")
+            
+            # Biomass is a special option
+            include_biomass = st.checkbox("Commercial Fish Biomass", value=True)
+            
+            # Create multiple columns for a more compact UI with 2 checkboxes per row
+            col1, col2 = st.columns(2)
+            
+            # Create selected metrics dictionary
+            selected_metrics = {}
+            for i, metric in enumerate(available_metrics):
+                # Alternate between columns
+                col = col1 if i % 2 == 0 else col2
+                selected_metrics[metric] = col.checkbox(metric_display[metric], value=True)
+            
+            # Filter selected metrics
+            metrics_to_include = [m for m, selected in selected_metrics.items() if selected]
+            
+            # PDF export button
+            pdf_report_button = st.button("Generate PDF Report")
+            
+            if pdf_report_button:
+                with st.spinner("Generating PDF report with selected charts..."):
+                    try:
+                        # Generate PDF bytes
+                        pdf_bytes = generate_site_report_pdf(
+                            selected_site, 
+                            data_processor, 
+                            metrics=metrics_to_include,
+                            include_biomass=include_biomass
+                        )
+                        
+                        # Create timestamp for filename
+                        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                        filename = f"{selected_site}_report_{timestamp}.pdf"
+                        
+                        # Show download button
+                        st.download_button(
+                            label="Download PDF Report",
+                            data=pdf_bytes,
+                            file_name=filename,
+                            mime="application/pdf",
+                        )
+                        
+                        st.success(f"PDF report for {selected_site} generated successfully!")
+                    except Exception as e:
+                        st.error(f"Error generating PDF report: {str(e)}")
+                        st.info("Try selecting fewer charts or checking console for error details.")
             
             # Date Range Selection
             st.header(TRANSLATIONS[st.session_state.language]['date_range'])

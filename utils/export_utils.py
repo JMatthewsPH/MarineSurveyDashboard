@@ -10,6 +10,15 @@ import io
 from datetime import datetime
 import json
 import base64
+import matplotlib.pyplot as plt
+from reportlab.lib.pagesizes import letter, A4
+from reportlab.pdfgen import canvas
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+import tempfile
+import os
 
 def create_download_link(data, filename, link_text="Download data"):
     """
@@ -128,4 +137,397 @@ def create_export_section(data, container, prefix="marine_data"):
         data=json_data,
         file_name=json_filename,
         mime="application/json",
+    )
+
+def convert_plotly_to_matplotlib(fig):
+    """
+    Convert a Plotly figure to a Matplotlib figure
+    
+    Args:
+        fig: Plotly figure object
+        
+    Returns:
+        Matplotlib figure object
+    """
+    # Extract data from plotly fig
+    fig_data = fig.data[0]
+    
+    # Create Matplotlib figure
+    mpl_fig, ax = plt.subplots(figsize=(8, 5))
+    
+    # Determine plot type and add data
+    if fig_data.type == 'scatter':
+        ax.plot(fig_data.x, fig_data.y, marker='o')
+    elif fig_data.type == 'bar':
+        ax.bar(fig_data.x, fig_data.y)
+    
+    # Set title and labels
+    if fig.layout.title.text:
+        ax.set_title(fig.layout.title.text)
+    if fig.layout.xaxis.title.text:
+        ax.set_xlabel(fig.layout.xaxis.title.text)
+    if fig.layout.yaxis.title.text:
+        ax.set_ylabel(fig.layout.yaxis.title.text)
+    
+    # Grid
+    ax.grid(True, alpha=0.3)
+    
+    # Tight layout
+    plt.tight_layout()
+    
+    return mpl_fig
+
+def generate_single_chart_pdf(fig, title, site_name):
+    """
+    Generate a PDF file containing a single chart
+    
+    Args:
+        fig: Plotly figure to include in the PDF
+        title: Title for the chart
+        site_name: Name of the site
+        
+    Returns:
+        PDF file as bytes
+    """
+    # Create a BytesIO object to store the PDF
+    buffer = io.BytesIO()
+    
+    # Create PDF document
+    doc = SimpleDocTemplate(buffer, pagesize=A4)
+    elements = []
+    
+    # Add title
+    styles = getSampleStyleSheet()
+    title_style = styles['Heading1']
+    elements.append(Paragraph(f"Marine Conservation Report", title_style))
+    elements.append(Spacer(1, 0.25*inch))
+    
+    # Add site name and date
+    subtitle_style = styles['Heading2']
+    elements.append(Paragraph(f"Site: {site_name}", subtitle_style))
+    elements.append(Paragraph(f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M')}", styles['Normal']))
+    elements.append(Spacer(1, 0.25*inch))
+    
+    # Add chart title
+    chart_title_style = styles['Heading3']
+    elements.append(Paragraph(title, chart_title_style))
+    elements.append(Spacer(1, 0.15*inch))
+    
+    # Save plotly figure to a temporary PNG file
+    temp_dir = tempfile.mkdtemp()
+    temp_img_path = os.path.join(temp_dir, "chart.png")
+    
+    # Export figure as an image
+    fig_bytes = fig.to_image(format="png", width=800, height=500, scale=2)
+    
+    # Write to temp file
+    with open(temp_img_path, "wb") as f:
+        f.write(fig_bytes)
+    
+    # Add the image to the PDF
+    img = Image(temp_img_path, width=6.5*inch, height=4*inch)
+    elements.append(img)
+    
+    # Add some notes
+    elements.append(Spacer(1, 0.25*inch))
+    elements.append(Paragraph("Notes:", styles['Heading4']))
+    
+    notes = [
+        f"This chart shows data for {site_name}.",
+        "Data source: Marine Conservation Monitoring Program.",
+        f"Report generated via Marine Conservation Dashboard on {datetime.now().strftime('%Y-%m-%d')}."
+    ]
+    
+    for note in notes:
+        elements.append(Paragraph(note, styles['Normal']))
+        elements.append(Spacer(1, 0.1*inch))
+    
+    # Build the PDF
+    doc.build(elements)
+    
+    # Clean up the temp file
+    try:
+        os.remove(temp_img_path)
+        os.rmdir(temp_dir)
+    except:
+        pass
+    
+    # Reset the buffer position to the beginning
+    buffer.seek(0)
+    return buffer.getvalue()
+
+def generate_site_report_pdf(site_name, data_processor, metrics=None, include_biomass=True):
+    """
+    Generate a comprehensive PDF report for a specific site with selected charts
+    
+    Args:
+        site_name: Name of the site
+        data_processor: Data processor instance with access to all metrics
+        metrics: List of metrics to include (default is standard set)
+        include_biomass: Whether to include biomass data (default is True)
+        
+    Returns:
+        PDF file as bytes
+    """
+    # If no metrics specified, use standard set
+    if metrics is None:
+        metrics = ["hard_coral", "fleshy_algae", "herbivore", "carnivore", 
+                  "omnivore", "corallivore", "bleaching", "rubble"]
+    
+    # Create buffer for PDF
+    buffer = io.BytesIO()
+    
+    # Create PDF document
+    doc = SimpleDocTemplate(buffer, pagesize=A4)
+    elements = []
+    
+    # Add title
+    styles = getSampleStyleSheet()
+    title_style = styles['Heading1']
+    elements.append(Paragraph(f"Marine Conservation Report: {site_name}", title_style))
+    elements.append(Spacer(1, 0.25*inch))
+    
+    # Add date and description
+    elements.append(Paragraph(f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M')}", styles['Normal']))
+    elements.append(Paragraph("This report contains selected metrics for the specified marine conservation site.", styles['Normal']))
+    elements.append(Spacer(1, 0.5*inch))
+    
+    # Create temp directory for images
+    temp_dir = tempfile.mkdtemp()
+    
+    # Add biomass data if selected
+    if include_biomass:
+        biomass_data = data_processor.get_biomass_data(site_name)
+        if not biomass_data.empty:
+            # Find the actual biomass column
+            biomass_column = None
+            for col in biomass_data.columns:
+                if 'biomass' in col.lower():
+                    biomass_column = col
+                    break
+            
+            if biomass_column:
+                elements.append(Paragraph(f"Commercial Fish Biomass", styles['Heading2']))
+                elements.append(Spacer(1, 0.15*inch))
+                
+                # Create matplotlib figure
+                fig, ax = plt.subplots(figsize=(8, 4))
+                ax.plot(biomass_data['date'], biomass_data[biomass_column], marker='o')
+                ax.set_title(f"Commercial Fish Biomass - {site_name}")
+                ax.set_xlabel("Date")
+                ax.set_ylabel("Biomass (kg/ha)")
+                
+                # Set fixed y-axis range
+                ax.set_ylim(0, 3000)
+                
+                ax.grid(True, alpha=0.3)
+                plt.tight_layout()
+                
+                # Save to temp file
+                biomass_img_path = os.path.join(temp_dir, "biomass.png")
+                fig.savefig(biomass_img_path, dpi=150)
+                plt.close(fig)
+                
+                # Add to PDF
+                img = Image(biomass_img_path, width=6.5*inch, height=3.5*inch)
+                elements.append(img)
+                elements.append(Spacer(1, 0.25*inch))
+    
+    # Process regular metrics
+    for metric in metrics:
+        metric_data = data_processor.get_metric_data(site_name, metric)
+        if not metric_data.empty:
+            # Get the standardized metric name
+            metric_column = data_processor.METRIC_MAP[metric]
+            display_name = data_processor.DISPLAY_NAMES.get(metric_column, metric_column.replace('_', ' ').title())
+            
+            elements.append(Paragraph(f"{display_name}", styles['Heading2']))
+            elements.append(Spacer(1, 0.15*inch))
+            
+            # Only proceed if the column exists in the DataFrame
+            if metric_column in metric_data.columns:
+                # Create matplotlib figure
+                fig, ax = plt.subplots(figsize=(8, 4))
+                ax.plot(metric_data['date'], metric_data[metric_column], marker='o')
+                ax.set_title(f"{display_name} - {site_name}")
+                ax.set_xlabel("Date")
+                
+                # Set appropriate y-axis label and fixed range
+                if 'cover' in metric_column.lower():
+                    ax.set_ylabel("Cover (%)")
+                    ax.set_ylim(0, 100)
+                elif 'density' in metric_column.lower():
+                    ax.set_ylabel("Density (ind/ha)")
+                    if 'herbivore' in metric_column.lower() or 'carnivore' in metric_column.lower():
+                        ax.set_ylim(0, 5000)
+                    else:
+                        ax.set_ylim(0, 3000)
+                elif 'biomass' in metric_column.lower():
+                    ax.set_ylabel("Biomass (kg/ha)")
+                    ax.set_ylim(0, 3000)
+                elif 'bleaching' in metric_column.lower():
+                    ax.set_ylabel("Bleaching (%)")
+                    ax.set_ylim(0, 100)
+                else:
+                    ax.set_ylabel(metric_column.replace('_', ' ').title())
+                
+                ax.grid(True, alpha=0.3)
+                plt.tight_layout()
+                
+                # Save to temp file
+                metric_img_path = os.path.join(temp_dir, f"{metric}.png")
+                fig.savefig(metric_img_path, dpi=150)
+                plt.close(fig)
+                
+                # Add to PDF
+                img = Image(metric_img_path, width=6.5*inch, height=3.5*inch)
+                elements.append(img)
+                elements.append(Spacer(1, 0.25*inch))
+    
+    # Add a summary table of latest values if we have data
+    included_metrics_with_data = []
+    summary_rows = []
+    
+    # Check biomass data for table
+    if include_biomass:
+        biomass_data = data_processor.get_biomass_data(site_name)
+        if not biomass_data.empty:
+            # Find the biomass column
+            biomass_column = None
+            for col in biomass_data.columns:
+                if 'biomass' in col.lower():
+                    biomass_column = col
+                    break
+            
+            if biomass_column:
+                included_metrics_with_data.append('biomass')
+                latest_biomass = biomass_data.sort_values('date', ascending=False).iloc[0]
+                
+                # Determine trend
+                trend = '−'
+                if len(biomass_data) > 1:
+                    prev_value = biomass_data.sort_values('date', ascending=False).iloc[1][biomass_column]
+                    if latest_biomass[biomass_column] > prev_value:
+                        trend = '↑'
+                    elif latest_biomass[biomass_column] < prev_value:
+                        trend = '↓'
+                
+                summary_rows.append([
+                    'Commercial Fish Biomass', 
+                    f"{latest_biomass[biomass_column]:.1f} kg/ha",
+                    latest_biomass['date'].strftime('%Y-%m-%d'),
+                    trend
+                ])
+    
+    # Check other metrics for table
+    for metric in metrics:
+        metric_data = data_processor.get_metric_data(site_name, metric)
+        if not metric_data.empty:
+            metric_column = data_processor.METRIC_MAP[metric]
+            if metric_column in metric_data.columns:
+                included_metrics_with_data.append(metric)
+                latest_data = metric_data.sort_values('date', ascending=False).iloc[0]
+                
+                # Format value based on metric type
+                if 'cover' in metric_column.lower():
+                    value_str = f"{latest_data[metric_column]:.1f}%"
+                elif 'density' in metric_column.lower():
+                    value_str = f"{latest_data[metric_column]:.1f} ind/ha"
+                else:
+                    value_str = f"{latest_data[metric_column]:.1f}"
+                
+                # Determine trend
+                trend = '−'
+                if len(metric_data) > 1:
+                    prev_value = metric_data.sort_values('date', ascending=False).iloc[1][metric_column]
+                    if latest_data[metric_column] > prev_value:
+                        trend = '↑'
+                    elif latest_data[metric_column] < prev_value:
+                        trend = '↓'
+                
+                # Add to table
+                display_name = data_processor.DISPLAY_NAMES.get(metric_column, metric_column.replace('_', ' ').title())
+                summary_rows.append([
+                    display_name,
+                    value_str,
+                    latest_data['date'].strftime('%Y-%m-%d'),
+                    trend
+                ])
+    
+    # Only add the summary table if we have data
+    if included_metrics_with_data:
+        elements.append(Paragraph("Summary of Latest Data", styles['Heading2']))
+        elements.append(Spacer(1, 0.15*inch))
+        
+        # Create table data with header
+        table_data = [['Metric', 'Latest Value', 'Date', 'Trend']]
+        table_data.extend(summary_rows)
+        
+        # Create table
+        table = Table(table_data)
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.lightblue),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ]))
+        
+        elements.append(table)
+    
+    # Add footer with information
+    elements.append(Spacer(1, 0.5*inch))
+    footer_style = ParagraphStyle(
+        'Footer',
+        parent=styles['Normal'],
+        fontSize=8,
+        textColor=colors.gray
+    )
+    
+    elements.append(Paragraph(
+        f"Report generated via Marine Conservation Dashboard on {datetime.now().strftime('%Y-%m-%d')}. " +
+        "Data source: Marine Conservation Monitoring Program.",
+        footer_style
+    ))
+    
+    # Build the PDF
+    doc.build(elements)
+    
+    # Clean up temp files
+    try:
+        for file in os.listdir(temp_dir):
+            os.remove(os.path.join(temp_dir, file))
+        os.rmdir(temp_dir)
+    except:
+        pass
+    
+    # Reset buffer position
+    buffer.seek(0)
+    return buffer.getvalue()
+
+def add_chart_export_button(fig, container, site_name, title):
+    """
+    Add a button to export a chart as PDF
+    
+    Args:
+        fig: Plotly figure object
+        container: Streamlit container to place the button
+        site_name: Name of the site for the chart title
+        title: Chart title
+    """
+    # Generate timestamped filename
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"{site_name}_{title.replace(' ', '_').lower()}_{timestamp}.pdf"
+    
+    # Create PDF
+    pdf_bytes = generate_single_chart_pdf(fig, title, site_name)
+    
+    # Add download button
+    container.download_button(
+        label="Export Chart as PDF",
+        data=pdf_bytes,
+        file_name=filename,
+        mime="application/pdf",
     )
