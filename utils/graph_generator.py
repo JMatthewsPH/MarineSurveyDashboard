@@ -535,7 +535,8 @@ class GraphGenerator:
                 'displaylogo': False,
                 'responsive': True,
                 'displayModeBar': True,
-                'modeBarButtonsToRemove': ['lasso2d', 'select2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d'],
+                # Define the exact buttons to show: zoom in, zoom out, reset view, download
+                'modeBarButtons': [['zoomIn2d', 'zoomOut2d', 'resetScale2d', 'toImage']],
                 'scrollZoom': False,  # Disable scroll zoom on mobile to prevent accidental zooming
                 'doubleClick': 'reset',  # Double tap to reset the view
                 'showTips': True,  # Show tips for better usability
@@ -580,7 +581,8 @@ class GraphGenerator:
             'displaylogo': False,
             'responsive': True,
             'displayModeBar': True,
-            'modeBarButtonsToRemove': ['lasso2d', 'select2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d'],
+            # Define the exact buttons to show: zoom in, zoom out, reset view, download
+            'modeBarButtons': [['zoomIn2d', 'zoomOut2d', 'resetScale2d', 'toImage']],
             'scrollZoom': False,  # Disable scroll zoom on mobile to prevent accidental zooming
             'doubleClick': 'reset',  # Double tap to reset the view
             'showTips': True,  # Show tips for better usability
@@ -716,7 +718,9 @@ class GraphGenerator:
             },
             'displaylogo': False,
             'responsive': True,
-            'modeBarButtonsToRemove': ['lasso2d', 'select2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d'],
+            'displayModeBar': True,
+            # Define the exact buttons to show: zoom in, zoom out, reset view, download
+            'modeBarButtons': [['zoomIn2d', 'zoomOut2d', 'resetScale2d', 'toImage']],
             'scrollZoom': False,
             'doubleClick': 'reset',
             'showTips': True,
