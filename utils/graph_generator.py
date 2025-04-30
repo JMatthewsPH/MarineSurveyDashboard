@@ -132,11 +132,13 @@ class GraphGenerator:
         data['season'] = data['date'].apply(format_season)
 
         # Split data into pre and post COVID
-        covid_start = pd.Timestamp(date(2019, 9, 1))
-        covid_end = pd.Timestamp(date(2022, 3, 1))
+        # Convert date objects to pandas timestamps consistently
+        covid_start = pd.Timestamp('2019-09-01')
+        covid_end = pd.Timestamp('2022-03-01')
         
         # Ensure data['date'] is in datetime64 format
         if not data.empty:
+            # Convert all dates to pandas timestamps to ensure consistent comparison
             data['date'] = pd.to_datetime(data['date'])
             pre_covid = data[data['date'] < covid_start]
             post_covid = data[data['date'] > covid_end]
@@ -228,9 +230,11 @@ class GraphGenerator:
             if start_filter and end_filter:
                 # Convert data['date'] to datetime64 for consistent comparison
                 if not data.empty:
+                    # Ensure dates are properly converted to pandas timestamps
                     data['date'] = pd.to_datetime(data['date'])
                     
-                    # Convert filter dates to datetime64 for consistent comparison
+                    # Convert filter dates to pandas timestamps for consistent comparison
+                    # Also remove timezone info to avoid comparison issues
                     start_dt = pd.to_datetime(start_filter).tz_localize(None)
                     end_dt = pd.to_datetime(end_filter).tz_localize(None)
                     
@@ -275,8 +279,13 @@ class GraphGenerator:
                     if start_filter and end_filter and not comp_df.empty:
                         # Convert to datetime for consistent comparison
                         comp_df['date'] = pd.to_datetime(comp_df['date'])
+                        
+                        # Convert filter dates to pandas timestamps for consistent comparison
+                        # Also remove timezone info to avoid comparison issues
                         start_dt = pd.to_datetime(start_filter).tz_localize(None)
                         end_dt = pd.to_datetime(end_filter).tz_localize(None)
+                        
+                        # Filter using consistent timestamp objects
                         comp_df = comp_df[(comp_df['date'] >= start_dt) & (comp_df['date'] <= end_dt)]
                 
                 # Sort and format data
@@ -646,13 +655,24 @@ class GraphGenerator:
         # Create a copy to avoid modifying the original dataframe
         chart_data = sites_data.copy()
         
-        # Fill NaN values with 0 and create a size column with a minimum value
+        # Fill NaN values with 0 for the metric column
         chart_data[metric_column] = chart_data[metric_column].fillna(0)
         
         # Create a size column that's always positive (minimum 5) for better visibility
         # Scale the values to a reasonable range for the scatter plot
-        chart_data['marker_size'] = chart_data[metric_column].apply(lambda x: max(5, min(30, x/100)) if 'biomass' in metric_column else max(5, min(30, x)))
+        # Handle different metric scales appropriately
+        if 'biomass' in metric_column.lower():
+            # Biomass values tend to be larger (e.g., 100-2000), so we divide by 100
+            chart_data['marker_size'] = chart_data[metric_column].apply(
+                lambda x: max(5, min(30, x/100)) if pd.notnull(x) else 5
+            )
+        else:
+            # Percentage values (0-100)
+            chart_data['marker_size'] = chart_data[metric_column].apply(
+                lambda x: max(5, min(30, x)) if pd.notnull(x) else 5
+            )
         
+        # Now we're sure marker_size doesn't contain any NaN values
         # For now, create a scatter plot with municipality on x-axis as an approximation
         fig = px.scatter(
             chart_data,
