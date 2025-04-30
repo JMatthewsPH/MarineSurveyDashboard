@@ -404,22 +404,22 @@ with trend_container:
     metric_to_column = {
         "Commercial Biomass": "commercial_biomass",
         "Hard Coral Cover": "hard_coral_cover", 
-        "Fleshy Algae Cover": "fleshy_algae", 
+        "Fleshy Algae Cover": "fleshy_algae",
+        "Omnivore Density": "omnivore_density"
     }
     
-    # For simplicity, default to commercial_biomass for now
-    trend_metric = "commercial_biomass"
-    if comparison_metric in ["Commercial Biomass"]:
+    # Map the selection to the proper trend metric name
+    if comparison_metric == "Commercial Biomass":
         trend_metric = "Commercial Biomass"  # This matches the column name in get_biomass_data
-    elif comparison_metric in ["Hard Coral Cover"]:
+    elif comparison_metric == "Hard Coral Cover":
         trend_metric = "Hard Coral Cover"  # This matches the column name in get_coral_cover_data
+    elif comparison_metric == "Omnivore Density":
+        trend_metric = "Omnivore Density"  # This will match column name in get_metric_data
     else:
-        # For other metrics, we'll need to adapt or use general metric_data endpoint
+        # For other metrics, default to the comparison_metric
         trend_metric = comparison_metric
     
     # Get trend analysis data based on selected metric
-    # Note: This is a simplified implementation that will need to be adapted
-    # to work with the actual data structure and column names
     if comparison_metric == "Commercial Biomass":
         # For Commercial Biomass, we can use existing methods
         trend_data_list = []
@@ -463,6 +463,53 @@ with trend_container:
             trend_placeholder.plotly_chart(fig, use_container_width=True, config=config)
         else:
             trend_placeholder.warning("No trend data available for the selected filters.")
+            
+    elif comparison_metric == "Omnivore Density":
+        # For Omnivore Density, we use the get_metric_data method
+        trend_data_list = []
+        for site in sites:
+            if municipality_filter and site.municipality != municipality_filter:
+                continue
+                
+            # Use 'omnivore' as the metric type in get_metric_data
+            # This corresponds to the key in DataProcessor.METRIC_MAP
+            site_data = data_processor.get_metric_data(site.name, "omnivore")
+            if not site_data.empty:
+                site_data['site'] = site.name
+                site_data['municipality'] = site.municipality
+                trend_data_list.append(site_data)
+        
+        if trend_data_list:
+            trend_data = pd.concat(trend_data_list)
+            
+            # Filter by date range if specified
+            if date_range:
+                # date_range already contains pandas timestamps
+                start_timestamp, end_timestamp = date_range
+                
+                # Ensure trend_data['date'] is in datetime64 format
+                trend_data['date'] = pd.to_datetime(trend_data['date'])
+                
+                # Now filter using compatible types
+                trend_data = trend_data[
+                    (trend_data['date'] >= start_timestamp) & 
+                    (trend_data['date'] <= end_timestamp)
+                ]
+            
+            # Create trend chart
+            fig, config = graph_generator.create_multi_site_trend_chart(
+                trend_data=trend_data,
+                metric_name="Omnivore Density",
+                group_by_municipality=group_by_municipality,
+                highlight_sites=highlight_sites
+            )
+            
+            # Display trend chart
+            trend_placeholder.empty()
+            trend_placeholder.plotly_chart(fig, use_container_width=True, config=config)
+        else:
+            trend_placeholder.warning("No trend data available for the selected filters.")
+            
     else:
         # For other metrics, display a placeholder message
         trend_placeholder.info(f"Trend analysis for {comparison_metric} will be implemented soon.")
