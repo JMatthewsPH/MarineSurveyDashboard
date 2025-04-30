@@ -36,7 +36,26 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Import navigation utilities
-from utils.navigation import display_navigation, add_back_to_main_button
+from utils.navigation import display_navigation
+
+# Hide Streamlit's default navigation elements
+hide_streamlit_elements_js = """
+<script type="text/javascript">
+    (function() {
+        function hideStreamlitElements() {
+            // Hide the default sidebar navigation
+            var sidebarNavs = document.querySelectorAll('[data-testid="stSidebarNav"]');
+            if (sidebarNavs.length > 0) {
+                sidebarNavs[0].style.display = 'none';
+            }
+            setTimeout(hideStreamlitElements, 500);
+        }
+        window.addEventListener('load', hideStreamlitElements);
+        hideStreamlitElements();
+    })();
+</script>
+"""
+st.markdown(f'<div style="display:none">{hide_streamlit_elements_js}</div>', unsafe_allow_html=True)
 
 # Initialize language in session state if not present
 if 'language' not in st.session_state:
@@ -81,29 +100,7 @@ def load_css():
 st.markdown(load_css(), unsafe_allow_html=True)
 st.markdown(add_loading_css(), unsafe_allow_html=True)
 
-# Add JavaScript to hide "main" text (hidden in a div with display:none)
-hide_main_js = """
-<script type="text/javascript">
-    (function() {
-        function hideMainText() {
-            var sidebarNavs = document.querySelectorAll('[data-testid="stSidebarNav"]');
-            if (sidebarNavs.length > 0) {
-                var navItems = sidebarNavs[0].querySelectorAll('li');
-                if (navItems.length > 0) {
-                    navItems[0].style.display = 'none';
-                }
-            }
-            setTimeout(hideMainText, 500);
-        }
-        
-        window.addEventListener('load', hideMainText);
-        hideMainText();
-    })();
-</script>
-"""
 
-# Use a div with display:none to hide the JS code from being shown
-st.markdown(f'<div style="display:none">{hide_main_js}</div>', unsafe_allow_html=True)
 
 # Add favicon to the page
 add_favicon()

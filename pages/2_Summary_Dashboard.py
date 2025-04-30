@@ -12,7 +12,7 @@ from utils.translations import TRANSLATIONS
 from utils.database import get_db_session
 from utils.branding import display_logo, add_favicon
 from utils.ui_helpers import loading_spinner, create_loading_placeholder, add_loading_css, skeleton_text_placeholder
-from utils.navigation import display_navigation, add_back_to_main_button
+from utils.navigation import display_navigation
 
 # Set page config
 st.set_page_config(
@@ -31,6 +31,25 @@ add_favicon()
 
 # Add custom CSS for loading animations
 add_loading_css()
+
+# Hide Streamlit's default navigation elements
+hide_streamlit_elements_js = """
+<script type="text/javascript">
+    (function() {
+        function hideStreamlitElements() {
+            // Hide the default sidebar navigation
+            var sidebarNavs = document.querySelectorAll('[data-testid="stSidebarNav"]');
+            if (sidebarNavs.length > 0) {
+                sidebarNavs[0].style.display = 'none';
+            }
+            setTimeout(hideStreamlitElements, 500);
+        }
+        window.addEventListener('load', hideStreamlitElements);
+        hideStreamlitElements();
+    })();
+</script>
+"""
+st.markdown(f'<div style="display:none">{hide_streamlit_elements_js}</div>', unsafe_allow_html=True)
 
 # Initialize data processor
 @st.cache_resource(ttl=3600)

@@ -32,29 +32,29 @@ from utils.ui_helpers import add_loading_css
 st.markdown(load_css(), unsafe_allow_html=True)
 st.markdown(add_loading_css(), unsafe_allow_html=True)
 
-# Add JavaScript to hide "main" text (hidden in an HTML comment to prevent display)
-hide_main_js = """
+# Add JavaScript to hide Streamlit's default navigation elements
+hide_streamlit_elements_js = """
 <script type="text/javascript">
     (function() {
-        function hideMainText() {
+        function hideStreamlitElements() {
+            // Hide the default sidebar navigation
             var sidebarNavs = document.querySelectorAll('[data-testid="stSidebarNav"]');
             if (sidebarNavs.length > 0) {
-                var navItems = sidebarNavs[0].querySelectorAll('li');
-                if (navItems.length > 0) {
-                    navItems[0].style.display = 'none';
-                }
+                sidebarNavs[0].style.display = 'none';
             }
-            setTimeout(hideMainText, 500);
+            
+            // In case elements are added dynamically, check periodically
+            setTimeout(hideStreamlitElements, 500);
         }
         
-        window.addEventListener('load', hideMainText);
-        hideMainText();
+        window.addEventListener('load', hideStreamlitElements);
+        hideStreamlitElements();
     })();
 </script>
 """
 
 # Use a div with display:none to hide the JS code from being shown
-st.markdown(f'<div style="display:none">{hide_main_js}</div>', unsafe_allow_html=True)
+st.markdown(f'<div style="display:none">{hide_streamlit_elements_js}</div>', unsafe_allow_html=True)
 
 # Initialize language in session state if not present
 if 'language' not in st.session_state:
