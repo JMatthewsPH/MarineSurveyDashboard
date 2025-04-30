@@ -39,6 +39,8 @@ TRANSLATIONS = {
         'metric_comparisons': 'Metric Comparisons',
         'site_metrics': 'Site Metrics',
         'site_desc_placeholder': 'Site description coming soon...',
+        'summary_dashboard': 'Summary Dashboard',
+        'all_sites_analysis': 'Analysis Across All Monitored Sites',
         'about_text': '''
         The Marine Conservation Dashboard provides a comprehensive visualization platform for monitoring marine protected areas (MPAs) across different municipalities. It displays critical ecological data including coral cover, fish biomass, and various marine species density measurements.
 
@@ -85,6 +87,8 @@ TRANSLATIONS = {
         'metric_comparisons': 'Mga Paghahambing ng Sukatan',
         'site_metrics': 'Mga Sukatan ng Lugar',
         'site_desc_placeholder': 'Paglalarawan ng lugar ay darating sa lalong madaling panahon...',
+        'summary_dashboard': 'Dashboard ng Buod',
+        'all_sites_analysis': 'Pagsusuri sa Lahat ng Mga Sinusubaybayan na Lugar',
         'about_text': '''
         Ang Dashboard ng Pangangalaga sa Karagatan ay nagbibigay ng komprehensibong plataporma para sa pagsubaybay sa mga Protected Marine Areas (MPAs) sa iba't ibang munisipyo. Ipinapakita nito ang mahahalagang datos tungkol sa ecological system tulad ng saklaw ng coral, dami ng isda, at iba't ibang sukat ng densidad ng mga species sa dagat.
 
@@ -131,6 +135,8 @@ TRANSLATIONS = {
         'metric_comparisons': 'Mga Pagtandi sa Sukod',
         'site_metrics': 'Mga Sukod sa Lugar',
         'site_desc_placeholder': 'Deskripsyon sa lugar moabot sa dili madugay...',
+        'summary_dashboard': 'Dashboard sa Katingbanan',
+        'all_sites_analysis': 'Pagtuki sa Tanang Gimonitor nga mga Dapit',
         'about_text': '''
         Ang Dashboard sa Konserbasyon sa Kadagatan naghatag og komprehensibong plataporma alang sa pagmonitor sa Marine Protected Areas (MPAs) sa lain-laing munisipyo. Nagpakita kini sa importanteng datos kabahin sa ecosystem sama sa tabon sa coral, kadaghan sa isda, ug lain-laing sukod sa density sa mga species sa dagat.
 

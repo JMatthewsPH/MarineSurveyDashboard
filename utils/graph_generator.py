@@ -492,3 +492,308 @@ class GraphGenerator:
             'displayModeBar': 'hover'  # Only show mode bar on hover to save space
         }
         return fig, config
+        
+    def create_site_comparison_heatmap(self, matrix_data, metric_column, title=None):
+        """
+        Create a heatmap for site comparison based on selected metric
+        
+        Args:
+            matrix_data: DataFrame with sites as rows and metrics as columns
+            metric_column: Column name to visualize in the heatmap
+            title: Optional title for the heatmap
+        """
+        # Sort data by municipality then site name for better organization
+        sorted_data = matrix_data.sort_values(['municipality', 'site'])
+        
+        # Get color scale based on metric
+        if metric_column == 'hard_coral_cover':
+            colorscale = 'Blues'  # Use Blues for coral (higher is better)
+            zmin, zmax = 0, 100
+        elif metric_column == 'fleshy_algae_cover':
+            colorscale = 'Reds_r'  # Use reversed Reds for algae (lower is better)
+            zmin, zmax = 0, 100
+        elif metric_column == 'commercial_biomass':
+            colorscale = 'Greens'  # Use Greens for biomass (higher is better)
+            zmin, zmax = 0, 3000
+        elif 'density' in metric_column:
+            colorscale = 'Purples'  # Use Purples for fish density
+            # Use different ranges based on fish type
+            if metric_column == 'herbivore_density':
+                zmin, zmax = 0, 5000
+            else:
+                zmin, zmax = 0, 300
+        else:
+            colorscale = 'Viridis'
+            zmin, zmax = None, None
+            
+        # Format annotations and create hover text
+        formatted_values = []
+        for val in sorted_data[metric_column]:
+            if pd.isna(val):
+                formatted_values.append("No data")
+            elif 'biomass' in metric_column:
+                formatted_values.append(f"{val:.1f} kg/ha")
+            elif 'cover' in metric_column:
+                formatted_values.append(f"{val:.1f}%")
+            elif 'density' in metric_column:
+                formatted_values.append(f"{val:.1f} ind/ha")
+            else:
+                formatted_values.append(f"{val:.1f}")
+                
+        # Create custom hover text
+        hover_text = [
+            f"Site: {row['site']}<br>Municipality: {row['municipality']}<br>{metric_column.replace('_', ' ').title()}: {val}"
+            for val, (_, row) in zip(formatted_values, sorted_data.iterrows())
+        ]
+            
+        # Create the heatmap
+        fig = go.Figure(data=go.Heatmap(
+            z=sorted_data[metric_column],
+            y=sorted_data['site'],
+            x=[metric_column.replace('_', ' ').title()],
+            colorscale=colorscale,
+            zmin=zmin,
+            zmax=zmax,
+            text=formatted_values,
+            hoverinfo='text',
+            hovertext=hover_text
+        ))
+        
+        # Add municipality separators
+        municipalities = sorted_data['municipality'].unique()
+        site_groups = []
+        
+        for muni in municipalities:
+            mask = sorted_data['municipality'] == muni
+            site_groups.append({
+                'name': muni,
+                'start': mask.idxmax(),
+                'end': mask.iloc[::-1].idxmax(),
+                'count': mask.sum()
+            })
+            
+        # Add shapes to separate municipalities
+        shapes = []
+        for i, group in enumerate(site_groups):
+            if i > 0:
+                prev_end = site_groups[i-1]['end']
+                if prev_end < group['start']:
+                    y_pos = (sorted_data.index.get_loc(prev_end) + 
+                            sorted_data.index.get_loc(group['start'])) / 2
+                    
+                    shapes.append(dict(
+                        type="line",
+                        x0=-0.5,
+                        x1=0.5,
+                        y0=y_pos,
+                        y1=y_pos,
+                        line=dict(color="black", width=2, dash="dot")
+                    ))
+                    
+        # Set layout
+        title_text = title if title else f"Site Comparison by {metric_column.replace('_', ' ').title()}"
+        
+        fig.update_layout(
+            title=title_text,
+            height=max(400, 20 * len(sorted_data) + 100),  # Adjust height based on number of sites
+            margin=dict(l=130, r=20, t=60, b=40),
+            yaxis=dict(
+                tickfont=dict(size=10),
+                title="",
+                autorange="reversed"  # Display sites from top to bottom
+            ),
+            xaxis=dict(
+                tickfont=dict(size=12),
+                title="",
+            ),
+            shapes=shapes,
+            template="plotly_white"
+        )
+        
+        # Configure download settings
+        config = {
+            'toImageButtonOptions': {
+                'format': 'png',
+                'filename': generate_filename(title_text),
+                'height': 800,
+                'width': 1200,
+                'scale': 2
+            },
+            'displaylogo': False,
+            'responsive': True,
+            'modeBarButtonsToRemove': ['lasso2d', 'select2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d'],
+            'scrollZoom': False,
+            'doubleClick': 'reset',
+            'showTips': True,
+            'displayModeBar': 'hover'
+        }
+        
+        return fig, config
+    
+    def create_geographic_visualization(self, sites_data, metric_column, title=None):
+        """
+        Create a bubble map plot showing sites colored by metric value
+        
+        Args:
+            sites_data: DataFrame with site info including lat/lon and metric values
+            metric_column: Column name to visualize with color and size
+            title: Optional title for the map
+        """
+        # This is a placeholder - in real implementation this would use lat/lon data
+        # and create a Mapbox or Scattergeo plot
+        
+        # For now, create a scatter plot with municipality on x-axis as an approximation
+        fig = px.scatter(
+            sites_data,
+            x='municipality',
+            y='site',
+            color=metric_column,
+            size=metric_column,
+            hover_name='site',
+            color_continuous_scale=px.colors.sequential.Viridis,
+            title=title if title else f"Geographic distribution of {metric_column.replace('_', ' ')}",
+            size_max=30,
+            opacity=0.8
+        )
+        
+        fig.update_layout(
+            height=500,
+            template="plotly_white",
+            margin=dict(l=40, r=40, t=60, b=60)
+        )
+        
+        # Configure download settings
+        config = {
+            'toImageButtonOptions': {
+                'format': 'png',
+                'filename': generate_filename(title if title else f"Geographic distribution"),
+                'height': 800,
+                'width': 1200,
+                'scale': 2
+            },
+            'displaylogo': False,
+            'responsive': True,
+            'modeBarButtonsToRemove': ['lasso2d', 'select2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d'],
+            'scrollZoom': False,
+            'doubleClick': 'reset',
+            'showTips': True,
+            'displayModeBar': 'hover'
+        }
+        
+        return fig, config
+        
+    def create_multi_site_trend_chart(self, trend_data, metric_name, group_by_municipality=False, highlight_sites=None):
+        """
+        Create time series with multiple lines for all sites
+        
+        Args:
+            trend_data: DataFrame with 'date', 'site', 'municipality', and metric columns
+            metric_name: Name of the metric column to plot
+            group_by_municipality: If True, group sites by municipality with same color
+            highlight_sites: List of site names to highlight
+        """
+        # Create figure
+        fig = go.Figure()
+        
+        # Set up color mapping for consistent colors
+        if group_by_municipality:
+            municipalities = trend_data['municipality'].unique()
+            color_map = {muni: px.colors.qualitative.Plotly[i % len(px.colors.qualitative.Plotly)] 
+                        for i, muni in enumerate(municipalities)}
+        else:
+            sites = trend_data['site'].unique()
+            color_map = {site: px.colors.qualitative.Plotly[i % len(px.colors.qualitative.Plotly)] 
+                        for i, site in enumerate(sites)}
+        
+        # Add traces for each site or municipality group
+        for site in trend_data['site'].unique():
+            site_data = trend_data[trend_data['site'] == site]
+            
+            if site_data.empty:
+                continue
+                
+            municipality = site_data['municipality'].iloc[0]
+            
+            # Determine line properties
+            line_props = {}
+            if highlight_sites and site in highlight_sites:
+                line_props['width'] = 3
+                line_props['dash'] = None
+            else:
+                line_props['width'] = 1.5
+                line_props['dash'] = 'dot' if highlight_sites else None
+                
+            # Set color based on grouping
+            if group_by_municipality:
+                color = color_map[municipality]
+                name = f"{site} ({municipality})"
+            else:
+                color = color_map[site]
+                name = site
+                
+            # Add the trace
+            fig.add_trace(go.Scatter(
+                x=site_data['date'],
+                y=site_data[metric_name],
+                name=name,
+                line=dict(
+                    color=color,
+                    **line_props
+                ),
+                mode='lines+markers',
+                marker=dict(size=6),
+                hovertemplate=f"{site} ({municipality})<br>Date: %{{x}}<br>{metric_name}: %{{y:.1f}}<extra></extra>"
+            ))
+        
+        # Format the y-axis range based on metric type
+        y_range = self.get_metric_range(metric_name)
+        y_min, y_max = y_range['min'], y_range['max']
+        
+        # Get an appropriate label based on the metric
+        if 'biomass' in metric_name.lower():
+            y_title = "Biomass (kg/ha)"
+        elif 'coral' in metric_name.lower() or 'algae' in metric_name.lower() or 'cover' in metric_name.lower():
+            y_title = "Cover (%)"
+        elif 'density' in metric_name.lower():
+            y_title = "Density (ind/ha)"
+        else:
+            y_title = metric_name.replace('_', ' ').title()
+        
+        # Set title and layout
+        title = f"Trend Analysis: {metric_name.replace('_', ' ').title()} Across All Sites"
+        fig.update_layout(
+            title=title,
+            xaxis_title="Date",
+            yaxis_title=y_title,
+            template="plotly_white",
+            height=500,
+            margin=dict(l=40, r=40, t=60, b=60),
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1
+            ),
+            yaxis=dict(range=[y_min, y_max])
+        )
+        
+        # Configure download settings
+        config = {
+            'toImageButtonOptions': {
+                'format': 'png',
+                'filename': generate_filename(title),
+                'height': 800,
+                'width': 1200,
+                'scale': 2
+            },
+            'displaylogo': False,
+            'responsive': True,
+            'modeBarButtonsToRemove': ['lasso2d', 'select2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d'],
+            'scrollZoom': False,
+            'doubleClick': 'reset',
+            'showTips': True,
+            'displayModeBar': 'hover'
+        }
+        
+        return fig, config
