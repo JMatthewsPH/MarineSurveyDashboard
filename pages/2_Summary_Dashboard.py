@@ -92,9 +92,6 @@ with st.sidebar:
     # Display modern navigation menu
     display_navigation(current_page="Summary Dashboard")
     
-    # Add Back to Main button
-    add_back_to_main_button(lang=st.session_state.language)
-    
     st.title(TRANSLATIONS[st.session_state.language]['analysis_options'])
     
     # Get the min and max dates from all surveys 

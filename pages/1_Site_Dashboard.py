@@ -128,9 +128,6 @@ with st.sidebar:
 
     # Display modern navigation menu
     display_navigation(current_page="Site Dashboard")
-    
-    # Add Back to Main button
-    add_back_to_main_button(lang=st.session_state.language)
 
     # Site selection with municipality grouping
     st.subheader(TRANSLATIONS[st.session_state.language]['select_site'])
