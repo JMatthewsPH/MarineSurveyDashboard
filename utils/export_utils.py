@@ -776,27 +776,4 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
     buffer.seek(0)
     return buffer.getvalue()
 
-def add_chart_export_button(fig, container, site_name, title):
-    """
-    Add a button to export a chart as PDF
-    
-    Args:
-        fig: Plotly figure object
-        container: Streamlit container to place the button
-        site_name: Name of the site for the chart title
-        title: Chart title
-    """
-    # Generate timestamped filename
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"{site_name}_{title.replace(' ', '_').lower()}_{timestamp}.pdf"
-    
-    # Create PDF
-    pdf_bytes = generate_single_chart_pdf(fig, title, site_name)
-    
-    # Add download button
-    container.download_button(
-        label="Export Chart as PDF",
-        data=pdf_bytes,
-        file_name=filename,
-        mime="application/pdf",
-    )
+# Function removed as we now only use the comprehensive PDF report

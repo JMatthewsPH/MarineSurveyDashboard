@@ -349,36 +349,35 @@ if selected_site:
             # Simple description
             st.markdown("Generate a comprehensive PDF report with all charts for this site:")
             
-            # PDF export button - just one button now
-            pdf_report_button = st.button("Export Complete PDF Report")
+            # PDF export button with updated text
+            pdf_report_button = st.button("Export PDF Report")
             
             if pdf_report_button:
-                with st.spinner("Generating complete PDF report..."):
-                    try:
-                        # Generate PDF bytes with all metrics and biomass included
-                        pdf_bytes = generate_site_report_pdf(
-                            selected_site, 
-                            data_processor, 
-                            metrics=available_metrics,  # Include all metrics
-                            include_biomass=True        # Always include biomass
-                        )
-                        
-                        # Create timestamp for filename
-                        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                        filename = f"{selected_site}_complete_report_{timestamp}.pdf"
-                        
-                        # Show download button
-                        st.download_button(
-                            label="Download PDF Report",
-                            data=pdf_bytes,
-                            file_name=filename,
-                            mime="application/pdf",
-                        )
-                        
-                        st.success(f"Complete PDF report for {selected_site} generated successfully!")
-                    except Exception as e:
-                        st.error(f"Error generating PDF report: {str(e)}")
-                        st.info("Please check console for error details.")
+                try:
+                    # Generate PDF bytes with all metrics and biomass included
+                    pdf_bytes = generate_site_report_pdf(
+                        selected_site, 
+                        data_processor, 
+                        metrics=available_metrics,  # Include all metrics
+                        include_biomass=True        # Always include biomass
+                    )
+                    
+                    # Create timestamp for filename
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    filename = f"{selected_site}_report_{timestamp}.pdf"
+                    
+                    # Show download button
+                    st.download_button(
+                        label="Download PDF Report",
+                        data=pdf_bytes,
+                        file_name=filename,
+                        mime="application/pdf",
+                    )
+                    
+                    st.success(f"PDF report for {selected_site} generated successfully!")
+                except Exception as e:
+                    st.error(f"Error generating PDF report: {str(e)}")
+                    st.info("Please check console for error details.")
             
             # Date Range Selection
             st.header(TRANSLATIONS[st.session_state.language]['date_range'])
