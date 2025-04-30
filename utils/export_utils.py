@@ -344,11 +344,21 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
             elements.append(Paragraph(f"{display_name}", styles['Heading2']))
             elements.append(Spacer(1, 0.15*inch))
             
-            # Only proceed if the column exists in the DataFrame
-            if metric_column in metric_data.columns:
+            # Let's print available columns in the DataFrame for debugging
+            print(f"Available columns for {metric}: {metric_data.columns.tolist()}")
+            
+            # Find the actual column containing the metric name
+            metric_col = None
+            for col in metric_data.columns:
+                if metric in col.lower() or col == metric_column:
+                    metric_col = col
+                    break
+            
+            # Proceed if we found a matching column
+            if metric_col is not None:
                 # Create matplotlib figure
                 fig, ax = plt.subplots(figsize=(8, 4))
-                ax.plot(metric_data['date'], metric_data[metric_column], marker='o')
+                ax.plot(metric_data['date'], metric_data[metric_col], marker='o')
                 ax.set_title(f"{display_name} - {site_name}")
                 ax.set_xlabel("Date")
                 
@@ -356,9 +366,9 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
                 if 'cover' in metric_column.lower():
                     ax.set_ylabel("Cover (%)")
                     ax.set_ylim(0, 100)
-                elif 'density' in metric_column.lower():
+                elif 'density' in metric_column.lower() or 'herbivore' in metric.lower() or 'carnivore' in metric.lower() or 'omnivore' in metric.lower() or 'corallivore' in metric.lower():
                     ax.set_ylabel("Density (ind/ha)")
-                    if 'herbivore' in metric_column.lower() or 'carnivore' in metric_column.lower():
+                    if 'herbivore' in metric.lower() or 'carnivore' in metric.lower():
                         ax.set_ylim(0, 5000)
                     else:
                         ax.set_ylim(0, 3000)
@@ -424,25 +434,33 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
         metric_data = data_processor.get_metric_data(site_name, metric)
         if not metric_data.empty:
             metric_column = data_processor.METRIC_MAP[metric]
-            if metric_column in metric_data.columns:
+            
+            # Find the actual column containing the metric name
+            metric_col = None
+            for col in metric_data.columns:
+                if metric in col.lower() or col == metric_column:
+                    metric_col = col
+                    break
+                
+            if metric_col is not None:
                 included_metrics_with_data.append(metric)
                 latest_data = metric_data.sort_values('date', ascending=False).iloc[0]
                 
                 # Format value based on metric type
-                if 'cover' in metric_column.lower():
-                    value_str = f"{latest_data[metric_column]:.1f}%"
-                elif 'density' in metric_column.lower():
-                    value_str = f"{latest_data[metric_column]:.1f} ind/ha"
+                if 'cover' in metric_col.lower():
+                    value_str = f"{latest_data[metric_col]:.1f}%"
+                elif 'density' in metric_col.lower() or any(term in metric.lower() for term in ['herbivore', 'carnivore', 'omnivore', 'corallivore']):
+                    value_str = f"{latest_data[metric_col]:.1f} ind/ha"
                 else:
-                    value_str = f"{latest_data[metric_column]:.1f}"
+                    value_str = f"{latest_data[metric_col]:.1f}"
                 
                 # Determine trend
                 trend = '−'
                 if len(metric_data) > 1:
-                    prev_value = metric_data.sort_values('date', ascending=False).iloc[1][metric_column]
-                    if latest_data[metric_column] > prev_value:
+                    prev_value = metric_data.sort_values('date', ascending=False).iloc[1][metric_col]
+                    if latest_data[metric_col] > prev_value:
                         trend = '↑'
-                    elif latest_data[metric_column] < prev_value:
+                    elif latest_data[metric_col] < prev_value:
                         trend = '↓'
                 
                 # Add to table
