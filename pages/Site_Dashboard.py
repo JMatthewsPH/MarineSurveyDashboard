@@ -54,7 +54,7 @@ from utils.graph_generator import GraphGenerator
 from utils.translations import TRANSLATIONS
 from utils.database import get_db
 from utils.branding import display_logo, add_favicon
-from utils.export_utils import create_export_section, generate_site_report_pdf, add_chart_export_button
+from utils.export_utils import create_export_section, generate_site_report_pdf
 from utils.ui_helpers import (
     loading_spinner, 
     skeleton_chart, 
