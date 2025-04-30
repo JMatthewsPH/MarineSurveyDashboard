@@ -169,6 +169,21 @@ def convert_plotly_to_matplotlib(fig):
     if fig.layout.yaxis.title.text:
         ax.set_ylabel(fig.layout.yaxis.title.text)
     
+    # Set consistent y-axis limits and ticks for specific metrics
+    title_text = fig.layout.title.text if fig.layout.title.text else ""
+    if "Commercial Fish Biomass" in title_text or "Commercial Biomass" in title_text:
+        ax.set_ylim(0, 100)
+        ax.set_yticks(range(0, 101, 20))
+    elif "Herbivore" in title_text:
+        ax.set_ylim(0, 2500)
+        ax.set_yticks(range(0, 2501, 500))
+    elif any(term in title_text for term in ["Carnivore", "Omnivore", "Corallivore"]):
+        ax.set_ylim(0, 300)
+        ax.set_yticks(range(0, 301, 50))
+    elif any(term in title_text for term in ["Coral Cover", "Algae Cover", "Bleaching", "Rubble"]):
+        ax.set_ylim(0, 100)
+        ax.set_yticks(range(0, 101, 20))
+    
     # Grid
     ax.grid(True, alpha=0.3)
     
@@ -326,8 +341,8 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
                 # Set the y-axis limits using the same ranges as the web display
                 ax.set_ylim(y_range['min'], y_range['max'])
                 
-                # Add consistent tick spacing (0, 200, 400, 600, etc.)
-                ax.set_yticks(range(0, 2001, 200))
+                # Add consistent tick spacing (0, 20, 40, 60, 80, 100)
+                ax.set_yticks(range(0, 101, 20))
                 
                 ax.grid(True, alpha=0.3)
                 plt.tight_layout()
