@@ -381,16 +381,7 @@
     align-items: center;
 }
 
-/* Hide Streamlit's default navigation elements */
-div[data-testid="stSidebarNav"] ul li:first-child {
-    display: none !important;
-    visibility: hidden !important;
-    height: 0 !important;
-    width: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    opacity: 0 !important;
-}
+/* Using Streamlit's default navigation elements now */
 
 /* Modern Back to Main button styling */
 .back-to-main {
