@@ -22,10 +22,34 @@ class DataProcessor:
     database and the visualization layer.
     """
     
+    # Centralized metric mapping for reuse across methods
+    METRIC_MAP = {
+        'hard_coral': 'hard_coral_cover',
+        'fleshy_algae': 'fleshy_macro_algae_cover',
+        'bleaching': 'bleaching',
+        'herbivore': 'herbivore_density',
+        'carnivore': 'carnivore_density',
+        'omnivore': 'omnivore_density',
+        'corallivore': 'corallivore_density',
+        'rubble': 'rubble'
+    }
+    
+    # Readable display names for metrics
+    DISPLAY_NAMES = {
+        'hard_coral_cover': 'Hard Coral Cover',
+        'fleshy_macro_algae_cover': 'Fleshy Algae Cover',
+        'bleaching': 'Bleaching',
+        'herbivore_density': 'Herbivore Density',
+        'carnivore_density': 'Carnivore Density',
+        'omnivore_density': 'Omnivore Density',
+        'corallivore_density': 'Corallivore Density',
+        'rubble': 'Rubble Cover',
+        'commercial_biomass': 'Commercial Biomass'
+    }
+    
     def __init__(self, db: Session):
         """Initialize with a database session"""
         self._db = db
-        self.query_builder = QueryBuilder()
         logger.info("DataProcessor initialized")
 
     @property
@@ -36,15 +60,33 @@ class DataProcessor:
             with get_db_session() as new_db:
                 self._db = new_db
         return self._db
+        
+    def _get_session(self):
+        """
+        Get an active database session, either the existing one or a new one
+        
+        This is a helper method to ensure we're always using an active session
+        """
+        try:
+            if self._db.is_active:
+                return self._db
+            else:
+                logger.info("Using new DB session since current one is inactive")
+                with get_db_session() as db:
+                    return db
+        except Exception as e:
+            logger.warning(f"Error checking session status: {e}. Creating new session.")
+            with get_db_session() as db:
+                return db
 
     @st.cache_data(ttl=3600, show_spinner=False)
     def get_sites(_self):  # Added underscore to ignore self in caching
         """Get all sites with their municipalities"""
         try:
-            with get_db_session() as db:
-                logger.info("Fetching all sites from database")
-                # Use the query builder to get sites
-                return QueryBuilder.all_sites(db)
+            db = _self._get_session()
+            logger.info("Fetching all sites from database")
+            # Use the query builder to get sites
+            return QueryBuilder.all_sites(db)
         except Exception as e:
             logger.error(f"Error fetching sites: {str(e)}")
             # Return empty list on error to prevent app crashes
@@ -65,40 +107,32 @@ class DataProcessor:
         """
         logger.info(f"Fetching {metric} data for site: {site_name}")
 
-        # Define metric mapping for column names
-        metric_map = {
-            'hard_coral': 'hard_coral_cover',
-            'fleshy_algae': 'fleshy_macro_algae_cover',
-            'bleaching': 'bleaching',
-            'herbivore': 'herbivore_density',
-            'carnivore': 'carnivore_density',
-            'omnivore': 'omnivore_density',
-            'corallivore': 'corallivore_density',
-            'rubble': 'rubble'
-        }
-
-        # Validate metric
-        column_name = metric_map.get(metric)
+        # Use centralized metric mapping
+        column_name = DataProcessor.METRIC_MAP.get(metric)
         if not column_name:
             logger.error(f"Invalid metric requested: {metric}")
             return pd.DataFrame(columns=['date', metric])
 
         try:
-            with get_db_session() as db:
-                # Get site using query builder
-                site = QueryBuilder.site_by_name(db, site_name)
-                if not site:
-                    logger.warning(f"Site not found: {site_name}")
-                    return pd.DataFrame(columns=['date', metric])
-
-                # Get metric data from database
-                surveys = QueryBuilder.metric_data(db, site.id, column_name, start_date)
-
-                # Log results
-                logger.info(f"Found {len(surveys)} {metric} surveys for {site_name}")
+            # Use common session management
+            db = _self._get_session()
                 
-                # Process results
-                return pd.DataFrame(surveys, columns=['date', metric])
+            # Get site using query builder
+            site = QueryBuilder.site_by_name(db, site_name)
+            if not site:
+                logger.warning(f"Site not found: {site_name}")
+                return pd.DataFrame(columns=['date', metric])
+
+            # Get metric data from database
+            surveys = QueryBuilder.metric_data(db, site.id, column_name, start_date)
+
+            # Log results
+            logger.info(f"Found {len(surveys)} {metric} surveys for {site_name}")
+            
+            print(f"DEBUG - Metric name: {_self.DISPLAY_NAMES.get(column_name, metric)}")
+            
+            # Process results
+            return pd.DataFrame(surveys, columns=['date', metric])
         except Exception as e:
             logger.error(f"Error fetching metric data: {str(e)}")
             # Return empty DataFrame to prevent application crashes
@@ -107,52 +141,39 @@ class DataProcessor:
     @st.cache_data(ttl=3600, show_spinner=False)
     def get_average_metric_data(_self, metric: str, exclude_site=None, municipality=None, start_date='2017-01-01'):
         """Calculate average metric data across sites with optional municipality filter"""
-        print(f"Calculating average {metric} (excluding {exclude_site}, municipality filter: {municipality})")
+        logger.info(f"Calculating average {metric} (excluding {exclude_site}, municipality filter: {municipality})")
 
-        metric_map = {
-            'hard_coral': 'hard_coral_cover',
-            'fleshy_algae': 'fleshy_macro_algae_cover',
-            'bleaching': 'bleaching',
-            'herbivore': 'herbivore_density',
-            'carnivore': 'carnivore_density',
-            'omnivore': 'omnivore_density',
-            'corallivore': 'corallivore_density',
-            'rubble': 'rubble'
-        }
-
-        column_name = metric_map.get(metric)
+        # Use centralized metric mapping
+        column_name = DataProcessor.METRIC_MAP.get(metric)
         if not column_name:
+            logger.error(f"Invalid metric requested: {metric}")
             return pd.DataFrame(columns=['date', metric])
 
         exclude_site_id = None
         if exclude_site:
-            with get_db_session() as db:
-                site = db.query(Site).filter(Site.name == exclude_site).first()
+            try:
+                # Use common session management
+                db = _self._get_session()
+                site = QueryBuilder.site_by_name(db, exclude_site)
                 if site:
                     exclude_site_id = site.id
+            except Exception as e:
+                logger.error(f"Error looking up exclude site: {str(e)}")
 
         try:
-            with get_db_session() as db:
-                # Start with base query
-                query = (db.query(
-                        Survey.date,
-                        func.avg(getattr(Survey, column_name)).label(metric))
-                        .join(Site)  # Join with Site table to access municipality
-                        .filter(Survey.date >= start_date))
+            # Use common session management
+            db = _self._get_session()
+            
+            # Use QueryBuilder's average_metric_data method
+            surveys = QueryBuilder.average_metric_data(
+                db, column_name, exclude_site_id, municipality, start_date
+            )
 
-                if exclude_site_id:
-                    query = query.filter(Survey.site_id != exclude_site_id)
-
-                if municipality:
-                    query = query.filter(Site.municipality == municipality)
-
-                surveys = (query.group_by(Survey.date)
-                          .order_by(Survey.date)
-                          .all())
-
-                return pd.DataFrame(surveys, columns=['date', metric])
+            logger.info(f"Found {len(surveys)} average {metric} data points")
+            
+            return pd.DataFrame(surveys, columns=['date', metric])
         except Exception as e:
-            print(f"Error calculating average metric data: {str(e)}")
+            logger.error(f"Error calculating average metric data: {str(e)}")
             return pd.DataFrame(columns=['date', metric])
 
     @st.cache_data(ttl=3600, show_spinner=False)
@@ -229,43 +250,59 @@ class DataProcessor:
     def get_biomass_data(_self, site_name, start_date='2017-01-01'):
         """Process commercial fish biomass data"""
         logger.info(f"Fetching biomass data for site: {site_name}")
+        
+        # Use the consistent display name from the class constants
+        display_name = _self.DISPLAY_NAMES.get('commercial_biomass', 'Commercial Biomass')
+        
         try:
-            with get_db_session() as db:
-                # Get site using QueryBuilder
-                site = QueryBuilder.site_by_name(db, site_name)
-                if not site:
-                    logger.warning(f"Site not found: {site_name}")
-                    return pd.DataFrame(columns=['date', 'Commercial Biomass'])
+            # Use common session management
+            db = _self._get_session()
+                
+            # Get site using QueryBuilder
+            site = QueryBuilder.site_by_name(db, site_name)
+            if not site:
+                logger.warning(f"Site not found: {site_name}")
+                return pd.DataFrame(columns=['date', display_name])
 
-                # Use specialized biomass query
-                surveys = QueryBuilder.biomass_data(db, site.id, start_date)
+            # Use specialized biomass query
+            surveys = QueryBuilder.biomass_data(db, site.id, start_date)
 
-                logger.info(f"Found {len(surveys)} biomass surveys for {site_name}")
-                return pd.DataFrame(surveys, columns=['date', 'Commercial Biomass'])
+            logger.info(f"Found {len(surveys)} biomass surveys for {site_name}")
+            print(f"DEBUG - Metric name: {display_name}")
+            
+            return pd.DataFrame(surveys, columns=['date', display_name])
         except Exception as e:
             logger.error(f"Error fetching biomass data: {str(e)}")
-            return pd.DataFrame(columns=['date', 'Commercial Biomass'])
+            return pd.DataFrame(columns=['date', display_name])
 
     @st.cache_data(ttl=3600, show_spinner=False)
     def get_coral_cover_data(_self, site_name, start_date='2017-01-01'):
         """Process hard coral cover data"""
         logger.info(f"Fetching coral cover data for site: {site_name}")
+        
+        # Use the consistent display name from the class constants
+        display_name = _self.DISPLAY_NAMES.get('hard_coral_cover', 'Hard Coral Cover')
+        
         try:
-            with get_db_session() as db:
-                # Get site using QueryBuilder
-                site = QueryBuilder.site_by_name(db, site_name)
-                if not site:
-                    logger.warning(f"Site not found: {site_name}")
-                    return pd.DataFrame(columns=['date', 'Hard Coral Cover'])
+            # Use common session management
+            db = _self._get_session()
+                
+            # Get site using QueryBuilder
+            site = QueryBuilder.site_by_name(db, site_name)
+            if not site:
+                logger.warning(f"Site not found: {site_name}")
+                return pd.DataFrame(columns=['date', display_name])
 
-                # Use specialized coral cover query
-                surveys = QueryBuilder.coral_cover_data(db, site.id, start_date)
+            # Use specialized coral cover query
+            surveys = QueryBuilder.coral_cover_data(db, site.id, start_date)
 
-                logger.info(f"Found {len(surveys)} coral cover surveys for {site_name}")
-                return pd.DataFrame(surveys, columns=['date', 'Hard Coral Cover'])
+            logger.info(f"Found {len(surveys)} coral cover surveys for {site_name}")
+            print(f"DEBUG - Metric name: {display_name}")
+            
+            return pd.DataFrame(surveys, columns=['date', display_name])
         except Exception as e:
             logger.error(f"Error fetching coral cover data: {str(e)}")
-            return pd.DataFrame(columns=['date', 'Hard Coral Cover'])
+            return pd.DataFrame(columns=['date', display_name])
 
     def get_fish_length_data(self, site_name, species, start_date='2017-01-01'):
         """Process fish length data by species"""
