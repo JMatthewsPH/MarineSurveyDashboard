@@ -1,0 +1,496 @@
+/* 
+ * Consolidated Styles for Marine Conservation Dashboard
+ * Combined from site_styles.css, navigation.css, and inline styles
+ */
+
+/* ===== COLOR PALETTE AND VARIABLES ===== */
+:root {
+    --primary-color: #2b6cb0;
+    --secondary-color: #48bb78;
+    --background-color: #f7fafc;
+    --text-color: #2d3748;
+    --border-color: #e2e8f0;
+    --hover-color: #4299e1;
+    --box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    --hover-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* ===== BASE STYLES ===== */
+.stApp {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    width: 100%;
+    max-width: 100vw;
+    margin: 0;
+    padding: 0.5rem;
+    overflow-x: hidden; /* Prevent horizontal scrolling on mobile */
+}
+
+/* Make all Streamlit elements full width */
+.element-container, .stMarkdown, .stDataFrame {
+    width: 100% !important;
+    padding: 0 !important;
+    max-width: none !important;
+}
+
+/* Remove any default margins from Streamlit elements */
+.block-container {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+}
+
+/* ===== LOGO AND BRANDING ===== */
+.logo-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.header-logo {
+    max-width: 300px;
+    height: auto;
+    margin-bottom: 1rem;
+}
+
+/* ===== HEADER STYLES ===== */
+.site-header {
+    background: white;
+    border-radius: 15px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s ease;
+    border: 1px solid var(--border-color);
+    width: 100%;
+    text-align: center;
+}
+
+.site-header:hover {
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* ===== NAVIGATION STYLES ===== */
+/* Streamlit's built-in navigation styling */
+[data-testid="stSidebarNav"] {
+    background-color: transparent !important;
+    padding-top: 0.5rem;
+}
+
+[data-testid="stSidebarNav"] > div {
+    background-color: white;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border: 1px solid #e2e8f0;
+}
+
+[data-testid="stSidebarNav"] li {
+    display: block !important;
+    margin-bottom: 0.5rem !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+[data-testid="stSidebarNav"] a {
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: #2d3748;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+[data-testid="stSidebarNav"] a:hover {
+    background-color: #edf2f7;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+[data-testid="stSidebarNav"] a.active {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* ===== GRAPH CONTAINERS ===== */
+.graph-container {
+    background: white;
+    border-radius: 15px;
+    padding: 0.75rem;  /* Reduced padding */
+    margin: 0.5rem 0;  /* Reduced margin */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 1px solid var(--border-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    min-height: 380px;  /* Reduced to match new graph height */
+    display: flex;
+    flex-direction: column;
+}
+
+.graph-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* ===== SITE DESCRIPTION STYLES ===== */
+.site-description {
+    background: white;
+    border-radius: 15px;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    box-shadow: var(--box-shadow);
+    border: 1px solid var(--border-color);
+    line-height: 1.6;
+    width: 100%;
+}
+
+.site-description-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-color);
+}
+
+/* ===== PLOTLY CHART CUSTOMIZATIONS ===== */
+/* Ensure Plotly charts take full width and have proper spacing */
+.js-plotly-plot, .plot-container {
+    width: 100% !important;
+    margin-top: 0.5rem !important;  /* Reduced space between title and plot */
+    touch-action: manipulation; /* Improve touch handling */
+}
+
+/* Adjust modebar (Plotly buttons) positioning */
+.modebar {
+    top: 0 !important;
+    right: 0 !important;
+}
+
+/* Make sure subheaders don't overlap with plots */
+.stSubheader {
+    margin-bottom: 0.5rem !important;
+    margin-top: 0.25rem !important;
+}
+
+/* Ensure proper spacing for the plot title */
+.gtitle {
+    margin-top: 1rem !important;
+}
+
+/* ===== LOADING ANIMATIONS AND SKELETONS ===== */
+/* Animation for loading states */
+.stSpinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Loader */
+.loader {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+/* Skeleton loading elements */
+.skeleton-text {
+    height: 1.2em;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    width: 100%;
+}
+
+.skeleton-text.short {
+    width: 60%;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Skeleton graph container */
+.skeleton-graph {
+    background: white;
+    border-radius: 15px;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 1px solid var(--border-color);
+    width: 100%;
+    min-height: 380px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ===== BUTTONS AND CONTROLS ===== */
+/* Modern Back to Main button styling (if needed for backwards compatibility) */
+.back-to-main {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: white !important;
+    text-decoration: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 500;
+    margin-top: 0.75rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.back-to-main:hover {
+    background-color: var(--hover-color);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transform: translateY(-1px);
+}
+
+.back-to-main:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Ensure proper spacing in radio buttons and dropdowns */
+.stRadio > div {
+    margin-bottom: 0.25rem !important;
+}
+
+.stSelectbox {
+    margin-bottom: 0.5rem !important;
+}
+
+/* Style for the selectbox options */
+.stSelectbox div[data-baseweb="select"] ul {
+    max-height: 400px !important;
+}
+
+/* Separate municipality site groups in dropdown */
+.stSelectbox div[data-baseweb="select"] strong {
+    color: var(--primary-color);
+    font-size: 1.1em;
+}
+
+/* ===== SITE CARDS FOR MAIN PAGE ===== */
+.site-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--box-shadow);
+    border: 1px solid var(--border-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 220px;
+}
+
+.site-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--hover-shadow);
+}
+
+.site-card h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+}
+
+.site-card p {
+    margin-bottom: 0.7rem;
+    flex-grow: 1;
+}
+
+/* Modern button for site cards */
+.site-button {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 500;
+    margin-top: auto;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.site-button:hover {
+    background-color: var(--hover-color);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+}
+
+.site-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* ===== MOBILE RESPONSIVENESS ===== */
+/* Mobile-specific base styles */
+@media (max-width: 768px) {
+    .stApp {
+        padding: 0.25rem;
+    }
+    
+    /* Make the main content area take full width on mobile */
+    .main .block-container {
+        max-width: 100% !important;
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
+    
+    /* Responsive styles for logo */
+    .header-logo {
+        max-width: 200px;
+    }
+    
+    /* Make columns stack vertically on mobile */
+    .main .row-widget.stHorizontal [data-testid="column"] {
+        width: 100% !important;
+        flex: 1 1 100% !important;
+        margin-bottom: 1rem;
+    }
+    
+    /* Adjust font size for mobile */
+    .site-description-text {
+        font-size: 0.95rem;
+    }
+    
+    /* Add some extra spacing for readability */
+    .stImage {
+        margin-bottom: 1rem;
+    }
+    
+    /* Responsive columns */
+    .row-widget.stHorizontal {
+        flex-wrap: wrap !important;
+    }
+
+    .row-widget.stHorizontal > div {
+        flex: 1 1 100% !important;
+        width: 100% !important;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Make the sidebar more compact on mobile */
+    .sidebar .sidebar-content {
+        padding: 0.5rem 0.25rem;
+    }
+    
+    /* Reduce spacing in sidebar elements */
+    .sidebar .block-container {
+        padding-top: 0.25rem !important;
+        padding-bottom: 0.25rem !important;
+    }
+    
+    /* Improve selectbox size on mobile */
+    .sidebar .stSelectbox > div > div {
+        min-height: 35px !important;
+        font-size: 0.9rem !important;
+    }
+    
+    /* Improve multiselect size on mobile */
+    .sidebar .stMultiSelect > div > div {
+        min-height: 35px !important;
+        font-size: 0.9rem !important;
+    }
+    
+    /* Adjust date input size on mobile */
+    .sidebar .stDateInput input {
+        font-size: 0.9rem !important;
+        padding: 0.25rem !important;
+    }
+    
+    /* Make sidebar headers more compact */
+    .sidebar h1, .sidebar h2, .sidebar h3 {
+        margin-top: 0.75rem !important;
+        margin-bottom: 0.25rem !important;
+        font-size: 90% !important;
+    }
+    
+    /* Ensure sidebar width isn't too narrow */
+    section[data-testid="stSidebar"] {
+        min-width: 18rem !important;
+    }
+    
+    /* Mobile navigation links */
+    [data-testid="stSidebarNav"] a {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    /* Mobile-specific back button adjustments */
+    .back-to-main {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    /* Make plot buttons larger for easier tapping */
+    .modebar-btn {
+        padding: 6px !important;
+    }
+    
+    /* Adjust chart height for better mobile viewing */
+    .js-plotly-plot {
+        height: auto !important;
+        min-height: 300px;
+    }
+    
+    /* Ensure plot legends are readable on small screens */
+    .legend {
+        font-size: 10px !important;
+    }
+    
+    /* Optimize chart margins for mobile */
+    .plot-container .main-svg {
+        margin: 0 auto !important;
+    }
+    
+    /* Ensure tooltips are clearly visible on mobile */
+    .hover-info, .tooltip {
+        font-size: 12px !important;
+        max-width: 80vw !important;
+        white-space: normal !important;
+    }
+}
+
+/* Smaller screen devices */
+@media (max-width: 480px) {
+    .header-logo {
+        max-width: 150px;
+    }
+}

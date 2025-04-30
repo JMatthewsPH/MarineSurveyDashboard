@@ -13,24 +13,11 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Load custom CSS
-@st.cache_data
-def load_css():
-    # Load main site styles
-    with open('assets/site_styles.css') as f:
-        site_css = f.read()
-    
-    # Load navigation styles
-    with open('assets/navigation.css') as f:
-        nav_css = f.read()
-    
-    return f'<style>{site_css}\n{nav_css}</style>'
+# Import centralized CSS loader
+from utils.ui_helpers import load_css
 
-# Include CSS for loading states and skeleton UI
-from utils.ui_helpers import add_loading_css
-
+# Apply consolidated CSS styles
 st.markdown(load_css(), unsafe_allow_html=True)
-st.markdown(add_loading_css(), unsafe_allow_html=True)
 
 # Add JavaScript to ensure the Home link is visible in navigation
 fix_nav_js = """

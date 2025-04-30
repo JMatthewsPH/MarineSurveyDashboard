@@ -113,49 +113,43 @@ def create_loading_placeholder(container, message="Loading data...", height=400)
                    f"</div></div>", unsafe_allow_html=True)
     return placeholder
 
-def add_loading_css():
-    """Add CSS for loading animations"""
-    return """
-    <style>
-    .loader {
-        border: 8px solid #f3f3f3;
-        border-top: 8px solid #3498db;
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        animation: spin 1s linear infinite;
-        margin: 0 auto;
-    }
-    
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-    
-    .skeleton-text {
-        height: 1.2em;
-        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-        background-size: 200% 100%;
-        animation: loading 1.5s infinite;
-        border-radius: 4px;
-        margin-bottom: 8px;
-        width: 100%;
-    }
-    
-    .skeleton-text.short {
-        width: 60%;
-    }
-    
-    @keyframes loading {
-        0% {
-            background-position: 200% 0;
-        }
-        100% {
-            background-position: -200% 0;
-        }
-    }
-    </style>
+@st.cache_data
+def load_css():
     """
+    Load the consolidated application CSS
+    
+    This function centralizes CSS loading to ensure consistency across all pages
+    and prevent duplicate CSS declarations.
+    
+    Returns:
+        str: HTML style tag with consolidated CSS
+    """
+    try:
+        with open('assets/styles.css') as f:
+            css_content = f.read()
+        return f'<style>{css_content}</style>'
+    except Exception as e:
+        print(f"Error loading CSS: {e}")
+        # Return minimal CSS if the file can't be loaded
+        return """
+        <style>
+        /* Minimal fallback styles */
+        body { font-family: sans-serif; }
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        </style>
+        """
 
 def skeleton_text_placeholder(lines=3, container=None):
     """
