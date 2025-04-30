@@ -72,7 +72,7 @@ def display_navigation(current_page=None):
         st.markdown(
             f"""
             <li class="nav-item">
-                <a href="{page_info['url']}" class="nav-link {active_class}">
+                <a href="{page_info['url']}" class="nav-link {active_class}" target="_self">
                     <span class="nav-icon">{page_info['icon']}</span>
                     {translated_name}
                 </a>
@@ -108,7 +108,7 @@ def add_back_to_main_button(lang="en"):
     # Create the button
     st.markdown(
         f"""
-        <a href="/" class="back-to-main-btn">
+        <a href="/" class="back-to-main-btn" target="_self">
             {text}
         </a>
         """,
