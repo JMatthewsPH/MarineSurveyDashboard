@@ -32,30 +32,42 @@ from utils.ui_helpers import add_loading_css
 st.markdown(load_css(), unsafe_allow_html=True)
 st.markdown(add_loading_css(), unsafe_allow_html=True)
 
-# Add debug JavaScript to inspect navigation
-debug_js = """
+# Add JavaScript to ensure the Home link is visible in navigation
+fix_nav_js = """
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Wait for Streamlit to load completely
-  setTimeout(function() {
-    console.log('Debug: Checking navigation elements');
+  function fixNavigation() {
     const navElement = document.querySelector('[data-testid="stSidebarNav"]');
     if (navElement) {
-      console.log('Navigation element found:', navElement);
-      const linkElements = navElement.querySelectorAll('li');
-      console.log('Navigation links count:', linkElements.length);
-      for (let i = 0; i < linkElements.length; i++) {
-        console.log(`Link ${i}:`, linkElements[i]);
-        console.log(`Link ${i} visibility:`, window.getComputedStyle(linkElements[i]).display);
-      }
+      console.log('Navigation element found');
+      const links = navElement.querySelectorAll('li');
+      console.log('Found', links.length, 'navigation links');
+      
+      // Make sure all links are visible
+      links.forEach((link, index) => {
+        console.log(`Link ${index} current display:`, window.getComputedStyle(link).display);
+        link.style.display = 'block';
+        link.style.visibility = 'visible';
+        link.style.opacity = '1';
+        link.style.height = 'auto';
+        link.style.width = 'auto';
+        console.log(`Link ${index} after fix:`, window.getComputedStyle(link).display);
+      });
     } else {
-      console.log('Navigation element not found');
+      console.log('Navigation element not found yet, retrying...');
+      setTimeout(fixNavigation, 1000);
     }
-  }, 3000); // Wait 3 seconds for everything to load
+  }
+  
+  // Initial call with delay to ensure Streamlit is loaded
+  setTimeout(fixNavigation, 1000);
+  
+  // Continue checking periodically (in case of dynamic changes)
+  setInterval(fixNavigation, 5000);
 });
 </script>
 """
-st.markdown(debug_js, unsafe_allow_html=True)
+st.markdown(fix_nav_js, unsafe_allow_html=True)
 
 
 
