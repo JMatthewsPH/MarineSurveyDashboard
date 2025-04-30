@@ -179,72 +179,75 @@ class DataProcessor:
     @st.cache_data(ttl=3600, show_spinner=False)
     def get_average_biomass_data(_self, exclude_site=None, municipality=None, start_date='2017-01-01'):
         """Calculate average commercial fish biomass with optional municipality filter"""
-        print(f"Calculating average biomass (excluding {exclude_site}, municipality filter: {municipality})")
-
+        logger.info(f"Calculating average biomass (excluding {exclude_site}, municipality filter: {municipality})")
+        
+        # Use the consistent display name from the class constants
+        display_name = _self.DISPLAY_NAMES.get('commercial_biomass', 'Commercial Biomass')
+        
         exclude_site_id = None
         if exclude_site:
-            with get_db_session() as db:
-                site = db.query(Site).filter(Site.name == exclude_site).first()
+            try:
+                # Use common session management
+                db = _self._get_session()
+                site = QueryBuilder.site_by_name(db, exclude_site)
                 if site:
                     exclude_site_id = site.id
+            except Exception as e:
+                logger.error(f"Error looking up exclude site: {str(e)}")
 
         try:
-            with get_db_session() as db:
-                query = (db.query(
-                        Survey.date,
-                        func.avg(Survey.commercial_biomass).label('Commercial Biomass'))
-                        .join(Site)  # Join with Site table
-                        .filter(Survey.date >= start_date))
+            # Use common session management
+            db = _self._get_session()
+            
+            # Use QueryBuilder's average_biomass_data method
+            surveys = QueryBuilder.average_biomass_data(
+                db, exclude_site_id, municipality, start_date
+            )
 
-                if exclude_site_id:
-                    query = query.filter(Survey.site_id != exclude_site_id)
-
-                if municipality:
-                    query = query.filter(Site.municipality == municipality)
-
-                surveys = (query.group_by(Survey.date)
-                          .order_by(Survey.date)
-                          .all())
-
-                return pd.DataFrame(surveys, columns=['date', 'Commercial Biomass'])
+            logger.info(f"Found {len(surveys)} average biomass data points")
+            
+            return pd.DataFrame(surveys, columns=['date', display_name])
         except Exception as e:
-            print(f"Error calculating average biomass data: {str(e)}")
-            return pd.DataFrame(columns=['date', 'Commercial Biomass'])
+            logger.error(f"Error calculating average biomass data: {str(e)}")
+            return pd.DataFrame(columns=['date', display_name])
 
     @st.cache_data(ttl=3600, show_spinner=False)
     def get_average_coral_cover_data(_self, exclude_site=None, municipality=None, start_date='2017-01-01'):
         """Calculate average hard coral cover with optional municipality filter"""
-        print(f"Calculating average coral cover (excluding {exclude_site}, municipality filter: {municipality})")
-
+        logger.info(f"Calculating average coral cover (excluding {exclude_site}, municipality filter: {municipality})")
+        
+        # Use the consistent display name from the class constants
+        display_name = _self.DISPLAY_NAMES.get('hard_coral_cover', 'Hard Coral Cover')
+        
         exclude_site_id = None
         if exclude_site:
-            with get_db_session() as db:
-                site = db.query(Site).filter(Site.name == exclude_site).first()
+            try:
+                # Use common session management
+                db = _self._get_session()
+                site = QueryBuilder.site_by_name(db, exclude_site)
                 if site:
                     exclude_site_id = site.id
-
+            except Exception as e:
+                logger.error(f"Error looking up exclude site: {str(e)}")
+        
         try:
-            with get_db_session() as db:
-                query = (db.query(
-                        Survey.date,
-                        func.avg(Survey.hard_coral_cover).label('Hard Coral Cover'))
-                        .join(Site)  # Join with Site table
-                        .filter(Survey.date >= start_date))
-
-                if exclude_site_id:
-                    query = query.filter(Survey.site_id != exclude_site_id)
-
-                if municipality:
-                    query = query.filter(Site.municipality == municipality)
-
-                surveys = (query.group_by(Survey.date)
-                          .order_by(Survey.date)
-                          .all())
-
-                return pd.DataFrame(surveys, columns=['date', 'Hard Coral Cover'])
+            # Use common session management
+            db = _self._get_session()
+            
+            # Using the column name directly from class constants
+            column_name = 'hard_coral_cover'
+            
+            # Use general average_metric_data from QueryBuilder
+            surveys = QueryBuilder.average_metric_data(
+                db, column_name, exclude_site_id, municipality, start_date
+            )
+            
+            logger.info(f"Found {len(surveys)} average coral cover data points")
+            
+            return pd.DataFrame(surveys, columns=['date', display_name])
         except Exception as e:
-            print(f"Error calculating average coral cover data: {str(e)}")
-            return pd.DataFrame(columns=['date', 'Hard Coral Cover'])
+            logger.error(f"Error calculating average coral cover data: {str(e)}")
+            return pd.DataFrame(columns=['date', display_name])
 
     @st.cache_data(ttl=3600, show_spinner=False)
     def get_biomass_data(_self, site_name, start_date='2017-01-01'):
@@ -359,13 +362,17 @@ class DataProcessor:
             if not coral_data.empty:
                 all_coral_data.append(coral_data)
         
+        # Get the display names for consistency
+        coral_display_name = _self.DISPLAY_NAMES.get('hard_coral_cover', 'Hard Coral Cover')
+        biomass_display_name = _self.DISPLAY_NAMES.get('commercial_biomass', 'Commercial Biomass')
+        
         avg_hard_coral = 0
         if all_coral_data:
             combined_coral = pd.concat(all_coral_data)
-            avg_hard_coral = combined_coral['Hard Coral Cover'].mean()
+            avg_hard_coral = combined_coral[coral_display_name].mean()
             
         # Calculate average commercial fish biomass
-        avg_biomass = combined_data['Commercial Biomass'].mean()
+        avg_biomass = combined_data[biomass_display_name].mean()
         
         # Calculate average fleshy algae
         all_algae_data = []
@@ -407,9 +414,13 @@ class DataProcessor:
             omnivore_data = _self.get_metric_data(site.name, 'omnivore')
             corallivore_data = _self.get_metric_data(site.name, 'corallivore')
             
+            # Get display names for consistency
+            biomass_display_name = _self.DISPLAY_NAMES.get('commercial_biomass', 'Commercial Biomass')
+            coral_display_name = _self.DISPLAY_NAMES.get('hard_coral_cover', 'Hard Coral Cover')
+            
             # Extract the latest values
-            latest_biomass = biomass_data['Commercial Biomass'].iloc[-1] if not biomass_data.empty else None
-            latest_coral = coral_data['Hard Coral Cover'].iloc[-1] if not coral_data.empty else None
+            latest_biomass = biomass_data[biomass_display_name].iloc[-1] if not biomass_data.empty else None
+            latest_coral = coral_data[coral_display_name].iloc[-1] if not coral_data.empty else None
             latest_algae = algae_data['fleshy_algae'].iloc[-1] if not algae_data.empty else None
             latest_herbivore = herbivore_data['herbivore'].iloc[-1] if not herbivore_data.empty else None
             latest_omnivore = omnivore_data['omnivore'].iloc[-1] if not omnivore_data.empty else None
