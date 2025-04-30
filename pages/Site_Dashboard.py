@@ -744,7 +744,8 @@ if selected_site:
                 f"Corallivore Density - {selected_site}",
                 "Density (ind/ha)",
                 comparison_data=corallivore_comparison_data,
-                date_range=date_range
+                date_range=date_range,
+                show_confidence_interval=show_confidence_interval
             )
             st.plotly_chart(corallivore_fig, use_container_width=True, config=corallivore_config, key='corallivore_chart')
 
@@ -768,7 +769,8 @@ if selected_site:
                 f"Bleaching - {selected_site}",
                 "Bleaching (%)",
                 comparison_data=bleaching_comparison_data,
-                date_range=date_range
+                date_range=date_range,
+                show_confidence_interval=show_confidence_interval
             )
             st.plotly_chart(bleaching_fig, use_container_width=True, config=bleaching_config, key='bleaching_chart')
 
@@ -792,7 +794,8 @@ if selected_site:
                 f"Rubble Cover - {selected_site}",
                 "Rubble Cover (%)",
                 comparison_data=rubble_comparison_data,
-                date_range=date_range
+                date_range=date_range,
+                show_confidence_interval=show_confidence_interval
             )
             st.plotly_chart(rubble_fig, use_container_width=True, config=rubble_config, key='rubble_chart')
             
