@@ -330,8 +330,8 @@ if selected_site:
             # PDF Report Export Section
             st.subheader("Export PDF Report")
             
-            # Metric selection
-            available_metrics = ["hard_coral", "fleshy_algae", "herbivore", "carnivore", 
+            # Metric selection - only include metrics that are displayed on the webpage
+            available_metrics = ["hard_coral", "fleshy_algae", "herbivore", 
                                "omnivore", "corallivore", "bleaching", "rubble"]
             
             # Display names for the metrics for friendly selection
