@@ -246,50 +246,44 @@ if selected_site:
             # Helper function to get all site data for export
             def get_site_data_for_export(site_name):
                 """Get all metrics data for the selected site in a single DataFrame"""
-                metrics_data = {}
+                # Start with an empty DataFrame with date column
+                result_df = pd.DataFrame(columns=["date"])
                 
-                # Get all the different metrics
-                metrics = ["hard_coral", "fleshy_algae", "herbivore", "carnivore", 
-                          "omnivore", "corallivore", "bleaching", "rubble"]
-                
+                # Get all the metrics data
                 # Commercial biomass is handled separately
                 biomass_df = data_processor.get_biomass_data(site_name)
                 if not biomass_df.empty:
-                    metrics_data["commercial_biomass"] = biomass_df
+                    # Create a copy of the dataframe with just the columns we need
+                    biomass_data = biomass_df[["date", "commercial_biomass"]].copy()
+                    # Merge with the result dataframe
+                    if result_df.empty:
+                        result_df = biomass_data.copy()
+                    else:
+                        result_df = result_df.merge(biomass_data, on="date", how="outer")
                 
-                # Get data for each metric
+                # List of all other metrics to process
+                metrics = ["hard_coral", "fleshy_algae", "herbivore", "carnivore", 
+                           "omnivore", "corallivore", "bleaching", "rubble"]
+                
+                # Process each metric
                 for metric in metrics:
+                    # Get the standard metric name from the mapping
+                    metric_column = data_processor.METRIC_MAP[metric]
                     df = data_processor.get_metric_data(site_name, metric)
-                    if not df.empty:
-                        # Use the standardized metric name from the map
-                        metrics_data[data_processor.METRIC_MAP[metric]] = df
-                
-                # Combine all metrics into a single DataFrame
-                if not metrics_data:
-                    return pd.DataFrame()  # Return empty DataFrame if no data
-                
-                # Start with dates from biomass as the base
-                if "commercial_biomass" in metrics_data:
-                    result_df = metrics_data["commercial_biomass"][["date"]].copy()
-                else:
-                    # Use the first available metric's dates
-                    first_key = list(metrics_data.keys())[0]
-                    result_df = metrics_data[first_key][["date"]].copy()
-                
-                # Add each metric's values to the result DataFrame
-                for metric_name, df in metrics_data.items():
-                    # Get the display name for the column header
-                    display_name = data_processor.DISPLAY_NAMES.get(metric_name, metric_name.replace('_', ' ').title())
                     
-                    # Add the metric column, matching by date
-                    result_df = result_df.merge(
-                        df[["date", metric_name]], 
-                        on="date", 
-                        how="outer"
-                    )
+                    if not df.empty and metric_column in df.columns:
+                        # Create a copy of just the columns we need
+                        metric_data = df[["date", metric_column]].copy()
+                        
+                        # Merge with the result dataframe
+                        if result_df.empty:
+                            result_df = metric_data.copy()
+                        else:
+                            result_df = result_df.merge(metric_data, on="date", how="outer")
                 
-                # Sort by date (newest first)
-                result_df = result_df.sort_values("date", ascending=False)
+                # If we have data, sort it by date (newest first)
+                if not result_df.empty:
+                    result_df = result_df.sort_values("date", ascending=False)
                 
                 return result_df
             
