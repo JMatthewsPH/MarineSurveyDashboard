@@ -499,11 +499,11 @@ with trend_container:
             # Debug: Print column names
             st.write("Debug - Available columns:", trend_data.columns.tolist())
             
-            # The column name should be 'omnivore_density', not 'Omnivore Density'
+            # The column name is 'omnivore' as shown in the debug output
             # Create trend chart
             fig, config = graph_generator.create_multi_site_trend_chart(
                 trend_data=trend_data,
-                metric_name="omnivore_density",  # Use the database column name
+                metric_name="omnivore",  # Use the actual column name from the dataframe
                 group_by_municipality=group_by_municipality,
                 highlight_sites=highlight_sites
             )
