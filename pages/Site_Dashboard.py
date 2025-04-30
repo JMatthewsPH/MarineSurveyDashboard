@@ -346,42 +346,26 @@ if selected_site:
                 "rubble": "Rubble"
             }
             
-            # Include biomass by default
-            st.markdown("Select charts to include in the PDF report:")
+            # Simple description
+            st.markdown("Generate a comprehensive PDF report with all charts for this site:")
             
-            # Biomass is a special option
-            include_biomass = st.checkbox("Commercial Fish Biomass", value=True)
-            
-            # Create multiple columns for a more compact UI with 2 checkboxes per row
-            col1, col2 = st.columns(2)
-            
-            # Create selected metrics dictionary
-            selected_metrics = {}
-            for i, metric in enumerate(available_metrics):
-                # Alternate between columns
-                col = col1 if i % 2 == 0 else col2
-                selected_metrics[metric] = col.checkbox(metric_display[metric], value=True)
-            
-            # Filter selected metrics
-            metrics_to_include = [m for m, selected in selected_metrics.items() if selected]
-            
-            # PDF export button
-            pdf_report_button = st.button("Generate PDF Report")
+            # PDF export button - just one button now
+            pdf_report_button = st.button("Export Complete PDF Report")
             
             if pdf_report_button:
-                with st.spinner("Generating PDF report with selected charts..."):
+                with st.spinner("Generating complete PDF report..."):
                     try:
-                        # Generate PDF bytes
+                        # Generate PDF bytes with all metrics and biomass included
                         pdf_bytes = generate_site_report_pdf(
                             selected_site, 
                             data_processor, 
-                            metrics=metrics_to_include,
-                            include_biomass=include_biomass
+                            metrics=available_metrics,  # Include all metrics
+                            include_biomass=True        # Always include biomass
                         )
                         
                         # Create timestamp for filename
                         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                        filename = f"{selected_site}_report_{timestamp}.pdf"
+                        filename = f"{selected_site}_complete_report_{timestamp}.pdf"
                         
                         # Show download button
                         st.download_button(
@@ -391,10 +375,10 @@ if selected_site:
                             mime="application/pdf",
                         )
                         
-                        st.success(f"PDF report for {selected_site} generated successfully!")
+                        st.success(f"Complete PDF report for {selected_site} generated successfully!")
                     except Exception as e:
                         st.error(f"Error generating PDF report: {str(e)}")
-                        st.info("Try selecting fewer charts or checking console for error details.")
+                        st.info("Please check console for error details.")
             
             # Date Range Selection
             st.header(TRANSLATIONS[st.session_state.language]['date_range'])
