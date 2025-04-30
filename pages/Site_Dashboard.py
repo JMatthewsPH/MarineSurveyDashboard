@@ -5,8 +5,46 @@ st.set_page_config(
     page_title="Site Dashboard",
     page_icon="assets/branding/favicon.png",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
+    menu_items={
+        'About': None,
+        'Get help': None,
+        'Report a bug': None
+    }
 )
+
+# Hide this page from navigation using JavaScript
+hide_page_js = """
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function hideNavItem() {
+        const navItems = document.querySelectorAll('[data-testid="stSidebarNav"] li a');
+        navItems.forEach(item => {
+            if (item.innerText.includes('Site Dashboard')) {
+                const listItem = item.closest('li');
+                if (listItem) {
+                    listItem.style.display = 'none';
+                    console.log('Hidden Site Dashboard from nav');
+                }
+            }
+        });
+        
+        // Try again if navigation isn't fully loaded yet
+        if (navItems.length === 0) {
+            setTimeout(hideNavItem, 500);
+        }
+    }
+    
+    // Initial attempt
+    hideNavItem();
+    
+    // Keep trying in case the navigation loads after our script
+    setInterval(hideNavItem, 3000);
+});
+</script>
+"""
+
+st.markdown(hide_page_js, unsafe_allow_html=True)
 
 import os
 import pandas as pd
