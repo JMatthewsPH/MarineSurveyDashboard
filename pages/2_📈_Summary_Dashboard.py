@@ -93,7 +93,11 @@ with st.sidebar:
                                 max_value=max_date)
     
     # Set date range only if valid selection
-    date_range = (pd.to_datetime(start_date), pd.to_datetime(end_date)) if start_date <= end_date else None
+    # Convert date_input objects (datetime.date) to pandas Timestamp objects for consistent comparison
+    start_timestamp = pd.to_datetime(start_date)
+    end_timestamp = pd.to_datetime(end_date)
+    
+    date_range = (start_timestamp, end_timestamp) if start_date <= end_date else None
     if start_date > end_date:
         st.error(TRANSLATIONS[st.session_state.language]['date_range_error'])
     
@@ -426,10 +430,16 @@ with trend_container:
             
             # Filter by date range if specified
             if date_range:
-                start_dt, end_dt = date_range
+                # date_range already contains pandas timestamps
+                start_timestamp, end_timestamp = date_range
+                
+                # Ensure trend_data['date'] is in datetime64 format
+                trend_data['date'] = pd.to_datetime(trend_data['date'])
+                
+                # Now filter using compatible types
                 trend_data = trend_data[
-                    (trend_data['date'] >= start_dt) & 
-                    (trend_data['date'] <= end_dt)
+                    (trend_data['date'] >= start_timestamp) & 
+                    (trend_data['date'] <= end_timestamp)
                 ]
             
             # Create trend chart
