@@ -236,11 +236,10 @@ if selected_site:
         with st.sidebar:
             st.title(TRANSLATIONS[st.session_state.language]['analysis_options'])
             
-            # Confidence Interval radio button
-            show_confidence_interval = st.radio(
-                "Confidence Interval",
-                ["Show", "Hide"],
-                index=1  # Default to Hide
+            # Confidence Interval checkbox
+            show_confidence_interval = st.checkbox(
+                "Show Confidence Interval",
+                value=False  # Default to unchecked
             )
             
             # Date Range Selection
