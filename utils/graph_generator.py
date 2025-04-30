@@ -55,8 +55,8 @@ class GraphGenerator:
     def get_metric_range(self, metric_name):
         """Define standard ranges for each metric type"""
         ranges = {
-            'Commercial Biomass': {'min': 0, 'max': 3000},  # kg/ha
-            'Commercial Fish Biomass': {'min': 0, 'max': 3000},  # kg/ha
+            'Commercial Biomass': {'min': 0, 'max': 2000},  # kg/ha
+            'Commercial Fish Biomass': {'min': 0, 'max': 2000},  # kg/ha
             'Hard Coral Cover': {'min': 0, 'max': 100},     # percentage
             'Fleshy Algae': {'min': 0, 'max': 100},         # percentage
             'Bleaching': {'min': 0, 'max': 100},            # percentage
@@ -206,6 +206,12 @@ class GraphGenerator:
                 'tickmode': 'linear',
                 'tick0': 0,
                 'dtick': 20  # 20% intervals for Rubble
+            })
+        elif 'Commercial Fish Biomass' in metric_name or 'Commercial Biomass' in metric_name:
+            y_axis_settings.update({
+                'tickmode': 'linear',
+                'tick0': 0,
+                'dtick': 200  # 200 kg/ha intervals for Commercial Fish Biomass
             })
 
         # Calculate confidence intervals if requested

@@ -321,10 +321,13 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
                 ax.set_ylabel("Biomass (kg/ha)")
                 
                 # Get Y-axis range from graph generator to match web display
-                y_range = graph_generator.get_metric_range('Commercial Biomass')
+                y_range = graph_generator.get_metric_range('Commercial Fish Biomass')
                 
                 # Set the y-axis limits using the same ranges as the web display
                 ax.set_ylim(y_range['min'], y_range['max'])
+                
+                # Add consistent tick spacing (0, 20, 40, 60, 80, 100)
+                ax.set_yticks(range(0, 101, 20))
                 
                 ax.grid(True, alpha=0.3)
                 plt.tight_layout()
@@ -390,6 +393,14 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
                 
                 # Set the y-axis limits using the same ranges as the web display
                 ax.set_ylim(y_range['min'], y_range['max'])
+                
+                # Set consistent tick spacing based on the metric
+                if 'Herbivore' in display_name:
+                    ax.set_yticks(range(0, 2501, 500))
+                elif 'Carnivore' in display_name or 'Omnivore' in display_name or 'Corallivore' in display_name:
+                    ax.set_yticks(range(0, 301, 50))
+                elif 'Coral Cover' in display_name or 'Algae Cover' in display_name or 'Bleaching' in display_name or 'Rubble' in display_name:
+                    ax.set_yticks(range(0, 101, 20))
                 
                 ax.grid(True, alpha=0.3)
                 plt.tight_layout()
