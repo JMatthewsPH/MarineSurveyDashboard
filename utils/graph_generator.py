@@ -642,24 +642,52 @@ class GraphGenerator:
         # This is a placeholder - in real implementation this would use lat/lon data
         # and create a Mapbox or Scattergeo plot
         
+        # First, handle NaN values in the metric column by replacing them with 0
+        # Create a copy to avoid modifying the original dataframe
+        chart_data = sites_data.copy()
+        
+        # Fill NaN values with 0 and create a size column with a minimum value
+        chart_data[metric_column] = chart_data[metric_column].fillna(0)
+        
+        # Create a size column that's always positive (minimum 5) for better visibility
+        # Scale the values to a reasonable range for the scatter plot
+        chart_data['marker_size'] = chart_data[metric_column].apply(lambda x: max(5, min(30, x/100)) if 'biomass' in metric_column else max(5, min(30, x)))
+        
         # For now, create a scatter plot with municipality on x-axis as an approximation
         fig = px.scatter(
-            sites_data,
+            chart_data,
             x='municipality',
             y='site',
             color=metric_column,
-            size=metric_column,
+            size='marker_size',  # Use our calculated size column
             hover_name='site',
             color_continuous_scale=px.colors.sequential.Viridis,
             title=title if title else f"Geographic distribution of {metric_column.replace('_', ' ')}",
-            size_max=30,
+            size_max=40,
             opacity=0.8
+        )
+        
+        # Add appropriate labels in the hover data based on the metric type
+        hover_template = ""
+        if 'biomass' in metric_column:
+            hover_template = "<b>%{hovertext}</b><br>Municipality: %{x}<br>Biomass: %{marker.color:.1f} kg/ha<extra></extra>"
+        elif 'coral' in metric_column or 'algae' in metric_column:
+            hover_template = "<b>%{hovertext}</b><br>Municipality: %{x}<br>Cover: %{marker.color:.1f}%<extra></extra>"
+        elif 'density' in metric_column:
+            hover_template = "<b>%{hovertext}</b><br>Municipality: %{x}<br>Density: %{marker.color:.1f} ind/ha<extra></extra>"
+        else:
+            hover_template = "<b>%{hovertext}</b><br>Municipality: %{x}<br>Value: %{marker.color:.1f}<extra></extra>"
+            
+        fig.update_traces(
+            hovertemplate=hover_template
         )
         
         fig.update_layout(
             height=500,
             template="plotly_white",
-            margin=dict(l=40, r=40, t=60, b=60)
+            margin=dict(l=40, r=40, t=60, b=60),
+            xaxis_title="Municipality",
+            yaxis_title="Site"
         )
         
         # Configure download settings
