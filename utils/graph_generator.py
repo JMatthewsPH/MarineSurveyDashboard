@@ -56,6 +56,7 @@ class GraphGenerator:
         """Define standard ranges for each metric type"""
         ranges = {
             'Commercial Biomass': {'min': 0, 'max': 3000},  # kg/ha
+            'Commercial Fish Biomass': {'min': 0, 'max': 3000},  # kg/ha
             'Hard Coral Cover': {'min': 0, 'max': 100},     # percentage
             'Fleshy Algae': {'min': 0, 'max': 100},         # percentage
             'Bleaching': {'min': 0, 'max': 100},            # percentage
