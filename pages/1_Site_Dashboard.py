@@ -35,6 +35,9 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# Import navigation utilities
+from utils.navigation import display_navigation, add_back_to_main_button
+
 # Initialize language in session state if not present
 if 'language' not in st.session_state:
     st.session_state.language = "en"  # Default to English
@@ -107,12 +110,8 @@ add_favicon()
 
 # Sidebar for site selection and language
 with st.sidebar:
-    # Back to main link first - using HTML with target="_self" to prevent opening in new tab
-    back_text = TRANSLATIONS[st.session_state.language]['back_to_main']
-    st.markdown(f'<a href="../" target="_self" class="back-to-main">{back_text}</a>', unsafe_allow_html=True)
-
-    st.markdown("---")  # Add separator
-
+    st.title(TRANSLATIONS[st.session_state.language]['settings'])
+    
     # Language selection
     selected_language = st.selectbox(
         TRANSLATIONS[st.session_state.language]['lang_toggle'],
@@ -127,7 +126,11 @@ with st.sidebar:
             st.session_state.language = code
             break
 
-    st.markdown("---")  # Add separator
+    # Display modern navigation menu
+    display_navigation(current_page="Site Dashboard")
+    
+    # Add Back to Main button
+    add_back_to_main_button(lang=st.session_state.language)
 
     # Site selection with municipality grouping
     st.subheader(TRANSLATIONS[st.session_state.language]['select_site'])

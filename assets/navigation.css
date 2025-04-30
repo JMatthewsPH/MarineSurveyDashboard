@@ -1,0 +1,112 @@
+/* Modern Navigation Styles */
+
+/* Navigation container */
+.navigation-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border: 1px solid #e2e8f0;
+}
+
+/* Menu list style */
+.nav-menu {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* Menu item style */
+.nav-item {
+    display: block;
+    margin-bottom: 0.5rem;
+    position: relative;
+}
+
+/* Menu link style */
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: #2d3748;
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+/* Active menu link style */
+.nav-link.active {
+    background-color: #2b6cb0;
+    color: white;
+    border-color: #2b6cb0;
+}
+
+/* Hover effect for menu items */
+.nav-link:hover:not(.active) {
+    background-color: #edf2f7;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Menu icon style */
+.nav-icon {
+    margin-right: 0.75rem;
+    width: 20px;
+    text-align: center;
+    opacity: 0.7;
+}
+
+/* Back to Main button style */
+.back-to-main-btn {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background-color: #2b6cb0;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(43, 108, 176, 0.3);
+    transition: all 0.2s ease;
+    border: none;
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+}
+
+.back-to-main-btn:hover {
+    background-color: #2c5282;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(43, 108, 176, 0.35);
+}
+
+/* Back arrow icon for Back to Main button */
+.back-arrow {
+    margin-right: 0.5rem;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .nav-link {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    .back-to-main-btn {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    .nav-icon {
+        margin-right: 0.5rem;
+        width: 16px;
+    }
+}

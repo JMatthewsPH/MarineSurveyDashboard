@@ -16,9 +16,15 @@ st.set_page_config(
 # Load custom CSS
 @st.cache_data
 def load_css():
+    # Load main site styles
     with open('assets/site_styles.css') as f:
-        css_content = f.read()
-        return f'<style>{css_content}</style>'
+        site_css = f.read()
+    
+    # Load navigation styles
+    with open('assets/navigation.css') as f:
+        nav_css = f.read()
+    
+    return f'<style>{site_css}\n{nav_css}</style>'
 
 # Include CSS for loading states and skeleton UI
 from utils.ui_helpers import add_loading_css
@@ -61,7 +67,10 @@ LANGUAGE_DISPLAY = {
     "ceb": "Cebuano"
 }
 
-# Sidebar for language selection
+# Import navigation helper
+from utils.navigation import display_navigation
+
+# Sidebar for language selection and navigation
 with st.sidebar:
     st.title(TRANSLATIONS[st.session_state.language]['settings'])
     
@@ -79,8 +88,10 @@ with st.sidebar:
             st.session_state.language = code
             break
 
+    # Display modern navigation menu
+    display_navigation(current_page="Main")
+            
     # Add site description based on selected language
-    st.markdown("---")  # Add a visual separator
     st.title(TRANSLATIONS[st.session_state.language]['about'])
     
     # Display about text from translations

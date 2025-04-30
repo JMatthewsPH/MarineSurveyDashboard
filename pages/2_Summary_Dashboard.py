@@ -12,11 +12,12 @@ from utils.translations import TRANSLATIONS
 from utils.database import get_db_session
 from utils.branding import display_logo, add_favicon
 from utils.ui_helpers import loading_spinner, create_loading_placeholder, add_loading_css, skeleton_text_placeholder
+from utils.navigation import display_navigation, add_back_to_main_button
 
 # Set page config
 st.set_page_config(
     page_title="MCP Summary Dashboard",
-    page_icon="📈",
+    page_icon="assets/branding/favicon.png",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -43,21 +44,57 @@ data_processor = get_data_processor()
 graph_generator = GraphGenerator(data_processor)
 
 # Load custom CSS
+@st.cache_data
 def load_css():
-    with open("assets/site_styles.css") as f:
-        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+    # Load main site styles
+    with open('assets/site_styles.css') as f:
+        site_css = f.read()
+    
+    # Load navigation styles
+    with open('assets/navigation.css') as f:
+        nav_css = f.read()
+    
+    return f'<style>{site_css}\n{nav_css}</style>'
 
-load_css()
+st.markdown(load_css(), unsafe_allow_html=True)
 
 # Display logo at the top
 display_logo(size="medium")
 
 # Dashboard title
-st.title(f"📈 {TRANSLATIONS[st.session_state.language]['summary_dashboard']}")
+st.title(f"{TRANSLATIONS[st.session_state.language]['summary_dashboard']}")
 st.markdown(f"<div class='subtitle'>{TRANSLATIONS[st.session_state.language]['all_sites_analysis']}</div>", unsafe_allow_html=True)
 
 # Date selector in the sidebar
 with st.sidebar:
+    st.title(TRANSLATIONS[st.session_state.language]['settings'])
+    
+    # Language selection
+    LANGUAGE_DISPLAY = {
+        "en": "English",
+        "tl": "Tagalog",
+        "ceb": "Cebuano"
+    }
+    
+    selected_language = st.selectbox(
+        TRANSLATIONS[st.session_state.language]['lang_toggle'],
+        list(LANGUAGE_DISPLAY.values()),
+        key="language_selector",
+        index=list(LANGUAGE_DISPLAY.values()).index(LANGUAGE_DISPLAY.get(st.session_state.language, "English"))
+    )
+    
+    # Convert display language back to language code
+    for code, name in LANGUAGE_DISPLAY.items():
+        if name == selected_language:
+            st.session_state.language = code
+            break
+    
+    # Display modern navigation menu
+    display_navigation(current_page="Summary Dashboard")
+    
+    # Add Back to Main button
+    add_back_to_main_button(lang=st.session_state.language)
+    
     st.title(TRANSLATIONS[st.session_state.language]['analysis_options'])
     
     # Get the min and max dates from all surveys 
