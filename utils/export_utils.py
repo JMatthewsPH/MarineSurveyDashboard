@@ -149,17 +149,81 @@ def convert_plotly_to_matplotlib(fig):
     Returns:
         Matplotlib figure object
     """
-    # Extract data from plotly fig
-    fig_data = fig.data[0]
-    
     # Create Matplotlib figure
     mpl_fig, ax = plt.subplots(figsize=(8, 5))
     
-    # Determine plot type and add data
-    if fig_data.type == 'scatter':
-        ax.plot(fig_data.x, fig_data.y, marker='o')
-    elif fig_data.type == 'bar':
-        ax.bar(fig_data.x, fig_data.y)
+    # Define COVID period dates for possible dotted line
+    covid_start = pd.Timestamp('2019-09-01')
+    covid_end = pd.Timestamp('2022-03-01')
+    
+    # Check if this is a time series with COVID period
+    has_covid_period = False
+    covid_line_x = []
+    covid_line_y = []
+    pre_covid_x = []
+    pre_covid_y = []
+    post_covid_x = []
+    post_covid_y = []
+    
+    # Check multiple data traces for possible COVID marker
+    for trace in fig.data:
+        if trace.name == 'COVID-19 Period (No Data)' and trace.line.dash == 'dot':
+            # We found a COVID period marker
+            has_covid_period = True
+            covid_line_x = trace.x
+            covid_line_y = trace.y
+        elif trace.mode == 'lines+markers' or trace.type == 'scatter':
+            # Regular data points - check if they might be pre or post COVID
+            if isinstance(trace.x, list) and len(trace.x) > 0:
+                # Try to parse x values as dates to determine pre/post COVID
+                try:
+                    x_dates = [pd.to_datetime(x) for x in trace.x]
+                    # Sort points by date
+                    points = sorted(zip(x_dates, trace.y), key=lambda p: p[0])
+                    x_dates = [p[0] for p in points]
+                    y_values = [p[1] for p in points]
+                    
+                    # Split into pre and post COVID
+                    for i, date in enumerate(x_dates):
+                        if date < covid_start:
+                            pre_covid_x.append(date)
+                            pre_covid_y.append(y_values[i])
+                        elif date > covid_end:
+                            post_covid_x.append(date)
+                            post_covid_y.append(y_values[i])
+                except:
+                    # Not date data or other issue, plot as is
+                    if not has_covid_period:  # Only plot if not already handling COVID period
+                        if trace.type == 'scatter':
+                            ax.plot(trace.x, trace.y, marker='o')
+                        elif trace.type == 'bar':
+                            ax.bar(trace.x, trace.y)
+    
+    # Plot with special COVID handling if needed, otherwise plot the first trace
+    if has_covid_period:
+        # Plot pre-COVID data
+        if pre_covid_x:
+            ax.plot(pre_covid_x, pre_covid_y, marker='o', color='#0077b6')
+            
+        # Plot post-COVID data
+        if post_covid_x:
+            ax.plot(post_covid_x, post_covid_y, marker='o', color='#0077b6')
+            
+        # Plot COVID dotted line
+        if covid_line_x and len(covid_line_x) >= 2:
+            ax.plot([pd.to_datetime(covid_line_x[0]), pd.to_datetime(covid_line_x[1])], 
+                    [covid_line_y[0], covid_line_y[1]], 
+                    linestyle='--', color='#0077b6', alpha=0.5, 
+                    label='COVID-19 Period (No Data)')
+            ax.legend(loc='best')
+    else:
+        # If no COVID period found and we haven't plotted yet, use the first trace
+        if not pre_covid_x and not post_covid_x and len(fig.data) > 0:
+            trace = fig.data[0]
+            if trace.type == 'scatter':
+                ax.plot(trace.x, trace.y, marker='o', color='#0077b6')
+            elif trace.type == 'bar':
+                ax.bar(trace.x, trace.y, color='#0077b6')
     
     # Set title and labels
     if fig.layout.title.text:
@@ -330,7 +394,34 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
                 
                 # Create matplotlib figure
                 fig, ax = plt.subplots(figsize=(8, 4))
-                ax.plot(biomass_data['date'], biomass_data[biomass_column], marker='o')
+                
+                # Add COVID period markers
+                covid_start = pd.Timestamp('2019-09-01')
+                covid_end = pd.Timestamp('2022-03-01')
+                
+                # Ensure date column is in datetime format
+                biomass_data['date'] = pd.to_datetime(biomass_data['date'])
+                
+                # Split data for pre-COVID and post-COVID
+                pre_covid = biomass_data[biomass_data['date'] < covid_start]
+                post_covid = biomass_data[biomass_data['date'] > covid_end]
+                
+                # Plot pre-COVID data
+                if not pre_covid.empty:
+                    ax.plot(pre_covid['date'], pre_covid[biomass_column], marker='o', color='#0077b6')
+                
+                # Plot post-COVID data
+                if not post_covid.empty:
+                    ax.plot(post_covid['date'], post_covid[biomass_column], marker='o', color='#0077b6')
+                
+                # Add dotted line for COVID period if applicable
+                if not pre_covid.empty and not post_covid.empty:
+                    last_pre_covid = pre_covid.iloc[-1]
+                    first_post_covid = post_covid.iloc[0]
+                    ax.plot([last_pre_covid['date'], first_post_covid['date']], 
+                            [last_pre_covid[biomass_column], first_post_covid[biomass_column]], 
+                            linestyle='--', color='#0077b6', alpha=0.5, label='COVID-19 Period (No Data)')
+                    
                 ax.set_title(f"Commercial Fish Biomass - {site_name}")
                 ax.set_xlabel("Date")
                 ax.set_ylabel("Biomass (kg/ha)")
@@ -344,6 +435,10 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
                 # Add consistent tick spacing (0, 20, 40, 60, 80, 100)
                 ax.set_yticks(range(0, 101, 20))
                 
+                # Add legend if we have the COVID period line
+                if not pre_covid.empty and not post_covid.empty:
+                    ax.legend(loc='best')
+                    
                 ax.grid(True, alpha=0.3)
                 plt.tight_layout()
                 
@@ -382,7 +477,34 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
             if metric_col is not None:
                 # Create matplotlib figure
                 fig, ax = plt.subplots(figsize=(8, 4))
-                ax.plot(metric_data['date'], metric_data[metric_col], marker='o')
+                
+                # Add COVID period markers
+                covid_start = pd.Timestamp('2019-09-01')
+                covid_end = pd.Timestamp('2022-03-01')
+                
+                # Ensure date column is in datetime format
+                metric_data['date'] = pd.to_datetime(metric_data['date'])
+                
+                # Split data for pre-COVID and post-COVID
+                pre_covid = metric_data[metric_data['date'] < covid_start]
+                post_covid = metric_data[metric_data['date'] > covid_end]
+                
+                # Plot pre-COVID data
+                if not pre_covid.empty:
+                    ax.plot(pre_covid['date'], pre_covid[metric_col], marker='o', color='#0077b6')
+                
+                # Plot post-COVID data
+                if not post_covid.empty:
+                    ax.plot(post_covid['date'], post_covid[metric_col], marker='o', color='#0077b6')
+                
+                # Add dotted line for COVID period if applicable
+                if not pre_covid.empty and not post_covid.empty:
+                    last_pre_covid = pre_covid.iloc[-1]
+                    first_post_covid = post_covid.iloc[0]
+                    ax.plot([last_pre_covid['date'], first_post_covid['date']], 
+                            [last_pre_covid[metric_col], first_post_covid[metric_col]], 
+                            linestyle='--', color='#0077b6', alpha=0.5, label='COVID-19 Period (No Data)')
+                
                 ax.set_title(f"{display_name} - {site_name}")
                 ax.set_xlabel("Date")
                 
@@ -417,6 +539,10 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
                 elif 'Coral Cover' in display_name or 'Algae Cover' in display_name or 'Bleaching' in display_name or 'Rubble' in display_name:
                     ax.set_yticks(range(0, 101, 20))
                 
+                # Add legend if we have the COVID period line
+                if not pre_covid.empty and not post_covid.empty:
+                    ax.legend(loc='best')
+                    
                 ax.grid(True, alpha=0.3)
                 plt.tight_layout()
                 
