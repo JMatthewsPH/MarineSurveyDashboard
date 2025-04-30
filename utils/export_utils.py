@@ -269,6 +269,9 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
     Returns:
         PDF file as bytes
     """
+    # Import GraphGenerator for consistent Y-axis ranges
+    from utils.graph_generator import GraphGenerator
+    graph_generator = GraphGenerator(data_processor)
     # If no metrics specified, use standard set
     if metrics is None:
         metrics = ["hard_coral", "fleshy_algae", "herbivore", "carnivore", 
@@ -317,8 +320,11 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
                 ax.set_xlabel("Date")
                 ax.set_ylabel("Biomass (kg/ha)")
                 
-                # Set fixed y-axis range
-                ax.set_ylim(0, 3000)
+                # Get Y-axis range from graph generator to match web display
+                y_range = graph_generator.get_metric_range('Commercial Biomass')
+                
+                # Set the y-axis limits using the same ranges as the web display
+                ax.set_ylim(y_range['min'], y_range['max'])
                 
                 ax.grid(True, alpha=0.3)
                 plt.tight_layout()
@@ -362,24 +368,28 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
                 ax.set_title(f"{display_name} - {site_name}")
                 ax.set_xlabel("Date")
                 
-                # Set appropriate y-axis label and fixed range
+                # Set appropriate y-axis label
                 if 'cover' in metric_column.lower():
                     ax.set_ylabel("Cover (%)")
-                    ax.set_ylim(0, 100)
                 elif 'density' in metric_column.lower() or 'herbivore' in metric.lower() or 'carnivore' in metric.lower() or 'omnivore' in metric.lower() or 'corallivore' in metric.lower():
                     ax.set_ylabel("Density (ind/ha)")
-                    if 'herbivore' in metric.lower() or 'carnivore' in metric.lower():
-                        ax.set_ylim(0, 5000)
-                    else:
-                        ax.set_ylim(0, 3000)
                 elif 'biomass' in metric_column.lower():
                     ax.set_ylabel("Biomass (kg/ha)")
-                    ax.set_ylim(0, 3000)
                 elif 'bleaching' in metric_column.lower():
                     ax.set_ylabel("Bleaching (%)")
-                    ax.set_ylim(0, 100)
                 else:
                     ax.set_ylabel(metric_column.replace('_', ' ').title())
+                
+                # Get Y-axis range from graph generator to match web display
+                # First try with display name
+                y_range = graph_generator.get_metric_range(display_name)
+                
+                # If not found by display name, try with metric name
+                if y_range['min'] == 0 and y_range['max'] == 100 and display_name not in ['Hard Coral Cover', 'Fleshy Algae Cover', 'Bleaching', 'Rubble Cover']:
+                    y_range = graph_generator.get_metric_range(metric)
+                
+                # Set the y-axis limits using the same ranges as the web display
+                ax.set_ylim(y_range['min'], y_range['max'])
                 
                 ax.grid(True, alpha=0.3)
                 plt.tight_layout()
