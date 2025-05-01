@@ -276,7 +276,7 @@ with st.sidebar:
 
 # Display site content
 if selected_site:
-    selected_site_obj = next((site for site in sites if site.name == selected_site), None)
+    selected_site_obj = next((site for site in sites if site['name'] == selected_site), None)
     if selected_site_obj:
         # Display small logo at the top of the dashboard
         display_logo(size="small")
@@ -317,11 +317,11 @@ if selected_site:
             
             # Get description based on language
             if language_code == 'en':
-                description = selected_site_obj.description_en
+                description = selected_site_obj['description_en']
             elif language_code == 'tl':
-                description = selected_site_obj.description_fil  # Using Filipino description for Tagalog
+                description = selected_site_obj['description_fil']  # Using Filipino description for Tagalog
             else:  # Cebuano - fallback to English for now
-                description = selected_site_obj.description_en
+                description = selected_site_obj['description_en']
                 
             # Default description if not available
             if not description:
@@ -334,7 +334,7 @@ if selected_site:
 
 
         # Get current site's municipality
-        site_municipality = selected_site_obj.municipality if selected_site_obj else None
+        site_municipality = selected_site_obj['municipality'] if selected_site_obj else None
 
         # Sidebar metric comparisons and date range selection
         with st.sidebar:
@@ -440,7 +440,7 @@ if selected_site:
             # Get the min and max dates from all surveys 
             all_surveys = []
             for site in sites:
-                site_surveys = data_processor.get_biomass_data(site.name)
+                site_surveys = data_processor.get_biomass_data(site['name'])
                 if not site_surveys.empty:
                     all_surveys.append(site_surveys)
             
@@ -510,7 +510,7 @@ if selected_site:
                 biomass_compare_sites = [extract_site_name(site) for site in biomass_compare_sites if extract_site_name(site)]
                 if biomass_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
-                    site_to_muni = {site.name: site.municipality for site in sites}
+                    site_to_muni = {site['name']: site['municipality'] for site in sites}
                     biomass_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in biomass_compare_sites]
                         
             elif biomass_comparison == "Compare with Average":

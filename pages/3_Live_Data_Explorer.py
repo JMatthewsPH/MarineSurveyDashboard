@@ -764,6 +764,84 @@ def analyze_substrate_data(df):
                         showarrow=False,
                         font=dict(size=12, color="gray")
                     )
+                    
+                    # Create separate traces with different line styles for pre-COVID, COVID, and post-COVID periods
+                    # First, filter the data into the three periods
+                    pre_covid_df = ci_df[ci_df['Date'] < covid_start]
+                    covid_df = ci_df[(ci_df['Date'] >= covid_start) & (ci_df['Date'] <= covid_end)]
+                    post_covid_df = ci_df[ci_df['Date'] > covid_end]
+                    
+                    # Clear the previous trace and add the new segmented traces
+                    fig.data = []
+                    
+                    # Add pre-COVID period (solid line)
+                    if not pre_covid_df.empty:
+                        fig.add_trace(go.Scatter(
+                            x=pre_covid_df['Date'],
+                            y=pre_covid_df['Value'],
+                            mode='lines',
+                            name=dashboard_metric,
+                            line=dict(color='blue', width=2)
+                        ))
+                    
+                    # Add COVID period (dashed line)
+                    if not covid_df.empty:
+                        fig.add_trace(go.Scatter(
+                            x=covid_df['Date'],
+                            y=covid_df['Value'],
+                            mode='lines',
+                            name=f"{dashboard_metric} (COVID)",
+                            line=dict(color='blue', width=2, dash='dash')
+                        ))
+                    
+                    # Add post-COVID period (solid line)
+                    if not post_covid_df.empty:
+                        fig.add_trace(go.Scatter(
+                            x=post_covid_df['Date'],
+                            y=post_covid_df['Value'],
+                            mode='lines',
+                            name=dashboard_metric,
+                            line=dict(color='blue', width=2)
+                        ))
+                    
+                    # If confidence intervals are present, add them for each period
+                    if 'CI_Lower' in ci_df.columns and 'CI_Upper' in ci_df.columns:
+                        # Add confidence intervals for pre-COVID
+                        if not pre_covid_df.empty:
+                            fig.add_trace(go.Scatter(
+                                x=pre_covid_df['Date'].tolist() + pre_covid_df['Date'].tolist()[::-1],
+                                y=pre_covid_df['CI_Upper'].tolist() + pre_covid_df['CI_Lower'].tolist()[::-1],
+                                fill='toself',
+                                fillcolor='rgba(0, 0, 255, 0.2)',
+                                line=dict(color='rgba(255, 255, 255, 0)'),
+                                hoverinfo='skip',
+                                showlegend=False
+                            ))
+                        
+                        # Add confidence intervals for COVID
+                        if not covid_df.empty:
+                            fig.add_trace(go.Scatter(
+                                x=covid_df['Date'].tolist() + covid_df['Date'].tolist()[::-1],
+                                y=covid_df['CI_Upper'].tolist() + covid_df['CI_Lower'].tolist()[::-1],
+                                fill='toself',
+                                fillcolor='rgba(0, 0, 255, 0.2)',
+                                line=dict(color='rgba(255, 255, 255, 0)'),
+                                hoverinfo='skip',
+                                showlegend=False
+                            ))
+                        
+                        # Add confidence intervals for post-COVID
+                        if not post_covid_df.empty:
+                            fig.add_trace(go.Scatter(
+                                x=post_covid_df['Date'].tolist() + post_covid_df['Date'].tolist()[::-1],
+                                y=post_covid_df['CI_Upper'].tolist() + post_covid_df['CI_Lower'].tolist()[::-1],
+                                fill='toself',
+                                fillcolor='rgba(0, 0, 255, 0.2)',
+                                line=dict(color='rgba(255, 255, 255, 0)'),
+                                hoverinfo='skip',
+                                showlegend=False
+                            ))
+                    }
                 
                 # Add grid lines
                 fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='rgba(0,0,0,0.1)')
