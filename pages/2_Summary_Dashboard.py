@@ -85,7 +85,7 @@ with st.sidebar:
     all_surveys = []
     sites = data_processor.get_sites()
     for site in sites:
-        site_surveys = data_processor.get_biomass_data(site.name)
+        site_surveys = data_processor.get_biomass_data(site['name'])
         if not site_surveys.empty:
             all_surveys.append(site_surveys)
     
@@ -126,7 +126,7 @@ with st.sidebar:
     st.header("Filter by Municipality")
     
     # Get all municipalities
-    municipalities = sorted(list(set([site.municipality for site in sites])))
+    municipalities = sorted(list(set([site['municipality'] for site in sites])))
     selected_municipality = st.selectbox(
         "Select Municipality",
         ["All Municipalities"] + municipalities,
@@ -379,10 +379,10 @@ with trend_container:
         highlight_sites = None
         if highlight_option:
             # Get site names
-            site_names = [site.name for site in sites]
+            site_names = [site['name'] for site in sites]
             if municipality_filter:
                 # Filter sites by municipality
-                filtered_sites = [site.name for site in sites if site.municipality == municipality_filter]
+                filtered_sites = [site['name'] for site in sites if site['municipality'] == municipality_filter]
                 highlight_sites = st.multiselect(
                     "Select sites to highlight:",
                     filtered_sites,
@@ -424,13 +424,13 @@ with trend_container:
         # For Commercial Biomass, we can use existing methods
         trend_data_list = []
         for site in sites:
-            if municipality_filter and site.municipality != municipality_filter:
+            if municipality_filter and site['municipality'] != municipality_filter:
                 continue
                 
-            site_data = data_processor.get_biomass_data(site.name)
+            site_data = data_processor.get_biomass_data(site['name'])
             if not site_data.empty:
-                site_data['site'] = site.name
-                site_data['municipality'] = site.municipality
+                site_data['site'] = site['name']
+                site_data['municipality'] = site['municipality']
                 trend_data_list.append(site_data)
         
         if trend_data_list:
@@ -468,15 +468,15 @@ with trend_container:
         # For Omnivore Density, we use the get_metric_data method
         trend_data_list = []
         for site in sites:
-            if municipality_filter and site.municipality != municipality_filter:
+            if municipality_filter and site['municipality'] != municipality_filter:
                 continue
                 
             # Use 'omnivore' as the metric type in get_metric_data
             # This corresponds to the key in DataProcessor.METRIC_MAP
-            site_data = data_processor.get_metric_data(site.name, "omnivore")
+            site_data = data_processor.get_metric_data(site['name'], "omnivore")
             if not site_data.empty:
-                site_data['site'] = site.name
-                site_data['municipality'] = site.municipality
+                site_data['site'] = site['name']
+                site_data['municipality'] = site['municipality']
                 trend_data_list.append(site_data)
         
         if trend_data_list:
