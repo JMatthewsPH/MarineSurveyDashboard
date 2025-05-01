@@ -16,6 +16,10 @@ import numpy as np
 # Import branding utilities
 from utils.branding import display_logo, add_favicon
 
+# Important: This page is intentionally ISOLATED from other parts of the application
+# It doesn't use the shared DataProcessor or database connections to avoid
+# any interference with the production dashboards
+
 # Page configuration
 st.set_page_config(
     page_title="Live Data Explorer | Marine Conservation Platform",
@@ -1092,20 +1096,24 @@ def detect_survey_type(df):
     # Check column patterns and file name
     columns = set(df.columns)
     
+    # Use our live data explorer specific session state key prefix
+    file_key = f'{live_data_prefix}selected_file'
+    selected_file = st.session_state.get(file_key, '')
+    
     # For substrate surveys
-    if {'Observer_name_1', 'Group', 'Status', 'Total'}.issubset(columns) or 'DBMCP_Substrates' in st.session_state.get('selected_file', ''):
+    if {'Observer_name_1', 'Group', 'Status', 'Total'}.issubset(columns) or 'DBMCP_Substrates' in selected_file:
         return "substrate"
     
     # For fish surveys
-    elif {'Observer_name_1', 'Species', 'Size', 'Total'}.issubset(columns) or 'DBMCP_Fish' in st.session_state.get('selected_file', ''):
+    elif {'Observer_name_1', 'Species', 'Size', 'Total'}.issubset(columns) or 'DBMCP_Fish' in selected_file:
         return "fish"
     
     # For predation surveys - these have Group column with predator species like "Drupella"
-    elif 'DBMCP_Predation' in st.session_state.get('selected_file', ''):
+    elif 'DBMCP_Predation' in selected_file:
         return "predation"
     
     # For invertebrate surveys
-    elif 'DBMCP_Inverts' in st.session_state.get('selected_file', ''):
+    elif 'DBMCP_Inverts' in selected_file:
         return "invertebrate"
     
     # Try to auto-detect based on column content if filename matching didn't work
@@ -1142,22 +1150,26 @@ if os.path.exists(data_dir):
         if filename.endswith('.csv') and "DBMCP" in filename:
             available_files.append(filename)
 
-# Data source selection
+# Data source selection - using a key prefix specific to this page
+# This helps isolate this page's state from other pages
+live_data_prefix = "live_explorer_"
 data_source = st.radio(
     "Select Data Source",
     ["Use Sample Files", "Upload File (currently disabled)"],
-    index=0
+    index=0,
+    key=f"{live_data_prefix}data_source"
 )
 
 if data_source == "Use Sample Files":
     if available_files:
         selected_file = st.selectbox(
             "Select a sample data file to analyze",
-            available_files
+            available_files,
+            key=f"{live_data_prefix}selected_file"
         )
         
-        # Store selected file in session state for detection logic
-        st.session_state['selected_file'] = selected_file
+        # Store selected file in session state for detection logic with specific key prefix
+        st.session_state[f'{live_data_prefix}selected_file'] = selected_file
         
         if selected_file:
             try:
