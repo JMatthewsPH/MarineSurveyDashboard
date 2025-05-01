@@ -476,19 +476,30 @@ if selected_site:
             st.subheader("Hard Coral Cover")
             coral_comparison = st.selectbox(
                 "Compare coral cover with:",
-                ["No Comparison", "Compare with Site", "Compare with Average"],
+                ["No Comparison", "Compare with Sites", "Compare with Average"],
                 key="coral_comparison"
             )
 
-            coral_compare_site = None
+            coral_compare_sites = None
             coral_compare_scope = None
-            if coral_comparison == "Compare with Site":
+            coral_compare_labels = None
+            
+            if coral_comparison == "Compare with Sites":
                 compare_sites = [site for site in alphabetical_site_names if site != selected_site]
-                coral_compare_site = st.selectbox(
-                    "Select site to compare coral cover:",
+                coral_compare_sites = st.multiselect(
+                    "Select sites to compare coral cover:",
                     compare_sites,
-                    key="coral_compare_site"
+                    key="coral_compare_sites",
+                    max_selections=5  # Limit to 5 sites for readability
                 )
+                if coral_compare_sites:
+                    # Show option to group by municipality (helps organize large datasets)
+                    group_by_municipality = st.checkbox("Group by municipality", key="coral_group_by_muni", value=False)
+                    if group_by_municipality:
+                        site_to_muni = {site.name: site.municipality for site in sites}
+                        coral_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in coral_compare_sites]
+                    else:
+                        coral_compare_labels = coral_compare_sites
             elif coral_comparison == "Compare with Average":
                 coral_compare_scope = st.selectbox(
                     "Select average scope:",
@@ -500,19 +511,30 @@ if selected_site:
             st.subheader("Fleshy Algae Cover")
             algae_comparison = st.selectbox(
                 "Compare fleshy algae with:",
-                ["No Comparison", "Compare with Site", "Compare with Average"],
+                ["No Comparison", "Compare with Sites", "Compare with Average"],
                 key="algae_comparison"
             )
 
-            algae_compare_site = None
+            algae_compare_sites = None
             algae_compare_scope = None
-            if algae_comparison == "Compare with Site":
+            algae_compare_labels = None
+            
+            if algae_comparison == "Compare with Sites":
                 compare_sites = [site for site in alphabetical_site_names if site != selected_site]
-                algae_compare_site = st.selectbox(
-                    "Select site to compare fleshy algae:",
+                algae_compare_sites = st.multiselect(
+                    "Select sites to compare fleshy algae:",
                     compare_sites,
-                    key="algae_compare_site"
+                    key="algae_compare_sites",
+                    max_selections=5  # Limit to 5 sites for readability
                 )
+                if algae_compare_sites:
+                    # Show option to group by municipality (helps organize large datasets)
+                    group_by_municipality = st.checkbox("Group by municipality", key="algae_group_by_muni", value=False)
+                    if group_by_municipality:
+                        site_to_muni = {site.name: site.municipality for site in sites}
+                        algae_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in algae_compare_sites]
+                    else:
+                        algae_compare_labels = algae_compare_sites
             elif algae_comparison == "Compare with Average":
                 algae_compare_scope = st.selectbox(
                     "Select average scope:",
@@ -524,19 +546,30 @@ if selected_site:
             st.subheader("Herbivore Density")
             herbivore_comparison = st.selectbox(
                 "Compare herbivore density with:",
-                ["No Comparison", "Compare with Site", "Compare with Average"],
+                ["No Comparison", "Compare with Sites", "Compare with Average"],
                 key="herbivore_comparison"
             )
 
-            herbivore_compare_site = None
+            herbivore_compare_sites = None
             herbivore_compare_scope = None
-            if herbivore_comparison == "Compare with Site":
+            herbivore_compare_labels = None
+            
+            if herbivore_comparison == "Compare with Sites":
                 compare_sites = [site for site in alphabetical_site_names if site != selected_site]
-                herbivore_compare_site = st.selectbox(
-                    "Select site to compare herbivore density:",
+                herbivore_compare_sites = st.multiselect(
+                    "Select sites to compare herbivore density:",
                     compare_sites,
-                    key="herbivore_compare_site"
+                    key="herbivore_compare_sites",
+                    max_selections=5  # Limit to 5 sites for readability
                 )
+                if herbivore_compare_sites:
+                    # Show option to group by municipality (helps organize large datasets)
+                    group_by_municipality = st.checkbox("Group by municipality", key="herbivore_group_by_muni", value=False)
+                    if group_by_municipality:
+                        site_to_muni = {site.name: site.municipality for site in sites}
+                        herbivore_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in herbivore_compare_sites]
+                    else:
+                        herbivore_compare_labels = herbivore_compare_sites
             elif herbivore_comparison == "Compare with Average":
                 herbivore_compare_scope = st.selectbox(
                     "Select average scope:",
@@ -548,19 +581,30 @@ if selected_site:
             st.subheader("Carnivore Density")
             carnivore_comparison = st.selectbox(
                 "Compare carnivore density with:",
-                ["No Comparison", "Compare with Site", "Compare with Average"],
+                ["No Comparison", "Compare with Sites", "Compare with Average"],
                 key="carnivore_comparison"
             )
 
-            carnivore_compare_site = None
+            carnivore_compare_sites = None
             carnivore_compare_scope = None
-            if carnivore_comparison == "Compare with Site":
+            carnivore_compare_labels = None
+            
+            if carnivore_comparison == "Compare with Sites":
                 compare_sites = [site for site in alphabetical_site_names if site != selected_site]
-                carnivore_compare_site = st.selectbox(
-                    "Select site to compare carnivore density:",
+                carnivore_compare_sites = st.multiselect(
+                    "Select sites to compare carnivore density:",
                     compare_sites,
-                    key="carnivore_compare_site"
+                    key="carnivore_compare_sites",
+                    max_selections=5  # Limit to 5 sites for readability
                 )
+                if carnivore_compare_sites:
+                    # Show option to group by municipality (helps organize large datasets)
+                    group_by_municipality = st.checkbox("Group by municipality", key="carnivore_group_by_muni", value=False)
+                    if group_by_municipality:
+                        site_to_muni = {site.name: site.municipality for site in sites}
+                        carnivore_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in carnivore_compare_sites]
+                    else:
+                        carnivore_compare_labels = carnivore_compare_sites
             elif carnivore_comparison == "Compare with Average":
                 carnivore_compare_scope = st.selectbox(
                     "Select average scope:",
@@ -794,8 +838,23 @@ if selected_site:
             # Get coral cover data and comparison
             coral_data = data_processor.get_metric_data(selected_site, 'hard_coral')
             coral_comparison_data = None
-            if coral_comparison == "Compare with Site" and coral_compare_site:
-                coral_comparison_data = data_processor.get_metric_data(coral_compare_site, 'hard_coral')
+            coral_comparison_labels = None
+            
+            if coral_comparison == "Compare with Sites" and coral_compare_sites:
+                # Get data for multiple comparison sites
+                comparison_data_list = []
+                for site_name in coral_compare_sites:
+                    site_data = data_processor.get_metric_data(site_name, 'hard_coral')
+                    if not site_data.empty:
+                        comparison_data_list.append(site_data)
+                
+                if comparison_data_list:
+                    coral_comparison_data = comparison_data_list
+                    # Use custom labels if provided
+                    if coral_compare_labels:
+                        coral_comparison_labels = coral_compare_labels
+                    else:
+                        coral_comparison_labels = coral_compare_sites
             elif coral_comparison == "Compare with Average":
                 municipality = site_municipality if coral_compare_scope == "Municipality Average" else None
                 coral_comparison_data = data_processor.get_average_metric_data(
@@ -803,11 +862,15 @@ if selected_site:
                     exclude_site=selected_site,
                     municipality=municipality
                 )
+                if not coral_comparison_data.empty:
+                    label = f"{site_municipality} Average" if coral_compare_scope == "Municipality Average" else "All Sites Average"
+                    coral_comparison_labels = [label]
             coral_fig, coral_config = graph_generator.create_time_series(
                 coral_data,
                 f"Hard Coral Cover - {selected_site}",
                 "Cover (%)",
                 comparison_data=coral_comparison_data,
+                comparison_labels=coral_comparison_labels,
                 date_range=date_range,
                 show_confidence_interval=show_confidence_interval
             )
@@ -831,8 +894,23 @@ if selected_site:
             # Get fleshy algae data and comparison
             algae_data = data_processor.get_metric_data(selected_site, 'fleshy_algae')
             algae_comparison_data = None
-            if algae_comparison == "Compare with Site" and algae_compare_site:
-                algae_comparison_data = data_processor.get_metric_data(algae_compare_site, 'fleshy_algae')
+            algae_comparison_labels = None
+            
+            if algae_comparison == "Compare with Sites" and algae_compare_sites:
+                # Get data for multiple comparison sites
+                comparison_data_list = []
+                for site_name in algae_compare_sites:
+                    site_data = data_processor.get_metric_data(site_name, 'fleshy_algae')
+                    if not site_data.empty:
+                        comparison_data_list.append(site_data)
+                
+                if comparison_data_list:
+                    algae_comparison_data = comparison_data_list
+                    # Use custom labels if provided
+                    if algae_compare_labels:
+                        algae_comparison_labels = algae_compare_labels
+                    else:
+                        algae_comparison_labels = algae_compare_sites
             elif algae_comparison == "Compare with Average":
                 municipality = site_municipality if algae_compare_scope == "Municipality Average" else None
                 algae_comparison_data = data_processor.get_average_metric_data(
@@ -840,11 +918,15 @@ if selected_site:
                     exclude_site=selected_site,
                     municipality=municipality
                 )
+                if not algae_comparison_data.empty:
+                    label = f"{site_municipality} Average" if algae_compare_scope == "Municipality Average" else "All Sites Average"
+                    algae_comparison_labels = [label]
             algae_fig, algae_config = graph_generator.create_time_series(
                 algae_data,
                 f"Fleshy Algae Cover - {selected_site}",
                 "Cover (%)",
                 comparison_data=algae_comparison_data,
+                comparison_labels=algae_comparison_labels,
                 date_range=date_range,
                 show_confidence_interval=show_confidence_interval
             )
@@ -856,8 +938,23 @@ if selected_site:
             # Get herbivore data and comparison
             herbivore_data = data_processor.get_metric_data(selected_site, 'herbivore')
             herbivore_comparison_data = None
-            if herbivore_comparison == "Compare with Site" and herbivore_compare_site:
-                herbivore_comparison_data = data_processor.get_metric_data(herbivore_compare_site, 'herbivore')
+            herbivore_comparison_labels = None
+            
+            if herbivore_comparison == "Compare with Sites" and herbivore_compare_sites:
+                # Get data for multiple comparison sites
+                comparison_data_list = []
+                for site_name in herbivore_compare_sites:
+                    site_data = data_processor.get_metric_data(site_name, 'herbivore')
+                    if not site_data.empty:
+                        comparison_data_list.append(site_data)
+                
+                if comparison_data_list:
+                    herbivore_comparison_data = comparison_data_list
+                    # Use custom labels if provided
+                    if herbivore_compare_labels:
+                        herbivore_comparison_labels = herbivore_compare_labels
+                    else:
+                        herbivore_comparison_labels = herbivore_compare_sites
             elif herbivore_comparison == "Compare with Average":
                 municipality = site_municipality if herbivore_compare_scope == "Municipality Average" else None
                 herbivore_comparison_data = data_processor.get_average_metric_data(
@@ -865,11 +962,15 @@ if selected_site:
                     exclude_site=selected_site,
                     municipality=municipality
                 )
+                if not herbivore_comparison_data.empty:
+                    label = f"{site_municipality} Average" if herbivore_compare_scope == "Municipality Average" else "All Sites Average"
+                    herbivore_comparison_labels = [label]
             herbivore_fig, herbivore_config = graph_generator.create_time_series(
                 herbivore_data,
                 f"Herbivore Density - {selected_site}",
                 "Density (ind/ha)",
                 comparison_data=herbivore_comparison_data,
+                comparison_labels=herbivore_comparison_labels,
                 date_range=date_range,
                 show_confidence_interval=show_confidence_interval
             )
