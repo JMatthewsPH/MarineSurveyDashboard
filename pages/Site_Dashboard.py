@@ -554,7 +554,7 @@ if selected_site:
                 coral_compare_sites = [extract_site_name(site) for site in coral_compare_sites if extract_site_name(site)]
                 if coral_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
-                    site_to_muni = {site.name: site.municipality for site in sites}
+                    site_to_muni = {site['name']: site['municipality'] for site in sites}
                     coral_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in coral_compare_sites]
             elif coral_comparison == "Compare with Average":
                 coral_compare_scope = st.selectbox(
@@ -591,7 +591,7 @@ if selected_site:
                 algae_compare_sites = [option.strip() for option in algae_compare_sites if option.startswith("  ")]
                 if algae_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
-                    site_to_muni = {site.name: site.municipality for site in sites}
+                    site_to_muni = {site['name']: site['municipality'] for site in sites}
                     algae_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in algae_compare_sites]
             elif algae_comparison == "Compare with Average":
                 algae_compare_scope = st.selectbox(
@@ -628,7 +628,7 @@ if selected_site:
                 herbivore_compare_sites = [option.strip() for option in herbivore_compare_sites if option.startswith("  ")]
                 if herbivore_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
-                    site_to_muni = {site.name: site.municipality for site in sites}
+                    site_to_muni = {site['name']: site['municipality'] for site in sites}
                     herbivore_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in herbivore_compare_sites]
             elif herbivore_comparison == "Compare with Average":
                 herbivore_compare_scope = st.selectbox(

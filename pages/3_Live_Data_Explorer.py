@@ -841,7 +841,6 @@ def analyze_substrate_data(df):
                                 hoverinfo='skip',
                                 showlegend=False
                             ))
-                    }
                 
                 # Add grid lines
                 fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='rgba(0,0,0,0.1)')
