@@ -126,7 +126,7 @@ with st.sidebar:
     st.header("Filter by Municipality")
     
     # Get all municipalities
-    municipalities = sorted(list(set([site.municipality for site in sites])))
+    municipalities = sorted(list(set([site['municipality'] for site in sites])))
     selected_municipality = st.selectbox(
         "Select Municipality",
         ["All Municipalities"] + municipalities,
