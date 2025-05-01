@@ -721,19 +721,30 @@ if selected_site:
             st.subheader("Rubble Cover")
             rubble_comparison = st.selectbox(
                 "Compare rubble cover with:",
-                ["No Comparison", "Compare with Site", "Compare with Average"],
+                ["No Comparison", "Compare with Sites", "Compare with Average"],
                 key="rubble_comparison"
             )
 
-            rubble_compare_site = None
+            rubble_compare_sites = None
             rubble_compare_scope = None
-            if rubble_comparison == "Compare with Site":
+            rubble_compare_labels = None
+            
+            if rubble_comparison == "Compare with Sites":
                 compare_sites = [site for site in alphabetical_site_names if site != selected_site]
-                rubble_compare_site = st.selectbox(
-                    "Select site to compare rubble cover:",
+                rubble_compare_sites = st.multiselect(
+                    "Select sites to compare rubble cover:",
                     compare_sites,
-                    key="rubble_compare_site"
+                    key="rubble_compare_sites",
+                    max_selections=5  # Limit to 5 sites for readability
                 )
+                if rubble_compare_sites:
+                    # Show option to group by municipality (helps organize large datasets)
+                    group_by_municipality = st.checkbox("Group by municipality", key="rubble_group_by_muni", value=False)
+                    if group_by_municipality:
+                        site_to_muni = {site.name: site.municipality for site in sites}
+                        rubble_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in rubble_compare_sites]
+                    else:
+                        rubble_compare_labels = rubble_compare_sites
             elif rubble_comparison == "Compare with Average":
                 rubble_compare_scope = st.selectbox(
                     "Select average scope:",
@@ -1179,6 +1190,7 @@ if selected_site:
                 f"Bleaching - {selected_site}",
                 "Bleaching (%)",
                 comparison_data=bleaching_comparison_data,
+                comparison_labels=bleaching_comparison_labels,
                 date_range=date_range,
                 show_confidence_interval=show_confidence_interval
             )
@@ -1190,8 +1202,23 @@ if selected_site:
             # Add rubble visualization
             rubble_data = data_processor.get_metric_data(selected_site, 'rubble')
             rubble_comparison_data = None
-            if rubble_comparison == "Compare with Site" and rubble_compare_site:
-                rubble_comparison_data = data_processor.get_metric_data(rubble_compare_site, 'rubble')
+            rubble_comparison_labels = None
+            
+            if rubble_comparison == "Compare with Sites" and rubble_compare_sites:
+                # Get data for multiple comparison sites
+                comparison_data_list = []
+                for site_name in rubble_compare_sites:
+                    site_data = data_processor.get_metric_data(site_name, 'rubble')
+                    if not site_data.empty:
+                        comparison_data_list.append(site_data)
+                
+                if comparison_data_list:
+                    rubble_comparison_data = comparison_data_list
+                    # Use custom labels if provided
+                    if rubble_compare_labels:
+                        rubble_comparison_labels = rubble_compare_labels
+                    else:
+                        rubble_comparison_labels = rubble_compare_sites
             elif rubble_comparison == "Compare with Average":
                 municipality = site_municipality if rubble_compare_scope == "Municipality Average" else None
                 rubble_comparison_data = data_processor.get_average_metric_data(
@@ -1199,11 +1226,15 @@ if selected_site:
                     exclude_site=selected_site,
                     municipality=municipality
                 )
+                if not rubble_comparison_data.empty:
+                    label = f"{site_municipality} Average" if rubble_compare_scope == "Municipality Average" else "All Sites Average"
+                    rubble_comparison_labels = [label]
             rubble_fig, rubble_config = graph_generator.create_time_series(
                 rubble_data,
                 f"Rubble Cover - {selected_site}",
                 "Rubble Cover (%)",
                 comparison_data=rubble_comparison_data,
+                comparison_labels=rubble_comparison_labels,
                 date_range=date_range,
                 show_confidence_interval=show_confidence_interval
             )
