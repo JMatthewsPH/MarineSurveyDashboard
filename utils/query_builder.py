@@ -24,8 +24,27 @@ class QueryBuilder:
     
     @staticmethod
     def all_sites(db: Session):
-        """Get all sites with eager loading of related data"""
-        return db.query(Site).all()
+        """Get all sites with eager loading of related data
+        
+        Returns:
+            List of dictionaries containing site data (serializable)
+        """
+        # Get site objects from the database
+        sites = db.query(Site).all()
+        
+        # Convert to serializable dictionaries
+        serializable_sites = []
+        for site in sites:
+            serializable_sites.append({
+                'id': site.id,
+                'name': site.name,
+                'municipality': site.municipality,
+                'image_url': site.image_url,
+                'description_en': site.description_en,
+                'description_fil': site.description_fil
+            })
+            
+        return serializable_sites
     
     @staticmethod
     def metric_data(db: Session, site_id: int, column_name: str, start_date: str):

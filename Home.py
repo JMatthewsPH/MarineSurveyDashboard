@@ -130,32 +130,32 @@ def get_processor():
 
 data_processor = get_processor()
 
-# Get all sites
+# Get all sites (now they're dictionaries instead of Site objects)
 sites = data_processor.get_sites()
 
 # Create ordered groups by municipality
 zamboanguita_sites = sorted(
-    [site for site in sites if site.municipality == "Zamboanguita"],
-    key=lambda x: x.name
+    [site for site in sites if site['municipality'] == "Zamboanguita"],
+    key=lambda x: x['name']
 )
 siaton_sites = sorted(
-    [site for site in sites if site.municipality == "Siaton"],
-    key=lambda x: x.name
+    [site for site in sites if site['municipality'] == "Siaton"],
+    key=lambda x: x['name']
 )
 santa_catalina_sites = sorted(
-    [site for site in sites if site.municipality == "Santa Catalina"],
-    key=lambda x: x.name
+    [site for site in sites if site['municipality'] == "Santa Catalina"],
+    key=lambda x: x['name']
 )
 
 # Function to create site card with translations
 def create_site_card(site):
     # Get description based on language
     if language_code == 'en':
-        description = site.description_en
+        description = site['description_en']
     elif language_code == 'tl':
-        description = site.description_fil  # Using Filipino description for Tagalog
+        description = site['description_fil']  # Using Filipino description for Tagalog
     else:  # Cebuano - fallback to English for now
-        description = site.description_en
+        description = site['description_en']
         
     # Default description if not available
     description = description or TRANSLATIONS[language_code]['site_desc_placeholder']
@@ -169,10 +169,10 @@ def create_site_card(site):
 
     st.markdown(f"""
         <div class="site-card">
-            <h3>{site.name}</h3>
-            <p><strong>{municipality_label}</strong> {site.municipality}</p>
+            <h3>{site['name']}</h3>
+            <p><strong>{municipality_label}</strong> {site['municipality']}</p>
             <p>{truncated_description}</p>
-            <a href="Site_Dashboard?site={site.name}" target="_self">
+            <a href="Site_Dashboard?site={site['name']}" target="_self">
                 <button class="site-button">{view_details_text}</button>
             </a>
         </div>

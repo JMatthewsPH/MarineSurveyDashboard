@@ -644,27 +644,75 @@ def analyze_substrate_data(df):
                     ci_df['ci_lower'] = ci_df['ci_lower'].clip(0)
                     ci_df['ci_upper'] = ci_df['ci_upper'].clip(upper=100)
                 
+                # First, format the dates to quarterly or monthly representation
+                # Add a quarter column for better display
+                ci_df['Year'] = ci_df['Date'].dt.year
+                ci_df['Month'] = ci_df['Date'].dt.month
+                ci_df['Quarter'] = ci_df['Date'].dt.quarter
+                ci_df['YearQuarter'] = ci_df['Year'].astype(str) + 'Q' + ci_df['Quarter'].astype(str)
+                
+                # Group by year-quarter if there are many dates
+                if len(ci_df) > 10:
+                    # Instead of using individual dates, use quarter midpoints
+                    grouped_df = ci_df.groupby('YearQuarter').agg({
+                        'Date': 'min',  # Use the first date of each quarter
+                        'mean': 'mean',
+                        'ci_lower': 'mean',
+                        'ci_upper': 'mean'
+                    }).reset_index()
+                    
+                    # Use the grouping for display
+                    display_dates = grouped_df['Date']
+                    display_means = grouped_df['mean']
+                    display_lower = grouped_df['ci_lower'] 
+                    display_upper = grouped_df['ci_upper']
+                    
+                    # Create quarterly date labels
+                    date_labels = grouped_df['YearQuarter']
+                else:
+                    # If few dates, use original data
+                    display_dates = ci_df['Date']
+                    display_means = ci_df['mean']
+                    display_lower = ci_df['ci_lower']
+                    display_upper = ci_df['ci_upper']
+                    
+                    # Format date labels as YYYY-MM
+                    date_labels = ci_df['Date'].dt.strftime('%Y-%m')
+                
                 # Add the main line
                 fig.add_trace(go.Scatter(
-                    x=ci_df['Date'],
-                    y=ci_df['mean'],
+                    x=display_dates,
+                    y=display_means,
                     mode='lines+markers',
                     name=metric_options[dashboard_metric],
                     line=dict(width=2, color='rgba(31, 119, 180, 1)'),
-                    marker=dict(size=8)
+                    marker=dict(size=8),
+                    text=date_labels,  # Add formatted date labels to hover text
+                    hovertemplate='%{text}<br>Value: %{y:.1f}%<extra></extra>'
                 ))
                 
                 # Add confidence interval as a shaded area
                 if show_ci:
                     fig.add_trace(go.Scatter(
-                        x=pd.concat([ci_df['Date'], ci_df['Date'].iloc[::-1]]),
-                        y=pd.concat([ci_df['ci_upper'], ci_df['ci_lower'].iloc[::-1]]),
+                        x=pd.concat([display_dates, display_dates.iloc[::-1]]),
+                        y=pd.concat([display_upper, display_lower.iloc[::-1]]),
                         fill='toself',
                         fillcolor='rgba(31, 119, 180, 0.2)',
                         line=dict(color='rgba(255,255,255,0)'),
                         hoverinfo='skip',
                         showlegend=False
                     ))
+                    
+                # Set custom tick values for cleaner x-axis
+                if len(display_dates) > 10:
+                    # For many dates, show quarters only at year boundaries
+                    tick_indices = [i for i, date in enumerate(display_dates) if date.month == 1 or i == 0 or i == len(display_dates)-1]
+                    tick_vals = [display_dates.iloc[i] for i in tick_indices]
+                    tick_texts = [date_labels.iloc[i] for i in tick_indices]
+                else:
+                    # For few dates, show all
+                    tick_vals = display_dates
+                    tick_texts = date_labels
                 
                 # Customize layout
                 fig.update_layout(
@@ -674,7 +722,12 @@ def analyze_substrate_data(df):
                     legend_title="Metric",
                     yaxis=dict(range=[0, 100]),
                     margin=dict(l=40, r=20, t=60, b=40),
-                    plot_bgcolor='white'
+                    plot_bgcolor='white',
+                    xaxis=dict(
+                        tickvals=tick_vals,
+                        ticktext=tick_texts,
+                        tickangle=45
+                    )
                 )
                 
                 # Add reference bands
@@ -692,6 +745,25 @@ def analyze_substrate_data(df):
                                     xanchor="left", yanchor="middle", font=dict(color="darkgreen"))
                     fig.add_annotation(x=ci_df['Date'].min(), y=87.5, text="Excellent", showarrow=False, 
                                     xanchor="left", yanchor="middle", font=dict(color="green"))
+                
+                # Add COVID-19 period marker (March 2020 - December 2021)
+                covid_start = np.datetime64('2020-03-01')
+                covid_end = np.datetime64('2021-12-31')
+                
+                # Only add the marker if the date range includes the COVID period
+                if (ci_df['Date'].min() < covid_end) and (ci_df['Date'].max() > covid_start):
+                    # Add vertical lines for COVID period
+                    fig.add_vline(x=covid_start, line_dash="dash", line_color="gray")
+                    fig.add_vline(x=covid_end, line_dash="dash", line_color="gray")
+                    
+                    # Add annotation for COVID period
+                    fig.add_annotation(
+                        x=(covid_start + (covid_end - covid_start)/2),
+                        y=95,  # Position near the top
+                        text="COVID-19 Period",
+                        showarrow=False,
+                        font=dict(size=12, color="gray")
+                    )
                 
                 # Add grid lines
                 fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='rgba(0,0,0,0.1)')

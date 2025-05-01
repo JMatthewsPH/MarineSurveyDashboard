@@ -89,13 +89,13 @@ def get_data_processor():
 
 data_processor, graph_generator = get_data_processor()
 
-# Get all sites
+# Get all sites (now returned as dictionaries)
 sites = data_processor.get_sites()
 
 # Create ordered groups by municipality
-zamboanguita_sites = sorted([site.name for site in sites if site.municipality == "Zamboanguita"])
-siaton_sites = sorted([site.name for site in sites if site.municipality == "Siaton"])
-santa_catalina_sites = sorted([site.name for site in sites if site.municipality == "Santa Catalina"])
+zamboanguita_sites = sorted([site['name'] for site in sites if site['municipality'] == "Zamboanguita"])
+siaton_sites = sorted([site['name'] for site in sites if site['municipality'] == "Siaton"])
+santa_catalina_sites = sorted([site['name'] for site in sites if site['municipality'] == "Santa Catalina"])
 
 # Combine in desired order for display in sidebar
 site_names = zamboanguita_sites + siaton_sites + santa_catalina_sites
