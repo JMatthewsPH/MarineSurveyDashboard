@@ -64,13 +64,14 @@ def analyze_invertebrate_data(df):
     # Basic statistics
     num_surveys = df['Survey_ID'].nunique()
     num_sites = df['Site'].nunique()
-    num_types = df['Invertebrate_type'].nunique() if 'Invertebrate_type' in df.columns else 0
+    # For invertebrate surveys, use Species instead of Invertebrate_type
+    num_types = df['Species'].nunique() if 'Species' in df.columns else 0
     date_range = f"{df['Date'].min().strftime('%Y-%m-%d')} to {df['Date'].max().strftime('%Y-%m-%d')}"
     
     col1, col2, col3, col4 = st.columns(4)
     col1.metric("Number of Surveys", num_surveys)
     col2.metric("Number of Sites", num_sites)
-    col3.metric("Number of Invertebrate Types", num_types)
+    col3.metric("Number of Species Types", num_types)
     col4.metric("Date Range", date_range)
     
     # Show sites
@@ -107,29 +108,29 @@ def analyze_invertebrate_data(df):
         st.dataframe(filtered_df.head(20), use_container_width=True)
         
         # Calculate metrics
-        st.subheader("Invertebrate Counts by Type")
+        st.subheader("Invertebrate Counts by Species")
         
-        if 'Invertebrate_type' in filtered_df.columns and 'Count' in filtered_df.columns:
-            # Group by invertebrate type
-            type_counts = filtered_df.groupby('Invertebrate_type')['Count'].sum().reset_index()
-            type_counts = type_counts.sort_values('Count', ascending=False)
+        if 'Species' in filtered_df.columns and 'Total' in filtered_df.columns:
+            # Group by invertebrate species
+            type_counts = filtered_df.groupby('Species')['Total'].sum().reset_index()
+            type_counts = type_counts.sort_values('Total', ascending=False)
             
             # Create bar chart
             fig = px.bar(
                 type_counts,
-                x='Invertebrate_type',
-                y='Count',
-                title='Invertebrate Counts by Type',
-                labels={'Count': 'Count', 'Invertebrate_type': 'Invertebrate Type'}
+                x='Species',
+                y='Total',
+                title='Invertebrate Counts by Species',
+                labels={'Total': 'Count', 'Species': 'Species'}
             )
             st.plotly_chart(fig, use_container_width=True)
             
             # Create pie chart for distribution
             fig = px.pie(
                 type_counts,
-                values='Count',
-                names='Invertebrate_type',
-                title='Invertebrate Type Distribution',
+                values='Total',
+                names='Species',
+                title='Invertebrate Species Distribution',
                 hole=0.4
             )
             st.plotly_chart(fig, use_container_width=True)
@@ -164,7 +165,9 @@ def analyze_predation_data(df):
     # Basic statistics
     num_surveys = df['Survey_ID'].nunique()
     num_sites = df['Site'].nunique()
-    num_predators = df['Predator'].nunique() if 'Predator' in df.columns else 0
+    # In predation data, the Group column contains predator types
+    predator_col = 'Group' if 'Group' in df.columns else 'Predator'
+    num_predators = df[predator_col].nunique() if predator_col in df.columns else 0
     date_range = f"{df['Date'].min().strftime('%Y-%m-%d')} to {df['Date'].max().strftime('%Y-%m-%d')}"
     
     col1, col2, col3, col4 = st.columns(4)
@@ -209,45 +212,45 @@ def analyze_predation_data(df):
         # Calculate metrics
         st.subheader("Predation Analysis")
         
-        if 'Predator' in filtered_df.columns and 'Count' in filtered_df.columns:
+        # The predation data has Group column for predator types and Total for counts
+        if predator_col in filtered_df.columns and 'Total' in filtered_df.columns:
             # Group by predator type
-            predator_counts = filtered_df.groupby('Predator')['Count'].sum().reset_index()
-            predator_counts = predator_counts.sort_values('Count', ascending=False)
+            predator_counts = filtered_df.groupby(predator_col)['Total'].sum().reset_index()
+            predator_counts = predator_counts.sort_values('Total', ascending=False)
             
             # Create bar chart
             fig = px.bar(
                 predator_counts,
-                x='Predator',
-                y='Count',
+                x=predator_col,
+                y='Total',
                 title='Predator Counts by Type',
-                labels={'Count': 'Count', 'Predator': 'Predator Type'}
+                labels={'Total': 'Count', predator_col: 'Predator Type'}
             )
             st.plotly_chart(fig, use_container_width=True)
             
             # Create pie chart for distribution
             fig = px.pie(
                 predator_counts,
-                values='Count',
-                names='Predator',
+                values='Total',
+                names=predator_col,
                 title='Predator Type Distribution',
                 hole=0.4
             )
             st.plotly_chart(fig, use_container_width=True)
             
-            # If prey data is available
-            if 'Prey' in filtered_df.columns:
-                # Top predator-prey relationships
-                pred_prey = filtered_df.groupby(['Predator', 'Prey'])['Count'].sum().reset_index()
-                pred_prey = pred_prey.sort_values('Count', ascending=False).head(15)  # Top 15 relationships
+            # If size data is available, show size distribution
+            if 'Size' in filtered_df.columns:
+                # Group by predator type and size
+                size_distribution = filtered_df.groupby([predator_col, 'Size'])['Total'].sum().reset_index()
                 
-                # Create bar chart for predator-prey
+                # Create grouped bar chart
                 fig = px.bar(
-                    pred_prey,
-                    x='Predator',
-                    y='Count',
-                    color='Prey',
-                    title='Top Predator-Prey Relationships',
-                    labels={'Count': 'Count', 'Predator': 'Predator', 'Prey': 'Prey'}
+                    size_distribution,
+                    x=predator_col,
+                    y='Total',
+                    color='Size',
+                    title='Predator Counts by Type and Size',
+                    labels={'Total': 'Count', predator_col: 'Predator Type', 'Size': 'Size Range'}
                 )
                 st.plotly_chart(fig, use_container_width=True)
         else:
@@ -426,7 +429,7 @@ def analyze_substrate_data(df):
             st.subheader("Hard Coral Type Breakdown")
             
             # Only proceed if we have hard coral data
-            if hard_coral_data is not None and len(hard_coral_data) > 0:
+            if len(hard_coral_data) > 0:
                 # Group by coral type
                 coral_types = hard_coral_data.groupby('Group')['Total'].sum().reset_index()
                 coral_types['Percentage'] = coral_types['Total'] / coral_types['Total'].sum() * 100
@@ -488,13 +491,13 @@ def analyze_fish_data(df):
     col1, col2 = st.columns(2)
     
     with col1:
-        selected_site = st.selectbox("Select Site", ["All Sites"] + list(df['Site'].unique()))
+        selected_site = st.selectbox("Select Site", ["All Sites"] + list(df['Site'].unique()), key="fish_site")
     
     with col2:
         # Extract dates and format them
         dates = pd.to_datetime(df['Date']).dt.date.unique()
         dates = sorted(dates)
-        selected_date = st.selectbox("Select Survey Date", ["All Dates"] + [str(d) for d in dates])
+        selected_date = st.selectbox("Select Survey Date", ["All Dates"] + [str(d) for d in dates], key="fish_date")
     
     # Apply filters
     filtered_df = df.copy()
@@ -528,14 +531,27 @@ def analyze_fish_data(df):
             total_fish = len(survey_data)
             
             # Fish biomass calculation (if size data is available)
-            if 'Size' in survey_data.columns and 'Count' in survey_data.columns:
-                # Sum up biomass per fish (using a simple estimation formula)
-                # In a real implementation, this would use species-specific length-weight relationships
+            if 'Size' in survey_data.columns and 'Total' in survey_data.columns:
                 try:
+                    # Convert size ranges to numeric estimates
+                    # Extract the average size from ranges like "5-10"
+                    def get_average_size(size_range):
+                        if isinstance(size_range, str) and '-' in size_range:
+                            parts = size_range.split('-')
+                            try:
+                                min_size = float(parts[0])
+                                max_size = float(parts[1])
+                                return (min_size + max_size) / 2
+                            except (ValueError, IndexError):
+                                return None
+                        return size_range
+                    
+                    survey_data['Average_Size'] = survey_data['Size'].apply(get_average_size)
+                    
                     # Basic formula: biomass ∝ length^3
                     # This is a simplification - real calculations would use species-specific coefficients
-                    survey_data['Estimated_Weight'] = (survey_data['Size'] ** 3) * 0.01  # Simple cubic relationship
-                    survey_data['Total_Biomass'] = survey_data['Estimated_Weight'] * survey_data['Count']
+                    survey_data['Estimated_Weight'] = (survey_data['Average_Size'] ** 3) * 0.01  # Simple cubic relationship
+                    survey_data['Total_Biomass'] = survey_data['Estimated_Weight'] * survey_data['Total']
                     total_biomass = survey_data['Total_Biomass'].sum()
                 except Exception as e:
                     total_biomass = None
@@ -543,30 +559,13 @@ def analyze_fish_data(df):
             else:
                 total_biomass = None
             
-            # Count by trophic group if available
-            if 'Trophic_Group' in survey_data.columns:
-                herbivore_count = survey_data[survey_data['Trophic_Group'] == 'Herbivore']['Count'].sum()
-                carnivore_count = survey_data[survey_data['Trophic_Group'] == 'Carnivore']['Count'].sum()
-                omnivore_count = survey_data[survey_data['Trophic_Group'] == 'Omnivore']['Count'].sum()
-                corallivore_count = survey_data[survey_data['Trophic_Group'] == 'Corallivore']['Count'].sum()
-            else:
-                # Try to categorize based on species name (simplified approach)
-                herbivore_count = 0
-                carnivore_count = 0
-                omnivore_count = 0
-                corallivore_count = 0
-            
             # Add to metrics list
             survey_metrics.append({
                 'Survey_ID': survey_id,
                 'Site': site,
                 'Date': date,
                 'Total_Fish': total_fish,
-                'Total_Biomass': total_biomass,
-                'Herbivore_Count': herbivore_count if 'herbivore_count' in locals() else None,
-                'Carnivore_Count': carnivore_count if 'carnivore_count' in locals() else None,
-                'Omnivore_Count': omnivore_count if 'omnivore_count' in locals() else None,
-                'Corallivore_Count': corallivore_count if 'corallivore_count' in locals() else None
+                'Total_Biomass': total_biomass
             })
         
         # Convert to DataFrame
@@ -580,15 +579,15 @@ def analyze_fish_data(df):
         
         # Species count
         if 'Species' in filtered_df.columns:
-            species_counts = filtered_df.groupby('Species')['Count'].sum().reset_index() if 'Count' in filtered_df.columns else filtered_df.groupby('Species').size().reset_index(name='Count')
-            species_counts = species_counts.sort_values('Count', ascending=False).head(15)  # Top 15 species
+            species_counts = filtered_df.groupby('Species')['Total'].sum().reset_index() if 'Total' in filtered_df.columns else filtered_df.groupby('Species').size().reset_index(name='Total')
+            species_counts = species_counts.sort_values('Total', ascending=False).head(15)  # Top 15 species
             
             fig = px.bar(
                 species_counts,
                 x='Species',
-                y='Count',
+                y='Total',
                 title='Top 15 Species by Count',
-                labels={'Count': 'Count', 'Species': 'Species'}
+                labels={'Total': 'Count', 'Species': 'Species'}
             )
             st.plotly_chart(fig, use_container_width=True)
             
@@ -596,12 +595,15 @@ def analyze_fish_data(df):
         if 'Size' in filtered_df.columns:
             st.subheader("Size Distribution")
             
-            fig = px.histogram(
-                filtered_df,
+            # Count of fish by size category
+            size_counts = filtered_df.groupby('Size')['Total'].sum().reset_index()
+            
+            fig = px.bar(
+                size_counts,
                 x='Size',
-                title='Fish Size Distribution',
-                labels={'Size': 'Size (cm)', 'count': 'Number of Fish'},
-                nbins=20
+                y='Total',
+                title='Fish Counts by Size Range',
+                labels={'Size': 'Size Range (cm)', 'Total': 'Number of Fish'}
             )
             st.plotly_chart(fig, use_container_width=True)
     else:
@@ -610,7 +612,7 @@ def analyze_fish_data(df):
 # Function to detect survey type from CSV
 def detect_survey_type(df):
     """
-    Detect survey type from CSV columns
+    Detect survey type from CSV columns and content
     
     Args:
         df: Pandas DataFrame to analyze
@@ -618,17 +620,47 @@ def detect_survey_type(df):
     Returns:
         str: Detected survey type
     """
-    # Check column patterns
+    # Check column patterns and file name
     columns = set(df.columns)
     
-    if {'Observer_name_1', 'Group', 'Status', 'Total'}.issubset(columns):
+    # For substrate surveys
+    if {'Observer_name_1', 'Group', 'Status', 'Total'}.issubset(columns) or 'DBMCP_Substrates' in st.session_state.get('selected_file', ''):
         return "substrate"
-    elif {'Observer_name_1', 'Species', 'Size'}.issubset(columns):
+    
+    # For fish surveys
+    elif {'Observer_name_1', 'Species', 'Size', 'Total'}.issubset(columns) or 'DBMCP_Fish' in st.session_state.get('selected_file', ''):
         return "fish"
-    elif {'Observer_name_1', 'Predator'}.issubset(columns):
+    
+    # For predation surveys - these have Group column with predator species like "Drupella"
+    elif 'DBMCP_Predation' in st.session_state.get('selected_file', ''):
         return "predation"
-    elif {'Observer_name_1', 'Invertebrate_type'}.issubset(columns):
+    
+    # For invertebrate surveys
+    elif 'DBMCP_Inverts' in st.session_state.get('selected_file', ''):
         return "invertebrate"
+    
+    # Try to auto-detect based on column content if filename matching didn't work
+    elif {'Observer_name_1', 'Group', 'Total'}.issubset(columns):
+        # Check if this is predation data by looking at Group values
+        if 'Group' in df.columns and len(df) > 0:
+            sample_groups = df['Group'].unique()
+            predation_indicators = ['Drupella', 'COTS', 'Coralliophila']
+            for indicator in predation_indicators:
+                if any(indicator in str(group) for group in sample_groups):
+                    return "predation"
+        return "substrate"  # Default to substrate if no predation indicators found
+    
+    # Check for invertebrate surveys by looking for invertebrate species
+    elif {'Observer_name_1', 'Species', 'Total'}.issubset(columns):
+        if 'Species' in df.columns and len(df) > 0:
+            sample_species = df['Species'].unique()
+            invert_indicators = ['Gastropod', 'Bivalve', 'Urchin', 'Sea Cucumber', 'Crab', 'Lobster']
+            for indicator in invert_indicators:
+                if any(indicator in str(species) for species in sample_species):
+                    return "invertebrate"
+        return "fish"  # Default to fish if no invertebrate indicators found
+    
+    # If nothing matches
     else:
         return "unknown"
 
@@ -654,6 +686,9 @@ if data_source == "Use Sample Files":
             "Select a sample data file to analyze",
             available_files
         )
+        
+        # Store selected file in session state for detection logic
+        st.session_state['selected_file'] = selected_file
         
         if selected_file:
             try:
@@ -726,223 +761,6 @@ else:
         st.markdown("""
         **Other survey types** (Predation, Invertebrate, Touristic value) will be supported in future updates.
         """)
-
-# Function to analyze invertebrate survey data
-def analyze_invertebrate_data(df):
-    """
-    Process and analyze invertebrate survey data
-    
-    Args:
-        df: Pandas DataFrame containing invertebrate survey data
-    """
-    # Pre-process the data if needed
-    # Convert date strings to datetime if they're not already
-    if 'Date' in df.columns and not pd.api.types.is_datetime64_dtype(df['Date']):
-        try:
-            df['Date'] = pd.to_datetime(df['Date'])
-        except Exception as e:
-            st.warning(f"Could not convert dates to datetime format: {str(e)}")
-    
-    # Clean up site names (remove MPA suffixes if present)
-    if 'Site' in df.columns:
-        df['Site'] = df['Site'].str.replace(' MPA', '').str.strip()
-    
-    # Display basic info
-    st.subheader("Dataset Overview")
-    
-    # Basic statistics
-    num_surveys = df['Survey_ID'].nunique()
-    num_sites = df['Site'].nunique()
-    num_types = df['Invertebrate_type'].nunique() if 'Invertebrate_type' in df.columns else 0
-    date_range = f"{df['Date'].min().strftime('%Y-%m-%d')} to {df['Date'].max().strftime('%Y-%m-%d')}"
-    
-    col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Number of Surveys", num_surveys)
-    col2.metric("Number of Sites", num_sites)
-    col3.metric("Number of Invertebrate Types", num_types)
-    col4.metric("Date Range", date_range)
-    
-    # Show sites
-    st.subheader("Sites in Dataset")
-    sites = df['Site'].unique()
-    st.write(", ".join(sites))
-    
-    # Filter options
-    st.subheader("Filter Data")
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        selected_site = st.selectbox("Select Site", ["All Sites"] + list(df['Site'].unique()), key="invertebrate_site")
-    
-    with col2:
-        # Extract dates and format them
-        dates = pd.to_datetime(df['Date']).dt.date.unique()
-        dates = sorted(dates)
-        selected_date = st.selectbox("Select Survey Date", ["All Dates"] + [str(d) for d in dates], key="invertebrate_date")
-    
-    # Apply filters
-    filtered_df = df.copy()
-    if selected_site != "All Sites":
-        filtered_df = filtered_df[filtered_df['Site'] == selected_site]
-    
-    if selected_date != "All Dates":
-        # Convert selected_date to datetime for comparison
-        selected_date_obj = pd.to_datetime(selected_date).date()
-        filtered_df = filtered_df[pd.to_datetime(filtered_df['Date']).dt.date == selected_date_obj]
-    
-    # Display filtered dataframe
-    if len(filtered_df) > 0:
-        st.subheader("Filtered Data Sample")
-        st.dataframe(filtered_df.head(20), use_container_width=True)
-        
-        # Calculate metrics
-        st.subheader("Invertebrate Counts by Type")
-        
-        if 'Invertebrate_type' in filtered_df.columns and 'Count' in filtered_df.columns:
-            # Group by invertebrate type
-            type_counts = filtered_df.groupby('Invertebrate_type')['Count'].sum().reset_index()
-            type_counts = type_counts.sort_values('Count', ascending=False)
-            
-            # Create bar chart
-            fig = px.bar(
-                type_counts,
-                x='Invertebrate_type',
-                y='Count',
-                title='Invertebrate Counts by Type',
-                labels={'Count': 'Count', 'Invertebrate_type': 'Invertebrate Type'}
-            )
-            st.plotly_chart(fig, use_container_width=True)
-            
-            # Create pie chart for distribution
-            fig = px.pie(
-                type_counts,
-                values='Count',
-                names='Invertebrate_type',
-                title='Invertebrate Type Distribution',
-                hole=0.4
-            )
-            st.plotly_chart(fig, use_container_width=True)
-        else:
-            st.warning("Required columns for analysis not found in the dataset.")
-    else:
-        st.warning("No data available for the selected filters.")
-
-# Function to analyze predation survey data
-def analyze_predation_data(df):
-    """
-    Process and analyze predation survey data
-    
-    Args:
-        df: Pandas DataFrame containing predation survey data
-    """
-    # Pre-process the data if needed
-    # Convert date strings to datetime if they're not already
-    if 'Date' in df.columns and not pd.api.types.is_datetime64_dtype(df['Date']):
-        try:
-            df['Date'] = pd.to_datetime(df['Date'])
-        except Exception as e:
-            st.warning(f"Could not convert dates to datetime format: {str(e)}")
-    
-    # Clean up site names (remove MPA suffixes if present)
-    if 'Site' in df.columns:
-        df['Site'] = df['Site'].str.replace(' MPA', '').str.strip()
-    
-    # Display basic info
-    st.subheader("Dataset Overview")
-    
-    # Basic statistics
-    num_surveys = df['Survey_ID'].nunique()
-    num_sites = df['Site'].nunique()
-    num_predators = df['Predator'].nunique() if 'Predator' in df.columns else 0
-    date_range = f"{df['Date'].min().strftime('%Y-%m-%d')} to {df['Date'].max().strftime('%Y-%m-%d')}"
-    
-    col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Number of Surveys", num_surveys)
-    col2.metric("Number of Sites", num_sites)
-    col3.metric("Number of Predator Types", num_predators)
-    col4.metric("Date Range", date_range)
-    
-    # Show sites
-    st.subheader("Sites in Dataset")
-    sites = df['Site'].unique()
-    st.write(", ".join(sites))
-    
-    # Filter options
-    st.subheader("Filter Data")
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        selected_site = st.selectbox("Select Site", ["All Sites"] + list(df['Site'].unique()), key="predation_site")
-    
-    with col2:
-        # Extract dates and format them
-        dates = pd.to_datetime(df['Date']).dt.date.unique()
-        dates = sorted(dates)
-        selected_date = st.selectbox("Select Survey Date", ["All Dates"] + [str(d) for d in dates], key="predation_date")
-    
-    # Apply filters
-    filtered_df = df.copy()
-    if selected_site != "All Sites":
-        filtered_df = filtered_df[filtered_df['Site'] == selected_site]
-    
-    if selected_date != "All Dates":
-        # Convert selected_date to datetime for comparison
-        selected_date_obj = pd.to_datetime(selected_date).date()
-        filtered_df = filtered_df[pd.to_datetime(filtered_df['Date']).dt.date == selected_date_obj]
-    
-    # Display filtered dataframe
-    if len(filtered_df) > 0:
-        st.subheader("Filtered Data Sample")
-        st.dataframe(filtered_df.head(20), use_container_width=True)
-        
-        # Calculate metrics
-        st.subheader("Predation Analysis")
-        
-        if 'Predator' in filtered_df.columns and 'Count' in filtered_df.columns:
-            # Group by predator type
-            predator_counts = filtered_df.groupby('Predator')['Count'].sum().reset_index()
-            predator_counts = predator_counts.sort_values('Count', ascending=False)
-            
-            # Create bar chart
-            fig = px.bar(
-                predator_counts,
-                x='Predator',
-                y='Count',
-                title='Predator Counts by Type',
-                labels={'Count': 'Count', 'Predator': 'Predator Type'}
-            )
-            st.plotly_chart(fig, use_container_width=True)
-            
-            # Create pie chart for distribution
-            fig = px.pie(
-                predator_counts,
-                values='Count',
-                names='Predator',
-                title='Predator Type Distribution',
-                hole=0.4
-            )
-            st.plotly_chart(fig, use_container_width=True)
-            
-            # If prey data is available
-            if 'Prey' in filtered_df.columns:
-                # Top predator-prey relationships
-                pred_prey = filtered_df.groupby(['Predator', 'Prey'])['Count'].sum().reset_index()
-                pred_prey = pred_prey.sort_values('Count', ascending=False).head(15)  # Top 15 relationships
-                
-                # Create bar chart for predator-prey
-                fig = px.bar(
-                    pred_prey,
-                    x='Predator',
-                    y='Count',
-                    color='Prey',
-                    title='Top Predator-Prey Relationships',
-                    labels={'Count': 'Count', 'Predator': 'Predator', 'Prey': 'Prey'}
-                )
-                st.plotly_chart(fig, use_container_width=True)
-        else:
-            st.warning("Required columns for analysis not found in the dataset.")
-    else:
-        st.warning("No data available for the selected filters.")
 
 # Footer
 st.markdown("---")
