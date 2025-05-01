@@ -457,13 +457,9 @@ if selected_site:
                     max_selections=5  # Limit to 5 sites for readability
                 )
                 if biomass_compare_sites:
-                    # Show option to group by municipality (helps organize large datasets)
-                    group_by_municipality = st.checkbox("Group by municipality", key="biomass_group_by_muni", value=False)
-                    if group_by_municipality:
-                        site_to_muni = {site.name: site.municipality for site in sites}
-                        biomass_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in biomass_compare_sites]
-                    else:
-                        biomass_compare_labels = biomass_compare_sites
+                    # Always group by municipality by default (helps organize datasets)
+                    site_to_muni = {site.name: site.municipality for site in sites}
+                    biomass_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in biomass_compare_sites]
                         
             elif biomass_comparison == "Compare with Average":
                 biomass_compare_scope = st.selectbox(
@@ -493,13 +489,9 @@ if selected_site:
                     max_selections=5  # Limit to 5 sites for readability
                 )
                 if coral_compare_sites:
-                    # Show option to group by municipality (helps organize large datasets)
-                    group_by_municipality = st.checkbox("Group by municipality", key="coral_group_by_muni", value=False)
-                    if group_by_municipality:
-                        site_to_muni = {site.name: site.municipality for site in sites}
-                        coral_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in coral_compare_sites]
-                    else:
-                        coral_compare_labels = coral_compare_sites
+                    # Always group by municipality by default (helps organize datasets)
+                    site_to_muni = {site.name: site.municipality for site in sites}
+                    coral_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in coral_compare_sites]
             elif coral_comparison == "Compare with Average":
                 coral_compare_scope = st.selectbox(
                     "Select average scope:",
@@ -528,13 +520,9 @@ if selected_site:
                     max_selections=5  # Limit to 5 sites for readability
                 )
                 if algae_compare_sites:
-                    # Show option to group by municipality (helps organize large datasets)
-                    group_by_municipality = st.checkbox("Group by municipality", key="algae_group_by_muni", value=False)
-                    if group_by_municipality:
-                        site_to_muni = {site.name: site.municipality for site in sites}
-                        algae_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in algae_compare_sites]
-                    else:
-                        algae_compare_labels = algae_compare_sites
+                    # Always group by municipality by default (helps organize datasets)
+                    site_to_muni = {site.name: site.municipality for site in sites}
+                    algae_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in algae_compare_sites]
             elif algae_comparison == "Compare with Average":
                 algae_compare_scope = st.selectbox(
                     "Select average scope:",
@@ -563,13 +551,9 @@ if selected_site:
                     max_selections=5  # Limit to 5 sites for readability
                 )
                 if herbivore_compare_sites:
-                    # Show option to group by municipality (helps organize large datasets)
-                    group_by_municipality = st.checkbox("Group by municipality", key="herbivore_group_by_muni", value=False)
-                    if group_by_municipality:
-                        site_to_muni = {site.name: site.municipality for site in sites}
-                        herbivore_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in herbivore_compare_sites]
-                    else:
-                        herbivore_compare_labels = herbivore_compare_sites
+                    # Always group by municipality by default (helps organize datasets)
+                    site_to_muni = {site.name: site.municipality for site in sites}
+                    herbivore_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in herbivore_compare_sites]
             elif herbivore_comparison == "Compare with Average":
                 herbivore_compare_scope = st.selectbox(
                     "Select average scope:",
@@ -598,13 +582,9 @@ if selected_site:
                     max_selections=5  # Limit to 5 sites for readability
                 )
                 if carnivore_compare_sites:
-                    # Show option to group by municipality (helps organize large datasets)
-                    group_by_municipality = st.checkbox("Group by municipality", key="carnivore_group_by_muni", value=False)
-                    if group_by_municipality:
-                        site_to_muni = {site.name: site.municipality for site in sites}
-                        carnivore_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in carnivore_compare_sites]
-                    else:
-                        carnivore_compare_labels = carnivore_compare_sites
+                    # Always group by municipality by default (helps organize datasets)
+                    site_to_muni = {site.name: site.municipality for site in sites}
+                    carnivore_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in carnivore_compare_sites]
             elif carnivore_comparison == "Compare with Average":
                 carnivore_compare_scope = st.selectbox(
                     "Select average scope:",
@@ -633,13 +613,9 @@ if selected_site:
                     max_selections=5  # Limit to 5 sites for readability
                 )
                 if omnivore_compare_sites:
-                    # Show option to group by municipality (helps organize large datasets)
-                    group_by_municipality = st.checkbox("Group by municipality", key="omnivore_group_by_muni", value=False)
-                    if group_by_municipality:
-                        site_to_muni = {site.name: site.municipality for site in sites}
-                        omnivore_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in omnivore_compare_sites]
-                    else:
-                        omnivore_compare_labels = omnivore_compare_sites
+                    # Always group by municipality by default (helps organize datasets)
+                    site_to_muni = {site.name: site.municipality for site in sites}
+                    omnivore_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in omnivore_compare_sites]
             elif omnivore_comparison == "Compare with Average":
                 omnivore_compare_scope = st.selectbox(
                     "Select average scope:",
@@ -668,13 +644,9 @@ if selected_site:
                     max_selections=5  # Limit to 5 sites for readability
                 )
                 if corallivore_compare_sites:
-                    # Show option to group by municipality (helps organize large datasets)
-                    group_by_municipality = st.checkbox("Group by municipality", key="corallivore_group_by_muni", value=False)
-                    if group_by_municipality:
-                        site_to_muni = {site.name: site.municipality for site in sites}
-                        corallivore_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in corallivore_compare_sites]
-                    else:
-                        corallivore_compare_labels = corallivore_compare_sites
+                    # Always group by municipality by default (helps organize datasets)
+                    site_to_muni = {site.name: site.municipality for site in sites}
+                    corallivore_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in corallivore_compare_sites]
             elif corallivore_comparison == "Compare with Average":
                 corallivore_compare_scope = st.selectbox(
                     "Select average scope:",
@@ -703,13 +675,9 @@ if selected_site:
                     max_selections=5  # Limit to 5 sites for readability
                 )
                 if bleaching_compare_sites:
-                    # Show option to group by municipality (helps organize large datasets)
-                    group_by_municipality = st.checkbox("Group by municipality", key="bleaching_group_by_muni", value=False)
-                    if group_by_municipality:
-                        site_to_muni = {site.name: site.municipality for site in sites}
-                        bleaching_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in bleaching_compare_sites]
-                    else:
-                        bleaching_compare_labels = bleaching_compare_sites
+                    # Always group by municipality by default (helps organize datasets)
+                    site_to_muni = {site.name: site.municipality for site in sites}
+                    bleaching_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in bleaching_compare_sites]
             elif bleaching_comparison == "Compare with Average":
                 bleaching_compare_scope = st.selectbox(
                     "Select average scope:",
@@ -738,13 +706,9 @@ if selected_site:
                     max_selections=5  # Limit to 5 sites for readability
                 )
                 if rubble_compare_sites:
-                    # Show option to group by municipality (helps organize large datasets)
-                    group_by_municipality = st.checkbox("Group by municipality", key="rubble_group_by_muni", value=False)
-                    if group_by_municipality:
-                        site_to_muni = {site.name: site.municipality for site in sites}
-                        rubble_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in rubble_compare_sites]
-                    else:
-                        rubble_compare_labels = rubble_compare_sites
+                    # Always group by municipality by default (helps organize datasets)
+                    site_to_muni = {site.name: site.municipality for site in sites}
+                    rubble_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in rubble_compare_sites]
             elif rubble_comparison == "Compare with Average":
                 rubble_compare_scope = st.selectbox(
                     "Select average scope:",
