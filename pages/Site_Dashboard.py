@@ -145,6 +145,39 @@ with st.sidebar:
             # Use non-breaking space entity to ensure indentation is preserved
             return f"- {option.strip()}"
     
+    # Helper function to create municipality-organized comparison options for multiselect
+    def create_comparison_options(exclude_site=None):
+        """
+        Creates a list of options for multiselect dropdowns with municipality headers
+        
+        Args:
+            exclude_site: Site to exclude from the options (usually the current selected site)
+            
+        Returns:
+            List of options with municipality headers and indented site names
+        """
+        options = []
+        
+        # Add Zamboanguita sites
+        zambo_sites = [site for site in zamboanguita_sites if site != exclude_site]
+        if zambo_sites:
+            options.append("Zamboanguita")  # Municipality header
+            options.extend([f"  {site}" for site in zambo_sites])  # Indented sites
+            
+        # Add Siaton sites
+        siaton_sites_filtered = [site for site in siaton_sites if site != exclude_site]
+        if siaton_sites_filtered:
+            options.append("Siaton")  # Municipality header
+            options.extend([f"  {site}" for site in siaton_sites_filtered])  # Indented sites
+            
+        # Add Santa Catalina sites
+        santa_sites = [site for site in santa_catalina_sites if site != exclude_site]
+        if santa_sites:
+            options.append("Santa Catalina")  # Municipality header
+            options.extend([f"  {site}" for site in santa_sites])  # Indented sites
+            
+        return options
+    
     # Create the options list with municipalities as headers and alphabetically sorted sites
     site_options = []
     if zamboanguita_sites:
@@ -457,13 +490,25 @@ if selected_site:
             biomass_compare_labels = None
             
             if biomass_comparison == "Compare with Sites":
-                compare_sites = [site for site in comparison_site_names if site != selected_site]
+                # Get options organized by municipality
+                comparison_options = create_comparison_options(exclude_site=selected_site)
+                
+                # Define function to extract site names (filtering out headers)
+                def extract_site_name(option):
+                    if option.startswith("  "):
+                        return option.strip()
+                    return None
+                
                 biomass_compare_sites = st.multiselect(
                     "Select sites to compare biomass:",
-                    compare_sites,
+                    options=comparison_options,
+                    format_func=format_site_option,
                     key="biomass_compare_sites",
                     max_selections=5  # Limit to 5 sites for readability
                 )
+                
+                # Filter out the header items to get just the site names
+                biomass_compare_sites = [extract_site_name(site) for site in biomass_compare_sites if extract_site_name(site)]
                 if biomass_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
                     site_to_muni = {site.name: site.municipality for site in sites}
@@ -489,13 +534,25 @@ if selected_site:
             coral_compare_labels = None
             
             if coral_comparison == "Compare with Sites":
-                compare_sites = [site for site in comparison_site_names if site != selected_site]
+                # Get options organized by municipality
+                comparison_options = create_comparison_options(exclude_site=selected_site)
+                
+                # Define function to extract site names (filtering out headers)
+                def extract_site_name(option):
+                    if option.startswith("  "):
+                        return option.strip()
+                    return None
+                
                 coral_compare_sites = st.multiselect(
                     "Select sites to compare coral cover:",
-                    compare_sites,
+                    options=comparison_options,
+                    format_func=format_site_option,
                     key="coral_compare_sites",
                     max_selections=5  # Limit to 5 sites for readability
                 )
+                
+                # Filter out the header items to get just the site names
+                coral_compare_sites = [extract_site_name(site) for site in coral_compare_sites if extract_site_name(site)]
                 if coral_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
                     site_to_muni = {site.name: site.municipality for site in sites}
@@ -520,13 +577,19 @@ if selected_site:
             algae_compare_labels = None
             
             if algae_comparison == "Compare with Sites":
-                compare_sites = [site for site in comparison_site_names if site != selected_site]
+                # Get options organized by municipality
+                comparison_options = create_comparison_options(exclude_site=selected_site)
+                
                 algae_compare_sites = st.multiselect(
                     "Select sites to compare fleshy algae:",
-                    compare_sites,
+                    options=comparison_options,
+                    format_func=format_site_option,
                     key="algae_compare_sites",
                     max_selections=5  # Limit to 5 sites for readability
                 )
+                
+                # Filter out the header items to get just the site names
+                algae_compare_sites = [option.strip() for option in algae_compare_sites if option.startswith("  ")]
                 if algae_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
                     site_to_muni = {site.name: site.municipality for site in sites}
@@ -551,13 +614,19 @@ if selected_site:
             herbivore_compare_labels = None
             
             if herbivore_comparison == "Compare with Sites":
-                compare_sites = [site for site in comparison_site_names if site != selected_site]
+                # Get options organized by municipality
+                comparison_options = create_comparison_options(exclude_site=selected_site)
+                
                 herbivore_compare_sites = st.multiselect(
                     "Select sites to compare herbivore density:",
-                    compare_sites,
+                    options=comparison_options,
+                    format_func=format_site_option,
                     key="herbivore_compare_sites",
                     max_selections=5  # Limit to 5 sites for readability
                 )
+                
+                # Filter out the header items to get just the site names
+                herbivore_compare_sites = [option.strip() for option in herbivore_compare_sites if option.startswith("  ")]
                 if herbivore_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
                     site_to_muni = {site.name: site.municipality for site in sites}
@@ -582,13 +651,19 @@ if selected_site:
             carnivore_compare_labels = None
             
             if carnivore_comparison == "Compare with Sites":
-                compare_sites = [site for site in comparison_site_names if site != selected_site]
+                # Get options organized by municipality
+                comparison_options = create_comparison_options(exclude_site=selected_site)
+                
                 carnivore_compare_sites = st.multiselect(
                     "Select sites to compare carnivore density:",
-                    compare_sites,
+                    options=comparison_options,
+                    format_func=format_site_option,
                     key="carnivore_compare_sites",
                     max_selections=5  # Limit to 5 sites for readability
                 )
+                
+                # Filter out the header items to get just the site names
+                carnivore_compare_sites = [option.strip() for option in carnivore_compare_sites if option.startswith("  ")]
                 if carnivore_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
                     site_to_muni = {site.name: site.municipality for site in sites}
@@ -613,13 +688,19 @@ if selected_site:
             omnivore_compare_labels = None
             
             if omnivore_comparison == "Compare with Sites":
-                compare_sites = [site for site in comparison_site_names if site != selected_site]
+                # Get options organized by municipality
+                comparison_options = create_comparison_options(exclude_site=selected_site)
+                
                 omnivore_compare_sites = st.multiselect(
                     "Select sites to compare omnivore density:",
-                    compare_sites,
+                    options=comparison_options,
+                    format_func=format_site_option,
                     key="omnivore_compare_sites",
                     max_selections=5  # Limit to 5 sites for readability
                 )
+                
+                # Filter out the header items to get just the site names
+                omnivore_compare_sites = [option.strip() for option in omnivore_compare_sites if option.startswith("  ")]
                 if omnivore_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
                     site_to_muni = {site.name: site.municipality for site in sites}
@@ -644,13 +725,19 @@ if selected_site:
             corallivore_compare_labels = None
             
             if corallivore_comparison == "Compare with Sites":
-                compare_sites = [site for site in comparison_site_names if site != selected_site]
+                # Get options organized by municipality
+                comparison_options = create_comparison_options(exclude_site=selected_site)
+                
                 corallivore_compare_sites = st.multiselect(
                     "Select sites to compare corallivore density:",
-                    compare_sites,
+                    options=comparison_options,
+                    format_func=format_site_option,
                     key="corallivore_compare_sites",
                     max_selections=5  # Limit to 5 sites for readability
                 )
+                
+                # Filter out the header items to get just the site names
+                corallivore_compare_sites = [option.strip() for option in corallivore_compare_sites if option.startswith("  ")]
                 if corallivore_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
                     site_to_muni = {site.name: site.municipality for site in sites}
