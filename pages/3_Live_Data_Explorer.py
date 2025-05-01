@@ -33,9 +33,17 @@ display_logo(size="small")
 st.title("Live Survey Data Explorer")
 
 st.markdown("""
-This page allows you to explore and visualize the new live survey data format.
-Upload CSV files from different survey types to analyze and test the data before
-integrating it into the main dashboard.
+## MCP's Ecological Monitoring Program
+
+This page allows you to explore data collected through Marine Conservation Philippines' volunteer-based scientific diving program, 
+which focuses on collecting and analyzing biophysical data on locally-managed MPAs effectiveness and resilience.
+
+### Key Focus Areas:
+- Assess locally managed Protected Areas' effectiveness at providing food security for the community
+- Assess regional reef health and resilience
+- Assess threats and sustainability of local MPAs at continuing to provide desired goods for the community
+
+Use the tools below to explore different survey types and understand the ecological health of the monitored areas.
 """)
 
 # Function to analyze invertebrate survey data
