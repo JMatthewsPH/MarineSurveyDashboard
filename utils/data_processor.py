@@ -73,7 +73,8 @@ class DataProcessor:
             if hasattr(self, '_db') and self._db and self._db.is_active:
                 try:
                     # Test the connection with a simple query
-                    self._db.execute("SELECT 1")
+                    from sqlalchemy import text
+                    self._db.execute(text("SELECT 1"))
                     return self._db
                 except Exception as conn_err:
                     # Connection error occurred, try to safely roll back any pending transaction

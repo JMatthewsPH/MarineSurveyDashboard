@@ -156,18 +156,38 @@ with st.sidebar:
         site_options.append("Santa Catalina")
         site_options.extend([f"  {site}" for site in sorted(santa_catalina_sites)])
 
+    # Initialize selected site from URL or session state
+    url_site = st.query_params.get('site')
+    
+    # Store selected site in session state if not already there
+    if 'selected_site_name' not in st.session_state or (url_site and url_site != st.session_state.get('selected_site_name')):
+        st.session_state.selected_site_name = url_site if url_site in site_names else site_names[0] if site_names else None
+    
+    # Find the correct option in site_options that corresponds to the selected site
+    default_index = 0
+    if st.session_state.selected_site_name:
+        # Find the option that contains this site name with leading spaces
+        for i, opt in enumerate(site_options):
+            if opt.strip() == st.session_state.selected_site_name:
+                default_index = i
+                break
+    
+    # Create the dropdown with the correct default selection
     selected_option = st.selectbox(
         TRANSLATIONS[st.session_state.language]['choose_site'],
         site_options,
-        index=site_options.index(f"  {st.query_params.get('site')}") if st.query_params.get('site') in [s.strip() for s in site_options] else 0,
-        format_func=format_site_option
+        index=default_index,
+        format_func=format_site_option,
+        key="site_selector"
     )
-
+    
     # Extract actual site name (remove leading spaces if it's a site)
     selected_site = selected_option.strip() if selected_option.startswith("  ") else None
-
+    
+    # Only update if a real site is selected (not a municipality header)
     if selected_site and selected_site in site_names:
-        # Update URL when site is selected
+        # Update session state and URL
+        st.session_state.selected_site_name = selected_site
         st.query_params["site"] = selected_site
 
 
