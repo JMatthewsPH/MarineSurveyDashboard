@@ -424,13 +424,13 @@ with trend_container:
         # For Commercial Biomass, we can use existing methods
         trend_data_list = []
         for site in sites:
-            if municipality_filter and site.municipality != municipality_filter:
+            if municipality_filter and site['municipality'] != municipality_filter:
                 continue
                 
-            site_data = data_processor.get_biomass_data(site.name)
+            site_data = data_processor.get_biomass_data(site['name'])
             if not site_data.empty:
-                site_data['site'] = site.name
-                site_data['municipality'] = site.municipality
+                site_data['site'] = site['name']
+                site_data['municipality'] = site['municipality']
                 trend_data_list.append(site_data)
         
         if trend_data_list:
@@ -468,15 +468,15 @@ with trend_container:
         # For Omnivore Density, we use the get_metric_data method
         trend_data_list = []
         for site in sites:
-            if municipality_filter and site.municipality != municipality_filter:
+            if municipality_filter and site['municipality'] != municipality_filter:
                 continue
                 
             # Use 'omnivore' as the metric type in get_metric_data
             # This corresponds to the key in DataProcessor.METRIC_MAP
-            site_data = data_processor.get_metric_data(site.name, "omnivore")
+            site_data = data_processor.get_metric_data(site['name'], "omnivore")
             if not site_data.empty:
-                site_data['site'] = site.name
-                site_data['municipality'] = site.municipality
+                site_data['site'] = site['name']
+                site_data['municipality'] = site['municipality']
                 trend_data_list.append(site_data)
         
         if trend_data_list:
