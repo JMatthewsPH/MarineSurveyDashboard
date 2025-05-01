@@ -46,13 +46,25 @@ def analyze_substrate_data(df):
     Args:
         df: Pandas DataFrame containing substrate survey data
     """
+    # Pre-process the data if needed
+    # Convert date strings to datetime if they're not already
+    if 'Date' in df.columns and not pd.api.types.is_datetime64_dtype(df['Date']):
+        try:
+            df['Date'] = pd.to_datetime(df['Date'])
+        except Exception as e:
+            st.warning(f"Could not convert dates to datetime format: {str(e)}")
+    
+    # Clean up site names (remove MPA suffixes if present)
+    if 'Site' in df.columns:
+        df['Site'] = df['Site'].str.replace(' MPA', '').str.strip()
+    
     # Display basic info
     st.subheader("Dataset Overview")
     
     # Basic statistics
     num_surveys = df['Survey_ID'].nunique()
     num_sites = df['Site'].nunique()
-    date_range = f"{df['Date'].min()} to {df['Date'].max()}"
+    date_range = f"{df['Date'].min().strftime('%Y-%m-%d')} to {df['Date'].max().strftime('%Y-%m-%d')}"
     
     col1, col2, col3 = st.columns(3)
     col1.metric("Number of Surveys", num_surveys)
@@ -83,7 +95,9 @@ def analyze_substrate_data(df):
         filtered_df = filtered_df[filtered_df['Site'] == selected_site]
     
     if selected_date != "All Dates":
-        filtered_df = filtered_df[filtered_df['Date'].str.startswith(selected_date)]
+        # Convert selected_date to datetime for comparison
+        selected_date_obj = pd.to_datetime(selected_date).date()
+        filtered_df = filtered_df[pd.to_datetime(filtered_df['Date']).dt.date == selected_date_obj]
     
     # Display filtered dataframe
     if len(filtered_df) > 0:
@@ -248,41 +262,67 @@ def detect_survey_type(df):
     else:
         return "unknown"
 
-# File uploader
-uploaded_file = st.file_uploader("Upload Survey CSV", type=["csv"])
+# Check for available data files in the attached_assets directory
+data_dir = "attached_assets"
+available_files = []
 
-if uploaded_file is not None:
-    try:
-        # Load data
-        df = pd.read_csv(uploaded_file)
+if os.path.exists(data_dir):
+    for filename in os.listdir(data_dir):
+        if filename.endswith('.csv') and "DBMCP" in filename:
+            available_files.append(filename)
+
+# Data source selection
+data_source = st.radio(
+    "Select Data Source",
+    ["Use Sample Files", "Upload File (currently disabled)"],
+    index=0
+)
+
+if data_source == "Use Sample Files":
+    if available_files:
+        selected_file = st.selectbox(
+            "Select a sample data file to analyze",
+            available_files
+        )
         
-        # Display raw data sample
-        st.subheader("Raw Data Sample")
-        st.dataframe(df.head(5), use_container_width=True)
-        
-        # Detect survey type
-        survey_type = detect_survey_type(df)
-        
-        if survey_type == "substrate":
-            st.success("Detected Substrate Survey Data")
-            analyze_substrate_data(df)
-        elif survey_type == "fish":
-            st.success("Detected Fish Survey Data")
-            analyze_fish_data(df)
-        elif survey_type == "predation":
-            st.success("Detected Predation Survey Data")
-            st.info("Predation survey analysis will be implemented in the future")
-        elif survey_type == "invertebrate":
-            st.success("Detected Invertebrate Survey Data")
-            st.info("Invertebrate survey analysis will be implemented in the future")
-        else:
-            st.warning("Unknown survey type. Please check the file format.")
-            
-    except Exception as e:
-        st.error(f"Error processing file: {str(e)}")
+        if selected_file:
+            try:
+                # Load data
+                file_path = os.path.join(data_dir, selected_file)
+                df = pd.read_csv(file_path)
+                
+                # Display raw data sample
+                st.subheader("Raw Data Sample")
+                st.dataframe(df.head(5), use_container_width=True)
+                
+                # Detect survey type
+                survey_type = detect_survey_type(df)
+                
+                if survey_type == "substrate":
+                    st.success("Detected Substrate Survey Data")
+                    analyze_substrate_data(df)
+                elif survey_type == "fish":
+                    st.success("Detected Fish Survey Data")
+                    analyze_fish_data(df)
+                elif survey_type == "predation":
+                    st.success("Detected Predation Survey Data")
+                    st.info("Predation survey analysis will be implemented in the future")
+                elif survey_type == "invertebrate":
+                    st.success("Detected Invertebrate Survey Data")
+                    st.info("Invertebrate survey analysis will be implemented in the future")
+                else:
+                    st.warning("Unknown survey type. Please check the file format.")
+                    
+            except Exception as e:
+                st.error(f"Error processing file: {str(e)}")
+    else:
+        st.warning("No sample data files found in the attached_assets directory.")
 else:
-    # Show example data structure when no file is uploaded
-    st.info("Upload a CSV file to begin exploring the data.")
+    # Disabling upload for now due to permission issues
+    st.warning("Direct file upload is currently disabled due to permission issues. Please use the sample files option.")
+    
+    # Disabled file uploader (kept for future reference)
+    uploaded_file = st.file_uploader("Upload Survey CSV (Disabled)", type=["csv"], disabled=True)
     
     # Explain expected format
     st.subheader("Expected Data Format")
