@@ -66,17 +66,45 @@ class DataProcessor:
         Get an active database session, either the existing one or a new one
         
         This is a helper method to ensure we're always using an active session
+        with proper error handling and transaction management
         """
         try:
-            if self._db.is_active:
-                return self._db
-            else:
-                logger.info("Using new DB session since current one is inactive")
-                with get_db_session() as db:
-                    return db
-        except Exception as e:
-            logger.warning(f"Error checking session status: {e}. Creating new session.")
+            # Check if we have a valid active session
+            if hasattr(self, '_db') and self._db and self._db.is_active:
+                try:
+                    # Test the connection with a simple query
+                    self._db.execute("SELECT 1")
+                    return self._db
+                except Exception as conn_err:
+                    # Connection error occurred, try to safely roll back any pending transaction
+                    logger.warning(f"Database connection error: {conn_err}. Rolling back...")
+                    try:
+                        self._db.rollback()
+                    except Exception:
+                        # If rollback fails, just continue with getting a new session
+                        pass
+                    
+                    # Close the problematic connection
+                    try:
+                        self._db.close()
+                    except Exception:
+                        pass
+                    
+                    # Connection is bad, set to None so we'll create a new one
+                    self._db = None
+            
+            # If we reached here, we need a new session
+            logger.info("Creating new database session")
             with get_db_session() as db:
+                # Store the reference
+                self._db = db
+                return db
+                
+        except Exception as e:
+            # For any other error, log and create a fresh session
+            logger.warning(f"Error managing database session: {e}. Creating new session.")
+            with get_db_session() as db:
+                self._db = db
                 return db
 
     @st.cache_data(ttl=3600, show_spinner=False)
@@ -473,6 +501,20 @@ class DataProcessor:
             return pd.DataFrame()
 
     def __del__(self):
-        """Ensure database connection is closed"""
-        if hasattr(self, '_db'):
-            self._db.close()
+        """Ensure database connection is closed and resources are released properly"""
+        try:
+            if hasattr(self, '_db') and self._db:
+                # First try to safely rollback any incomplete transaction
+                try:
+                    self._db.rollback()
+                except Exception as e:
+                    logger.warning(f"Error rolling back transaction during cleanup: {e}")
+                
+                # Then close the connection
+                try:
+                    self._db.close()
+                    logger.info("Database connection closed properly")
+                except Exception as e:
+                    logger.warning(f"Error closing database connection: {e}")
+        except Exception as e:
+            logger.error(f"Error in database cleanup: {e}")
