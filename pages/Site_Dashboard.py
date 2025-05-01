@@ -172,23 +172,32 @@ with st.sidebar:
                 default_index = i
                 break
     
-    # Create the dropdown with the correct default selection
+    # Function to handle site selection change
+    def on_site_change():
+        # Get the value from session state
+        option = st.session_state.site_selector
+        # Only process if it's a site (starts with spaces)
+        if option.startswith("  "):
+            site = option.strip()
+            if site in site_names:
+                # Update both session state and URL params
+                st.session_state.selected_site_name = site
+                st.query_params["site"] = site
+                # Force a rerun to apply the change immediately
+                st.rerun()
+    
+    # Create the dropdown with the correct default selection and callback
     selected_option = st.selectbox(
         TRANSLATIONS[st.session_state.language]['choose_site'],
         site_options,
         index=default_index,
         format_func=format_site_option,
-        key="site_selector"
+        key="site_selector",
+        on_change=on_site_change
     )
     
     # Extract actual site name (remove leading spaces if it's a site)
     selected_site = selected_option.strip() if selected_option.startswith("  ") else None
-    
-    # Only update if a real site is selected (not a municipality header)
-    if selected_site and selected_site in site_names:
-        # Update session state and URL
-        st.session_state.selected_site_name = selected_site
-        st.query_params["site"] = selected_site
 
 
 # Display site content
