@@ -379,6 +379,75 @@ class DataProcessor:
         except Exception as e:
             logger.error(f"Error fetching biomass data: {str(e)}")
             return pd.DataFrame(columns=['date', display_name])
+            
+    @st.cache_data(ttl=3600, show_spinner=False)
+    def batch_get_biomass_data(_self, site_names: list, start_date='2017-01-01'):
+        """
+        Efficiently fetch biomass data for multiple sites in a single database query
+        
+        Args:
+            site_names: List of site names to fetch data for
+            start_date: Start date for filtering data (YYYY-MM-DD format)
+            
+        Returns:
+            Dictionary mapping site names to DataFrames with date and biomass columns
+        """
+        if not site_names:
+            return {}
+            
+        logger.info(f"Batch fetching biomass data for {len(site_names)} sites")
+        
+        # Use the consistent display name from the class constants
+        display_name = _self.DISPLAY_NAMES.get('commercial_biomass', 'Commercial Biomass')
+            
+        try:
+            # Use common session management
+            db = _self._get_session()
+            
+            # First, get all site IDs in a single query
+            site_name_to_id = {}
+            site_id_to_name = {}
+            
+            # Query all sites at once rather than one at a time
+            sites = db.query(Site).filter(Site.name.in_(site_names)).all()
+            for site in sites:
+                site_name_to_id[site.name] = site.id
+                site_id_to_name[site.id] = site.name
+                
+            # Handle case where some sites aren't found
+            missing_sites = set(site_names) - set(site_name_to_id.keys())
+            if missing_sites:
+                logger.warning(f"Sites not found: {missing_sites}")
+                
+            # Get all site IDs we found
+            site_ids = list(site_id_to_name.keys())
+            
+            # Fetch all biomass data in a single query
+            results_by_site_id = QueryBuilder.batch_biomass_data(
+                db, site_ids, start_date
+            )
+            
+            # Convert results to DataFrames by site name
+            results = {}
+            for site_id, data in results_by_site_id.items():
+                site_name = site_id_to_name[site_id]
+                df = pd.DataFrame(data, columns=['date', display_name])
+                logger.info(f"Found {len(df)} biomass surveys for {site_name}")
+                results[site_name] = df
+                
+            # Add empty DataFrames for sites with no data
+            for site_name in site_names:
+                if site_name not in results and site_name in site_name_to_id:
+                    logger.info(f"No biomass surveys found for {site_name}")
+                    results[site_name] = pd.DataFrame(columns=['date', display_name])
+                    
+            print(f"DEBUG - Batch loaded biomass data for {len(results)} sites")
+            return results
+            
+        except Exception as e:
+            logger.error(f"Error batch fetching biomass data: {str(e)}")
+            # Return empty DataFrames to prevent application crashes
+            return {site: pd.DataFrame(columns=['date', display_name]) for site in site_names}
 
     @st.cache_data(ttl=3600, show_spinner=False)
     def get_coral_cover_data(_self, site_name, start_date='2017-01-01'):
@@ -408,6 +477,75 @@ class DataProcessor:
         except Exception as e:
             logger.error(f"Error fetching coral cover data: {str(e)}")
             return pd.DataFrame(columns=['date', display_name])
+            
+    @st.cache_data(ttl=3600, show_spinner=False)
+    def batch_get_coral_cover_data(_self, site_names: list, start_date='2017-01-01'):
+        """
+        Efficiently fetch coral cover data for multiple sites in a single database query
+        
+        Args:
+            site_names: List of site names to fetch data for
+            start_date: Start date for filtering data (YYYY-MM-DD format)
+            
+        Returns:
+            Dictionary mapping site names to DataFrames with date and coral cover columns
+        """
+        if not site_names:
+            return {}
+            
+        logger.info(f"Batch fetching coral cover data for {len(site_names)} sites")
+        
+        # Use the consistent display name from the class constants
+        display_name = _self.DISPLAY_NAMES.get('hard_coral_cover', 'Hard Coral Cover')
+            
+        try:
+            # Use common session management
+            db = _self._get_session()
+            
+            # First, get all site IDs in a single query
+            site_name_to_id = {}
+            site_id_to_name = {}
+            
+            # Query all sites at once rather than one at a time
+            sites = db.query(Site).filter(Site.name.in_(site_names)).all()
+            for site in sites:
+                site_name_to_id[site.name] = site.id
+                site_id_to_name[site.id] = site.name
+                
+            # Handle case where some sites aren't found
+            missing_sites = set(site_names) - set(site_name_to_id.keys())
+            if missing_sites:
+                logger.warning(f"Sites not found: {missing_sites}")
+                
+            # Get all site IDs we found
+            site_ids = list(site_id_to_name.keys())
+            
+            # Fetch all coral cover data in a single query
+            results_by_site_id = QueryBuilder.batch_coral_cover_data(
+                db, site_ids, start_date
+            )
+            
+            # Convert results to DataFrames by site name
+            results = {}
+            for site_id, data in results_by_site_id.items():
+                site_name = site_id_to_name[site_id]
+                df = pd.DataFrame(data, columns=['date', display_name])
+                logger.info(f"Found {len(df)} coral cover surveys for {site_name}")
+                results[site_name] = df
+                
+            # Add empty DataFrames for sites with no data
+            for site_name in site_names:
+                if site_name not in results and site_name in site_name_to_id:
+                    logger.info(f"No coral cover surveys found for {site_name}")
+                    results[site_name] = pd.DataFrame(columns=['date', display_name])
+                    
+            print(f"DEBUG - Batch loaded coral cover data for {len(results)} sites")
+            return results
+            
+        except Exception as e:
+            logger.error(f"Error batch fetching coral cover data: {str(e)}")
+            # Return empty DataFrames to prevent application crashes
+            return {site: pd.DataFrame(columns=['date', display_name]) for site in site_names}
 
     def get_fish_length_data(self, site_name, species, start_date='2017-01-01'):
         """Process fish length data by species"""

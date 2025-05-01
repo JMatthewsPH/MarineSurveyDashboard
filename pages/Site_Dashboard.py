@@ -766,12 +766,11 @@ if selected_site:
             biomass_comparison_labels = None
             
             if biomass_comparison == "Compare with Sites" and biomass_compare_sites:
-                # Get data for multiple comparison sites
-                comparison_data_list = []
-                for site_name in biomass_compare_sites:
-                    site_data = data_processor.get_biomass_data(site_name)
-                    if not site_data.empty:
-                        comparison_data_list.append(site_data)
+                # Use batch loading for better performance
+                site_data_dict = data_processor.batch_get_biomass_data(biomass_compare_sites, start_date='2017-01-01')
+                
+                # Convert to the format expected by the graph generator
+                comparison_data_list = [df for site, df in site_data_dict.items() if not df.empty]
                 
                 if comparison_data_list:
                     biomass_comparison_data = comparison_data_list
@@ -849,12 +848,11 @@ if selected_site:
             coral_comparison_labels = None
             
             if coral_comparison == "Compare with Sites" and coral_compare_sites:
-                # Get data for multiple comparison sites
-                comparison_data_list = []
-                for site_name in coral_compare_sites:
-                    site_data = data_processor.get_metric_data(site_name, 'hard_coral')
-                    if not site_data.empty:
-                        comparison_data_list.append(site_data)
+                # Use batch loading for better performance
+                site_data_dict = data_processor.batch_get_coral_cover_data(coral_compare_sites, start_date='2017-01-01')
+                
+                # Convert to the format expected by the graph generator
+                comparison_data_list = [df for site, df in site_data_dict.items() if not df.empty]
                 
                 if comparison_data_list:
                     coral_comparison_data = comparison_data_list
@@ -905,12 +903,11 @@ if selected_site:
             algae_comparison_labels = None
             
             if algae_comparison == "Compare with Sites" and algae_compare_sites:
-                # Get data for multiple comparison sites
-                comparison_data_list = []
-                for site_name in algae_compare_sites:
-                    site_data = data_processor.get_metric_data(site_name, 'fleshy_algae')
-                    if not site_data.empty:
-                        comparison_data_list.append(site_data)
+                # Use batch loading for better performance
+                site_data_dict = data_processor.batch_get_metric_data(algae_compare_sites, 'fleshy_algae', start_date='2017-01-01')
+                
+                # Convert to the format expected by the graph generator
+                comparison_data_list = [df for site, df in site_data_dict.items() if not df.empty]
                 
                 if comparison_data_list:
                     algae_comparison_data = comparison_data_list
@@ -949,12 +946,11 @@ if selected_site:
             herbivore_comparison_labels = None
             
             if herbivore_comparison == "Compare with Sites" and herbivore_compare_sites:
-                # Get data for multiple comparison sites
-                comparison_data_list = []
-                for site_name in herbivore_compare_sites:
-                    site_data = data_processor.get_metric_data(site_name, 'herbivore')
-                    if not site_data.empty:
-                        comparison_data_list.append(site_data)
+                # Use batch loading for better performance
+                site_data_dict = data_processor.batch_get_metric_data(herbivore_compare_sites, 'herbivore', start_date='2017-01-01')
+                
+                # Convert to the format expected by the graph generator
+                comparison_data_list = [df for site, df in site_data_dict.items() if not df.empty]
                 
                 if comparison_data_list:
                     herbivore_comparison_data = comparison_data_list
@@ -993,12 +989,11 @@ if selected_site:
             carnivore_comparison_labels = None
             
             if carnivore_comparison == "Compare with Sites" and carnivore_compare_sites:
-                # Get data for multiple comparison sites
-                comparison_data_list = []
-                for site_name in carnivore_compare_sites:
-                    site_data = data_processor.get_metric_data(site_name, 'carnivore')
-                    if not site_data.empty:
-                        comparison_data_list.append(site_data)
+                # Use batch loading for better performance
+                site_data_dict = data_processor.batch_get_metric_data(carnivore_compare_sites, 'carnivore', start_date='2017-01-01')
+                
+                # Convert to the format expected by the graph generator
+                comparison_data_list = [df for site, df in site_data_dict.items() if not df.empty]
                 
                 if comparison_data_list:
                     carnivore_comparison_data = comparison_data_list
@@ -1037,12 +1032,11 @@ if selected_site:
             omnivore_comparison_labels = None
             
             if omnivore_comparison == "Compare with Sites" and omnivore_compare_sites:
-                # Get data for multiple comparison sites
-                comparison_data_list = []
-                for site_name in omnivore_compare_sites:
-                    site_data = data_processor.get_metric_data(site_name, 'omnivore')
-                    if not site_data.empty:
-                        comparison_data_list.append(site_data)
+                # Use batch loading for better performance
+                site_data_dict = data_processor.batch_get_metric_data(omnivore_compare_sites, 'omnivore', start_date='2017-01-01')
+                
+                # Convert to the format expected by the graph generator
+                comparison_data_list = [df for site, df in site_data_dict.items() if not df.empty]
                 
                 if comparison_data_list:
                     omnivore_comparison_data = comparison_data_list
@@ -1081,12 +1075,11 @@ if selected_site:
             corallivore_comparison_labels = None
             
             if corallivore_comparison == "Compare with Sites" and corallivore_compare_sites:
-                # Get data for multiple comparison sites
-                comparison_data_list = []
-                for site_name in corallivore_compare_sites:
-                    site_data = data_processor.get_metric_data(site_name, 'corallivore')
-                    if not site_data.empty:
-                        comparison_data_list.append(site_data)
+                # Use batch loading for better performance
+                site_data_dict = data_processor.batch_get_metric_data(corallivore_compare_sites, 'corallivore', start_date='2017-01-01')
+                
+                # Convert to the format expected by the graph generator
+                comparison_data_list = [df for site, df in site_data_dict.items() if not df.empty]
                 
                 if comparison_data_list:
                     corallivore_comparison_data = comparison_data_list
