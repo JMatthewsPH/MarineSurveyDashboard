@@ -1097,6 +1097,7 @@ def detect_survey_type(df):
     columns = set(df.columns)
     
     # Use our live data explorer specific session state key prefix
+    # The key is automatically created when the selectbox is rendered
     file_key = f'{live_data_prefix}selected_file'
     selected_file = st.session_state.get(file_key, '')
     
@@ -1162,14 +1163,13 @@ data_source = st.radio(
 
 if data_source == "Use Sample Files":
     if available_files:
+        # Select a file - the value will be automatically stored in session state
+        # using the provided key, so we don't need to set it again manually
         selected_file = st.selectbox(
             "Select a sample data file to analyze",
             available_files,
             key=f"{live_data_prefix}selected_file"
         )
-        
-        # Store selected file in session state for detection logic with specific key prefix
-        st.session_state[f'{live_data_prefix}selected_file'] = selected_file
         
         if selected_file:
             try:
