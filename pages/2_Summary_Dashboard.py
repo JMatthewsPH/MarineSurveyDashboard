@@ -379,10 +379,10 @@ with trend_container:
         highlight_sites = None
         if highlight_option:
             # Get site names
-            site_names = [site.name for site in sites]
+            site_names = [site['name'] for site in sites]
             if municipality_filter:
                 # Filter sites by municipality
-                filtered_sites = [site.name for site in sites if site.municipality == municipality_filter]
+                filtered_sites = [site['name'] for site in sites if site['municipality'] == municipality_filter]
                 highlight_sites = st.multiselect(
                     "Select sites to highlight:",
                     filtered_sites,
