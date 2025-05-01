@@ -100,8 +100,9 @@ santa_catalina_sites = sorted([site.name for site in sites if site.municipality 
 # Combine in desired order for display in sidebar
 site_names = zamboanguita_sites + siaton_sites + santa_catalina_sites
 
-# Create alphabetical list for comparison dropdowns
-alphabetical_site_names = sorted([site.name for site in sites])
+# Create organized list for comparison dropdowns (grouped by municipality, same as site selector)
+# We'll keep the same order as the site selection dropdown
+comparison_site_names = zamboanguita_sites + siaton_sites + santa_catalina_sites
 
 
 
@@ -456,7 +457,7 @@ if selected_site:
             biomass_compare_labels = None
             
             if biomass_comparison == "Compare with Sites":
-                compare_sites = [site for site in alphabetical_site_names if site != selected_site]
+                compare_sites = [site for site in comparison_site_names if site != selected_site]
                 biomass_compare_sites = st.multiselect(
                     "Select sites to compare biomass:",
                     compare_sites,
@@ -488,7 +489,7 @@ if selected_site:
             coral_compare_labels = None
             
             if coral_comparison == "Compare with Sites":
-                compare_sites = [site for site in alphabetical_site_names if site != selected_site]
+                compare_sites = [site for site in comparison_site_names if site != selected_site]
                 coral_compare_sites = st.multiselect(
                     "Select sites to compare coral cover:",
                     compare_sites,
@@ -519,7 +520,7 @@ if selected_site:
             algae_compare_labels = None
             
             if algae_comparison == "Compare with Sites":
-                compare_sites = [site for site in alphabetical_site_names if site != selected_site]
+                compare_sites = [site for site in comparison_site_names if site != selected_site]
                 algae_compare_sites = st.multiselect(
                     "Select sites to compare fleshy algae:",
                     compare_sites,
@@ -550,7 +551,7 @@ if selected_site:
             herbivore_compare_labels = None
             
             if herbivore_comparison == "Compare with Sites":
-                compare_sites = [site for site in alphabetical_site_names if site != selected_site]
+                compare_sites = [site for site in comparison_site_names if site != selected_site]
                 herbivore_compare_sites = st.multiselect(
                     "Select sites to compare herbivore density:",
                     compare_sites,
@@ -581,7 +582,7 @@ if selected_site:
             carnivore_compare_labels = None
             
             if carnivore_comparison == "Compare with Sites":
-                compare_sites = [site for site in alphabetical_site_names if site != selected_site]
+                compare_sites = [site for site in comparison_site_names if site != selected_site]
                 carnivore_compare_sites = st.multiselect(
                     "Select sites to compare carnivore density:",
                     compare_sites,
@@ -612,7 +613,7 @@ if selected_site:
             omnivore_compare_labels = None
             
             if omnivore_comparison == "Compare with Sites":
-                compare_sites = [site for site in alphabetical_site_names if site != selected_site]
+                compare_sites = [site for site in comparison_site_names if site != selected_site]
                 omnivore_compare_sites = st.multiselect(
                     "Select sites to compare omnivore density:",
                     compare_sites,
@@ -643,7 +644,7 @@ if selected_site:
             corallivore_compare_labels = None
             
             if corallivore_comparison == "Compare with Sites":
-                compare_sites = [site for site in alphabetical_site_names if site != selected_site]
+                compare_sites = [site for site in comparison_site_names if site != selected_site]
                 corallivore_compare_sites = st.multiselect(
                     "Select sites to compare corallivore density:",
                     compare_sites,
@@ -674,7 +675,7 @@ if selected_site:
             bleaching_compare_labels = None
             
             if bleaching_comparison == "Compare with Sites":
-                compare_sites = [site for site in alphabetical_site_names if site != selected_site]
+                compare_sites = [site for site in comparison_site_names if site != selected_site]
                 bleaching_compare_sites = st.multiselect(
                     "Select sites to compare bleaching:",
                     compare_sites,
@@ -705,7 +706,7 @@ if selected_site:
             rubble_compare_labels = None
             
             if rubble_comparison == "Compare with Sites":
-                compare_sites = [site for site in alphabetical_site_names if site != selected_site]
+                compare_sites = [site for site in comparison_site_names if site != selected_site]
                 rubble_compare_sites = st.multiselect(
                     "Select sites to compare rubble cover:",
                     compare_sites,
