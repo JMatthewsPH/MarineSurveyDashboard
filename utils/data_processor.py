@@ -557,17 +557,36 @@ class DataProcessor:
             
     @st.cache_data(ttl=3600, show_spinner=False)
     def get_all_sites_summary_metrics(_self):
-        """Get summary statistics for all sites combined"""
+        """Get summary statistics for all sites combined using optimized batch loading"""
         sites = _self.get_sites()
         site_count = len(sites)
         
-        all_surveys = []
-        for site in sites:
-            site_surveys = _self.get_biomass_data(site.name)
-            if not site_surveys.empty:
-                all_surveys.append(site_surveys)
-                
-        if not all_surveys:
+        if not sites:
+            return {
+                "site_count": 0,
+                "survey_count": 0,
+                "start_date": None,
+                "end_date": None,
+                "avg_survey_frequency": 0,
+                "avg_hard_coral": 0,
+                "avg_biomass": 0,
+                "avg_fleshy_algae": 0,
+            }
+        
+        # Get site names for batch loading
+        site_names = [site.name for site in sites]
+        
+        # Use batch loading for biomass data
+        biomass_data_by_site = _self.batch_get_biomass_data(site_names, start_date='2017-01-01')
+        
+        # Get the display names for consistency
+        biomass_display_name = _self.DISPLAY_NAMES.get('commercial_biomass', 'Commercial Biomass')
+        coral_display_name = _self.DISPLAY_NAMES.get('hard_coral_cover', 'Hard Coral Cover')
+        
+        # Filter out empty dataframes and combine data
+        biomass_dfs = [df for df in biomass_data_by_site.values() if not df.empty]
+        
+        if not biomass_dfs:
             return {
                 "site_count": site_count,
                 "survey_count": 0,
@@ -580,12 +599,12 @@ class DataProcessor:
             }
             
         # Combine all survey data
-        combined_data = pd.concat(all_surveys)
+        combined_biomass_data = pd.concat(biomass_dfs)
         
         # Calculate basic stats
-        survey_count = len(combined_data)
-        start_date = pd.to_datetime(combined_data['date'].min())
-        end_date = pd.to_datetime(combined_data['date'].max())
+        survey_count = len(combined_biomass_data)
+        start_date = pd.to_datetime(combined_biomass_data['date'].min())
+        end_date = pd.to_datetime(combined_biomass_data['date'].max())
         date_range = (end_date - start_date).days
         
         # Average survey frequency (surveys per site per year)
@@ -595,35 +614,29 @@ class DataProcessor:
         else:
             avg_survey_frequency = 0
             
-        # Calculate average coral cover
-        all_coral_data = []
-        for site in sites:
-            coral_data = _self.get_coral_cover_data(site.name)
-            if not coral_data.empty:
-                all_coral_data.append(coral_data)
+        # Batch load coral cover data
+        coral_data_by_site = _self.batch_get_coral_cover_data(site_names, start_date='2017-01-01')
         
-        # Get the display names for consistency
-        coral_display_name = _self.DISPLAY_NAMES.get('hard_coral_cover', 'Hard Coral Cover')
-        biomass_display_name = _self.DISPLAY_NAMES.get('commercial_biomass', 'Commercial Biomass')
+        # Filter out empty dataframes and combine data
+        coral_dfs = [df for df in coral_data_by_site.values() if not df.empty]
         
         avg_hard_coral = 0
-        if all_coral_data:
-            combined_coral = pd.concat(all_coral_data)
+        if coral_dfs:
+            combined_coral = pd.concat(coral_dfs)
             avg_hard_coral = combined_coral[coral_display_name].mean()
             
         # Calculate average commercial fish biomass
-        avg_biomass = combined_data[biomass_display_name].mean()
+        avg_biomass = combined_biomass_data[biomass_display_name].mean()
         
-        # Calculate average fleshy algae
-        all_algae_data = []
-        for site in sites:
-            algae_data = _self.get_metric_data(site.name, 'fleshy_algae')
-            if not algae_data.empty:
-                all_algae_data.append(algae_data)
-                
+        # Batch load algae data
+        algae_data_by_site = _self.batch_get_metric_data(site_names, 'fleshy_algae', start_date='2017-01-01')
+        
+        # Filter out empty dataframes and combine data
+        algae_dfs = [df for df in algae_data_by_site.values() if not df.empty]
+        
         avg_fleshy_algae = 0
-        if all_algae_data:
-            combined_algae = pd.concat(all_algae_data)
+        if algae_dfs:
+            combined_algae = pd.concat(algae_dfs)
             avg_fleshy_algae = combined_algae['fleshy_algae'].mean()
         
         return {
@@ -639,37 +652,76 @@ class DataProcessor:
     
     @st.cache_data(ttl=3600, show_spinner=False)
     def get_site_comparison_matrix(_self):
-        """Generate matrix of all sites vs key metrics with latest values"""
+        """Generate matrix of all sites vs key metrics with latest values using optimized batch loading"""
         sites = _self.get_sites()
+        
+        if not sites:
+            return pd.DataFrame()
+            
+        # Get site names for batch loading
+        site_names = [site.name for site in sites]
+        
+        # Create a mapping from site name to municipality for use in the final matrix
+        site_municipalities = {site.name: site.municipality for site in sites}
+        
+        # Use batch loading for all metrics
+        biomass_data_by_site = _self.batch_get_biomass_data(site_names, start_date='2017-01-01')
+        coral_data_by_site = _self.batch_get_coral_cover_data(site_names, start_date='2017-01-01')
+        algae_data_by_site = _self.batch_get_metric_data(site_names, 'fleshy_algae', start_date='2017-01-01')
+        herbivore_data_by_site = _self.batch_get_metric_data(site_names, 'herbivore', start_date='2017-01-01')
+        omnivore_data_by_site = _self.batch_get_metric_data(site_names, 'omnivore', start_date='2017-01-01')
+        corallivore_data_by_site = _self.batch_get_metric_data(site_names, 'corallivore', start_date='2017-01-01')
+        
+        # Get display names for consistency
+        biomass_display_name = _self.DISPLAY_NAMES.get('commercial_biomass', 'Commercial Biomass')
+        coral_display_name = _self.DISPLAY_NAMES.get('hard_coral_cover', 'Hard Coral Cover')
         
         # Create a dataframe with one row per site
         matrix_data = []
         
-        for site in sites:
-            # Get the latest data for each metric
-            biomass_data = _self.get_biomass_data(site.name)
-            coral_data = _self.get_coral_cover_data(site.name)
-            algae_data = _self.get_metric_data(site.name, 'fleshy_algae')
-            herbivore_data = _self.get_metric_data(site.name, 'herbivore')
-            omnivore_data = _self.get_metric_data(site.name, 'omnivore')
-            corallivore_data = _self.get_metric_data(site.name, 'corallivore')
+        # Process each site using the batch-loaded data
+        for site_name in site_names:
+            # Extract the latest values for each metric
+            latest_biomass = (
+                biomass_data_by_site[site_name][biomass_display_name].iloc[-1] 
+                if site_name in biomass_data_by_site and not biomass_data_by_site[site_name].empty 
+                else None
+            )
             
-            # Get display names for consistency
-            biomass_display_name = _self.DISPLAY_NAMES.get('commercial_biomass', 'Commercial Biomass')
-            coral_display_name = _self.DISPLAY_NAMES.get('hard_coral_cover', 'Hard Coral Cover')
+            latest_coral = (
+                coral_data_by_site[site_name][coral_display_name].iloc[-1]
+                if site_name in coral_data_by_site and not coral_data_by_site[site_name].empty
+                else None
+            )
             
-            # Extract the latest values
-            latest_biomass = biomass_data[biomass_display_name].iloc[-1] if not biomass_data.empty else None
-            latest_coral = coral_data[coral_display_name].iloc[-1] if not coral_data.empty else None
-            latest_algae = algae_data['fleshy_algae'].iloc[-1] if not algae_data.empty else None
-            latest_herbivore = herbivore_data['herbivore'].iloc[-1] if not herbivore_data.empty else None
-            latest_omnivore = omnivore_data['omnivore'].iloc[-1] if not omnivore_data.empty else None
-            latest_corallivore = corallivore_data['corallivore'].iloc[-1] if not corallivore_data.empty else None
+            latest_algae = (
+                algae_data_by_site[site_name]['fleshy_algae'].iloc[-1]
+                if site_name in algae_data_by_site and not algae_data_by_site[site_name].empty
+                else None
+            )
+            
+            latest_herbivore = (
+                herbivore_data_by_site[site_name]['herbivore'].iloc[-1]
+                if site_name in herbivore_data_by_site and not herbivore_data_by_site[site_name].empty
+                else None
+            )
+            
+            latest_omnivore = (
+                omnivore_data_by_site[site_name]['omnivore'].iloc[-1]
+                if site_name in omnivore_data_by_site and not omnivore_data_by_site[site_name].empty
+                else None
+            )
+            
+            latest_corallivore = (
+                corallivore_data_by_site[site_name]['corallivore'].iloc[-1]
+                if site_name in corallivore_data_by_site and not corallivore_data_by_site[site_name].empty
+                else None
+            )
             
             # Add to matrix
             matrix_data.append({
-                'site': site.name,
-                'municipality': site.municipality,
+                'site': site_name,
+                'municipality': site_municipalities[site_name],
                 'commercial_biomass': latest_biomass,
                 'hard_coral_cover': latest_coral,
                 'fleshy_algae_cover': latest_algae,
@@ -682,33 +734,55 @@ class DataProcessor:
     
     @st.cache_data(ttl=3600, show_spinner=False)
     def get_trend_analysis_data(_self, metric, start_date=None, end_date=None):
-        """Get time series data for all sites for specified metric"""
+        """Get time series data for all sites for specified metric using optimized batch loading"""
         sites = _self.get_sites()
         
+        if not sites:
+            return pd.DataFrame()
+            
         # Set default dates if not provided
         if start_date is None:
             start_date = '2017-01-01'
-        
-        # Collect data for each site
-        site_data_list = []
-        
-        for site in sites:
-            data = _self.get_metric_data(site.name, metric, start_date)
             
-            if not data.empty:
-                # Add site name column and filter by date range if specified
-                data['site'] = site.name
-                data['municipality'] = site.municipality
+        # Get site names for batch loading
+        site_names = [site.name for site in sites]
+        
+        # Create a mapping from site name to municipality for use in the final dataset
+        site_municipalities = {site.name: site.municipality for site in sites}
+        
+        # Use batch loading based on the metric type
+        if metric == 'biomass':
+            data_by_site = _self.batch_get_biomass_data(site_names, start_date=start_date)
+            metric_column = _self.DISPLAY_NAMES.get('commercial_biomass', 'Commercial Biomass')
+        elif metric == 'hard_coral':
+            data_by_site = _self.batch_get_coral_cover_data(site_names, start_date=start_date)
+            metric_column = _self.DISPLAY_NAMES.get('hard_coral_cover', 'Hard Coral Cover')
+        else:
+            data_by_site = _self.batch_get_metric_data(site_names, metric, start_date=start_date)
+            metric_column = metric
+        
+        # Process each site's data and add site/municipality columns
+        enhanced_data_frames = []
+        
+        for site_name, df in data_by_site.items():
+            if not df.empty:
+                # Make a copy to avoid modifying the cached data
+                site_df = df.copy()
                 
+                # Add site and municipality columns
+                site_df['site'] = site_name
+                site_df['municipality'] = site_municipalities.get(site_name, '')
+                
+                # Filter by date range if specified
                 if end_date:
-                    data = data[(data['date'] >= pd.to_datetime(start_date)) & 
-                               (data['date'] <= pd.to_datetime(end_date))]
+                    site_df = site_df[(site_df['date'] >= pd.to_datetime(start_date)) & 
+                                     (site_df['date'] <= pd.to_datetime(end_date))]
                 
-                site_data_list.append(data)
+                enhanced_data_frames.append(site_df)
         
         # Combine all site data
-        if site_data_list:
-            return pd.concat(site_data_list)
+        if enhanced_data_frames:
+            return pd.concat(enhanced_data_frames)
         else:
             return pd.DataFrame()
 

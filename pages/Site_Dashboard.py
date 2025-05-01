@@ -1118,12 +1118,11 @@ if selected_site:
             bleaching_comparison_labels = None
             
             if bleaching_comparison == "Compare with Sites" and bleaching_compare_sites:
-                # Get data for multiple comparison sites
-                comparison_data_list = []
-                for site_name in bleaching_compare_sites:
-                    site_data = data_processor.get_metric_data(site_name, 'bleaching')
-                    if not site_data.empty:
-                        comparison_data_list.append(site_data)
+                # Use batch loading for better performance
+                site_data_dict = data_processor.batch_get_metric_data(bleaching_compare_sites, 'bleaching', start_date='2017-01-01')
+                
+                # Convert to the format expected by the graph generator
+                comparison_data_list = [df for site, df in site_data_dict.items() if not df.empty]
                 
                 if comparison_data_list:
                     bleaching_comparison_data = comparison_data_list
@@ -1162,12 +1161,11 @@ if selected_site:
             rubble_comparison_labels = None
             
             if rubble_comparison == "Compare with Sites" and rubble_compare_sites:
-                # Get data for multiple comparison sites
-                comparison_data_list = []
-                for site_name in rubble_compare_sites:
-                    site_data = data_processor.get_metric_data(site_name, 'rubble')
-                    if not site_data.empty:
-                        comparison_data_list.append(site_data)
+                # Use batch loading for better performance
+                site_data_dict = data_processor.batch_get_metric_data(rubble_compare_sites, 'rubble', start_date='2017-01-01')
+                
+                # Convert to the format expected by the graph generator
+                comparison_data_list = [df for site, df in site_data_dict.items() if not df.empty]
                 
                 if comparison_data_list:
                     rubble_comparison_data = comparison_data_list
