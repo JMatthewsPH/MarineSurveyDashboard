@@ -198,7 +198,48 @@ with st.sidebar:
     
     # Extract actual site name (remove leading spaces if it's a site)
     selected_site = selected_option.strip() if selected_option.startswith("  ") else None
-
+    
+    # PDF Report Export Section - moved below site selection as requested
+    if selected_site:
+        st.markdown("---")
+        # PDF export button with updated text
+        pdf_report_button = st.button("Export PDF Report")
+        
+        # Descriptive text below the button
+        st.markdown("Generate a comprehensive PDF report with all charts for this site")
+        
+        # Handle PDF generation when button is clicked
+        if pdf_report_button:
+            try:
+                # Make sure available_metrics is defined here
+                available_metrics = ["hard_coral", "fleshy_algae", "herbivore", "carnivore",
+                                  "omnivore", "corallivore", "bleaching", "rubble"]
+                
+                # Generate PDF bytes with all metrics and biomass included
+                pdf_bytes = generate_site_report_pdf(
+                    selected_site, 
+                    data_processor, 
+                    metrics=available_metrics,  # Include all metrics
+                    include_biomass=True        # Always include biomass
+                )
+                
+                # Create timestamp for filename
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                filename = f"{selected_site}_report_{timestamp}.pdf"
+                
+                # Show download button
+                st.download_button(
+                    label="Download PDF Report",
+                    data=pdf_bytes,
+                    file_name=filename,
+                    mime="application/pdf",
+                )
+                
+                st.success(f"PDF report for {selected_site} generated successfully!")
+            except Exception as e:
+                st.error(f"Error generating PDF report: {str(e)}")
+                st.info("Please check console for error details.")
+    
 
 # Display site content
 if selected_site:
@@ -342,14 +383,11 @@ if selected_site:
             # Export Data section removed per user request
             # Will be rethought and reimplemented later
             
-            # PDF Report Export Section
-            st.subheader("Export PDF Report")
-            
-            # Metric selection - include all metrics displayed on the webpage
+            # Metric selection - include all metrics displayed on the webpage (moved up, but kept for use with PDF generation)
             available_metrics = ["hard_coral", "fleshy_algae", "herbivore", "carnivore",
                                "omnivore", "corallivore", "bleaching", "rubble"]
             
-            # Display names for the metrics for friendly selection
+            # Display names for the metrics for friendly selection (moved up, but kept for use with PDF generation)
             metric_display = {
                 "hard_coral": "Hard Coral Cover",
                 "fleshy_algae": "Fleshy Algae Cover",
@@ -361,38 +399,7 @@ if selected_site:
                 "rubble": "Rubble"
             }
             
-            # Simple description
-            st.markdown("Generate a comprehensive PDF report with all charts for this site:")
-            
-            # PDF export button with updated text
-            pdf_report_button = st.button("Export PDF Report")
-            
-            if pdf_report_button:
-                try:
-                    # Generate PDF bytes with all metrics and biomass included
-                    pdf_bytes = generate_site_report_pdf(
-                        selected_site, 
-                        data_processor, 
-                        metrics=available_metrics,  # Include all metrics
-                        include_biomass=True        # Always include biomass
-                    )
-                    
-                    # Create timestamp for filename
-                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                    filename = f"{selected_site}_report_{timestamp}.pdf"
-                    
-                    # Show download button
-                    st.download_button(
-                        label="Download PDF Report",
-                        data=pdf_bytes,
-                        file_name=filename,
-                        mime="application/pdf",
-                    )
-                    
-                    st.success(f"PDF report for {selected_site} generated successfully!")
-                except Exception as e:
-                    st.error(f"Error generating PDF report: {str(e)}")
-                    st.info("Please check console for error details.")
+            # PDF generation code moved to the sidebar content below
             
             # Date Range Selection
             st.header(TRANSLATIONS[st.session_state.language]['date_range'])
