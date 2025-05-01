@@ -415,6 +415,10 @@ class GraphGenerator:
                 # Pick a color (cycle through the available colors)
                 color = comparison_colors[i % len(comparison_colors)]
                 
+                # Determine if we should add a legend item for this comparison
+                # We want to ensure the legend shows each site, regardless of data period
+                have_shown_in_legend = False
+                
                 # Add pre-COVID comparison data
                 if not pre_covid_comp.empty:
                     fig.add_trace(go.Scatter(
@@ -424,6 +428,7 @@ class GraphGenerator:
                         line=dict(color=color, dash='solid'),
                         mode='lines+markers'
                     ))
+                    have_shown_in_legend = True
                 
                 # Add post-COVID comparison data
                 if not post_covid_comp.empty:
@@ -433,7 +438,23 @@ class GraphGenerator:
                         name=label,
                         line=dict(color=color, dash='solid'),
                         mode='lines+markers',
-                        showlegend=False
+                        # Only hide from legend if we've already added this site to the legend
+                        showlegend=not have_shown_in_legend
+                    ))
+                    have_shown_in_legend = True
+                    
+                # Ensure site is in legend even if it has no pre-COVID or post-COVID data
+                if not have_shown_in_legend:
+                    # Add a placeholder with NaN value just to show in legend
+                    placeholder_season = "2022Q1"  # Default placeholder season
+                    fig.add_trace(go.Scatter(
+                        x=[placeholder_season],
+                        y=[None],  # Using None for better handling in plotly
+                        name=label,
+                        line=dict(color=color, dash='solid'),
+                        mode='markers',
+                        marker=dict(opacity=0),  # Transparent marker
+                        showlegend=True
                     ))
                     
                 # Add COVID period connector if both pre and post exist
