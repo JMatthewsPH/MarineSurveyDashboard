@@ -100,9 +100,8 @@ santa_catalina_sites = sorted([site.name for site in sites if site.municipality 
 # Combine in desired order for display in sidebar
 site_names = zamboanguita_sites + siaton_sites + santa_catalina_sites
 
-# Create organized list for comparison dropdowns (grouped by municipality, same as site selector)
-# We'll keep the same order as the site selection dropdown
-comparison_site_names = zamboanguita_sites + siaton_sites + santa_catalina_sites
+# All comparison dropdowns now use the create_comparison_options function
+# This provides municipality grouping with headers for all site comparison options
 
 
 
@@ -762,13 +761,19 @@ if selected_site:
             bleaching_compare_labels = None
             
             if bleaching_comparison == "Compare with Sites":
-                compare_sites = [site for site in comparison_site_names if site != selected_site]
+                # Get options organized by municipality
+                comparison_options = create_comparison_options(exclude_site=selected_site)
+                
                 bleaching_compare_sites = st.multiselect(
                     "Select sites to compare bleaching:",
-                    compare_sites,
+                    options=comparison_options,
+                    format_func=format_site_option,
                     key="bleaching_compare_sites",
                     max_selections=5  # Limit to 5 sites for readability
                 )
+                
+                # Filter out the header items to get just the site names
+                bleaching_compare_sites = [option.strip() for option in bleaching_compare_sites if option.startswith("  ")]
                 if bleaching_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
                     site_to_muni = {site.name: site.municipality for site in sites}
@@ -793,13 +798,19 @@ if selected_site:
             rubble_compare_labels = None
             
             if rubble_comparison == "Compare with Sites":
-                compare_sites = [site for site in comparison_site_names if site != selected_site]
+                # Get options organized by municipality
+                comparison_options = create_comparison_options(exclude_site=selected_site)
+                
                 rubble_compare_sites = st.multiselect(
                     "Select sites to compare rubble cover:",
-                    compare_sites,
+                    options=comparison_options,
+                    format_func=format_site_option,
                     key="rubble_compare_sites",
                     max_selections=5  # Limit to 5 sites for readability
                 )
+                
+                # Filter out the header items to get just the site names
+                rubble_compare_sites = [option.strip() for option in rubble_compare_sites if option.startswith("  ")]
                 if rubble_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
                     site_to_muni = {site.name: site.municipality for site in sites}
