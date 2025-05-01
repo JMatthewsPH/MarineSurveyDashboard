@@ -401,46 +401,288 @@ def analyze_substrate_data(df):
         # Visualize
         st.subheader("Visualization")
         
-        # Select metric to visualize
-        metric_options = {
-            'Hard_Coral_Cover': 'Hard Coral Cover (%)',
-            'Algae_Cover': 'Algae Cover (%)',
-            'Fleshy_Algae_Cover': 'Fleshy Algae Cover (%)',
-            'Rubble_Cover': 'Rubble Cover (%)'
-        }
+        viz_tabs = st.tabs(["Basic Metrics", "Time Series", "Coral Health", "Site Dashboard Style"])
         
-        selected_metric = st.selectbox(
-            "Select Metric to Visualize",
-            list(metric_options.keys()),
-            format_func=lambda x: metric_options[x]
-        )
+        with viz_tabs[0]:
+            # Select metric to visualize
+            metric_options = {
+                'Hard_Coral_Cover': 'Hard Coral Cover (%)',
+                'Algae_Cover': 'Algae Cover (%)',
+                'Fleshy_Algae_Cover': 'Fleshy Algae Cover (%)',
+                'Rubble_Cover': 'Rubble Cover (%)'
+            }
+            
+            selected_metric = st.selectbox(
+                "Select Metric to Visualize",
+                list(metric_options.keys()),
+                format_func=lambda x: metric_options[x]
+            )
+            
+            # Create visualization based on grouping
+            if len(metrics_df) > 1:
+                if 'Depth' in metrics_df.columns and metrics_df['Depth'].nunique() > 1:
+                    # Group by depth if multiple depths exist
+                    fig = px.bar(
+                        metrics_df, 
+                        x='Depth', 
+                        y=selected_metric,
+                        color='Site',
+                        barmode='group',
+                        title=f"{metric_options[selected_metric]} by Depth",
+                        labels={selected_metric: metric_options[selected_metric], 'Depth': 'Depth'}
+                    )
+                    
+                    # Set y-axis range based on metric
+                    if selected_metric in ['Hard_Coral_Cover', 'Algae_Cover', 'Fleshy_Algae_Cover', 'Rubble_Cover']:
+                        fig.update_yaxes(range=[0, 100])
+                    
+                    st.plotly_chart(fig, use_container_width=True)
+                
+                # Group by site visualization
+                if metrics_df['Site'].nunique() > 1:
+                    fig = px.bar(
+                        metrics_df, 
+                        x='Site', 
+                        y=selected_metric,
+                        color='Depth',
+                        barmode='group',
+                        title=f"{metric_options[selected_metric]} by Site",
+                        labels={selected_metric: metric_options[selected_metric], 'Site': 'Site'}
+                    )
+                    
+                    # Set y-axis range based on metric
+                    if selected_metric in ['Hard_Coral_Cover', 'Algae_Cover', 'Fleshy_Algae_Cover', 'Rubble_Cover']:
+                        fig.update_yaxes(range=[0, 100])
+                        
+                    st.plotly_chart(fig, use_container_width=True)
         
-        # Create visualization based on grouping
-        if len(metrics_df) > 1:
-            if 'Depth' in metrics_df.columns and metrics_df['Depth'].nunique() > 1:
-                # Group by depth if multiple depths exist
+        with viz_tabs[1]:
+            st.subheader("Time Series Analysis")
+            
+            if 'Date' in metrics_df.columns:
+                # Convert to datetime and sort
+                metrics_df['Date'] = pd.to_datetime(metrics_df['Date'])
+                time_metrics_df = metrics_df.sort_values('Date')
+                
+                # Group by site and date
+                if metrics_df['Site'].nunique() > 1:
+                    # If multiple sites, add a site selector
+                    time_site = st.selectbox("Select Site for Time Series", 
+                                            ["All Sites"] + list(metrics_df['Site'].unique()),
+                                            key="time_site")
+                    
+                    if time_site != "All Sites":
+                        time_metrics_df = time_metrics_df[time_metrics_df['Site'] == time_site]
+                
+                # Select time series metric
+                time_metric = st.selectbox(
+                    "Select Metric for Time Series",
+                    list(metric_options.keys()),
+                    format_func=lambda x: metric_options[x],
+                    key="time_metric"
+                )
+                
+                # Create time series chart
+                if not time_metrics_df.empty:
+                    fig = px.line(
+                        time_metrics_df,
+                        x='Date',
+                        y=time_metric,
+                        color='Site' if 'time_site' in locals() and time_site == "All Sites" and metrics_df['Site'].nunique() > 1 else None,
+                        markers=True,
+                        title=f"{metric_options[time_metric]} Over Time",
+                        labels={time_metric: metric_options[time_metric], 'Date': 'Survey Date'}
+                    )
+                    
+                    # Set y-axis range based on metric
+                    if time_metric in ['Hard_Coral_Cover', 'Algae_Cover', 'Fleshy_Algae_Cover', 'Rubble_Cover']:
+                        fig.update_yaxes(range=[0, 100])
+                        
+                    # Add fixed reference bands for different condition categories (for coral cover)
+                    if time_metric == 'Hard_Coral_Cover':
+                        fig.add_hrect(y0=0, y1=25, line_width=0, fillcolor="red", opacity=0.1)
+                        fig.add_hrect(y0=25, y1=50, line_width=0, fillcolor="orange", opacity=0.1)
+                        fig.add_hrect(y0=50, y1=75, line_width=0, fillcolor="yellow", opacity=0.1)
+                        fig.add_hrect(y0=75, y1=100, line_width=0, fillcolor="green", opacity=0.1)
+                        
+                        fig.add_annotation(x=time_metrics_df['Date'].min(), y=12.5, text="Poor", showarrow=False, 
+                                        xanchor="left", yanchor="middle", font=dict(color="red"))
+                        fig.add_annotation(x=time_metrics_df['Date'].min(), y=37.5, text="Fair", showarrow=False, 
+                                        xanchor="left", yanchor="middle", font=dict(color="orange"))
+                        fig.add_annotation(x=time_metrics_df['Date'].min(), y=62.5, text="Good", showarrow=False, 
+                                        xanchor="left", yanchor="middle", font=dict(color="darkgreen"))
+                        fig.add_annotation(x=time_metrics_df['Date'].min(), y=87.5, text="Excellent", showarrow=False, 
+                                        xanchor="left", yanchor="middle", font=dict(color="green"))
+                    
+                    st.plotly_chart(fig, use_container_width=True)
+                    
+                    # Add interpretation guidance
+                    if time_metric == 'Hard_Coral_Cover':
+                        st.info("""
+                        **Hard Coral Cover Interpretation:**
+                        - **0-25%**: Poor condition - Significant coral loss
+                        - **25-50%**: Fair condition - Moderate coral coverage
+                        - **50-75%**: Good condition - Healthy coral coverage
+                        - **75-100%**: Excellent condition - Very high coral coverage
+                        """)
+                else:
+                    st.warning("Not enough time series data available.")
+        
+        with viz_tabs[2]:
+            st.subheader("Coral Health Analysis")
+            
+            # Filter to only coral data
+            hard_coral_data_all = filtered_df[filtered_df['Group'].str.startswith('Hard Coral')]
+            
+            if not hard_coral_data_all.empty and 'Status' in hard_coral_data_all.columns:
+                # Group by coral type and status
+                health_data = hard_coral_data_all.groupby(['Group', 'Status'])['Total'].sum().reset_index()
+                
+                # Create health status chart
                 fig = px.bar(
-                    metrics_df, 
-                    x='Depth', 
-                    y=selected_metric,
-                    color='Site',
-                    barmode='group',
-                    title=f"{metric_options[selected_metric]} by Depth",
-                    labels={selected_metric: metric_options[selected_metric], 'Depth': 'Depth'}
+                    health_data,
+                    x='Group',
+                    y='Total',
+                    color='Status',
+                    title='Coral Health Status by Type',
+                    labels={'Total': 'Count', 'Group': 'Coral Type', 'Status': 'Health Status'}
                 )
                 st.plotly_chart(fig, use_container_width=True)
-            
-            # Group by site visualization
-            if metrics_df['Site'].nunique() > 1:
-                fig = px.bar(
-                    metrics_df, 
-                    x='Site', 
-                    y=selected_metric,
-                    color='Depth',
-                    barmode='group',
-                    title=f"{metric_options[selected_metric]} by Site",
-                    labels={selected_metric: metric_options[selected_metric], 'Site': 'Site'}
+                
+                # Calculate overall health percentages
+                status_totals = hard_coral_data_all.groupby('Status')['Total'].sum().reset_index()
+                total_coral = status_totals['Total'].sum()
+                status_totals['Percentage'] = (status_totals['Total'] / total_coral * 100).round(1)
+                
+                # Create pie chart for health distribution
+                fig = px.pie(
+                    status_totals,
+                    values='Percentage',
+                    names='Status',
+                    title='Overall Coral Health Distribution',
+                    hole=0.4
                 )
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                st.warning("No coral health data available or 'Status' column missing.")
+        
+        with viz_tabs[3]:
+            st.subheader("Site Dashboard Style Visualization")
+            
+            st.markdown("""
+            This view replicates the style of visualization used in the main Site Dashboard.
+            """)
+            
+            # Select metric for dashboard-style viz
+            dashboard_metric = st.selectbox(
+                "Select Metric for Dashboard Visualization",
+                ['Hard_Coral_Cover'],  # For now, just focus on coral cover
+                format_func=lambda x: metric_options[x],
+                key="dashboard_metric"
+            )
+            
+            if not metrics_df.empty:
+                # Add confidence interval toggle
+                show_ci = st.checkbox("Show Confidence Interval", value=True)
+                
+                # Create a styled line chart
+                fig = go.Figure()
+                
+                # Calculate mean and confidence interval per date
+                ci_df = metrics_df.groupby('Date')[dashboard_metric].agg(['mean', 'count', 'std']).reset_index()
+                ci_df['sem'] = ci_df['std'] / np.sqrt(ci_df['count'])
+                ci_df['ci_lower'] = ci_df['mean'] - 1.96 * ci_df['sem']
+                ci_df['ci_upper'] = ci_df['mean'] + 1.96 * ci_df['sem']
+                
+                # Ensure confidence intervals don't go below 0 or above 100 for percentage values
+                if dashboard_metric in ['Hard_Coral_Cover', 'Algae_Cover', 'Fleshy_Algae_Cover', 'Rubble_Cover']:
+                    ci_df['ci_lower'] = ci_df['ci_lower'].clip(0)
+                    ci_df['ci_upper'] = ci_df['ci_upper'].clip(upper=100)
+                
+                # Add the main line
+                fig.add_trace(go.Scatter(
+                    x=ci_df['Date'],
+                    y=ci_df['mean'],
+                    mode='lines+markers',
+                    name=metric_options[dashboard_metric],
+                    line=dict(width=2, color='rgba(31, 119, 180, 1)'),
+                    marker=dict(size=8)
+                ))
+                
+                # Add confidence interval as a shaded area
+                if show_ci:
+                    fig.add_trace(go.Scatter(
+                        x=pd.concat([ci_df['Date'], ci_df['Date'].iloc[::-1]]),
+                        y=pd.concat([ci_df['ci_upper'], ci_df['ci_lower'].iloc[::-1]]),
+                        fill='toself',
+                        fillcolor='rgba(31, 119, 180, 0.2)',
+                        line=dict(color='rgba(255,255,255,0)'),
+                        hoverinfo='skip',
+                        showlegend=False
+                    ))
+                
+                # Customize layout
+                fig.update_layout(
+                    title=f"{metric_options[dashboard_metric]} Over Time (Dashboard Style)",
+                    xaxis_title="Survey Date",
+                    yaxis_title=metric_options[dashboard_metric],
+                    legend_title="Metric",
+                    yaxis=dict(range=[0, 100]),
+                    margin=dict(l=40, r=20, t=60, b=40),
+                    plot_bgcolor='white'
+                )
+                
+                # Add reference bands
+                if dashboard_metric == 'Hard_Coral_Cover':
+                    fig.add_hrect(y0=0, y1=25, line_width=0, fillcolor="red", opacity=0.1)
+                    fig.add_hrect(y0=25, y1=50, line_width=0, fillcolor="orange", opacity=0.1)
+                    fig.add_hrect(y0=50, y1=75, line_width=0, fillcolor="yellow", opacity=0.1)
+                    fig.add_hrect(y0=75, y1=100, line_width=0, fillcolor="green", opacity=0.1)
+                    
+                    fig.add_annotation(x=ci_df['Date'].min(), y=12.5, text="Poor", showarrow=False, 
+                                    xanchor="left", yanchor="middle", font=dict(color="red"))
+                    fig.add_annotation(x=ci_df['Date'].min(), y=37.5, text="Fair", showarrow=False, 
+                                    xanchor="left", yanchor="middle", font=dict(color="orange"))
+                    fig.add_annotation(x=ci_df['Date'].min(), y=62.5, text="Good", showarrow=False, 
+                                    xanchor="left", yanchor="middle", font=dict(color="darkgreen"))
+                    fig.add_annotation(x=ci_df['Date'].min(), y=87.5, text="Excellent", showarrow=False, 
+                                    xanchor="left", yanchor="middle", font=dict(color="green"))
+                
+                # Add grid lines
+                fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='rgba(0,0,0,0.1)')
+                fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='rgba(0,0,0,0.1)')
+                
+                # Custom buttons for zoom control
+                fig.update_layout(
+                    updatemenus=[
+                        dict(
+                            type="buttons",
+                            direction="right",
+                            x=0.1,
+                            y=1.1,
+                            showactive=False,
+                            buttons=[
+                                dict(
+                                    label="Reset View",
+                                    method="relayout",
+                                    args=[{"xaxis.range": [ci_df['Date'].min(), ci_df['Date'].max()],
+                                          "yaxis.range": [0, 100]}]
+                                ),
+                                dict(
+                                    label="Zoom In Y",
+                                    method="relayout",
+                                    args=[{"yaxis.range": [25, 75]}]
+                                ),
+                                dict(
+                                    label="Zoom Out Y",
+                                    method="relayout",
+                                    args=[{"yaxis.range": [0, 100]}]
+                                )
+                            ]
+                        )
+                    ]
+                )
+                
                 st.plotly_chart(fig, use_container_width=True)
                 
             # Show detailed coral types breakdown for the selected survey
