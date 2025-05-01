@@ -75,6 +75,21 @@ def analyze_invertebrate_data(df):
     # Clean up site names (remove MPA suffixes if present)
     if 'Site' in df.columns:
         df['Site'] = df['Site'].str.replace(' MPA', '').str.strip()
+        
+    # Filter for valid rows based on Survey_Status = 1
+    if 'Survey_Status' in df.columns:
+        valid_count = df[df['Survey_Status'] == 1].shape[0]
+        invalid_count = df[df['Survey_Status'] != 1].shape[0]
+        total_count = df.shape[0]
+        
+        # Filter the DataFrame
+        df = df[df['Survey_Status'] == 1]
+        
+        # Show notice about filtering
+        if invalid_count > 0:
+            st.info(f"Filtered data to include only valid surveys (Survey_Status = 1). Removed {invalid_count} of {total_count} rows ({(invalid_count/total_count*100):.1f}%).")
+    else:
+        st.warning("'Survey_Status' column not found in the dataset. Unable to filter for valid surveys.")
     
     # Display basic info
     st.subheader("Dataset Overview")
@@ -176,6 +191,21 @@ def analyze_predation_data(df):
     # Clean up site names (remove MPA suffixes if present)
     if 'Site' in df.columns:
         df['Site'] = df['Site'].str.replace(' MPA', '').str.strip()
+        
+    # Filter for valid rows based on Survey_Status = 1
+    if 'Survey_Status' in df.columns:
+        valid_count = df[df['Survey_Status'] == 1].shape[0]
+        invalid_count = df[df['Survey_Status'] != 1].shape[0]
+        total_count = df.shape[0]
+        
+        # Filter the DataFrame
+        df = df[df['Survey_Status'] == 1]
+        
+        # Show notice about filtering
+        if invalid_count > 0:
+            st.info(f"Filtered data to include only valid surveys (Survey_Status = 1). Removed {invalid_count} of {total_count} rows ({(invalid_count/total_count*100):.1f}%).")
+    else:
+        st.warning("'Survey_Status' column not found in the dataset. Unable to filter for valid surveys.")
     
     # Display basic info
     st.subheader("Dataset Overview")
@@ -295,6 +325,21 @@ def analyze_substrate_data(df):
     # Clean up site names (remove MPA suffixes if present)
     if 'Site' in df.columns:
         df['Site'] = df['Site'].str.replace(' MPA', '').str.strip()
+        
+    # Filter for valid rows based on Survey_Status = 1
+    if 'Survey_Status' in df.columns:
+        valid_count = df[df['Survey_Status'] == 1].shape[0]
+        invalid_count = df[df['Survey_Status'] != 1].shape[0]
+        total_count = df.shape[0]
+        
+        # Filter the DataFrame
+        df = df[df['Survey_Status'] == 1]
+        
+        # Show notice about filtering
+        if invalid_count > 0:
+            st.info(f"Filtered data to include only valid surveys (Survey_Status = 1). Removed {invalid_count} of {total_count} rows ({(invalid_count/total_count*100):.1f}%).")
+    else:
+        st.warning("'Survey_Status' column not found in the dataset. Unable to filter for valid surveys.")
     
     # Display basic info
     st.subheader("Dataset Overview")
@@ -725,6 +770,21 @@ def analyze_fish_data(df):
     # Clean up site names (remove MPA suffixes if present)
     if 'Site' in df.columns:
         df['Site'] = df['Site'].str.replace(' MPA', '').str.strip()
+        
+    # Filter for valid rows based on Survey_Status = 1
+    if 'Survey_Status' in df.columns:
+        valid_count = df[df['Survey_Status'] == 1].shape[0]
+        invalid_count = df[df['Survey_Status'] != 1].shape[0]
+        total_count = df.shape[0]
+        
+        # Filter the DataFrame
+        df = df[df['Survey_Status'] == 1]
+        
+        # Show notice about filtering
+        if invalid_count > 0:
+            st.info(f"Filtered data to include only valid surveys (Survey_Status = 1). Removed {invalid_count} of {total_count} rows ({(invalid_count/total_count*100):.1f}%).")
+    else:
+        st.warning("'Survey_Status' column not found in the dataset. Unable to filter for valid surveys.")
     
     # Display basic info
     st.subheader("Dataset Overview")
