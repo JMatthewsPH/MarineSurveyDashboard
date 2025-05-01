@@ -35,6 +35,42 @@ class QueryBuilder:
                 .filter(Survey.date >= start_date)
                 .order_by(Survey.date)
                 .all())
+                
+    @staticmethod
+    def batch_metric_data(db: Session, site_ids: list, column_name: str, start_date: str):
+        """
+        Build an optimized query to fetch metric data for multiple sites at once
+        
+        Args:
+            db: Database session
+            site_ids: List of site IDs to fetch data for
+            column_name: Name of the metric column
+            start_date: Start date for filtering (YYYY-MM-DD)
+            
+        Returns:
+            Dictionary mapping site_id to list of (date, value) tuples
+        """
+        if not site_ids:
+            return {}
+            
+        # Fetch all matching data in a single query
+        query_results = (db.query(
+                Survey.site_id, 
+                Survey.date, 
+                getattr(Survey, column_name))
+            .filter(Survey.site_id.in_(site_ids))
+            .filter(Survey.date >= start_date)
+            .order_by(Survey.site_id, Survey.date)
+            .all())
+            
+        # Organize results by site_id
+        results_by_site = {}
+        for site_id, date, value in query_results:
+            if site_id not in results_by_site:
+                results_by_site[site_id] = []
+            results_by_site[site_id].append((date, value))
+            
+        return results_by_site
     
     @staticmethod
     def average_metric_data(db: Session, column_name: str, exclude_site_id=None, 
@@ -71,6 +107,41 @@ class QueryBuilder:
                 .all())
                 
     @staticmethod
+    def batch_biomass_data(db: Session, site_ids: list, start_date: str):
+        """
+        Build an optimized query to fetch biomass data for multiple sites at once
+        
+        Args:
+            db: Database session
+            site_ids: List of site IDs to fetch data for
+            start_date: Start date for filtering (YYYY-MM-DD)
+            
+        Returns:
+            Dictionary mapping site_id to list of (date, value) tuples
+        """
+        if not site_ids:
+            return {}
+            
+        # Fetch all matching data in a single query
+        query_results = (db.query(
+                Survey.site_id, 
+                Survey.date, 
+                Survey.commercial_biomass)
+            .filter(Survey.site_id.in_(site_ids))
+            .filter(Survey.date >= start_date)
+            .order_by(Survey.site_id, Survey.date)
+            .all())
+            
+        # Organize results by site_id
+        results_by_site = {}
+        for site_id, date, value in query_results:
+            if site_id not in results_by_site:
+                results_by_site[site_id] = []
+            results_by_site[site_id].append((date, value))
+            
+        return results_by_site
+                
+    @staticmethod
     def coral_cover_data(db: Session, site_id: int, start_date: str):
         """Specialized query for coral cover data"""
         return (db.query(Survey.date, Survey.hard_coral_cover)
@@ -78,6 +149,41 @@ class QueryBuilder:
                 .filter(Survey.date >= start_date)
                 .order_by(Survey.date)
                 .all())
+                
+    @staticmethod
+    def batch_coral_cover_data(db: Session, site_ids: list, start_date: str):
+        """
+        Build an optimized query to fetch coral cover data for multiple sites at once
+        
+        Args:
+            db: Database session
+            site_ids: List of site IDs to fetch data for
+            start_date: Start date for filtering (YYYY-MM-DD)
+            
+        Returns:
+            Dictionary mapping site_id to list of (date, value) tuples
+        """
+        if not site_ids:
+            return {}
+            
+        # Fetch all matching data in a single query
+        query_results = (db.query(
+                Survey.site_id, 
+                Survey.date, 
+                Survey.hard_coral_cover)
+            .filter(Survey.site_id.in_(site_ids))
+            .filter(Survey.date >= start_date)
+            .order_by(Survey.site_id, Survey.date)
+            .all())
+            
+        # Organize results by site_id
+        results_by_site = {}
+        for site_id, date, value in query_results:
+            if site_id not in results_by_site:
+                results_by_site[site_id] = []
+            results_by_site[site_id].append((date, value))
+            
+        return results_by_site
                 
     @staticmethod
     def average_biomass_data(db: Session, exclude_site_id=None, 

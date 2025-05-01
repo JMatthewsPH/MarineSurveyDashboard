@@ -166,6 +166,79 @@ class DataProcessor:
             logger.error(f"Error fetching metric data: {str(e)}")
             # Return empty DataFrame to prevent application crashes
             return pd.DataFrame(columns=['date', metric])
+            
+    @st.cache_data(ttl=3600, show_spinner=False)
+    def batch_get_metric_data(_self, site_names: list, metric: str, start_date='2017-01-01'):
+        """
+        Efficiently fetch metric data for multiple sites in a single database query
+        
+        Args:
+            site_names: List of site names to fetch data for
+            metric: Metric type ('hard_coral', 'fleshy_algae', etc.)
+            start_date: Start date for filtering data (YYYY-MM-DD format)
+            
+        Returns:
+            Dictionary mapping site names to DataFrames with date and metric columns
+        """
+        if not site_names:
+            return {}
+            
+        logger.info(f"Batch fetching {metric} data for {len(site_names)} sites")
+        
+        # Use centralized metric mapping
+        column_name = DataProcessor.METRIC_MAP.get(metric)
+        if not column_name:
+            logger.error(f"Invalid metric requested: {metric}")
+            return {site: pd.DataFrame(columns=['date', metric]) for site in site_names}
+            
+        try:
+            # Use common session management
+            db = _self._get_session()
+            
+            # First, get all site IDs in a single query
+            site_name_to_id = {}
+            site_id_to_name = {}
+            
+            # Query all sites at once rather than one at a time
+            sites = db.query(Site).filter(Site.name.in_(site_names)).all()
+            for site in sites:
+                site_name_to_id[site.name] = site.id
+                site_id_to_name[site.id] = site.name
+                
+            # Handle case where some sites aren't found
+            missing_sites = set(site_names) - set(site_name_to_id.keys())
+            if missing_sites:
+                logger.warning(f"Sites not found: {missing_sites}")
+                
+            # Get all site IDs we found
+            site_ids = list(site_id_to_name.keys())
+            
+            # Fetch all metric data in a single query
+            results_by_site_id = QueryBuilder.batch_metric_data(
+                db, site_ids, column_name, start_date
+            )
+            
+            # Convert results to DataFrames by site name
+            results = {}
+            for site_id, data in results_by_site_id.items():
+                site_name = site_id_to_name[site_id]
+                df = pd.DataFrame(data, columns=['date', metric])
+                logger.info(f"Found {len(df)} {metric} surveys for {site_name}")
+                results[site_name] = df
+                
+            # Add empty DataFrames for sites with no data
+            for site_name in site_names:
+                if site_name not in results and site_name in site_name_to_id:
+                    logger.info(f"No {metric} surveys found for {site_name}")
+                    results[site_name] = pd.DataFrame(columns=['date', metric])
+                    
+            print(f"DEBUG - Batch loaded {metric} data for {len(results)} sites")
+            return results
+            
+        except Exception as e:
+            logger.error(f"Error batch fetching metric data: {str(e)}")
+            # Return empty DataFrames to prevent application crashes
+            return {site: pd.DataFrame(columns=['date', metric]) for site in site_names}
 
     @st.cache_data(ttl=3600, show_spinner=False)
     def get_average_metric_data(_self, metric: str, exclude_site=None, municipality=None, start_date='2017-01-01'):
