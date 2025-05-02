@@ -1045,13 +1045,10 @@ def analyze_substrate_data(df):
             This view replicates the style of visualization used in the main Site Dashboard.
             """)
             
-            # Select metric for dashboard-style viz
-            dashboard_metric = st.selectbox(
-                "Select Metric for Dashboard Visualization",
-                ['Hard_Coral_Cover'],  # For now, just focus on coral cover
-                format_func=lambda x: metric_options[x],
-                key="dashboard_metric"
-            )
+            # Add dashboard-style analysis options
+            dashboard_show_ci = st.checkbox("Show Confidence Interval", value=False, 
+                                        help="Display 95% confidence interval bands around the trend lines",
+                                        key="dashboard_ci")
             
             if not metrics_df.empty:
                 # Add confidence interval toggle
