@@ -1059,6 +1059,10 @@ def analyze_substrate_data(df):
                 # Calculate metrics using our helper functions
                 site_coral_data = calculate_hard_coral_cover(df, site_name_to_use)
                 site_algae_data = calculate_fleshy_algae_cover(df, site_name_to_use)
+                site_fish_data = calculate_fish_biomass(df, site_name_to_use)
+                
+                # Check if we have any fish data
+                have_fish_data = not site_fish_data.empty if isinstance(site_fish_data, pd.DataFrame) else False
                 
                 # Create two column layout for the charts
                 col1, col2 = st.columns(2)
@@ -1089,13 +1093,56 @@ def analyze_substrate_data(df):
                     else:
                         st.info("No fleshy algae cover data available for the selected site.")
                 
-                # Add interpretation guidance for coral cover
+                # Add fish biomass chart if data is available
+                if have_fish_data:
+                    st.subheader("Fish Biomass & Density")
+                    col3, col4 = st.columns(2)
+                    
+                    with col3:
+                        fig, config = create_dashboard_time_series(
+                            site_fish_data,
+                            f"Commercial Fish Biomass",
+                            "Biomass (kg/100m²)",
+                            dashboard_show_ci
+                        )
+                        st.plotly_chart(fig, config=config, use_container_width=True)
+                    
+                    # Add fish density chart
+                    with col4:
+                        # Calculate herbivore density for the site
+                        herbivore_density = calculate_fish_density(df, 'herbivore', site_name_to_use)
+                        if not herbivore_density.empty:
+                            fig, config = create_dashboard_time_series(
+                                herbivore_density,
+                                f"Herbivore Density",
+                                "Density (per 100m²)",
+                                dashboard_show_ci
+                            )
+                            st.plotly_chart(fig, config=config, use_container_width=True)
+                        else:
+                            st.info("No herbivore density data available for the selected site.")
+                
+                # Add interpretation guidance
                 st.markdown("""
-                **Hard Coral Cover Interpretation:**
+                **Ecological Indicator Interpretation:**
+                
+                **Hard Coral Cover:**
                 - **0-25%**: Poor condition - Significant coral loss
                 - **25-50%**: Fair condition - Moderate coral coverage
                 - **50-75%**: Good condition - Healthy coral coverage
                 - **75-100%**: Excellent condition - Very high coral coverage
+                
+                **Fleshy Algae Cover:**
+                - High percentages typically indicate nutrient pollution or lack of herbivores
+                - Values over 20% may suggest an ecological phase shift
+                
+                **Commercial Fish Biomass:**
+                - Higher values indicate healthier reef systems with intact food webs
+                - Sudden decreases may indicate overfishing or other disturbances
+                
+                **Herbivore Density:**
+                - Critical for controlling algae growth and maintaining reef balance
+                - Low herbivore density combined with high algae cover indicates ecological imbalance
                 """)
             else:
                 st.info("Please select a specific site (not 'All Sites') to view dashboard-style charts with our live survey data.")
