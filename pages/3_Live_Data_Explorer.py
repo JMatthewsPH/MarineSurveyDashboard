@@ -1049,10 +1049,77 @@ def analyze_substrate_data(df):
             dashboard_show_ci = st.checkbox("Show Confidence Interval", value=False, 
                                         help="Display 95% confidence interval bands around the trend lines",
                                         key="dashboard_ci")
+                                        
+            # Only process dashboard if a specific site is selected
+            site_name_to_use = selected_site if selected_site != "All Sites" else None
             
-            if not metrics_df.empty:
-                # Add confidence interval toggle
-                show_ci = st.checkbox("Show Confidence Interval", value=True)
+            if site_name_to_use:
+                st.subheader(f"Ecological Health Indicators for {site_name_to_use}")
+                
+                # Calculate metrics using our helper functions
+                site_coral_data = calculate_hard_coral_cover(df, site_name_to_use)
+                site_algae_data = calculate_fleshy_algae_cover(df, site_name_to_use)
+                
+                # Create two column layout for the charts
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    # Hard coral cover chart
+                    if not site_coral_data.empty:
+                        fig, config = create_dashboard_time_series(
+                            site_coral_data,
+                            f"Hard Coral Cover", 
+                            "Hard Coral Cover (%)",
+                            dashboard_show_ci
+                        )
+                        st.plotly_chart(fig, config=config, use_container_width=True)
+                    else:
+                        st.info("No hard coral cover data available for the selected site.")
+                
+                with col2:
+                    # Fleshy algae cover chart
+                    if not site_algae_data.empty:
+                        fig, config = create_dashboard_time_series(
+                            site_algae_data,
+                            f"Fleshy Algae Cover", 
+                            "Fleshy Algae Cover (%)",
+                            dashboard_show_ci
+                        )
+                        st.plotly_chart(fig, config=config, use_container_width=True)
+                    else:
+                        st.info("No fleshy algae cover data available for the selected site.")
+                
+                # Add interpretation guidance for coral cover
+                st.markdown("""
+                **Hard Coral Cover Interpretation:**
+                - **0-25%**: Poor condition - Significant coral loss
+                - **25-50%**: Fair condition - Moderate coral coverage
+                - **50-75%**: Good condition - Healthy coral coverage
+                - **75-100%**: Excellent condition - Very high coral coverage
+                """)
+            else:
+                st.info("Please select a specific site (not 'All Sites') to view dashboard-style charts with our live survey data.")
+                
+                # Show available sites
+                if len(df['Site'].unique()) > 0:
+                    st.subheader("Available Sites")
+                    st.write("Select one of the following sites to view dashboard-style charts:")
+                    for site in df['Site'].unique():
+                        st.write(f"- {site}")
+            
+            # Keep the legacy visualization code for reference, but hidden
+            if False and not metrics_df.empty:
+                # Define the dashboard_metric for the legacy code
+                dashboard_metric = 'Hard_Coral_Cover'
+                # Define show_ci for the legacy code
+                show_ci = dashboard_show_ci
+                # Add metric_options for the legacy code
+                metric_options = {
+                    'Hard_Coral_Cover': 'Hard Coral Cover (%)',
+                    'Algae_Cover': 'Algae Cover (%)',
+                    'Fleshy_Algae_Cover': 'Fleshy Algae Cover (%)',
+                    'Rubble_Cover': 'Rubble Cover (%)'
+                }
                 
                 # Create a styled line chart
                 fig = go.Figure()
