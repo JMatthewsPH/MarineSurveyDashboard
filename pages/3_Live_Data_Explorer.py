@@ -1050,8 +1050,13 @@ def analyze_substrate_data(df):
                                         help="Display 95% confidence interval bands around the trend lines",
                                         key="dashboard_ci")
                                         
-            # Only process dashboard if a specific site is selected
-            site_name_to_use = selected_site if selected_site != "All Sites" else None
+            # Initialize site_name_to_use as None, will be updated in the else block if needed
+            site_name_to_use = None
+            
+            # Check if we're already in the context of a file analysis
+            # In that case, use the selected_site from the analysis section if it's not "All Sites"
+            if 'selected_site' in locals() and selected_site != "All Sites":
+                site_name_to_use = selected_site
             
             if site_name_to_use:
                 st.subheader(f"Ecological Health Indicators for {site_name_to_use}")
@@ -1145,14 +1150,22 @@ def analyze_substrate_data(df):
                 - Low herbivore density combined with high algae cover indicates ecological imbalance
                 """)
             else:
-                st.info("Please select a specific site (not 'All Sites') to view dashboard-style charts with our live survey data.")
+                st.info("Please select a specific site to view dashboard-style charts with our live survey data.")
                 
-                # Show available sites
+                # Show available sites with an interactive selector
                 if len(df['Site'].unique()) > 0:
                     st.subheader("Available Sites")
                     st.write("Select one of the following sites to view dashboard-style charts:")
-                    for site in df['Site'].unique():
-                        st.write(f"- {site}")
+                    
+                    # Interactive site selector specific for the dashboard tab
+                    dashboard_selected_site = st.selectbox(
+                        "Select a site",
+                        options=list(df['Site'].unique()),
+                        key="dashboard_site_selector"
+                    )
+                    
+                    # Update the site_name_to_use variable with the selection
+                    site_name_to_use = dashboard_selected_site
             
             # Keep the legacy visualization code for reference, but hidden
             if False and not metrics_df.empty:
