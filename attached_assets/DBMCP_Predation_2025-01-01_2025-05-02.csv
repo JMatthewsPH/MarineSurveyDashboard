@@ -1,0 +1,1013 @@
+Observer_name_1,Observer_name_2,Date,Site,Zone,Depth,Water_Temp,Visibility,Current,Group,Size,Diver_1_count,Diver_2_count,Total,Survey_Status,Survey_ID
+Mark Obstfeld,Christina Bednasch,2025-01-02 09:30:00,Maluay Malatapay MPA,2,Deep,28,12,2,Trash - Fishing Line,>120,15,0,15,1,67763ed4ba04f3616f6e8566
+Mark Obstfeld,Christina Bednasch,2025-01-02 11:30:00,Maluay Malatapay MPA,3,Shallow,29,12,1,Drupella,0-5,61,0,61,1,67763f50ba04f3616f6e856c
+Mark Obstfeld,Christina Bednasch,2025-01-02 11:30:00,Maluay Malatapay MPA,3,Shallow,29,12,1,Trash - Fishing Line,>120,3,0,3,1,67763f50ba04f3616f6e856c
+Christina Bednasch,Toby Cooper,2025-01-03 09:00:00,Lutoban South MPA,1,Medium,28,16,1,Coralliophila,0-5,16,2,18,1,67778151deb59d014baf4fc7
+Christina Bednasch,Toby Cooper,2025-01-03 09:00:00,Lutoban South MPA,1,Medium,28,16,1,Drupella,0-5,4,5,9,1,67778151deb59d014baf4fc7
+Christina Bednasch,Toby Cooper,2025-01-03 09:00:00,Lutoban South MPA,1,Medium,28,16,1,Trash - Fishing Line,>120,1,0,1,1,67778151deb59d014baf4fc7
+Christina Bednasch,Toby Cooper,2025-01-03 09:00:00,Lutoban South MPA,1,Medium,28,16,1,Trash - Soft Plastic (Other),20-25,1,0,1,1,67778151deb59d014baf4fc7
+Christina Bednasch,Toby Cooper,2025-01-03 11:00:00,Lutoban South MPA,3,Shallow,28,16,1,Coralliophila,0-5,8,3,11,1,677781c0deb59d014baf4fd3
+Christina Bednasch,Toby Cooper,2025-01-03 11:00:00,Lutoban South MPA,3,Shallow,28,16,1,Drupella,0-5,12,5,17,1,677781c0deb59d014baf4fd3
+Christina Bednasch,Toby Cooper,2025-01-03 11:00:00,Lutoban South MPA,3,Shallow,28,16,1,Trash - Fishing Line,>120,1,0,1,1,677781c0deb59d014baf4fd3
+Christina Bednasch,Mark Obstfeld,2025-01-04 09:00:00,Basak Can-Unsang MPA,2,Medium,28,16,0,Coralliophila,0-5,11,0,11,1,6778d5b62c3c468b64fb800b
+Christina Bednasch,Mark Obstfeld,2025-01-04 09:00:00,Basak Can-Unsang MPA,2,Medium,28,16,0,Drupella,0-5,1,0,1,1,6778d5b62c3c468b64fb800b
+Christina Bednasch,Mark Obstfeld,2025-01-04 09:00:00,Basak Can-Unsang MPA,2,Medium,28,16,0,Trash - Fishing Line,>120,1,0,1,1,6778d5b62c3c468b64fb800b
+Christina Bednasch,Mark Obstfeld,2025-01-04 11:00:00,Basak Can-Unsang MPA,1,Medium,28,18,0,Trash - Textiles and Bags,25-30,1,0,1,1,6778d6572c3c468b64fb8015
+Mark Obstfeld,Christina Bednasch,2025-01-08 09:00:00,Maluay Malatapay MPA,1,Deep,28,20,0,Drupella,0-5,2,0,2,1,677e2b142c3c468b64fb85d3
+Mark Obstfeld,Christina Bednasch,2025-01-08 09:00:00,Maluay Malatapay MPA,1,Deep,28,20,0,Trash - Fishing Line,>120,2,0,2,1,677e2b142c3c468b64fb85d3
+Mark Obstfeld,Christina Bednasch,2025-01-08 09:00:00,Maluay Malatapay MPA,1,Deep,28,20,0,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,677e2b142c3c468b64fb85d3
+Joanna Lund,Joanna Lund,2025-01-09 09:00:00,Salag MPA,2,Deep,28,14,0,Drupella,0-5,2,0,2,1,6780c6762c3c468b64fb89c6
+Joanna Lund,Joanna Lund,2025-01-09 09:00:00,Salag MPA,2,Deep,28,14,0,Trash - Fishing Line,>120,2,0,2,1,6780c6762c3c468b64fb89c6
+Joanna Lund,Joanna Lund,2025-01-09 09:00:00,Salag MPA,2,Deep,28,14,0,Trash - Fishing Line,35-40,1,0,1,1,6780c6762c3c468b64fb89c6
+Joanna Lund,Joanna Lund,2025-01-09 09:00:00,Salag MPA,2,Deep,28,14,0,Trash - Soft Plastic Wrapper,20-25,1,0,1,1,6780c6762c3c468b64fb89c6
+Mark Obstfeld,Christina Bednasch,2025-01-09 11:00:00,Salag MPA,2,Medium,28,18,2,Drupella,0-5,12,0,12,1,677f72de2c3c468b64fb86a9
+Mark Obstfeld,Christina Bednasch,2025-01-09 11:00:00,Salag MPA,2,Medium,28,18,2,Trash - Fishing Line,>120,8,0,8,1,677f72de2c3c468b64fb86a9
+Mark Obstfeld,Christina Bednasch,2025-01-09 11:00:00,Salag MPA,2,Medium,28,18,2,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,677f72de2c3c468b64fb86a9
+Joanna Lund,Joanna Lund,2025-01-10 09:00:00,Kookoos,3,Deep,28,12,0,Drupella,0-5,27,0,27,1,6780c5eb2c3c468b64fb89b4
+Joanna Lund,Joanna Lund,2025-01-10 09:00:00,Kookoos,3,Deep,28,12,0,Trash - Fishing Line,>120,14,0,14,1,6780c5eb2c3c468b64fb89b4
+Joanna Lund,Joanna Lund,2025-01-10 09:00:00,Kookoos,3,Deep,28,12,0,Trash - Fishing Line,35-40,6,0,6,1,6780c5eb2c3c468b64fb89b4
+Joanna Lund,Joanna Lund,2025-01-10 09:00:00,Kookoos,3,Deep,28,12,0,Trash - Plastic Bag,30-35,2,0,2,1,6780c5eb2c3c468b64fb89b4
+Joanna Lund,Joanna Lund,2025-01-10 09:00:00,Kookoos,3,Deep,28,12,0,Trash - Hard Plastic Bottle,10-15,1,0,1,1,6780c5eb2c3c468b64fb89b4
+Joanna Lund,Joanna Lund,2025-01-10 09:00:00,Kookoos,3,Deep,28,12,0,Trash - Rope,>120,1,0,1,1,6780c5eb2c3c468b64fb89b4
+Joanna Lund,Joanna Lund,2025-01-10 09:00:00,Kookoos,3,Deep,28,12,0,Trash - Hard Plastic (Other),10-15,1,0,1,1,6780c5eb2c3c468b64fb89b4
+Mark Obstfeld,Mark Obstfeld,2025-01-10 10:00:00,Kookoos,2,Medium,28,10,1,Drupella,0-5,7,0,7,1,6780bd962c3c468b64fb892b
+Mark Obstfeld,Mark Obstfeld,2025-01-10 10:00:00,Kookoos,2,Medium,28,10,1,Trash - Fishing Line,>120,6,0,6,1,6780bd962c3c468b64fb892b
+Mark Obstfeld,Mark Obstfeld,2025-01-10 10:00:00,Kookoos,2,Medium,28,10,1,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,6780bd962c3c468b64fb892b
+Mark Obstfeld,Joanna Lund,2025-01-11 08:30:00,Lutoban North MPA,3,Medium,28,8,1,Drupella,0-5,3,0,3,1,678222782c3c468b64fb8e48
+Mark Obstfeld,Joanna Lund,2025-01-11 08:30:00,Lutoban North MPA,3,Medium,28,8,1,Trash - Fishing Line,>120,1,0,1,1,678222782c3c468b64fb8e48
+Mark Obstfeld,Joanna Lund,2025-01-11 08:30:00,Lutoban North MPA,3,Medium,28,8,1,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,678222782c3c468b64fb8e48
+Joanna Lund,Joanna Lund,2025-01-11 11:00:00,Lutoban North MPA,2,Shallow,28,10,1,Coralliophila,0-5,15,0,15,0,678601f88da1db46492495fa
+Mark Obstfeld,Joanna Lund,2025-01-11 11:00:00,Lutoban North MPA,2,Shallow,28,10,2,Drupella,0-5,19,0,19,1,67985f07dc012e2cbf3de1ca
+Mark Obstfeld,Joanna Lund,2025-01-11 11:00:00,Lutoban North MPA,2,Shallow,28,10,2,Trash - Fishing Line,>120,3,0,3,1,67985f07dc012e2cbf3de1ca
+Mark Obstfeld,Joanna Lund,2025-01-11 11:00:00,Lutoban North MPA,2,Shallow,28,10,2,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,67985f07dc012e2cbf3de1ca
+Mark Obstfeld,Joanna Lund,2025-01-11 11:00:00,Lutoban North MPA,2,Shallow,28,10,2,Coralliophila,0-5,0,15,15,1,67985f07dc012e2cbf3de1ca
+Jennifer Bloodworth,Jennifer Bloodworth,2025-01-14 07:00:00,Basak Can-Unsang MPA,1,Shallow,28,14,2,Drupella,0-5,3,0,3,1,6786f3a88da1db4649249997
+Jennifer Bloodworth,Jennifer Bloodworth,2025-01-14 07:00:00,Basak Can-Unsang MPA,1,Shallow,28,14,2,Trash - Fishing Line,50-60,1,0,1,1,6786f3a88da1db4649249997
+Jennifer Bloodworth,Jennifer Bloodworth,2025-01-14 07:00:00,Basak Can-Unsang MPA,1,Shallow,28,14,2,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,6786f3a88da1db4649249997
+Joanna Lund,Joanna Lund,2025-01-14 09:00:00,Antulang,3,Medium,28,8,2,Coralliophila,0-5,3,0,3,1,67860ca38da1db46492496cf
+Joanna Lund,Joanna Lund,2025-01-14 09:00:00,Antulang,3,Medium,28,8,2,Drupella,0-5,19,0,19,1,67860ca38da1db46492496cf
+Joanna Lund,Joanna Lund,2025-01-14 09:00:00,Antulang,3,Medium,28,8,2,Trash - Fishing Line,>120,2,0,2,1,67860ca38da1db46492496cf
+Joanna Lund,Joanna Lund,2025-01-14 09:00:00,Antulang,3,Medium,28,8,2,Trash - Rope,>120,1,0,1,1,67860ca38da1db46492496cf
+Joanna Lund,Joanna Lund,2025-01-14 09:00:00,Antulang,3,Medium,28,8,2,Trash - Soft Plastic (Other),10-15,1,0,1,1,67860ca38da1db46492496cf
+Joanna Lund,Joanna Lund,2025-01-14 09:00:00,Antulang,3,Medium,28,8,2,Trash - Metal,15-20,1,0,1,1,67860ca38da1db46492496cf
+Jennifer Bloodworth,Jennifer Bloodworth,2025-01-14 09:00:00,Basak Can-Unsang MPA,2,Deep,28,14,2,Drupella,0-5,2,0,2,1,6786f3378da1db4649249988
+Jennifer Bloodworth,Jennifer Bloodworth,2025-01-14 09:00:00,Basak Can-Unsang MPA,2,Deep,28,14,2,Trash - Fishing Line,>120,1,0,1,1,6786f3378da1db4649249988
+Jennifer Bloodworth,Jennifer Bloodworth,2025-01-14 09:00:00,Basak Can-Unsang MPA,2,Deep,28,14,2,Trash - Soft Plastic Wrapper,5-10,1,0,1,1,6786f3378da1db4649249988
+Jennifer Bloodworth,Jennifer Bloodworth,2025-01-14 09:00:00,Basak Can-Unsang MPA,2,Deep,28,14,2,Trash - Diapers and Nappies,25-30,1,0,1,1,6786f3378da1db4649249988
+Ceasar Ruiz,Ceasar Ruiz,2025-01-14 11:00:00,Antulang,2,Shallow,29,12,0,Coralliophila,0-5,32,0,32,1,6785f8338da1db46492494e0
+Ceasar Ruiz,Ceasar Ruiz,2025-01-14 11:00:00,Antulang,2,Shallow,29,12,0,Drupella,0-5,29,0,29,1,6785f8338da1db46492494e0
+Ceasar Ruiz,Ceasar Ruiz,2025-01-14 11:00:00,Antulang,2,Shallow,29,12,0,Trash - Fishing Line,50-60,1,0,1,1,6785f8338da1db46492494e0
+Mark Obstfeld,Joanna Lund,2025-01-14 11:00:00,Antulang,1,Shallow,28,8,2,Drupella,0-5,21,0,21,1,678615348da1db46492497e1
+Mark Obstfeld,Joanna Lund,2025-01-14 11:00:00,Antulang,1,Shallow,28,8,2,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,678615348da1db46492497e1
+Mark Obstfeld,Joanna Lund,2025-01-14 11:00:00,Antulang,1,Shallow,28,8,2,Coralliophila,0-5,26,0,26,1,678615348da1db46492497e1
+Mark Obstfeld,Joanna Lund,2025-01-14 11:00:00,Antulang,1,Shallow,28,8,2,Trash - Fishing Line,>120,1,0,1,1,678615348da1db46492497e1
+Mark Obstfeld,Joanna Lund,2025-01-14 11:00:00,Antulang,1,Shallow,28,8,2,Trash - Other,10-15,1,0,1,1,678615348da1db46492497e1
+Mark Obstfeld,Joanna Lund,2025-01-14 12:00:00,Antulang,2,Shallow,28,8,1,Drupella,0-5,48,0,48,1,678615d08da1db464924985d
+Mark Obstfeld,Joanna Lund,2025-01-14 12:00:00,Antulang,2,Shallow,28,8,1,Trash - Other,15-20,1,0,1,1,678615d08da1db464924985d
+Mark Obstfeld,Joanna Lund,2025-01-14 12:00:00,Antulang,2,Shallow,28,8,1,Coralliophila,0-5,24,0,24,1,678615d08da1db464924985d
+Mark Obstfeld,Joanna Lund,2025-01-14 12:00:00,Antulang,2,Shallow,28,8,1,Trash - Fishing Line,>120,1,0,1,1,678615d08da1db464924985d
+Mark Obstfeld,Joanna Lund,2025-01-14 12:00:00,Antulang,2,Shallow,28,8,1,Trash - Fishing Line,70-80,1,0,1,1,678615d08da1db464924985d
+Joanna Lund,Joanna Lund,2025-01-15 10:00:00,Mojon MPA,1,Medium,28,10,1,Coralliophila,0-5,34,0,34,1,678b0b56dc012e2cbf3dca76
+Joanna Lund,Joanna Lund,2025-01-15 10:00:00,Mojon MPA,1,Medium,28,10,1,Trash - Diapers and Nappies,15-20,1,0,1,1,678b0b56dc012e2cbf3dca76
+Joanna Lund,Joanna Lund,2025-01-15 10:00:00,Mojon MPA,1,Medium,28,10,1,Trash - Fishing Line,35-40,2,0,2,1,678b0b56dc012e2cbf3dca76
+Joanna Lund,Joanna Lund,2025-01-15 10:00:00,Mojon MPA,1,Medium,28,10,1,Trash - Fishing Line,>120,5,0,5,1,678b0b56dc012e2cbf3dca76
+Bethel Benjamin,Sherwin Badlaan,2025-01-15 10:30:00,Mojon MPA,1,Shallow,28,10,1,Coralliophila,0-5,18,47,65,1,678b0b4adc012e2cbf3dca5d
+Bethel Benjamin,Sherwin Badlaan,2025-01-15 10:30:00,Mojon MPA,1,Shallow,28,10,1,Drupella,0-5,46,46,92,1,678b0b4adc012e2cbf3dca5d
+Bethel Benjamin,Sherwin Badlaan,2025-01-15 10:30:00,Mojon MPA,1,Shallow,28,10,1,Trash - Fishing Line,>120,2,0,2,1,678b0b4adc012e2cbf3dca5d
+Bethel Benjamin,Sherwin Badlaan,2025-01-15 10:30:00,Mojon MPA,1,Shallow,28,10,1,Trash - Plastic Bag,30-35,1,0,1,1,678b0b4adc012e2cbf3dca5d
+Mark Obstfeld,Joanna Lund,2025-01-16 08:30:00,Lutoban North MPA,3,Deep,28,6,1,Coralliophila,0-5,2,0,2,1,6788e1c8dc012e2cbf3dc4e3
+Mark Obstfeld,Joanna Lund,2025-01-16 08:30:00,Lutoban North MPA,3,Deep,28,6,1,Drupella,0-5,6,0,6,1,6788e1c8dc012e2cbf3dc4e3
+Mark Obstfeld,Joanna Lund,2025-01-16 08:30:00,Lutoban North MPA,3,Deep,28,6,1,Trash - Fishing Line,>120,12,0,12,1,6788e1c8dc012e2cbf3dc4e3
+Mark Obstfeld,Joanna Lund,2025-01-16 08:30:00,Lutoban North MPA,3,Deep,28,6,1,Trash - Soft Plastic Wrapper,0-5,5,0,5,1,6788e1c8dc012e2cbf3dc4e3
+Mark Obstfeld,Joanna Lund,2025-01-16 08:30:00,Lutoban North MPA,3,Deep,28,6,1,Trash - Plastic Bag,25-30,1,0,1,1,6788e1c8dc012e2cbf3dc4e3
+Joanna Lund,Joanna Lund,2025-01-16 09:00:00,Lutoban Pier,3,Deep,28,10,1,Coralliophila,0-5,7,0,7,1,67889702dc012e2cbf3dc282
+Joanna Lund,Joanna Lund,2025-01-16 09:00:00,Lutoban Pier,3,Deep,28,10,1,Trash - Fishing Line,>120,9,0,9,1,67889702dc012e2cbf3dc282
+Joanna Lund,Joanna Lund,2025-01-16 09:00:00,Lutoban Pier,3,Deep,28,10,1,Trash - Plastic Bag,20-25,1,0,1,1,67889702dc012e2cbf3dc282
+Joanna Lund,Joanna Lund,2025-01-16 09:00:00,Lutoban Pier,3,Deep,28,10,1,Trash - Hard Plastic (Other),30-35,1,0,1,1,67889702dc012e2cbf3dc282
+Joanna Lund,Joanna Lund,2025-01-16 09:00:00,Lutoban Pier,3,Deep,28,10,1,Trash - Rope,>120,1,0,1,1,67889702dc012e2cbf3dc282
+Joanna Lund,Joanna Lund,2025-01-16 11:00:00,Lutoban Pier,2,Medium,28,10,1,Drupella,0-5,3,0,3,1,67889973dc012e2cbf3dc2c2
+Joanna Lund,Joanna Lund,2025-01-16 11:00:00,Lutoban Pier,2,Medium,28,10,1,Trash - Fishing Line,60-70,2,0,2,1,67889973dc012e2cbf3dc2c2
+Joanna Lund,Joanna Lund,2025-01-16 11:00:00,Lutoban Pier,2,Medium,28,10,1,Trash - Soft Plastic Wrapper,5-10,1,0,1,1,67889973dc012e2cbf3dc2c2
+Matt Rutledge,Matt Rutledge,2025-01-17 09:00:00,Basak Can-Unsang MPA,1,Deep,28,20,1,Coralliophila,0-5,1,0,1,1,678a1d1edc012e2cbf3dc86b
+Matt Rutledge,Matt Rutledge,2025-01-17 09:00:00,Basak Can-Unsang MPA,1,Deep,28,20,1,Trash - Soft Plastic Wrapper,5-10,1,0,1,1,678a1d1edc012e2cbf3dc86b
+Annalise Sortino,Annalise Sortino,2025-01-21 08:30:00,Kookoos,1,Shallow,28,10,1,Coralliophila,0-5,21,0,21,1,6791ed96dc012e2cbf3dd275
+Annalise Sortino,Annalise Sortino,2025-01-21 08:30:00,Kookoos,1,Shallow,28,10,1,Drupella,0-5,34,0,34,1,6791ed96dc012e2cbf3dd275
+Joanna Lund,Joanna Lund,2025-01-21 09:00:00,Maluay Malatapay MPA,1,Deep,28,12,1,Trash - Fishing Line,50-60,1,0,1,1,67920303dc012e2cbf3dd3f0
+Joanna Lund,Joanna Lund,2025-01-21 09:00:00,Maluay Malatapay MPA,1,Deep,28,12,1,Trash - Fishing Line,>120,6,0,6,1,67920303dc012e2cbf3dd3f0
+Joanna Lund,Joanna Lund,2025-01-21 09:00:00,Maluay Malatapay MPA,1,Deep,28,12,1,Trash - Metal,20-25,1,0,1,1,67920303dc012e2cbf3dd3f0
+Joanna Lund,Joanna Lund,2025-01-21 09:00:00,Maluay Malatapay MPA,1,Deep,28,12,1,Trash - Other,35-40,1,0,1,1,67920303dc012e2cbf3dd3f0
+Joanna Lund,Joanna Lund,2025-01-21 09:00:00,Maluay Malatapay MPA,1,Deep,28,12,1,Trash - Soft Plastic Drinking Bag,15-20,1,0,1,1,67920303dc012e2cbf3dd3f0
+Joanna Lund,Joanna Lund,2025-01-21 09:00:00,Maluay Malatapay MPA,1,Deep,28,12,1,Trash - Soft Plastic Wrapper,25-30,1,0,1,1,67920303dc012e2cbf3dd3f0
+Emmerson,Jessie,2025-01-21 09:30:00,Andulay MPA,2,Shallow,27,20,1,Coralliophila,0-5,13,0,13,1,679dc46adc012e2cbf3df20e
+Emmerson,Jessie,2025-01-21 09:30:00,Andulay MPA,2,Shallow,27,20,1,Drupella,0-5,18,0,18,1,679dc46adc012e2cbf3df20e
+Emma Steel,Annalise Sortino,2025-01-21 10:30:00,Kookoos,2,Shallow,28,10,0,Coralliophila,0-5,11,0,11,1,67973348dc012e2cbf3ddedc
+Emma Steel,Annalise Sortino,2025-01-21 10:30:00,Kookoos,2,Shallow,28,10,0,Drupella,0-5,30,0,30,1,67973348dc012e2cbf3ddedc
+Emmerson,Jessie,2025-01-21 11:00:00,Andulay MPA,1,Shallow,28,12,1,Coralliophila,0-5,17,0,17,1,679dc4bddc012e2cbf3df218
+Emmerson,Jessie,2025-01-21 11:00:00,Andulay MPA,1,Shallow,28,12,1,Drupella,0-5,47,0,47,1,679dc4bddc012e2cbf3df218
+Joanna Lund,Joanna Lund,2025-01-21 11:30:00,Maluay Malatapay MPA,1,Medium,28,10,1,Trash - Fishing Line,>120,11,0,11,1,6793727fdc012e2cbf3ddad0
+Joanna Lund,Joanna Lund,2025-01-21 11:30:00,Maluay Malatapay MPA,1,Medium,28,10,1,Trash - Fishing Line,60-70,3,0,3,1,6793727fdc012e2cbf3ddad0
+Joanna Lund,Joanna Lund,2025-01-21 11:30:00,Maluay Malatapay MPA,1,Medium,28,10,1,Trash - Hard Plastic Toys,5-10,1,0,1,1,6793727fdc012e2cbf3ddad0
+Joanna Lund,Joanna Lund,2025-01-21 11:30:00,Maluay Malatapay MPA,1,Medium,28,10,1,Trash - Hard Plastic (Other),0-5,1,0,1,1,6793727fdc012e2cbf3ddad0
+Joanna Lund,Joanna Lund,2025-01-21 11:30:00,Maluay Malatapay MPA,1,Medium,28,10,1,Trash - Metal,15-20,1,0,1,1,6793727fdc012e2cbf3ddad0
+Joanna Lund,Joanna Lund,2025-01-21 11:30:00,Maluay Malatapay MPA,1,Medium,28,10,1,Trash - Fishing Line,30-35,1,0,1,1,6793727fdc012e2cbf3ddad0
+Annalise Sortino,Emmerson,2025-01-23 08:30:00,Lutoban North MPA,1,Deep,27,8,0,Coralliophila,0-5,3,2,5,1,67920604dc012e2cbf3dd503
+Annalise Sortino,Emmerson,2025-01-23 08:30:00,Lutoban North MPA,1,Deep,27,8,0,Drupella,0-5,1,3,4,1,67920604dc012e2cbf3dd503
+Annalise Sortino,Emmerson,2025-01-23 08:30:00,Lutoban North MPA,1,Deep,27,8,0,Trash - Glass and Ceramics,15-20,0,1,1,1,67920604dc012e2cbf3dd503
+Emma Steel,Shenaye Hugh,2025-01-23 10:30:00,Maluay Malatapay MPA,1,Deep,28,12,0,Coralliophila,0-5,2,0,2,1,679739ffdc012e2cbf3ddf4c
+Emma Steel,Shenaye Hugh,2025-01-23 10:30:00,Maluay Malatapay MPA,1,Deep,28,12,0,Drupella,0-5,2,0,2,1,679739ffdc012e2cbf3ddf4c
+Emma Steel,Shenaye Hugh,2025-01-23 10:30:00,Maluay Malatapay MPA,1,Deep,28,12,0,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,679739ffdc012e2cbf3ddf4c
+Annalise Sortino,Emmerson,2025-01-23 11:30:00,Lutoban North MPA,3,Shallow,27,14,1,Coralliophila,0-5,4,2,6,1,679206f9dc012e2cbf3dd56a
+Annalise Sortino,Emmerson,2025-01-23 11:30:00,Lutoban North MPA,3,Shallow,27,14,1,Drupella,0-5,8,6,14,1,679206f9dc012e2cbf3dd56a
+Annalise Sortino,Emmerson,2025-01-24 09:30:00,Maluay Malatapay MPA,2,Medium,27,14,0,Coralliophila,0-5,7,2,9,1,67933ff4dc012e2cbf3dda10
+Annalise Sortino,Emmerson,2025-01-24 09:30:00,Maluay Malatapay MPA,2,Medium,27,14,0,Drupella,0-5,0,5,5,1,67933ff4dc012e2cbf3dda10
+Emma Steel,Shenaye Hugh,2025-01-24 09:30:00,Antulang,1,Deep,28,10,0,Coralliophila,0-5,5,0,5,1,679735d7dc012e2cbf3ddf0b
+Emma Steel,Shenaye Hugh,2025-01-24 09:30:00,Antulang,1,Deep,28,10,0,Trash - Textiles and Bags,70-80,1,0,1,1,679735d7dc012e2cbf3ddf0b
+Emmerson,Annalise Sortino,2025-01-24 10:00:00,Maluay Malatapay MPA,2,Shallow,28,14,0,Drupella,0-5,5,1,6,1,6793407edc012e2cbf3dda1b
+Emma Steel,Shenaye Hugh,2025-01-24 10:30:00,Antulang,1,Shallow,28,10,0,Coralliophila,0-5,2,0,2,1,6797364ddc012e2cbf3ddf15
+Emma Steel,Shenaye Hugh,2025-01-24 10:30:00,Antulang,1,Shallow,28,10,0,Drupella,0-5,8,0,8,1,6797364ddc012e2cbf3ddf15
+Emma Steel,Shenaye Hugh,2025-01-24 10:30:00,Antulang,1,Shallow,28,10,0,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,6797364ddc012e2cbf3ddf15
+Emma Steel,Shenaye Hugh,2025-01-24 10:30:00,Antulang,1,Shallow,28,10,0,Coralliophila,0-5,2,0,2,0,67973652dc012e2cbf3ddf20
+Emma Steel,Shenaye Hugh,2025-01-24 10:30:00,Antulang,1,Shallow,28,10,0,Drupella,0-5,8,0,8,0,67973652dc012e2cbf3ddf20
+Emma Steel,Shenaye Hugh,2025-01-24 10:30:00,Antulang,1,Shallow,28,10,0,Trash - Soft Plastic Wrapper,0-5,1,0,1,0,67973652dc012e2cbf3ddf20
+Emma Steel,Shenaye Hugh,2025-01-24 10:30:00,Antulang,1,Shallow,28,10,0,Coralliophila,0-5,2,0,2,0,6797365adc012e2cbf3ddf2b
+Emma Steel,Shenaye Hugh,2025-01-24 10:30:00,Antulang,1,Shallow,28,10,0,Drupella,0-5,8,0,8,0,6797365adc012e2cbf3ddf2b
+Emma Steel,Shenaye Hugh,2025-01-24 10:30:00,Antulang,1,Shallow,28,10,0,Trash - Soft Plastic Wrapper,0-5,1,0,1,0,6797365adc012e2cbf3ddf2b
+Janina Rafael,Janina Rafael,2025-01-24 11:00:00,Andulay MPA,1,Shallow,25,18,1,Coralliophila,0-5,47,0,47,1,67933a20dc012e2cbf3dd9ce
+Janina Rafael,Janina Rafael,2025-01-24 11:00:00,Andulay MPA,1,Shallow,25,18,1,Drupella,0-5,32,0,32,1,67933a20dc012e2cbf3dd9ce
+Janina Rafael,Janina Rafael,2025-01-24 11:00:00,Andulay MPA,1,Shallow,25,18,1,Crown of Thorns,0-5,1,0,1,1,67933a20dc012e2cbf3dd9ce
+Janina Rafael,Janina Rafael,2025-01-25 09:30:00,Lutoban South MPA,3,Deep,27,16,1,Coralliophila,0-5,7,0,7,0,67973222dc012e2cbf3dde95
+Janina Rafael,Janina Rafael,2025-01-25 09:30:00,Lutoban South MPA,3,Deep,27,16,1,Trash - Soft Plastic Wrapper,0-5,1,10,11,0,67973222dc012e2cbf3dde95
+Janina Rafael,Janina Rafael,2025-01-25 09:30:00,Lutoban South MPA,3,Deep,27,16,1,Trash - Other,0-5,0,24,24,0,67973222dc012e2cbf3dde95
+Janina Rafael,Janina Rafael,2025-01-25 09:30:00,Lutoban South MPA,3,Deep,27,16,1,Coralliophila,0-5,7,0,7,1,6799cd1edc012e2cbf3de72a
+Janina Rafael,Janina Rafael,2025-01-25 09:30:00,Lutoban South MPA,3,Deep,27,16,1,Trash - Other,20-25,1,0,1,1,6799cd1edc012e2cbf3de72a
+Janina Rafael,Janina Rafael,2025-01-25 09:30:00,Lutoban South MPA,3,Deep,27,16,1,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,6799cd1edc012e2cbf3de72a
+Janina Rafael,Janina Rafael,2025-01-25 11:00:00,Lutoban South MPA,3,Medium,27,18,1,Coralliophila,0-5,10,0,10,1,679732eedc012e2cbf3ddecb
+Janina Rafael,Janina Rafael,2025-01-25 11:00:00,Lutoban South MPA,3,Medium,27,18,1,Drupella,0-5,2,0,2,1,679732eedc012e2cbf3ddecb
+Annalise Sortino,Emmerson,2025-01-25 14:00:00,Lutoban South MPA,3,Medium,28,12,2,Coralliophila,0-5,7,5,12,1,679483a2dc012e2cbf3ddbef
+Annalise Sortino,Emmerson,2025-01-25 14:00:00,Lutoban South MPA,3,Medium,28,12,2,Drupella,0-5,1,1,2,1,679483a2dc012e2cbf3ddbef
+Annalise Sortino,Emmerson,2025-01-25 14:00:00,Lutoban South MPA,3,Medium,28,12,2,Trash - Soft Plastic Wrapper,10-15,0,1,1,1,679483a2dc012e2cbf3ddbef
+Emma Steel,Emma Steel,2025-01-28 09:00:00,Salag MPA,3,Deep,29,20,0,Coralliophila,0-5,2,0,2,1,6799cf8fdc012e2cbf3de7d8
+Emma Steel,Emma Steel,2025-01-28 09:00:00,Salag MPA,3,Deep,29,20,0,Trash - Fishing Line,>120,1,0,1,1,6799cf8fdc012e2cbf3de7d8
+Emma Steel,Emma Steel,2025-01-28 09:00:00,Salag MPA,3,Deep,29,20,0,Trash - Soft Plastic Wrapper,0-5,2,0,2,1,6799cf8fdc012e2cbf3de7d8
+Jessie,Jessie,2025-01-28 10:00:00,Salag MPA,1,Medium,27,26,1,Drupella,0-5,2,0,2,1,6799c81fdc012e2cbf3de64f
+Jessie,Janina Rafael,2025-01-28 11:00:00,Salag MPA,3,Medium,27,30,1,Drupella,0-5,9,1,10,1,6799c8a0dc012e2cbf3de66e
+Emma Steel,Emma Steel,2025-01-28 14:30:00,Salag MPA,3,Deep,29,14,0,Coralliophila,0-5,5,0,5,1,6799cfffdc012e2cbf3de7e4
+Emma Steel,Emma Steel,2025-01-28 14:30:00,Salag MPA,3,Deep,29,14,0,Drupella,0-5,9,0,9,1,6799cfffdc012e2cbf3de7e4
+Emma Steel,Emma Steel,2025-01-28 14:30:00,Salag MPA,3,Deep,29,14,0,Trash - Fishing Line,>120,2,0,2,1,6799cfffdc012e2cbf3de7e4
+Emma Steel,Emma Steel,2025-01-28 14:30:00,Salag MPA,3,Deep,29,14,0,Trash - Plastic Bag,10-15,1,0,1,1,6799cfffdc012e2cbf3de7e4
+Emma Steel,Emma Steel,2025-01-29 09:30:00,Latason MPA,3,Deep,27,14,0,Coralliophila,0-5,4,0,4,1,6799cddfdc012e2cbf3de764
+Emma Steel,Emma Steel,2025-01-29 09:30:00,Latason MPA,3,Deep,27,14,0,Drupella,0-5,13,0,13,1,6799cddfdc012e2cbf3de764
+Emma Steel,Emma Steel,2025-01-29 09:30:00,Latason MPA,3,Deep,27,14,0,Trash - Fishing Line,>120,1,0,1,1,6799cddfdc012e2cbf3de764
+Emma Steel,Emma Steel,2025-01-29 09:30:00,Latason MPA,3,Deep,27,14,0,Trash - Textiles and Bags,15-20,1,0,1,1,6799cddfdc012e2cbf3de764
+Jessie,Jessie,2025-01-29 10:00:00,Lutoban South MPA,3,Deep,27,14,1,Drupella,0-5,1,0,1,1,6799c90ddc012e2cbf3de6bb
+Jessie,Janina Rafael,2025-01-29 11:00:00,Lutoban South MPA,2,Medium,27,18,1,Coralliophila,0-5,0,3,3,1,6799c9c5dc012e2cbf3de6c3
+Jessie,Janina Rafael,2025-01-29 11:00:00,Lutoban South MPA,2,Medium,27,18,1,Drupella,0-5,5,3,8,1,6799c9c5dc012e2cbf3de6c3
+Jessie,Janina Rafael,2025-01-29 11:00:00,Lutoban South MPA,2,Medium,27,18,1,Trash - Fishing Line,>120,1,0,1,1,6799c9c5dc012e2cbf3de6c3
+Jessie,Janina Rafael,2025-01-29 11:00:00,Lutoban South MPA,2,Medium,27,18,1,Trash - Plastic Bag,5-10,0,2,2,1,6799c9c5dc012e2cbf3de6c3
+Emma Steel,Emma Steel,2025-01-29 11:00:00,Latason MPA,1,Shallow,27,10,0,Coralliophila,0-5,6,0,6,1,6799ce63dc012e2cbf3de7c2
+Emma Steel,Emma Steel,2025-01-29 11:00:00,Latason MPA,1,Shallow,27,10,0,Drupella,0-5,13,0,13,1,6799ce63dc012e2cbf3de7c2
+Emma Steel,Emma Steel,2025-01-29 11:00:00,Latason MPA,1,Shallow,27,10,0,Trash - Hard Plastic Bottle,20-25,1,0,1,1,6799ce63dc012e2cbf3de7c2
+Emmerson,Jessie,2025-01-29 11:00:00,Kookoos,1,Deep,27,12,0,Drupella,0-5,4,0,4,1,679dc529dc012e2cbf3df258
+Emma Steel,Emma Steel,2025-01-29 11:30:00,Latason MPA,2,Shallow,27,10,0,Coralliophila,0-5,5,0,5,1,6799cea2dc012e2cbf3de7ce
+Emma Steel,Emma Steel,2025-01-29 11:30:00,Latason MPA,2,Shallow,27,10,0,Drupella,0-5,17,0,17,1,6799cea2dc012e2cbf3de7ce
+Emmerson,Jessie,2025-01-30 08:30:00,Maluay Malatapay MPA,2,Deep,27,8,0,Drupella,0-5,1,0,1,1,679dc5b1dc012e2cbf3df260
+Emma Steel,Jessie,2025-01-30 11:00:00,Santa Catalina Cawitan,1,Shallow,28,6,0,Coralliophila,0-5,3,0,3,1,679c529bdc012e2cbf3ded09
+Emma Steel,Jessie,2025-01-30 11:00:00,Santa Catalina Cawitan,1,Shallow,28,6,0,Drupella,0-5,11,0,11,1,679c529bdc012e2cbf3ded09
+Emma Steel,Jessie,2025-01-30 11:00:00,Santa Catalina Cawitan,1,Shallow,28,6,0,Trash - Fishing Line,>120,11,0,11,1,679c529bdc012e2cbf3ded09
+Emma Steel,Jessie,2025-01-30 11:00:00,Santa Catalina Cawitan,1,Shallow,28,6,0,Trash - Soft Plastic Wrapper,0-5,2,0,2,1,679c529bdc012e2cbf3ded09
+Emma Steel,Jessie,2025-01-30 11:00:00,Santa Catalina Cawitan,1,Shallow,28,6,0,Trash - Textiles and Bags,35-40,3,0,3,1,679c529bdc012e2cbf3ded09
+Emmerson,Jessie,2025-01-30 11:00:00,Maluay Malatapay MPA,2,Shallow,27,10,2,Coralliophila,0-5,12,0,12,1,679dc5f4dc012e2cbf3df287
+Emmerson,Jessie,2025-01-30 11:00:00,Maluay Malatapay MPA,2,Shallow,27,10,2,Drupella,0-5,9,0,9,1,679dc5f4dc012e2cbf3df287
+Emma Steel,Jessie,2025-01-30 12:30:00,Santa Catalina Manalongon,1,Shallow,27,2,1,Coralliophila,0-5,1,0,1,1,679c53efdc012e2cbf3ded27
+Emma Steel,Jessie,2025-01-30 12:30:00,Santa Catalina Manalongon,1,Shallow,27,2,1,Trash - Soft Plastic Wrapper,0-5,2,0,2,1,679c53efdc012e2cbf3ded27
+Emma Steel,Jessie,2025-01-30 12:30:00,Santa Catalina Manalongon,1,Shallow,27,2,1,Trash - Hard Plastic Bottle,35-40,1,0,1,1,679c53efdc012e2cbf3ded27
+Emma Steel,Jessie,2025-01-30 12:30:00,Santa Catalina Manalongon,1,Shallow,27,2,1,Trash - Rope,>120,2,0,2,1,679c53efdc012e2cbf3ded27
+Emma Steel,Jessie,2025-01-30 12:30:00,Santa Catalina Manalongon,1,Shallow,27,2,1,Trash - Textiles and Bags,45-50,1,0,1,1,679c53efdc012e2cbf3ded27
+Emma Steel,Jessie,2025-01-30 13:00:00,Santa Catalina Cawitan,2,Shallow,27,6,1,Coralliophila,0-5,7,0,7,1,679c557adc012e2cbf3ded47
+Emma Steel,Jessie,2025-01-30 13:00:00,Santa Catalina Cawitan,2,Shallow,27,6,1,Drupella,0-5,12,0,12,1,679c557adc012e2cbf3ded47
+Emma Steel,Jessie,2025-01-30 13:00:00,Santa Catalina Cawitan,2,Shallow,27,6,1,Trash - Fishing Line,>120,7,0,7,1,679c557adc012e2cbf3ded47
+Emma Steel,Jessie,2025-01-30 13:00:00,Santa Catalina Cawitan,2,Shallow,27,6,1,Trash - Textiles and Bags,40-45,1,0,1,1,679c557adc012e2cbf3ded47
+Emma Steel,Jessie,2025-01-30 13:00:00,Santa Catalina Cawitan,2,Shallow,27,6,1,Trash - Soft Plastic Wrapper,10-15,3,0,3,1,679c557adc012e2cbf3ded47
+Emma Steel,Jessie,2025-01-30 13:00:00,Santa Catalina Cawitan,2,Shallow,27,6,1,Trash - Soft Plastic Wrapper,30-35,1,0,1,1,679c557adc012e2cbf3ded47
+Emma Steel,Jessie,2025-01-30 13:00:00,Santa Catalina Cawitan,2,Shallow,27,6,1,Trash - Soft Plastic Wrapper,15-20,2,0,2,1,679c557adc012e2cbf3ded47
+Emma Steel,Jessie,2025-01-30 13:00:00,Santa Catalina Cawitan,2,Shallow,27,6,1,Trash - Soft Plastic (Other),0-5,4,0,4,1,679c557adc012e2cbf3ded47
+Emma Steel,Jessie,2025-01-30 13:00:00,Santa Catalina Cawitan,2,Shallow,27,6,1,Trash - Plastic Bag,10-15,4,0,4,1,679c557adc012e2cbf3ded47
+Annalise Sortino,Annalise Sortino,2025-01-31 08:30:00,Lutoban North MPA,2,Deep,27,14,1,Coralliophila,0-5,2,0,2,1,679c626edc012e2cbf3dedc2
+Annalise Sortino,Annalise Sortino,2025-01-31 08:30:00,Lutoban North MPA,2,Deep,27,14,1,Drupella,0-5,1,0,1,1,679c626edc012e2cbf3dedc2
+Annalise Sortino,Annalise Sortino,2025-01-31 08:30:00,Lutoban North MPA,2,Deep,27,14,1,Trash - Soft Plastic Wrapper,5-10,1,0,1,1,679c626edc012e2cbf3dedc2
+Emma Steel,Emma Steel,2025-01-31 10:00:00,Andulay MPA,3,Deep,28,20,0,Drupella,0-5,3,0,3,1,679c5a9adc012e2cbf3ded5f
+Emma Steel,Emma Steel,2025-01-31 10:00:00,Andulay MPA,3,Deep,28,20,0,Trash - Fishing Line,>120,1,0,1,1,679c5a9adc012e2cbf3ded5f
+Annalise Sortino,Annalise Sortino,2025-01-31 10:30:00,Lutoban North MPA,1,Medium,27,12,0,Coralliophila,0-5,2,0,2,1,679c62b0dc012e2cbf3dedce
+Annalise Sortino,Annalise Sortino,2025-01-31 10:30:00,Lutoban North MPA,1,Medium,27,12,0,Drupella,0-5,5,0,5,1,679c62b0dc012e2cbf3dedce
+Jessie,Emma Steel,2025-01-31 12:00:00,Andulay MPA,2,Medium,28,22,1,Drupella,0-5,20,0,20,1,679c5e11dc012e2cbf3dedb9
+Zoe Wooldridge,Zoe Wooldridge,2025-02-01 09:00:00,Kookoos,3,Medium,27,10,1,Coralliophila,0-5,3,0,3,1,679dbffbdc012e2cbf3df124
+Zoe Wooldridge,Zoe Wooldridge,2025-02-01 09:00:00,Kookoos,3,Medium,27,10,1,Drupella,0-5,5,0,5,1,679dbffbdc012e2cbf3df124
+Zoe Wooldridge,Zoe Wooldridge,2025-02-01 09:00:00,Kookoos,3,Medium,27,10,1,Trash - Plastic Bag,25-30,1,0,1,1,679dbffbdc012e2cbf3df124
+Jessie,Jessie,2025-02-01 09:00:00,Lutoban Pier,3,Deep,27,14,0,Coralliophila,0-5,2,0,2,1,679dcc87dc012e2cbf3df345
+Emma Steel,Emma Steel,2025-02-01 09:00:00,Mojon MPA,1,Medium,27,8,0,Drupella,0-5,3,0,3,1,679dcf81dc012e2cbf3df34d
+Emmerson,Jessie,2025-02-01 11:00:00,Lutoban Pier,3,Medium,27,14,0,Coralliophila,0-5,5,0,5,1,679dc3bbdc012e2cbf3df1ee
+Emmerson,Jessie,2025-02-01 11:00:00,Lutoban Pier,3,Medium,27,14,0,Drupella,0-5,1,0,1,1,679dc3bbdc012e2cbf3df1ee
+Scarlett Harrison,Scarlett Harrison,2025-02-01 11:00:00,Kookoos,3,Shallow,27,10,1,Coralliophila,0-5,1,0,1,1,679dc3ccdc012e2cbf3df201
+Scarlett Harrison,Scarlett Harrison,2025-02-01 11:00:00,Kookoos,3,Shallow,27,10,1,Drupella,0-5,42,0,42,1,679dc3ccdc012e2cbf3df201
+Scarlett Harrison,Scarlett Harrison,2025-02-01 11:00:00,Kookoos,3,Shallow,27,10,1,Crown of Thorns,0-5,3,0,3,1,679dc3ccdc012e2cbf3df201
+Jessie,Jessie,2025-02-01 14:30:00,Lutoban Pier,3,Shallow,27,20,0,Coralliophila,0-5,20,0,20,1,679dc2cedc012e2cbf3df1a2
+Jessie,Jessie,2025-02-01 14:30:00,Lutoban Pier,3,Shallow,27,20,0,Drupella,0-5,49,0,49,1,679dc2cedc012e2cbf3df1a2
+Emma Steel,Emma Steel,2025-02-01 15:30:00,Mojon MPA,1,Shallow,27,8,0,Coralliophila,0-5,69,0,69,1,679dcfdedc012e2cbf3df355
+Emma Steel,Emma Steel,2025-02-01 15:30:00,Mojon MPA,1,Shallow,27,8,0,Drupella,0-5,12,0,12,1,679dcfdedc012e2cbf3df355
+Emma Steel,Emma Steel,2025-02-01 15:30:00,Mojon MPA,1,Shallow,27,8,0,Trash - Soft Plastic Wrapper,0-5,2,0,2,1,679dcfdedc012e2cbf3df355
+Mark Obstfeld,Scarlett Harrison,2025-02-04 09:00:00,Maluay Malatapay MPA,2,Medium,28,20,2,Coralliophila,0-5,0,7,7,1,67a1e768dc012e2cbf3dfa7c
+Mark Obstfeld,Scarlett Harrison,2025-02-04 09:00:00,Maluay Malatapay MPA,2,Medium,28,20,2,Drupella,0-5,8,2,10,1,67a1e768dc012e2cbf3dfa7c
+Mark Obstfeld,Scarlett Harrison,2025-02-04 09:00:00,Maluay Malatapay MPA,2,Medium,28,20,2,Trash - Fishing Line,>120,5,0,5,1,67a1e768dc012e2cbf3dfa7c
+Mark Obstfeld,Scarlett Harrison,2025-02-04 09:00:00,Maluay Malatapay MPA,2,Medium,28,20,2,Trash - Soft Plastic Wrapper,0-5,2,0,2,1,67a1e768dc012e2cbf3dfa7c
+Mark Obstfeld,Scarlett Harrison,2025-02-04 09:00:00,Maluay Malatapay MPA,2,Medium,28,20,2,Trash - Plastic Bag,20-25,0,1,1,1,67a1e768dc012e2cbf3dfa7c
+Mark Obstfeld,Scarlett Harrison,2025-02-04 09:00:00,Maluay Malatapay MPA,2,Medium,28,20,2,Trash - Textiles and Bags,0-5,0,1,1,1,67a1e768dc012e2cbf3dfa7c
+Peggy van Vegchel,Peggy van Vegchel,2025-02-04 11:00:00,Maluay Malatapay MPA,3,Medium,28,14,1,Coralliophila,0-5,6,8,14,1,67a1c9f0dc012e2cbf3df950
+Peggy van Vegchel,Peggy van Vegchel,2025-02-04 11:00:00,Maluay Malatapay MPA,3,Medium,28,14,1,Trash - Fishing Line,>120,1,6,7,1,67a1c9f0dc012e2cbf3df950
+Peggy van Vegchel,Peggy van Vegchel,2025-02-04 11:00:00,Maluay Malatapay MPA,3,Medium,28,14,1,Trash - Fishing Line,70-80,1,0,1,1,67a1c9f0dc012e2cbf3df950
+Peggy van Vegchel,Peggy van Vegchel,2025-02-04 11:00:00,Maluay Malatapay MPA,3,Medium,28,14,1,Trash - Soft Plastic Wrapper,10-15,1,0,1,1,67a1c9f0dc012e2cbf3df950
+Peggy van Vegchel,Peggy van Vegchel,2025-02-04 11:00:00,Maluay Malatapay MPA,3,Medium,28,14,1,Trash - Fishing Line,40-45,3,4,7,1,67a1c9f0dc012e2cbf3df950
+Peggy van Vegchel,Peggy van Vegchel,2025-02-04 11:00:00,Maluay Malatapay MPA,3,Medium,28,14,1,Trash - Other,10-15,0,1,1,1,67a1c9f0dc012e2cbf3df950
+Peggy van Vegchel,Peggy van Vegchel,2025-02-04 11:00:00,Maluay Malatapay MPA,3,Medium,28,14,1,Trash - Hard Plastic (Other),0-5,0,1,1,1,67a1c9f0dc012e2cbf3df950
+Mark Obstfeld,Zoe Wooldridge,2025-02-04 11:00:00,Maluay Malatapay MPA,1,Shallow,28,20,1,Coralliophila,0-5,9,8,17,1,67a1e812dc012e2cbf3dfa8e
+Mark Obstfeld,Zoe Wooldridge,2025-02-04 11:00:00,Maluay Malatapay MPA,1,Shallow,28,20,1,Drupella,0-5,61,56,117,1,67a1e812dc012e2cbf3dfa8e
+Mark Obstfeld,Zoe Wooldridge,2025-02-04 11:00:00,Maluay Malatapay MPA,1,Shallow,28,20,1,Trash - Fishing Line,>120,2,0,2,1,67a1e812dc012e2cbf3dfa8e
+Mark Obstfeld,Zoe Wooldridge,2025-02-04 11:00:00,Maluay Malatapay MPA,1,Shallow,28,20,1,Trash - Textiles and Bags,35-40,1,0,1,1,67a1e812dc012e2cbf3dfa8e
+Mark Obstfeld,Scarlett Harrison,2025-02-05 08:30:00,Basak Can-Unsang MPA,1,Deep,28,16,1,Drupella,0-5,7,65,72,1,67a2ff5ddc012e2cbf3dfb5c
+Mark Obstfeld,Scarlett Harrison,2025-02-05 08:30:00,Basak Can-Unsang MPA,1,Deep,28,16,1,Trash - Fishing Line,>120,4,0,4,1,67a2ff5ddc012e2cbf3dfb5c
+Mark Obstfeld,Scarlett Harrison,2025-02-05 08:30:00,Basak Can-Unsang MPA,1,Deep,28,16,1,Trash - Soft Plastic Wrapper,0-5,0,1,1,1,67a2ff5ddc012e2cbf3dfb5c
+Mark Obstfeld,Scarlett Harrison,2025-02-05 08:30:00,Basak Can-Unsang MPA,1,Deep,28,16,1,Trash - Hard Plastic Bottle,25-30,1,0,1,1,67a2ff5ddc012e2cbf3dfb5c
+Mark Obstfeld,Scarlett Harrison,2025-02-05 08:30:00,Basak Can-Unsang MPA,1,Deep,28,16,1,Trash - Other,80-90,1,0,1,1,67a2ff5ddc012e2cbf3dfb5c
+Mark Obstfeld,Zoe Wooldridge,2025-02-05 10:30:00,Basak Can-Unsang MPA,2,Shallow,28,14,2,Drupella,0-5,7,6,13,1,67a30199dc012e2cbf3dfba6
+Mark Obstfeld,Zoe Wooldridge,2025-02-05 10:30:00,Basak Can-Unsang MPA,2,Shallow,28,14,2,Trash - Fishing Line,>120,11,3,14,1,67a30199dc012e2cbf3dfba6
+Mark Obstfeld,Zoe Wooldridge,2025-02-05 10:30:00,Basak Can-Unsang MPA,2,Shallow,28,14,2,Trash - Glass and Ceramics,20-25,1,0,1,1,67a30199dc012e2cbf3dfba6
+Mark Obstfeld,Zoe Wooldridge,2025-02-05 10:30:00,Basak Can-Unsang MPA,2,Shallow,28,14,2,Trash - Hard Plastic (Other),5-10,0,1,1,1,67a30199dc012e2cbf3dfba6
+Mark Obstfeld,Mark Obstfeld,2025-02-06 08:30:00,Latason MPA,1,Medium,28,6,0,Trash - Fishing Line,>120,1,0,1,1,67a48dbbdc012e2cbf3e01b5
+Mark Obstfeld,Mark Obstfeld,2025-02-06 08:30:00,Latason MPA,1,Medium,28,6,0,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,67a48dbbdc012e2cbf3e01b5
+Zoe Wooldridge,Zoe Wooldridge,2025-02-06 09:00:00,Salag MPA,2,Deep,27,18,0,Coralliophila,0-5,2,0,2,1,67a4524ddc012e2cbf3e0050
+Zoe Wooldridge,Zoe Wooldridge,2025-02-06 09:00:00,Salag MPA,2,Deep,27,18,0,Drupella,0-5,1,0,1,1,67a4524ddc012e2cbf3e0050
+Zoe Wooldridge,Zoe Wooldridge,2025-02-06 09:00:00,Salag MPA,2,Deep,27,18,0,Trash - Fishing Line,>120,3,0,3,1,67a4524ddc012e2cbf3e0050
+Zoe Wooldridge,Zoe Wooldridge,2025-02-06 09:00:00,Salag MPA,2,Deep,27,18,0,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,67a4524ddc012e2cbf3e0050
+Zoe Wooldridge,Zoe Wooldridge,2025-02-06 09:00:00,Salag MPA,2,Deep,27,18,0,Trash - Plastic Bag,25-30,1,0,1,1,67a4524ddc012e2cbf3e0050
+Zoe Wooldridge,Zoe Wooldridge,2025-02-06 09:00:00,Salag MPA,2,Deep,27,18,0,Trash - Rope,>120,2,0,2,1,67a4524ddc012e2cbf3e0050
+Zoe Wooldridge,Zoe Wooldridge,2025-02-06 09:00:00,Salag MPA,2,Deep,27,18,0,Trash - Other,5-10,1,0,1,1,67a4524ddc012e2cbf3e0050
+Peggy van Vegchel,Peggy van Vegchel,2025-02-06 10:30:00,Salag MPA,3,Shallow,28,14,0,Coralliophila,0-5,2,2,4,1,67a4646fdc012e2cbf3e0106
+Peggy van Vegchel,Peggy van Vegchel,2025-02-06 10:30:00,Salag MPA,3,Shallow,28,14,0,Trash - Fishing Line,>120,1,0,1,1,67a4646fdc012e2cbf3e0106
+Peggy van Vegchel,Peggy van Vegchel,2025-02-06 10:30:00,Salag MPA,3,Shallow,28,14,0,Trash - Fishing Line,45-50,0,2,2,1,67a4646fdc012e2cbf3e0106
+Peggy van Vegchel,Peggy van Vegchel,2025-02-06 10:30:00,Salag MPA,3,Shallow,28,14,0,Trash - Fishing Line,80-90,1,3,4,1,67a4646fdc012e2cbf3e0106
+Peggy van Vegchel,Peggy van Vegchel,2025-02-06 10:30:00,Salag MPA,3,Shallow,28,14,0,Trash - Fishing Line,30-35,1,0,1,1,67a4646fdc012e2cbf3e0106
+Peggy van Vegchel,Peggy van Vegchel,2025-02-06 10:30:00,Salag MPA,3,Shallow,28,14,0,Trash - Rope,35-40,2,1,3,1,67a4646fdc012e2cbf3e0106
+Peggy van Vegchel,Peggy van Vegchel,2025-02-06 10:30:00,Salag MPA,3,Shallow,28,14,0,Trash - Textiles and Bags,35-40,4,1,5,1,67a4646fdc012e2cbf3e0106
+Peggy van Vegchel,Peggy van Vegchel,2025-02-06 10:30:00,Salag MPA,3,Shallow,28,14,0,Trash - Textiles and Bags,60-70,2,1,3,1,67a4646fdc012e2cbf3e0106
+Peggy van Vegchel,Peggy van Vegchel,2025-02-06 10:30:00,Salag MPA,3,Shallow,28,14,0,Trash - Textiles and Bags,70-80,1,1,2,1,67a4646fdc012e2cbf3e0106
+Scarlett Harrison,Scarlett Harrison,2025-02-06 11:00:00,Latason MPA,3,Shallow,27,6,1,Coralliophila,0-5,8,0,8,1,67a44fc6dc012e2cbf3e0046
+Scarlett Harrison,Scarlett Harrison,2025-02-06 11:00:00,Latason MPA,3,Shallow,27,6,1,Drupella,0-5,28,0,28,1,67a44fc6dc012e2cbf3e0046
+Zoe Wooldridge,Zoe Wooldridge,2025-02-06 11:30:00,Salag MPA,2,Shallow,27,14,0,Coralliophila,0-5,24,0,24,1,67a452d4dc012e2cbf3e0064
+Zoe Wooldridge,Zoe Wooldridge,2025-02-06 11:30:00,Salag MPA,2,Shallow,27,14,0,Drupella,0-5,46,0,46,1,67a452d4dc012e2cbf3e0064
+Zoe Wooldridge,Zoe Wooldridge,2025-02-06 11:30:00,Salag MPA,2,Shallow,27,14,0,Trash - Fishing Line,>120,3,0,3,1,67a452d4dc012e2cbf3e0064
+Zoe Wooldridge,Zoe Wooldridge,2025-02-06 11:30:00,Salag MPA,2,Shallow,27,14,0,Trash - Plastic Bag,25-30,1,0,1,1,67a452d4dc012e2cbf3e0064
+Zoe Wooldridge,Zoe Wooldridge,2025-02-06 11:30:00,Salag MPA,2,Shallow,27,14,0,Trash - Textiles and Bags,100-110,3,0,3,1,67a452d4dc012e2cbf3e0064
+Mark Obstfeld,Siri Ullrich,2025-02-07 08:30:00,Antulang,2,Deep,27,12,0,Coralliophila,0-5,0,2,2,1,67a5a55fdc012e2cbf3e0442
+Mark Obstfeld,Siri Ullrich,2025-02-07 08:30:00,Antulang,2,Deep,27,12,0,Drupella,0-5,0,1,1,1,67a5a55fdc012e2cbf3e0442
+Mark Obstfeld,Siri Ullrich,2025-02-07 08:30:00,Antulang,2,Deep,27,12,0,Trash - Fishing Line,>120,3,0,3,1,67a5a55fdc012e2cbf3e0442
+Zoe Wooldridge,Zoe Wooldridge,2025-02-07 09:00:00,Antulang,3,Deep,26,12,0,Drupella,0-5,4,0,4,1,67a59cdbdc012e2cbf3e0385
+Zoe Wooldridge,Zoe Wooldridge,2025-02-07 09:00:00,Antulang,3,Deep,26,12,0,Trash - Plastic Bag,10-15,1,0,1,1,67a59cdbdc012e2cbf3e0385
+Zoe Wooldridge,Scarlett Harrison,2025-02-07 10:30:00,Antulang,3,Medium,27,12,0,Coralliophila,0-5,3,0,3,1,67a59d3fdc012e2cbf3e038f
+Zoe Wooldridge,Scarlett Harrison,2025-02-07 10:30:00,Antulang,3,Medium,27,12,0,Drupella,0-5,6,0,6,1,67a59d3fdc012e2cbf3e038f
+Zoe Wooldridge,Scarlett Harrison,2025-02-07 10:30:00,Antulang,3,Medium,27,12,0,Trash - Fishing Line,>120,1,0,1,1,67a59d3fdc012e2cbf3e038f
+Zoe Wooldridge,Scarlett Harrison,2025-02-07 10:30:00,Antulang,3,Medium,27,12,0,Trash - Plastic Bag,15-20,0,1,1,1,67a59d3fdc012e2cbf3e038f
+Mark Obstfeld,Mark Obstfeld,2025-02-07 10:30:00,Antulang,3,Shallow,28,14,1,Drupella,0-5,40,0,40,1,67a5a4ecdc012e2cbf3e0436
+Mark Obstfeld,Mark Obstfeld,2025-02-07 10:30:00,Antulang,3,Shallow,28,14,1,Trash - Fishing Line,>120,3,0,3,1,67a5a4ecdc012e2cbf3e0436
+Mark Obstfeld,Mark Obstfeld,2025-02-07 10:30:00,Antulang,3,Shallow,28,14,1,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,67a5a4ecdc012e2cbf3e0436
+Zoe Wooldridge,Scarlett Harrison,2025-02-07 11:00:00,Antulang,2,Medium,27,12,0,Coralliophila,0-5,3,1,4,1,67a59d86dc012e2cbf3e039d
+Zoe Wooldridge,Scarlett Harrison,2025-02-07 11:00:00,Antulang,2,Medium,27,12,0,Drupella,0-5,14,2,16,1,67a59d86dc012e2cbf3e039d
+Zoe Wooldridge,Scarlett Harrison,2025-02-07 11:00:00,Antulang,2,Medium,27,12,0,Trash - Fishing Line,>120,2,0,2,1,67a59d86dc012e2cbf3e039d
+Scarlett Harrison,Scarlett Harrison,2025-02-08 09:00:00,Lutoban South MPA,2,Deep,26,12,0,Coralliophila,0-5,2,0,2,1,67a6f11fdc012e2cbf3e06df
+Scarlett Harrison,Scarlett Harrison,2025-02-08 09:00:00,Lutoban South MPA,2,Deep,26,12,0,Trash - Fishing Line,>120,1,0,1,1,67a6f11fdc012e2cbf3e06df
+Scarlett Harrison,Scarlett Harrison,2025-02-08 09:00:00,Lutoban South MPA,2,Deep,26,12,0,Trash - Soft Plastic (Other),10-15,1,0,1,1,67a6f11fdc012e2cbf3e06df
+Zoe Wooldridge,Siri Ullrich,2025-02-08 09:00:00,Basak Can-Unsang MPA,2,Medium,27,18,0,Drupella,0-5,2,0,2,1,67a6f858dc012e2cbf3e0772
+Zoe Wooldridge,Siri Ullrich,2025-02-08 09:00:00,Basak Can-Unsang MPA,2,Medium,27,18,0,Trash - Fishing Line,>120,4,0,4,1,67a6f858dc012e2cbf3e0772
+Zoe Wooldridge,Siri Ullrich,2025-02-08 09:00:00,Basak Can-Unsang MPA,2,Medium,27,18,0,Trash - Soft Plastic Wrapper,0-5,0,1,1,1,67a6f858dc012e2cbf3e0772
+Zoe Wooldridge,Siri Ullrich,2025-02-08 09:00:00,Basak Can-Unsang MPA,2,Medium,27,18,0,Trash - Plastic Bag,15-20,0,1,1,1,67a6f858dc012e2cbf3e0772
+Mark Obstfeld,Mark Obstfeld,2025-02-08 10:30:00,Lutoban South MPA,3,Shallow,28,14,1,Drupella,0-5,12,0,12,1,67a6e754dc012e2cbf3e0664
+Zoe Wooldridge,Zoe Wooldridge,2025-02-08 11:00:00,Basak Can-Unsang MPA,1,Shallow,27,14,1,Drupella,0-5,2,0,2,1,67a6f10fdc012e2cbf3e06d5
+Zoe Wooldridge,Zoe Wooldridge,2025-02-08 11:00:00,Basak Can-Unsang MPA,1,Shallow,27,14,1,Trash - Fishing Line,>120,10,0,10,1,67a6f10fdc012e2cbf3e06d5
+Zoe Wooldridge,Zoe Wooldridge,2025-02-08 11:30:00,Basak Can-Unsang MPA,2,Shallow,27,14,1,Coralliophila,0-5,18,0,18,1,67a6f19cdc012e2cbf3e06eb
+Zoe Wooldridge,Zoe Wooldridge,2025-02-08 11:30:00,Basak Can-Unsang MPA,2,Shallow,27,14,1,Drupella,0-5,3,0,3,1,67a6f19cdc012e2cbf3e06eb
+Zoe Wooldridge,Zoe Wooldridge,2025-02-08 11:30:00,Basak Can-Unsang MPA,2,Shallow,27,14,1,Trash - Fishing Line,>120,6,0,6,1,67a6f19cdc012e2cbf3e06eb
+Zoe Wooldridge,Zoe Wooldridge,2025-02-08 11:30:00,Basak Can-Unsang MPA,2,Shallow,27,14,1,Trash - Metal,15-20,1,0,1,1,67a6f19cdc012e2cbf3e06eb
+Sherwin Badlaan,Jennifer Bloodworth,2025-02-11 08:30:00,Lutoban South MPA,1,Deep,26,16,0,Coralliophila,0-5,7,0,7,1,67aaf3e1dc012e2cbf3e0abc
+Scarlett Harrison,Sherwin Badlaan,2025-02-11 09:00:00,Lutoban South MPA,1,Deep,27,16,0,Coralliophila,0-5,0,7,7,1,67aaf2fddc012e2cbf3e0aae
+Scarlett Harrison,Sherwin Badlaan,2025-02-11 09:00:00,Lutoban South MPA,1,Deep,27,16,0,Drupella,0-5,6,0,6,1,67aaf2fddc012e2cbf3e0aae
+Scarlett Harrison,Sherwin Badlaan,2025-02-11 09:00:00,Lutoban South MPA,1,Deep,27,16,0,Trash - Fishing Line,>120,1,0,1,1,67aaf2fddc012e2cbf3e0aae
+Scarlett Harrison,Sherwin Badlaan,2025-02-11 09:00:00,Lutoban South MPA,1,Deep,27,16,0,Trash - Soft Plastic Wrapper,10-15,3,0,3,1,67aaf2fddc012e2cbf3e0aae
+Matt Rutledge,Peggy van Vegchel,2025-02-11 09:00:00,Maluay Malatapay MPA,3,Deep,28,10,1,Trash - Fishing Line,>120,0,4,4,1,67aafd55dc012e2cbf3e0b03
+Matt Rutledge,Peggy van Vegchel,2025-02-11 09:00:00,Maluay Malatapay MPA,3,Deep,28,10,1,Trash - Fishing Line,5-10,0,1,1,1,67aafd55dc012e2cbf3e0b03
+Matt Rutledge,Peggy van Vegchel,2025-02-11 09:00:00,Maluay Malatapay MPA,3,Deep,28,10,1,Trash - Fishing Line,10-15,0,3,3,1,67aafd55dc012e2cbf3e0b03
+Matt Rutledge,Peggy van Vegchel,2025-02-11 09:00:00,Maluay Malatapay MPA,3,Deep,28,10,1,Trash - Fishing Line,30-35,0,2,2,1,67aafd55dc012e2cbf3e0b03
+Matt Rutledge,Peggy van Vegchel,2025-02-11 09:00:00,Maluay Malatapay MPA,3,Deep,28,10,1,Trash - Fishing Line,45-50,0,3,3,1,67aafd55dc012e2cbf3e0b03
+Matt Rutledge,Peggy van Vegchel,2025-02-11 09:00:00,Maluay Malatapay MPA,3,Deep,28,10,1,Trash - Textiles and Bags,5-10,0,1,1,1,67aafd55dc012e2cbf3e0b03
+Matt Rutledge,Peggy van Vegchel,2025-02-11 09:00:00,Maluay Malatapay MPA,3,Deep,28,10,1,Trash - Fish Cage (not in use),35-40,0,1,1,1,67aafd55dc012e2cbf3e0b03
+Matt Rutledge,Peggy van Vegchel,2025-02-11 09:00:00,Maluay Malatapay MPA,3,Deep,28,10,1,Trash - Rope,40-45,0,1,1,1,67aafd55dc012e2cbf3e0b03
+Siri Ullrich,Scarlett Harrison,2025-02-11 11:00:00,Lutoban South MPA,1,Medium,27,16,0,Coralliophila,0-5,9,11,20,1,67aaeedbdc012e2cbf3e0a79
+Siri Ullrich,Scarlett Harrison,2025-02-11 11:00:00,Lutoban South MPA,1,Medium,27,16,0,Drupella,0-5,6,0,6,1,67aaeedbdc012e2cbf3e0a79
+Siri Ullrich,Scarlett Harrison,2025-02-11 11:00:00,Lutoban South MPA,1,Medium,27,16,0,Trash - Fishing Line,>120,2,0,2,1,67aaeedbdc012e2cbf3e0a79
+Matt Rutledge,Peggy van Vegchel,2025-02-11 15:00:00,Maluay Malatapay MPA,3,Shallow,28,12,0,Coralliophila,0-5,19,5,24,1,67aafeafdc012e2cbf3e0b19
+Matt Rutledge,Peggy van Vegchel,2025-02-11 15:00:00,Maluay Malatapay MPA,3,Shallow,28,12,0,Drupella,0-5,2,7,9,1,67aafeafdc012e2cbf3e0b19
+Matt Rutledge,Peggy van Vegchel,2025-02-11 15:00:00,Maluay Malatapay MPA,3,Shallow,28,12,0,Trash - Fishing Line,>120,0,2,2,1,67aafeafdc012e2cbf3e0b19
+Matt Rutledge,Peggy van Vegchel,2025-02-11 15:00:00,Maluay Malatapay MPA,3,Shallow,28,12,0,Trash - Fishing Line,5-10,0,1,1,1,67aafeafdc012e2cbf3e0b19
+Matt Rutledge,Peggy van Vegchel,2025-02-11 15:00:00,Maluay Malatapay MPA,3,Shallow,28,12,0,Trash - Textiles and Bags,45-50,1,0,1,1,67aafeafdc012e2cbf3e0b19
+Matt Rutledge,Peggy van Vegchel,2025-02-11 15:00:00,Maluay Malatapay MPA,3,Shallow,28,12,0,Trash - Fishing Line,30-35,0,2,2,1,67aafeafdc012e2cbf3e0b19
+Matt Rutledge,Peggy van Vegchel,2025-02-11 15:00:00,Maluay Malatapay MPA,3,Shallow,28,12,0,Trash - Fishing Line,45-50,0,2,2,1,67aafeafdc012e2cbf3e0b19
+Scarlett Harrison,Scarlett Harrison,2025-02-12 09:30:00,Salag MPA,1,Deep,27,12,0,Drupella,0-5,7,0,7,1,67ac3dcedc012e2cbf3e0e84
+Scarlett Harrison,Scarlett Harrison,2025-02-12 09:30:00,Salag MPA,1,Deep,27,12,0,Trash - Fishing Line,>120,1,0,1,1,67ac3dcedc012e2cbf3e0e84
+Scarlett Harrison,Scarlett Harrison,2025-02-12 09:30:00,Salag MPA,1,Deep,27,12,0,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,67ac3dcedc012e2cbf3e0e84
+Siri Ullrich,Sherwin Badlaan,2025-02-12 11:00:00,Salag MPA,1,Shallow,27,14,1,Coralliophila,0-5,21,0,21,1,67ad9c35dc012e2cbf3e1527
+Siri Ullrich,Sherwin Badlaan,2025-02-12 11:00:00,Salag MPA,1,Shallow,27,14,1,Drupella,0-5,40,0,40,1,67ad9c35dc012e2cbf3e1527
+Scarlett Harrison,Scarlett Harrison,2025-02-13 09:30:00,Guinsuan MPA,1,Deep,27,16,1,Drupella,0-5,2,0,2,1,67ad8dc2dc012e2cbf3e134c
+Scarlett Harrison,Scarlett Harrison,2025-02-13 09:30:00,Guinsuan MPA,1,Deep,27,16,1,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,67ad8dc2dc012e2cbf3e134c
+Siri Ullrich,Siri Ullrich,2025-02-13 11:30:00,Dalakit MPA,1,Shallow,27,12,1,Coralliophila,0-5,12,0,12,1,67ad97cbdc012e2cbf3e14d9
+Siri Ullrich,Siri Ullrich,2025-02-13 11:30:00,Dalakit MPA,1,Shallow,27,12,1,Drupella,0-5,46,0,46,1,67ad97cbdc012e2cbf3e14d9
+Siri Ullrich,Siri Ullrich,2025-02-13 11:30:00,Dalakit MPA,1,Shallow,27,12,1,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,67ad97cbdc012e2cbf3e14d9
+Siri Ullrich,Siri Ullrich,2025-02-13 11:30:00,Dalakit MPA,1,Shallow,27,12,1,Trash - Diapers and Nappies,0-5,1,0,1,1,67ad97cbdc012e2cbf3e14d9
+Scarlett Harrison,Sherwin Badlaan,2025-02-14 10:30:00,Kookoos,2,Medium,29,14,1,Coralliophila,0-5,0,3,3,1,67aee463dc012e2cbf3e1705
+Scarlett Harrison,Sherwin Badlaan,2025-02-14 10:30:00,Kookoos,2,Medium,29,14,1,Drupella,0-5,9,0,9,1,67aee463dc012e2cbf3e1705
+Scarlett Harrison,Sherwin Badlaan,2025-02-14 10:30:00,Kookoos,2,Medium,29,14,1,Trash - Soft Plastic Wrapper,0-5,2,0,2,1,67aee463dc012e2cbf3e1705
+Siri Ullrich,Scarlett Harrison,2025-02-14 11:00:00,Kookoos,2,Medium,27,14,1,Coralliophila,0-5,4,0,4,1,67aedfa7dc012e2cbf3e16a5
+Siri Ullrich,Scarlett Harrison,2025-02-14 11:00:00,Kookoos,2,Medium,27,14,1,Drupella,0-5,11,0,11,1,67aedfa7dc012e2cbf3e16a5
+Siri Ullrich,Scarlett Harrison,2025-02-14 11:00:00,Kookoos,2,Medium,27,14,1,Trash - Plastic Bag,25-30,1,0,1,1,67aedfa7dc012e2cbf3e16a5
+Siri Ullrich,Scarlett Harrison,2025-02-14 11:00:00,Kookoos,2,Medium,27,14,1,Trash - Glass and Ceramics,15-20,1,0,1,1,67aedfa7dc012e2cbf3e16a5
+Flynn Wesselius,Bailey Forsyth,2025-02-18 09:00:00,Andulay MPA,3,Deep,27,16,1,Coralliophila,0-5,3,5,8,1,67b42c36dc012e2cbf3e19e0
+Flynn Wesselius,Bailey Forsyth,2025-02-18 09:00:00,Andulay MPA,3,Deep,27,16,1,Drupella,0-5,5,4,9,1,67b42c36dc012e2cbf3e19e0
+Flynn Wesselius,Bailey Forsyth,2025-02-18 09:00:00,Andulay MPA,3,Deep,27,16,1,Trash - Soft Plastic Wrapper,0-5,0,2,2,1,67b42c36dc012e2cbf3e19e0
+Flynn Wesselius,Bailey Forsyth,2025-02-18 09:00:00,Andulay MPA,3,Deep,27,16,1,Trash - Paper and Card,15-20,0,1,1,1,67b42c36dc012e2cbf3e19e0
+Flynn Wesselius,Bailey Forsyth,2025-02-18 09:00:00,Andulay MPA,3,Deep,27,16,1,Trash - Soft Plastic Wrapper,5-10,1,0,1,1,67b42c36dc012e2cbf3e19e0
+Flynn Wesselius,Bailey Forsyth,2025-02-18 09:00:00,Andulay MPA,3,Deep,27,16,1,Trash - Other,15-20,1,0,1,1,67b42c36dc012e2cbf3e19e0
+Bailey Forsyth,Sherwin Badlaan,2025-02-18 11:00:00,Andulay MPA,3,Shallow,28,16,1,Coralliophila,0-5,5,23,28,1,67b42c2ddc012e2cbf3e19d3
+Bailey Forsyth,Sherwin Badlaan,2025-02-18 11:00:00,Andulay MPA,3,Shallow,28,16,1,Drupella,0-5,20,2,22,1,67b42c2ddc012e2cbf3e19d3
+Bailey Forsyth,Sherwin Badlaan,2025-02-18 11:00:00,Andulay MPA,3,Shallow,28,16,1,Crown of Thorns,10-15,1,1,2,1,67b42c2ddc012e2cbf3e19d3
+Bailey Forsyth,Sherwin Badlaan,2025-02-18 11:00:00,Andulay MPA,3,Shallow,28,16,1,Trash - Plastic Bag,5-10,0,1,1,1,67b42c2ddc012e2cbf3e19d3
+Flynn Wesselius,Flynn Wesselius,2025-02-19 09:00:00,Lutoban North MPA,2,Deep,27,12,1,Coralliophila,0-5,11,0,11,1,67b573ffdc012e2cbf3e1ce0
+Flynn Wesselius,Flynn Wesselius,2025-02-19 09:00:00,Lutoban North MPA,2,Deep,27,12,1,Drupella,0-5,8,0,8,1,67b573ffdc012e2cbf3e1ce0
+Bailey Forsyth,Peggy van Vegchel,2025-02-19 11:00:00,Lutoban North MPA,1,Medium,28,6,0,Coralliophila,0-5,5,2,7,1,67b57596dc012e2cbf3e1d86
+Bailey Forsyth,Peggy van Vegchel,2025-02-19 11:00:00,Lutoban North MPA,1,Medium,28,6,0,Drupella,0-5,9,0,9,1,67b57596dc012e2cbf3e1d86
+Bailey Forsyth,Peggy van Vegchel,2025-02-19 11:00:00,Lutoban North MPA,1,Medium,28,6,0,Trash - Fishing Line,10-15,0,1,1,1,67b57596dc012e2cbf3e1d86
+Bailey Forsyth,Peggy van Vegchel,2025-02-19 11:00:00,Lutoban North MPA,1,Medium,28,6,0,Trash - Fishing Line,30-35,0,1,1,1,67b57596dc012e2cbf3e1d86
+Bailey Forsyth,Peggy van Vegchel,2025-02-19 11:00:00,Lutoban North MPA,1,Medium,28,6,0,Trash - Fishing Line,50-60,0,2,2,1,67b57596dc012e2cbf3e1d86
+Bailey Forsyth,Peggy van Vegchel,2025-02-19 11:00:00,Lutoban North MPA,1,Medium,28,6,0,Trash - Fishing Line,>120,0,1,1,1,67b57596dc012e2cbf3e1d86
+Flynn Wesselius,Peggy van Vegchel,2025-02-19 12:00:00,Lutoban North MPA,1,Shallow,28,8,0,Coralliophila,0-5,11,5,16,1,67b57566dc012e2cbf3e1d6e
+Flynn Wesselius,Peggy van Vegchel,2025-02-19 12:00:00,Lutoban North MPA,1,Shallow,28,8,0,Drupella,0-5,13,17,30,1,67b57566dc012e2cbf3e1d6e
+Flynn Wesselius,Peggy van Vegchel,2025-02-19 12:00:00,Lutoban North MPA,1,Shallow,28,8,0,Trash - Fishing Line,25-30,0,1,1,1,67b57566dc012e2cbf3e1d6e
+Bailey Forsyth,Bailey Forsyth,2025-02-20 11:00:00,Latason MPA,3,Medium,27,16,1,Coralliophila,0-5,8,0,8,1,67b6d141dc012e2cbf3e22eb
+Bailey Forsyth,Bailey Forsyth,2025-02-20 11:00:00,Latason MPA,3,Medium,27,16,1,Drupella,0-5,7,0,7,1,67b6d141dc012e2cbf3e22eb
+Bailey Forsyth,Bailey Forsyth,2025-02-20 11:00:00,Latason MPA,3,Medium,27,16,1,Trash - Soft Plastic Wrapper,0-5,2,0,2,1,67b6d141dc012e2cbf3e22eb
+Bailey Forsyth,Bailey Forsyth,2025-02-20 11:00:00,Latason MPA,3,Medium,27,16,1,Trash - Plastic Bag,15-20,1,0,1,1,67b6d141dc012e2cbf3e22eb
+Flynn Wesselius,Flynn Wesselius,2025-02-20 12:00:00,Latason MPA,3,Shallow,27,14,1,Coralliophila,0-5,6,0,6,1,67b6d231dc012e2cbf3e2323
+Flynn Wesselius,Flynn Wesselius,2025-02-20 12:00:00,Latason MPA,3,Shallow,27,14,1,Drupella,0-5,4,0,4,1,67b6d231dc012e2cbf3e2323
+Flynn Wesselius,Flynn Wesselius,2025-02-20 12:00:00,Latason MPA,3,Shallow,27,14,1,Trash - Plastic Bag,10-15,1,0,1,1,67b6d231dc012e2cbf3e2323
+Bailey Forsyth,Bailey Forsyth,2025-02-21 09:00:00,Lutoban Pier,1,Deep,27,10,1,Coralliophila,0-5,3,0,3,1,67b804d6dc012e2cbf3e2715
+Bailey Forsyth,Bailey Forsyth,2025-02-21 09:00:00,Lutoban Pier,1,Deep,27,10,1,Trash - Soft Plastic Wrapper,0-5,2,0,2,1,67b804d6dc012e2cbf3e2715
+Bailey Forsyth,Bailey Forsyth,2025-02-21 09:00:00,Lutoban Pier,1,Deep,27,10,1,Trash - Plastic Bag,5-10,2,0,2,1,67b804d6dc012e2cbf3e2715
+Flynn Wesselius,Flynn Wesselius,2025-02-21 11:00:00,Lutoban Pier,1,Medium,27,4,0,Coralliophila,0-5,1,0,1,1,67b80a61dc012e2cbf3e27ac
+Flynn Wesselius,Flynn Wesselius,2025-02-21 11:00:00,Lutoban Pier,1,Medium,27,4,0,Drupella,0-5,1,0,1,1,67b80a61dc012e2cbf3e27ac
+Flynn Wesselius,Flynn Wesselius,2025-02-21 11:00:00,Lutoban Pier,1,Medium,27,4,0,Trash - Plastic Bag,15-20,1,0,1,1,67b80a61dc012e2cbf3e27ac
+Bailey Forsyth,Bailey Forsyth,2025-02-21 11:30:00,Lutoban Pier,1,Shallow,27,6,1,Coralliophila,0-5,6,0,6,1,67b80554dc012e2cbf3e272e
+Bailey Forsyth,Bailey Forsyth,2025-02-21 11:30:00,Lutoban Pier,1,Shallow,27,6,1,Drupella,0-5,4,0,4,1,67b80554dc012e2cbf3e272e
+Bailey Forsyth,Bailey Forsyth,2025-02-21 11:30:00,Lutoban Pier,1,Shallow,27,6,1,Trash - Soft Plastic Wrapper,0-5,2,0,2,1,67b80554dc012e2cbf3e272e
+Bailey Forsyth,Bailey Forsyth,2025-02-21 11:30:00,Lutoban Pier,1,Shallow,27,6,1,Trash - Plastic Bag,5-10,1,0,1,1,67b80554dc012e2cbf3e272e
+Flynn Wesselius,Flynn Wesselius,2025-02-21 15:30:00,Guinsuan MPA,2,Medium,27,16,4,Coralliophila,0-5,3,0,3,1,67b847e7dc012e2cbf3e2851
+Flynn Wesselius,Flynn Wesselius,2025-02-21 15:30:00,Guinsuan MPA,2,Medium,27,16,4,Drupella,0-5,1,0,1,1,67b847e7dc012e2cbf3e2851
+Flynn Wesselius,Flynn Wesselius,2025-02-21 15:30:00,Guinsuan MPA,2,Medium,27,16,4,Trash - Rope,20-25,1,0,1,1,67b847e7dc012e2cbf3e2851
+Flynn Wesselius,Flynn Wesselius,2025-02-22 09:30:00,Kookoos,2,Deep,27,16,1,Coralliophila,0-5,3,0,3,1,67b95233dc012e2cbf3e2a3a
+Flynn Wesselius,Flynn Wesselius,2025-02-22 09:30:00,Kookoos,2,Deep,27,16,1,Drupella,0-5,6,0,6,1,67b95233dc012e2cbf3e2a3a
+Flynn Wesselius,Flynn Wesselius,2025-02-22 09:30:00,Kookoos,2,Deep,27,16,1,Trash - Plastic Bag,15-20,1,0,1,1,67b95233dc012e2cbf3e2a3a
+Flynn Wesselius,Flynn Wesselius,2025-02-22 09:30:00,Kookoos,2,Deep,27,16,1,Trash - Hard Plastic (Other),5-10,1,0,1,1,67b95233dc012e2cbf3e2a3a
+Mark Obstfeld,Bailey Forsyth,2025-02-22 11:00:00,Kookoos,1,Medium,28,12,1,Coralliophila,0-5,0,3,3,1,67b95b0ddc012e2cbf3e2ae8
+Mark Obstfeld,Bailey Forsyth,2025-02-22 11:00:00,Kookoos,1,Medium,28,12,1,Drupella,0-5,2,10,12,1,67b95b0ddc012e2cbf3e2ae8
+Mark Obstfeld,Bailey Forsyth,2025-02-22 11:00:00,Kookoos,1,Medium,28,12,1,Trash - Fishing Line,>120,3,1,4,1,67b95b0ddc012e2cbf3e2ae8
+Mark Obstfeld,Bailey Forsyth,2025-02-22 11:00:00,Kookoos,1,Medium,28,12,1,Trash - Soft Plastic Wrapper,0-5,0,1,1,1,67b95b0ddc012e2cbf3e2ae8
+Toby Cooper,Toby Cooper,2025-02-24 10:00:00,Guinsuan MPA,1,Deep,28,16,3,Trash - Plastic Bag,10-15,1,0,1,1,67bc12fbdc012e2cbf3e2d76
+Bethel Benjamin,Peggy van Vegchel,2025-02-24 10:00:00,Guinsuan MPA,1,Shallow,28,16,3,Drupella,0-5,1,0,1,1,67bc192ddc012e2cbf3e2df6
+Bethel Benjamin,Peggy van Vegchel,2025-02-24 10:00:00,Guinsuan MPA,1,Shallow,28,16,3,Trash - Fishing Line,>120,1,4,5,1,67bc192ddc012e2cbf3e2df6
+Bethel Benjamin,Peggy van Vegchel,2025-02-24 10:00:00,Guinsuan MPA,1,Shallow,28,16,3,Trash - Fishing Line,30-35,0,3,3,1,67bc192ddc012e2cbf3e2df6
+Bethel Benjamin,Peggy van Vegchel,2025-02-24 10:00:00,Guinsuan MPA,1,Shallow,28,16,3,Trash - Textiles and Bags,5-10,1,0,1,1,67bc192ddc012e2cbf3e2df6
+Bethel Benjamin,Peggy van Vegchel,2025-02-24 10:00:00,Guinsuan MPA,1,Shallow,28,16,3,Trash - Rope,10-15,1,0,1,1,67bc192ddc012e2cbf3e2df6
+Bethel Benjamin,Peggy van Vegchel,2025-02-24 10:30:00,Guinsuan MPA,2,Shallow,28,16,2,Coralliophila,0-5,1,0,1,1,67bc19d3dc012e2cbf3e2e21
+Bethel Benjamin,Peggy van Vegchel,2025-02-24 10:30:00,Guinsuan MPA,2,Shallow,28,16,2,Drupella,0-5,4,0,4,1,67bc19d3dc012e2cbf3e2e21
+Bethel Benjamin,Peggy van Vegchel,2025-02-24 10:30:00,Guinsuan MPA,2,Shallow,28,16,2,Trash - Fishing Line,>120,2,4,6,1,67bc19d3dc012e2cbf3e2e21
+Bethel Benjamin,Peggy van Vegchel,2025-02-24 10:30:00,Guinsuan MPA,2,Shallow,28,16,2,Trash - Fishing Line,30-35,0,2,2,1,67bc19d3dc012e2cbf3e2e21
+Bethel Benjamin,Peggy van Vegchel,2025-02-24 10:30:00,Guinsuan MPA,2,Shallow,28,16,2,Trash - Plastic Bag,15-20,1,0,1,1,67bc19d3dc012e2cbf3e2e21
+Bethel Benjamin,Peggy van Vegchel,2025-02-24 10:30:00,Guinsuan MPA,2,Shallow,28,16,2,Trash - Other,5-10,1,0,1,1,67bc19d3dc012e2cbf3e2e21
+Bethel Benjamin,Peggy van Vegchel,2025-02-24 10:30:00,Guinsuan MPA,2,Shallow,28,16,2,Trash - Fishing Net,20-25,1,0,1,1,67bc19d3dc012e2cbf3e2e21
+Toby Cooper,Toby Cooper,2025-02-24 12:00:00,Lutoban South MPA,2,Shallow,28,10,1,Drupella,0-5,5,0,5,1,67bc1475dc012e2cbf3e2d7f
+Toby Cooper,Toby Cooper,2025-02-24 12:00:00,Lutoban South MPA,2,Shallow,28,10,1,Trash - Hard Plastic (Other),15-20,1,0,1,1,67bc1475dc012e2cbf3e2d7f
+Toby Cooper,Toby Cooper,2025-02-24 12:00:00,Lutoban South MPA,2,Shallow,28,10,1,Trash - Textiles and Bags,15-20,1,0,1,1,67bc1475dc012e2cbf3e2d7f
+Bethel Benjamin,Bethel Benjamin,2025-02-24 12:30:00,Lutoban South MPA,1,Shallow,28,10,1,Coralliophila,0-5,7,0,7,1,67bc128ddc012e2cbf3e2d6b
+Bethel Benjamin,Bethel Benjamin,2025-02-24 12:30:00,Lutoban South MPA,1,Shallow,28,10,1,Drupella,0-5,14,0,14,1,67bc128ddc012e2cbf3e2d6b
+Bethel Benjamin,Peggy van Vegchel,2025-02-25 09:00:00,Lutoban Pier,3,Medium,26,8,1,Coralliophila,0-5,14,0,14,1,67bd48acdc012e2cbf3e304e
+Bethel Benjamin,Peggy van Vegchel,2025-02-25 09:00:00,Lutoban Pier,3,Medium,26,8,1,Drupella,0-5,3,0,3,1,67bd48acdc012e2cbf3e304e
+Bethel Benjamin,Peggy van Vegchel,2025-02-25 09:00:00,Lutoban Pier,3,Medium,26,8,1,Trash - Fishing Line,>120,1,9,10,1,67bd48acdc012e2cbf3e304e
+Bethel Benjamin,Peggy van Vegchel,2025-02-25 09:00:00,Lutoban Pier,3,Medium,26,8,1,Trash - Fishing Line,25-30,0,1,1,1,67bd48acdc012e2cbf3e304e
+Bethel Benjamin,Peggy van Vegchel,2025-02-25 09:00:00,Lutoban Pier,3,Medium,26,8,1,Trash - Fishing Line,45-50,0,1,1,1,67bd48acdc012e2cbf3e304e
+Toby Cooper,Toby Cooper,2025-02-25 09:00:00,Lutoban Pier,2,Deep,28,10,1,Coralliophila,0-5,3,0,3,1,67bd51f4dc012e2cbf3e3149
+Flynn Wesselius,Bailey Forsyth,2025-02-25 09:00:00,Lutoban South MPA,1,Shallow,26,4,2,Coralliophila,0-5,2,4,6,1,67bd7fecdc012e2cbf3e332f
+Flynn Wesselius,Bailey Forsyth,2025-02-25 09:00:00,Lutoban South MPA,1,Shallow,26,4,2,Drupella,0-5,9,13,22,1,67bd7fecdc012e2cbf3e332f
+Flynn Wesselius,Bailey Forsyth,2025-02-25 09:00:00,Lutoban South MPA,1,Shallow,26,4,2,Trash - Plastic Bag,10-15,1,1,2,1,67bd7fecdc012e2cbf3e332f
+Bethel Benjamin,Peggy van Vegchel,2025-02-25 11:00:00,Lutoban Pier,2,Deep,27,8,3,Coralliophila,0-5,10,3,13,1,67bd56e3dc012e2cbf3e3190
+Bethel Benjamin,Peggy van Vegchel,2025-02-25 11:00:00,Lutoban Pier,2,Deep,27,8,3,Drupella,0-5,3,0,3,1,67bd56e3dc012e2cbf3e3190
+Bethel Benjamin,Peggy van Vegchel,2025-02-25 11:00:00,Lutoban Pier,2,Deep,27,8,3,Trash - Fishing Line,>120,0,1,1,1,67bd56e3dc012e2cbf3e3190
+Bethel Benjamin,Peggy van Vegchel,2025-02-25 11:00:00,Lutoban Pier,2,Deep,27,8,3,Trash - Fishing Line,30-35,0,1,1,1,67bd56e3dc012e2cbf3e3190
+Bethel Benjamin,Peggy van Vegchel,2025-02-25 11:00:00,Lutoban Pier,2,Deep,27,8,3,Trash - Rope,50-60,0,1,1,1,67bd56e3dc012e2cbf3e3190
+Mark Obstfeld,Mark Obstfeld,2025-02-25 11:00:00,Lutoban Pier,3,Shallow,27,6,1,Drupella,0-5,12,0,12,1,67bd887fdc012e2cbf3e33cc
+Bethel Benjamin,Peggy van Vegchel,2025-02-25 11:30:00,Lutoban Pier,1,Deep,27,8,1,Coralliophila,0-5,1,0,1,1,67bd57b8dc012e2cbf3e31ab
+Bethel Benjamin,Peggy van Vegchel,2025-02-25 11:30:00,Lutoban Pier,1,Deep,27,8,1,Drupella,0-5,1,0,1,1,67bd57b8dc012e2cbf3e31ab
+Bethel Benjamin,Peggy van Vegchel,2025-02-25 11:30:00,Lutoban Pier,1,Deep,27,8,1,Trash - Fishing Line,>120,2,0,2,1,67bd57b8dc012e2cbf3e31ab
+Bethel Benjamin,Peggy van Vegchel,2025-02-25 11:30:00,Lutoban Pier,1,Deep,27,8,1,Trash - Fishing Line,60-70,2,1,3,1,67bd57b8dc012e2cbf3e31ab
+Bethel Benjamin,Peggy van Vegchel,2025-02-25 11:30:00,Lutoban Pier,1,Deep,27,8,1,Trash - Soft Plastic Wrapper,10-15,1,0,1,1,67bd57b8dc012e2cbf3e31ab
+Bethel Benjamin,Peggy van Vegchel,2025-02-25 11:30:00,Lutoban Pier,1,Deep,27,8,1,Trash - Fishing Line,15-20,0,3,3,1,67bd57b8dc012e2cbf3e31ab
+Bethel Benjamin,Peggy van Vegchel,2025-02-25 11:30:00,Lutoban Pier,1,Deep,27,8,1,Trash - Fishing Line,50-60,0,1,1,1,67bd57b8dc012e2cbf3e31ab
+Bethel Benjamin,Peggy van Vegchel,2025-02-25 13:30:00,Antulang,2,Deep,27,8,2,Coralliophila,0-5,7,3,10,1,67bd8ae7dc012e2cbf3e340a
+Bethel Benjamin,Peggy van Vegchel,2025-02-25 13:30:00,Antulang,2,Deep,27,8,2,Drupella,0-5,1,0,1,1,67bd8ae7dc012e2cbf3e340a
+Bethel Benjamin,Peggy van Vegchel,2025-02-25 13:30:00,Antulang,2,Deep,27,8,2,Trash - Fishing Line,20-25,0,2,2,1,67bd8ae7dc012e2cbf3e340a
+Bethel Benjamin,Peggy van Vegchel,2025-02-25 13:30:00,Antulang,2,Deep,27,8,2,Trash - Plastic Bag,20-25,0,1,1,1,67bd8ae7dc012e2cbf3e340a
+Bethel Benjamin,Peggy van Vegchel,2025-02-25 13:30:00,Antulang,2,Deep,27,8,2,Trash - Fishing Line,80-90,0,1,1,1,67bd8ae7dc012e2cbf3e340a
+Bailey Forsyth,Flynn Wesselius,2025-02-25 15:00:00,Antulang,2,Medium,26,14,2,Coralliophila,0-5,4,2,6,1,67bd8062dc012e2cbf3e3344
+Bailey Forsyth,Flynn Wesselius,2025-02-25 15:00:00,Antulang,2,Medium,26,14,2,Drupella,0-5,9,9,18,1,67bd8062dc012e2cbf3e3344
+Bailey Forsyth,Flynn Wesselius,2025-02-25 15:00:00,Antulang,2,Medium,26,14,2,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,67bd8062dc012e2cbf3e3344
+Bailey Forsyth,Flynn Wesselius,2025-02-25 15:00:00,Antulang,2,Medium,26,14,2,Trash - Plastic Bag,10-15,1,1,2,1,67bd8062dc012e2cbf3e3344
+Bethel Benjamin,Peggy van Vegchel,2025-02-25 15:00:00,Antulang,1,Deep,27,8,2,Drupella,0-5,1,0,1,1,67bd8a67dc012e2cbf3e33fe
+Bethel Benjamin,Peggy van Vegchel,2025-02-25 15:00:00,Antulang,1,Deep,27,8,2,Trash - Fishing Line,>120,2,3,5,1,67bd8a67dc012e2cbf3e33fe
+Bethel Benjamin,Peggy van Vegchel,2025-02-25 15:00:00,Antulang,1,Deep,27,8,2,Trash - Fishing Line,40-45,0,2,2,1,67bd8a67dc012e2cbf3e33fe
+Toby Cooper,Toby Cooper,2025-02-26 09:00:00,Guinsuan MPA,2,Deep,27,10,2,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,67be7e42dc012e2cbf3e3585
+Mark Obstfeld,Mark Obstfeld,2025-02-26 09:00:00,Guinsuan MPA,2,Shallow,27,14,2,Trash - Fishing Line,>120,2,0,2,1,67be9611dc012e2cbf3e367a
+Flynn Wesselius,Flynn Wesselius,2025-02-26 09:00:00,Andulay MPA,2,Deep,26,14,1,Coralliophila,0-5,2,0,2,1,67be9a9edc012e2cbf3e3683
+Flynn Wesselius,Flynn Wesselius,2025-02-26 09:00:00,Andulay MPA,2,Deep,26,14,1,Drupella,0-5,4,0,4,1,67be9a9edc012e2cbf3e3683
+Ceasar Ruiz,Ceasar Ruiz,2025-02-26 09:30:00,Andulay MPA,2,Shallow,26,10,0,Coralliophila,0-5,3,0,3,1,67be9d3bdc012e2cbf3e36c8
+Ceasar Ruiz,Ceasar Ruiz,2025-02-26 09:30:00,Andulay MPA,2,Shallow,26,10,0,Drupella,0-5,75,0,75,1,67be9d3bdc012e2cbf3e36c8
+Ceasar Ruiz,Ceasar Ruiz,2025-02-26 09:30:00,Andulay MPA,2,Shallow,26,10,0,Crown of Thorns,15-20,1,0,1,1,67be9d3bdc012e2cbf3e36c8
+Ceasar Ruiz,Ceasar Ruiz,2025-02-26 09:30:00,Andulay MPA,2,Shallow,26,10,0,Crown of Thorns,10-15,1,0,1,1,67be9d3bdc012e2cbf3e36c8
+Bonvalot Chloe,Bonvalot Chloe,2025-02-26 09:30:00,Andulay MPA,1,Deep,26,12,1,Drupella,0-5,4,0,4,1,67bea4c3dc012e2cbf3e377b
+Bethel Benjamin,Bethel Benjamin,2025-02-26 09:30:00,Basak Can-Unsang MPA,2,Deep,27,18,1,Coralliophila,0-5,2,0,2,1,67beab15dc012e2cbf3e392b
+Bethel Benjamin,Bethel Benjamin,2025-02-26 09:30:00,Basak Can-Unsang MPA,2,Deep,27,18,1,Drupella,0-5,1,0,1,1,67beab15dc012e2cbf3e392b
+Bethel Benjamin,Bethel Benjamin,2025-02-26 09:30:00,Basak Can-Unsang MPA,2,Deep,27,18,1,Trash - Fishing Line,50-60,1,0,1,1,67beab15dc012e2cbf3e392b
+Bethel Benjamin,Bethel Benjamin,2025-02-26 10:00:00,Basak Can-Unsang MPA,1,Medium,27,18,1,Coralliophila,0-5,2,0,2,1,67bea7c6dc012e2cbf3e37fc
+Bethel Benjamin,Bethel Benjamin,2025-02-26 10:00:00,Basak Can-Unsang MPA,1,Medium,27,18,1,Drupella,0-5,4,0,4,1,67bea7c6dc012e2cbf3e37fc
+Bethel Benjamin,Bethel Benjamin,2025-02-26 10:00:00,Basak Can-Unsang MPA,1,Medium,27,18,1,Trash - Fishing Line,10-15,1,0,1,1,67bea7c6dc012e2cbf3e37fc
+Bethel Benjamin,Bethel Benjamin,2025-02-26 10:00:00,Basak Can-Unsang MPA,1,Medium,27,18,1,Trash - Textiles and Bags,10-15,1,0,1,1,67bea7c6dc012e2cbf3e37fc
+Mark Obstfeld,Sherwin Badlaan,2025-02-26 10:30:00,Dalakit MPA,2,Shallow,27,4,1,Coralliophila,0-5,22,53,75,1,67bec291dc012e2cbf3e3a08
+Mark Obstfeld,Sherwin Badlaan,2025-02-26 10:30:00,Dalakit MPA,2,Shallow,27,4,1,Drupella,0-5,52,44,96,1,67bec291dc012e2cbf3e3a08
+Mark Obstfeld,Sherwin Badlaan,2025-02-26 10:30:00,Dalakit MPA,2,Shallow,27,4,1,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,67bec291dc012e2cbf3e3a08
+Bailey Forsyth,Bailey Forsyth,2025-02-26 11:00:00,Andulay MPA,1,Medium,26,10,1,Coralliophila,0-5,9,0,9,1,67bea24ddc012e2cbf3e370d
+Bailey Forsyth,Bailey Forsyth,2025-02-26 11:00:00,Andulay MPA,1,Medium,26,10,1,Drupella,0-5,25,0,25,1,67bea24ddc012e2cbf3e370d
+Bailey Forsyth,Bailey Forsyth,2025-02-26 11:00:00,Andulay MPA,1,Medium,26,10,1,Trash - Fishing Line,>120,1,0,1,1,67bea24ddc012e2cbf3e370d
+Bailey Forsyth,Bailey Forsyth,2025-02-26 11:00:00,Andulay MPA,1,Medium,26,10,1,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,67bea24ddc012e2cbf3e370d
+Bailey Forsyth,Bailey Forsyth,2025-02-26 11:00:00,Andulay MPA,1,Medium,26,10,1,Trash - Plastic Bag,5-10,1,0,1,1,67bea24ddc012e2cbf3e370d
+Peggy van Vegchel,Peggy van Vegchel,2025-02-26 11:00:00,Andulay MPA,3,Medium,26,12,1,Coralliophila,0-5,21,0,21,1,67bea76edc012e2cbf3e37eb
+Peggy van Vegchel,Peggy van Vegchel,2025-02-26 11:00:00,Andulay MPA,3,Medium,26,12,1,Drupella,0-5,3,0,3,1,67bea76edc012e2cbf3e37eb
+Peggy van Vegchel,Peggy van Vegchel,2025-02-26 11:00:00,Andulay MPA,3,Medium,26,12,1,Trash - Fishing Line,>120,2,0,2,1,67bea76edc012e2cbf3e37eb
+Peggy van Vegchel,Peggy van Vegchel,2025-02-26 11:00:00,Andulay MPA,3,Medium,26,12,1,Trash - Fishing Line,60-70,2,0,2,1,67bea76edc012e2cbf3e37eb
+Peggy van Vegchel,Peggy van Vegchel,2025-02-26 11:00:00,Andulay MPA,3,Medium,26,12,1,Trash - Other,15-20,1,0,1,1,67bea76edc012e2cbf3e37eb
+Peggy van Vegchel,Peggy van Vegchel,2025-02-26 11:00:00,Andulay MPA,3,Medium,26,12,1,Trash - Hard Plastic (Other),5-10,1,0,1,1,67bea76edc012e2cbf3e37eb
+Bethel Benjamin,Bethel Benjamin,2025-02-26 11:00:00,Latason MPA,3,Medium,28,10,1,Coralliophila,0-5,21,0,21,1,67bea9f0dc012e2cbf3e38f1
+Bethel Benjamin,Bethel Benjamin,2025-02-26 11:00:00,Latason MPA,3,Medium,28,10,1,Drupella,0-5,12,0,12,1,67bea9f0dc012e2cbf3e38f1
+Bethel Benjamin,Bethel Benjamin,2025-02-26 11:00:00,Latason MPA,3,Medium,28,10,1,Trash - Fishing Line,50-60,1,0,1,1,67bea9f0dc012e2cbf3e38f1
+Bethel Benjamin,Bethel Benjamin,2025-02-26 11:30:00,Latason MPA,1,Medium,28,10,2,Drupella,0-5,1,0,1,1,67beaa71dc012e2cbf3e3901
+Bethel Benjamin,Bethel Benjamin,2025-02-26 11:30:00,Latason MPA,1,Medium,28,10,2,Trash - Fishing Line,>120,3,0,3,1,67beaa71dc012e2cbf3e3901
+Bethel Benjamin,Bethel Benjamin,2025-02-26 11:30:00,Latason MPA,1,Medium,28,10,2,Trash - Fishing Line,10-15,1,0,1,1,67beaa71dc012e2cbf3e3901
+Bethel Benjamin,Bethel Benjamin,2025-02-26 11:30:00,Latason MPA,1,Medium,28,10,2,Trash - Plastic Bag,25-30,1,0,1,1,67beaa71dc012e2cbf3e3901
+Mark Obstfeld,Sherwin Badlaan,2025-02-26 11:30:00,Dalakit MPA,1,Shallow,27,4,1,Drupella,0-5,4,2,6,1,67bec2fddc012e2cbf3e3a14
+Mark Obstfeld,Sherwin Badlaan,2025-02-26 11:30:00,Dalakit MPA,1,Shallow,27,4,1,Trash - Fishing Line,>120,3,0,3,1,67bec2fddc012e2cbf3e3a14
+Toby Cooper,Toby Cooper,2025-02-27 08:30:00,Guinsuan MPA,1,Medium,27,16,0,Drupella,0-5,5,0,5,1,67bfe7c5dc012e2cbf3e3b91
+Peggy van Vegchel,Bonvalot Chloe,2025-02-27 09:00:00,Lutoban North MPA,2,Medium,27,10,1,Coralliophila,0-5,2,0,2,1,67c0277cdc012e2cbf3e3d46
+Peggy van Vegchel,Bonvalot Chloe,2025-02-27 09:00:00,Lutoban North MPA,2,Medium,27,10,1,Drupella,0-5,5,0,5,1,67c0277cdc012e2cbf3e3d46
+Peggy van Vegchel,Bonvalot Chloe,2025-02-27 09:00:00,Lutoban North MPA,2,Medium,27,10,1,Trash - Fishing Line,>120,1,0,1,1,67c0277cdc012e2cbf3e3d46
+Peggy van Vegchel,Bonvalot Chloe,2025-02-27 09:00:00,Lutoban North MPA,2,Medium,27,10,1,Trash - Fishing Line,50-60,1,0,1,1,67c0277cdc012e2cbf3e3d46
+Peggy van Vegchel,Bonvalot Chloe,2025-02-27 09:00:00,Lutoban North MPA,2,Medium,27,10,1,Trash - Plastic Bag,40-45,1,0,1,1,67c0277cdc012e2cbf3e3d46
+Peggy van Vegchel,Bonvalot Chloe,2025-02-27 09:00:00,Lutoban North MPA,2,Medium,27,10,1,Trash - Fishing Line,45-50,1,0,1,1,67c0277cdc012e2cbf3e3d46
+Peggy van Vegchel,Bonvalot Chloe,2025-02-27 09:00:00,Lutoban North MPA,2,Medium,27,10,1,Trash - Fishing Line,40-45,1,0,1,1,67c0277cdc012e2cbf3e3d46
+Sherwin Badlaan,Flynn Wesselius,2025-02-27 09:30:00,Lutoban North MPA,3,Medium,27,12,4,Coralliophila,0-5,5,0,5,1,67c012b3dc012e2cbf3e3d16
+Sherwin Badlaan,Flynn Wesselius,2025-02-27 09:30:00,Lutoban North MPA,3,Medium,27,12,4,Drupella,0-5,8,0,8,1,67c012b3dc012e2cbf3e3d16
+Mark Obstfeld,Matt Rutledge,2025-02-27 09:30:00,Lutoban North MPA,3,Shallow,27,10,1,Coralliophila,0-5,4,6,10,1,67c04480dc012e2cbf3e3da8
+Mark Obstfeld,Matt Rutledge,2025-02-27 09:30:00,Lutoban North MPA,3,Shallow,27,10,1,Drupella,0-5,8,7,15,1,67c04480dc012e2cbf3e3da8
+Mark Obstfeld,Matt Rutledge,2025-02-27 09:30:00,Lutoban North MPA,3,Shallow,27,10,1,Trash - Fishing Line,>120,1,0,1,1,67c04480dc012e2cbf3e3da8
+Toby Cooper,Bailey Forsyth,2025-02-27 11:00:00,Lutoban Pier,2,Shallow,27,12,0,Coralliophila,0-5,25,16,41,1,67bfe8a3dc012e2cbf3e3bbf
+Toby Cooper,Bailey Forsyth,2025-02-27 11:00:00,Lutoban Pier,2,Shallow,27,12,0,Drupella,0-5,30,33,63,1,67bfe8a3dc012e2cbf3e3bbf
+Toby Cooper,Bailey Forsyth,2025-02-27 11:00:00,Lutoban Pier,2,Shallow,27,12,0,Crown of Thorns,20-25,0,1,1,1,67bfe8a3dc012e2cbf3e3bbf
+Bailey Forsyth,Toby Cooper,2025-02-27 15:00:00,Kookoos,1,Deep,27,10,0,Coralliophila,0-5,2,4,6,1,67c037eddc012e2cbf3e3d88
+Bailey Forsyth,Toby Cooper,2025-02-27 15:00:00,Kookoos,1,Deep,27,10,0,Drupella,0-5,4,1,5,1,67c037eddc012e2cbf3e3d88
+Bailey Forsyth,Toby Cooper,2025-02-27 15:00:00,Kookoos,1,Deep,27,10,0,Trash - Soft Plastic Wrapper,0-5,0,1,1,1,67c037eddc012e2cbf3e3d88
+Bailey Forsyth,Toby Cooper,2025-02-27 15:00:00,Kookoos,1,Deep,27,10,0,Trash - Plastic Bag,10-15,1,0,1,1,67c037eddc012e2cbf3e3d88
+Mark Obstfeld,Flynn Wesselius,2025-02-27 15:00:00,Kookoos,3,Deep,27,10,0,Coralliophila,0-5,0,1,1,1,67c0441bdc012e2cbf3e3d9a
+Mark Obstfeld,Flynn Wesselius,2025-02-27 15:00:00,Kookoos,3,Deep,27,10,0,Drupella,0-5,1,3,4,1,67c0441bdc012e2cbf3e3d9a
+Mark Obstfeld,Flynn Wesselius,2025-02-27 15:00:00,Kookoos,3,Deep,27,10,0,Trash - Fishing Line,>120,1,0,1,1,67c0441bdc012e2cbf3e3d9a
+Mark Obstfeld,Flynn Wesselius,2025-02-27 15:00:00,Kookoos,3,Deep,27,10,0,Trash - Glass and Ceramics,15-20,0,1,1,1,67c0441bdc012e2cbf3e3d9a
+Laura Skjoedeberg Almind,Laura Skjoedeberg Almind,2025-03-08 09:00:00,Lutoban South MPA,2,Medium,27,10,1,Coralliophila,0-5,7,0,7,1,67cbf590dc012e2cbf3e5071
+Laura Skjoedeberg Almind,Laura Skjoedeberg Almind,2025-03-08 09:00:00,Lutoban South MPA,2,Medium,27,10,1,Drupella,0-5,19,0,19,1,67cbf590dc012e2cbf3e5071
+Diana Isabel,Diana Isabel,2025-03-11 09:00:00,Kookoos,2,Deep,26,10,0,Drupella,0-5,8,0,8,1,67cfc685dc012e2cbf3e5373
+Laura Skjoedeberg Almind,Laura Skjoedeberg Almind,2025-03-11 10:00:00,Lutoban North MPA,2,Medium,27,10,2,Coralliophila,0-5,5,0,5,1,67cfcb75dc012e2cbf3e5422
+Laura Skjoedeberg Almind,Laura Skjoedeberg Almind,2025-03-11 10:00:00,Lutoban North MPA,2,Medium,27,10,2,Drupella,0-5,14,0,14,1,67cfcb75dc012e2cbf3e5422
+Laura Skjoedeberg Almind,Laura Skjoedeberg Almind,2025-03-11 10:00:00,Lutoban North MPA,2,Medium,27,10,2,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,67cfcb75dc012e2cbf3e5422
+Leslie Cano,Leslie Cano,2025-03-11 10:30:00,Kookoos,1,Shallow,27,10,2,Coralliophila,0-5,10,0,10,1,67cfc4e5dc012e2cbf3e5334
+Leslie Cano,Leslie Cano,2025-03-11 10:30:00,Kookoos,1,Shallow,27,10,2,Drupella,0-5,38,0,38,1,67cfc4e5dc012e2cbf3e5334
+Diana Isabel,Diana Isabel,2025-03-11 15:30:00,Dalakit MPA,1,Shallow,26,6,1,Drupella,0-5,139,0,139,1,67cffe8edc012e2cbf3e5516
+Diana Isabel,Diana Isabel,2025-03-11 15:30:00,Dalakit MPA,1,Shallow,26,6,1,Trash - Textiles and Bags,80-90,2,0,2,1,67cffe8edc012e2cbf3e5516
+Leslie Cano,Leslie Cano,2025-03-11 16:00:00,Dalakit MPA,2,Shallow,27,6,2,Coralliophila,0-5,6,0,6,1,67d013a9dc012e2cbf3e554a
+Leslie Cano,Leslie Cano,2025-03-11 16:00:00,Dalakit MPA,2,Shallow,27,6,2,Drupella,0-5,23,0,23,1,67d013a9dc012e2cbf3e554a
+Diana Isabel,Diana Isabel,2025-03-12 10:30:00,Basak Can-Unsang MPA,1,Shallow,27,10,1,Coralliophila,0-5,1,0,1,1,67d2959adc012e2cbf3e5ca7
+Diana Isabel,Diana Isabel,2025-03-12 10:30:00,Basak Can-Unsang MPA,1,Shallow,27,10,1,Drupella,0-5,6,0,6,1,67d2959adc012e2cbf3e5ca7
+Kiri Simons,Laura Skjoedeberg Almind,2025-03-13 08:30:00,Guinsuan MPA,2,Medium,28,16,2,Coralliophila,0-5,3,0,3,1,67d28fa1dc012e2cbf3e5c39
+Kiri Simons,Laura Skjoedeberg Almind,2025-03-13 08:30:00,Guinsuan MPA,2,Medium,28,16,2,Drupella,0-5,4,0,4,1,67d28fa1dc012e2cbf3e5c39
+Kiri Simons,Laura Skjoedeberg Almind,2025-03-13 08:30:00,Guinsuan MPA,2,Medium,28,16,2,Trash - Plastic Bag,10-15,0,1,1,1,67d28fa1dc012e2cbf3e5c39
+Uriel Soto,Uriel Soto,2025-03-13 09:00:00,Andulay MPA,1,Deep,28,12,1,Coralliophila,0-5,3,0,3,1,67d2a3a7dc012e2cbf3e5dbd
+Uriel Soto,Uriel Soto,2025-03-13 09:00:00,Andulay MPA,1,Deep,28,12,1,Drupella,0-5,4,0,4,1,67d2a3a7dc012e2cbf3e5dbd
+Kiri Simons,Laura Skjoedeberg Almind,2025-03-13 10:30:00,Maluay Malatapay MPA,2,Medium,28,16,0,Coralliophila,0-5,2,2,4,1,67d28fdedc012e2cbf3e5c45
+Kiri Simons,Laura Skjoedeberg Almind,2025-03-13 10:30:00,Maluay Malatapay MPA,2,Medium,28,16,0,Drupella,0-5,1,0,1,1,67d28fdedc012e2cbf3e5c45
+Uriel Soto,Uriel Soto,2025-03-13 10:30:00,Andulay MPA,2,Medium,28,12,0,Drupella,0-5,7,0,7,1,67d2a442dc012e2cbf3e5dc7
+Joanna Lund,Joanna Lund,2025-03-13 15:00:00,Antulang,2,Medium,28,8,2,Coralliophila,0-5,2,0,2,1,67d2a2f7dc012e2cbf3e5db2
+Joanna Lund,Joanna Lund,2025-03-13 15:00:00,Antulang,2,Medium,28,8,2,Trash - Fishing Line,>120,1,0,1,1,67d2a2f7dc012e2cbf3e5db2
+Joanna Lund,Joanna Lund,2025-03-13 15:00:00,Antulang,2,Medium,28,8,2,Trash - Ghost Net,>120,1,0,1,1,67d2a2f7dc012e2cbf3e5db2
+Laura Skjoedeberg Almind,Diana Isabel,2025-03-14 09:30:00,Salag MPA,1,Deep,27,16,0,Coralliophila,0-5,3,0,3,1,67d3cdc2dc012e2cbf3e6186
+Laura Skjoedeberg Almind,Diana Isabel,2025-03-14 09:30:00,Salag MPA,1,Deep,27,16,0,Drupella,0-5,6,0,6,1,67d3cdc2dc012e2cbf3e6186
+Laura Skjoedeberg Almind,Laura Skjoedeberg Almind,2025-03-14 11:00:00,Salag MPA,3,Medium,27,16,0,Coralliophila,0-5,2,0,2,1,67d3cfaadc012e2cbf3e61bc
+Laura Skjoedeberg Almind,Laura Skjoedeberg Almind,2025-03-14 11:00:00,Salag MPA,3,Medium,27,16,0,Drupella,0-5,4,0,4,1,67d3cfaadc012e2cbf3e61bc
+Diana Isabel,Diana Isabel,2025-03-14 11:00:00,Salag MPA,2,Shallow,28,12,1,Drupella,0-5,11,0,11,1,67d3d557dc012e2cbf3e6214
+Leslie Cano,Leslie Cano,2025-03-14 11:00:00,Salag MPA,1,Deep,28,16,0,Coralliophila,0-5,14,0,14,0,67d3e25fdc012e2cbf3e6371
+Leslie Cano,Leslie Cano,2025-03-14 11:00:00,Salag MPA,1,Deep,28,16,0,Drupella,0-5,2,0,2,0,67d3e25fdc012e2cbf3e6371
+Leslie Cano,Leslie Cano,2025-03-14 11:00:00,Salag MPA,1,Deep,28,16,0,Trash - Plastic Bag,20-25,1,0,1,0,67d3e25fdc012e2cbf3e6371
+Ceasar Ruiz,Uriel Soto,2025-03-14 11:30:00,Maluay Malatapay MPA,1,Shallow,27,8,0,Coralliophila,0-5,109,20,129,1,67d507cedc012e2cbf3e64ec
+Ceasar Ruiz,Uriel Soto,2025-03-14 11:30:00,Maluay Malatapay MPA,1,Shallow,27,8,0,Drupella,0-5,75,11,86,1,67d507cedc012e2cbf3e64ec
+Ceasar Ruiz,Uriel Soto,2025-03-14 11:30:00,Maluay Malatapay MPA,1,Shallow,27,8,0,Trash - Soft Plastic Wrapper,0-5,0,1,1,1,67d507cedc012e2cbf3e64ec
+Ceasar Ruiz,Uriel Soto,2025-03-14 12:00:00,Maluay Malatapay MPA,2,Shallow,27,8,0,Coralliophila,0-5,13,4,17,1,67d50800dc012e2cbf3e64f8
+Ceasar Ruiz,Uriel Soto,2025-03-14 12:00:00,Maluay Malatapay MPA,2,Shallow,27,8,0,Drupella,0-5,10,12,22,1,67d50800dc012e2cbf3e64f8
+Ceasar Ruiz,Uriel Soto,2025-03-14 12:00:00,Maluay Malatapay MPA,2,Shallow,27,8,0,Trash - Soft Plastic Wrapper,0-5,0,1,1,1,67d50800dc012e2cbf3e64f8
+Uriel Soto,Ceasar Ruiz,2025-03-15 08:30:00,Maluay Malatapay MPA,1,Deep,28,10,0,Drupella,0-5,4,0,4,1,67d508c6dc012e2cbf3e6505
+Uriel Soto,Ceasar Ruiz,2025-03-15 08:30:00,Maluay Malatapay MPA,1,Deep,28,10,0,Trash - Soft Plastic Wrapper,0-5,6,0,6,1,67d508c6dc012e2cbf3e6505
+Stefan Dahinden,Lieve Buijs,2025-03-18 09:00:00,Andulay MPA,2,Deep,28,8,0,Coralliophila,0-5,1,0,1,1,67d91055dc012e2cbf3e693d
+Stefan Dahinden,Lieve Buijs,2025-03-18 09:00:00,Andulay MPA,2,Deep,28,8,0,Drupella,0-5,3,2,5,1,67d91055dc012e2cbf3e693d
+Stefan Dahinden,Lieve Buijs,2025-03-18 09:00:00,Andulay MPA,2,Deep,28,8,0,Trash - Plastic Bag,15-20,1,0,1,1,67d91055dc012e2cbf3e693d
+Stefan Dahinden,Lieve Buijs,2025-03-18 09:00:00,Andulay MPA,2,Deep,28,8,0,Trash - Rope,>120,1,0,1,1,67d91055dc012e2cbf3e693d
+freja hjordt christensen,Teun  Boogaard,2025-03-18 09:00:00,Andulay MPA,3,Medium,27,10,1,Coralliophila,0-5,5,0,5,1,67d912bbdc012e2cbf3e6a49
+freja hjordt christensen,Teun  Boogaard,2025-03-18 09:00:00,Andulay MPA,3,Medium,27,10,1,Drupella,0-5,6,0,6,1,67d912bbdc012e2cbf3e6a49
+freja hjordt christensen,Teun  Boogaard,2025-03-18 09:00:00,Andulay MPA,3,Medium,27,10,1,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,67d912bbdc012e2cbf3e6a49
+Teun  Boogaard,freja hjordt christensen,2025-03-18 10:30:00,Andulay MPA,1,Medium,27,10,0,Coralliophila,0-5,5,0,5,1,67d9128bdc012e2cbf3e6a3f
+Teun  Boogaard,freja hjordt christensen,2025-03-18 10:30:00,Andulay MPA,1,Medium,27,10,0,Drupella,0-5,17,0,17,1,67d9128bdc012e2cbf3e6a3f
+Stefan Dahinden,Lieve Buijs,2025-03-18 11:00:00,Andulay MPA,2,Shallow,28,8,0,Coralliophila,0-5,3,0,3,1,67d91a6adc012e2cbf3e6b15
+Stefan Dahinden,Lieve Buijs,2025-03-18 11:00:00,Andulay MPA,2,Shallow,28,8,0,Crown of Thorns,10-15,0,1,1,1,67d91a6adc012e2cbf3e6b15
+Stefan Dahinden,Lieve Buijs,2025-03-18 11:00:00,Andulay MPA,2,Shallow,28,8,0,Crown of Thorns,30-35,1,1,2,1,67d91a6adc012e2cbf3e6b15
+Stefan Dahinden,Lieve Buijs,2025-03-18 11:00:00,Andulay MPA,2,Shallow,28,8,0,Drupella,0-5,22,9,31,1,67d91a6adc012e2cbf3e6b15
+Stefan Dahinden,Lieve Buijs,2025-03-18 11:30:00,Andulay MPA,1,Shallow,28,8,1,Coralliophila,0-5,1,0,1,1,67d91b0fdc012e2cbf3e6b2e
+Stefan Dahinden,Lieve Buijs,2025-03-18 11:30:00,Andulay MPA,1,Shallow,28,8,1,Crown of Thorns,10-15,1,2,3,1,67d91b0fdc012e2cbf3e6b2e
+Stefan Dahinden,Lieve Buijs,2025-03-18 11:30:00,Andulay MPA,1,Shallow,28,8,1,Crown of Thorns,20-25,4,1,5,1,67d91b0fdc012e2cbf3e6b2e
+Stefan Dahinden,Lieve Buijs,2025-03-18 11:30:00,Andulay MPA,1,Shallow,28,8,1,Crown of Thorns,30-35,1,2,3,1,67d91b0fdc012e2cbf3e6b2e
+Stefan Dahinden,Lieve Buijs,2025-03-18 11:30:00,Andulay MPA,1,Shallow,28,8,1,Crown of Thorns,45-50,1,0,1,1,67d91b0fdc012e2cbf3e6b2e
+Stefan Dahinden,Lieve Buijs,2025-03-18 11:30:00,Andulay MPA,1,Shallow,28,8,1,Drupella,0-5,17,6,23,1,67d91b0fdc012e2cbf3e6b2e
+Stefan Dahinden,Lieve Buijs,2025-03-18 11:30:00,Andulay MPA,1,Shallow,28,8,1,Trash - Other,25-30,0,2,2,1,67d91b0fdc012e2cbf3e6b2e
+freja hjordt christensen,freja hjordt christensen,2025-03-19 09:00:00,Maluay Malatapay MPA,1,Shallow,27,10,0,Coralliophila,0-5,6,0,6,1,67da5815dc012e2cbf3e6d3c
+freja hjordt christensen,freja hjordt christensen,2025-03-19 09:00:00,Maluay Malatapay MPA,1,Shallow,27,10,0,Drupella,0-5,7,0,7,1,67da5815dc012e2cbf3e6d3c
+freja hjordt christensen,freja hjordt christensen,2025-03-19 09:00:00,Maluay Malatapay MPA,1,Shallow,27,10,0,Trash - Fishing Line,5-10,1,0,1,1,67da5815dc012e2cbf3e6d3c
+freja hjordt christensen,freja hjordt christensen,2025-03-19 09:00:00,Maluay Malatapay MPA,1,Shallow,27,10,0,Trash - Other,0-5,1,0,1,1,67da5815dc012e2cbf3e6d3c
+Ceasar Ruiz,Ceasar Ruiz,2025-03-20 09:00:00,Antulang,2,Deep,28,12,0,Trash - Rope,>120,2,0,2,1,67db99c3dc012e2cbf3e6eae
+Ceasar Ruiz,Ceasar Ruiz,2025-03-20 09:00:00,Antulang,2,Deep,28,12,0,Trash - Fishing Line,20-25,5,0,5,1,67db99c3dc012e2cbf3e6eae
+Ceasar Ruiz,Ceasar Ruiz,2025-03-20 09:00:00,Antulang,2,Deep,28,12,0,Trash - Fishing Line,30-35,3,0,3,1,67db99c3dc012e2cbf3e6eae
+Ceasar Ruiz,Ceasar Ruiz,2025-03-20 09:00:00,Antulang,2,Deep,28,12,0,Trash - Fishing Line,60-70,2,0,2,1,67db99c3dc012e2cbf3e6eae
+Ceasar Ruiz,Ceasar Ruiz,2025-03-20 09:00:00,Antulang,2,Deep,28,12,0,Trash - Fishing Line,100-110,1,0,1,1,67db99c3dc012e2cbf3e6eae
+freja hjordt christensen,freja hjordt christensen,2025-03-20 09:00:00,Antulang,1,Deep,27,12,0,Drupella,0-5,3,0,3,1,67dba099dc012e2cbf3e6f82
+freja hjordt christensen,freja hjordt christensen,2025-03-20 09:00:00,Antulang,1,Deep,27,12,0,Trash - Fishing Line,5-10,1,0,1,1,67dba099dc012e2cbf3e6f82
+freja hjordt christensen,freja hjordt christensen,2025-03-20 09:00:00,Antulang,1,Deep,27,12,0,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,67dba099dc012e2cbf3e6f82
+Lieve Buijs,Lieve Buijs,2025-03-20 09:00:00,Kookoos,2,Deep,27,12,0,Coralliophila,0-5,3,0,3,1,67dcfc19dc012e2cbf3e71f2
+Lieve Buijs,Lieve Buijs,2025-03-20 09:00:00,Kookoos,2,Deep,27,12,0,Drupella,0-5,4,0,4,1,67dcfc19dc012e2cbf3e71f2
+Lieve Buijs,Lieve Buijs,2025-03-20 09:00:00,Kookoos,2,Deep,27,12,0,Trash - Fishing Line,20-25,5,0,5,1,67dcfc19dc012e2cbf3e71f2
+Lieve Buijs,Lieve Buijs,2025-03-20 09:00:00,Kookoos,2,Deep,27,12,0,Trash - Fishing Line,>120,2,0,2,1,67dcfc19dc012e2cbf3e71f2
+Lieve Buijs,Lieve Buijs,2025-03-20 09:00:00,Kookoos,2,Deep,27,12,0,Trash - Metal,30-35,1,0,1,1,67dcfc19dc012e2cbf3e71f2
+Ceasar Ruiz,Ceasar Ruiz,2025-03-20 10:30:00,Antulang,3,Medium,28,12,1,Coralliophila,0-5,11,0,11,1,67db9a9bdc012e2cbf3e6ebf
+Ceasar Ruiz,Ceasar Ruiz,2025-03-20 10:30:00,Antulang,3,Medium,28,12,1,Drupella,0-5,17,0,17,1,67db9a9bdc012e2cbf3e6ebf
+Ceasar Ruiz,Ceasar Ruiz,2025-03-20 10:30:00,Antulang,3,Medium,28,12,1,Crown of Thorns,15-20,1,0,1,1,67db9a9bdc012e2cbf3e6ebf
+Ceasar Ruiz,Ceasar Ruiz,2025-03-20 10:30:00,Antulang,3,Medium,28,12,1,Trash - Fishing Line,20-25,1,0,1,1,67db9a9bdc012e2cbf3e6ebf
+Ceasar Ruiz,Ceasar Ruiz,2025-03-20 10:30:00,Antulang,3,Medium,28,12,1,Trash - Fishing Line,90-100,1,0,1,1,67db9a9bdc012e2cbf3e6ebf
+Ceasar Ruiz,Ceasar Ruiz,2025-03-20 10:30:00,Antulang,3,Medium,28,12,1,Trash - Soft Plastic Straw,60-70,1,0,1,1,67db9a9bdc012e2cbf3e6ebf
+Stefan Dahinden,Stefan Dahinden,2025-03-20 10:30:00,Antulang,1,Shallow,28,12,0,Coralliophila,0-5,6,0,6,1,67db9d03dc012e2cbf3e6ef8
+Stefan Dahinden,Stefan Dahinden,2025-03-20 10:30:00,Antulang,1,Shallow,28,12,0,Drupella,0-5,35,0,35,1,67db9d03dc012e2cbf3e6ef8
+Stefan Dahinden,Stefan Dahinden,2025-03-20 10:30:00,Antulang,1,Shallow,28,12,0,Trash - Rope,>120,1,0,1,1,67db9d03dc012e2cbf3e6ef8
+Lieve Buijs,Lieve Buijs,2025-03-20 11:30:00,Kookoos,2,Medium,27,12,0,Drupella,0-5,25,0,25,1,67dbffa0dc012e2cbf3e70f3
+Lieve Buijs,Lieve Buijs,2025-03-20 11:30:00,Kookoos,2,Medium,27,12,0,Trash - Fishing Line,45-50,2,0,2,1,67dbffa0dc012e2cbf3e70f3
+Lieve Buijs,Lieve Buijs,2025-03-20 11:30:00,Kookoos,2,Medium,27,12,0,Trash - Glass and Ceramics,5-10,1,0,1,1,67dbffa0dc012e2cbf3e70f3
+Lieve Buijs,Lieve Buijs,2025-03-20 11:30:00,Kookoos,2,Medium,27,12,0,Drupella,0-5,25,0,25,0,67dcfbdcdc012e2cbf3e71db
+Lieve Buijs,Lieve Buijs,2025-03-20 11:30:00,Kookoos,2,Medium,27,12,0,Trash - Fishing Line,45-50,2,0,2,0,67dcfbdcdc012e2cbf3e71db
+Lieve Buijs,Lieve Buijs,2025-03-20 11:30:00,Kookoos,2,Medium,27,12,0,Trash - Glass and Ceramics,0-5,1,0,1,0,67dcfbdcdc012e2cbf3e71db
+freja hjordt christensen,freja hjordt christensen,2025-03-21 09:00:00,Kookoos,3,Deep,27,12,0,Trash - Fishing Line,>120,8,0,8,1,67dcfccddc012e2cbf3e7229
+freja hjordt christensen,freja hjordt christensen,2025-03-21 09:00:00,Kookoos,3,Deep,27,12,0,Trash - Fishing Line,100-110,8,0,8,1,67dcfccddc012e2cbf3e7229
+freja hjordt christensen,freja hjordt christensen,2025-03-21 09:00:00,Kookoos,3,Deep,27,12,0,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,67dcfccddc012e2cbf3e7229
+freja hjordt christensen,freja hjordt christensen,2025-03-21 09:00:00,Kookoos,3,Deep,27,12,0,Trash - Fishing Line,45-50,3,0,3,1,67dcfccddc012e2cbf3e7229
+freja hjordt christensen,freja hjordt christensen,2025-03-21 09:00:00,Kookoos,3,Deep,27,12,0,Trash - Fishing Net,>120,1,0,1,1,67dcfccddc012e2cbf3e7229
+freja hjordt christensen,freja hjordt christensen,2025-03-21 09:00:00,Kookoos,3,Deep,27,12,0,Trash - Fishing Net,100-110,1,0,1,1,67dcfccddc012e2cbf3e7229
+freja hjordt christensen,freja hjordt christensen,2025-03-21 09:00:00,Kookoos,3,Deep,27,12,0,Trash - Fishing Net,5-10,3,0,3,1,67dcfccddc012e2cbf3e7229
+Leslie Cano,Leslie Cano,2025-03-21 09:00:00,Lutoban North MPA,3,Deep,27,6,1,Trash - Plastic Bag,25-30,1,0,1,1,67dd0a7cdc012e2cbf3e72c3
+Leslie Cano,Leslie Cano,2025-03-21 09:00:00,Lutoban North MPA,3,Deep,27,6,1,Trash - Fishing Line,0-5,2,0,2,1,67dd0a7cdc012e2cbf3e72c3
+Leslie Cano,Leslie Cano,2025-03-21 09:00:00,Lutoban North MPA,3,Deep,27,6,1,Trash - Plastic Bag,10-15,1,0,1,1,67dd0a7cdc012e2cbf3e72c3
+Teun  Boogaard,Teun  Boogaard,2025-03-21 10:30:00,Kookoos,3,Medium,27,14,0,Coralliophila,0-5,7,0,7,1,67dcfd04dc012e2cbf3e723d
+Teun  Boogaard,Teun  Boogaard,2025-03-21 10:30:00,Kookoos,3,Medium,27,14,0,Drupella,0-5,12,0,12,1,67dcfd04dc012e2cbf3e723d
+Teun  Boogaard,Teun  Boogaard,2025-03-21 10:30:00,Kookoos,3,Medium,27,14,0,Trash - Soft Plastic Wrapper,0-5,2,0,2,1,67dcfd04dc012e2cbf3e723d
+Stefan Dahinden,Stefan Dahinden,2025-03-21 11:00:00,Lutoban North MPA,3,Shallow,29,8,1,Coralliophila,0-5,4,0,4,1,67dcf28cdc012e2cbf3e718c
+Stefan Dahinden,Stefan Dahinden,2025-03-21 11:00:00,Lutoban North MPA,3,Shallow,29,8,1,Drupella,0-5,8,0,8,1,67dcf28cdc012e2cbf3e718c
+Bethel Benjamin,Bethel Benjamin,2025-03-21 11:00:00,Kookoos,2,Shallow,27,14,1,Coralliophila,0-5,53,0,53,1,67dd2391dc012e2cbf3e73a0
+Bethel Benjamin,Bethel Benjamin,2025-03-21 11:00:00,Kookoos,2,Shallow,27,14,1,Drupella,0-5,27,0,27,1,67dd2391dc012e2cbf3e73a0
+Leslie Cano,Leslie Cano,2025-03-21 11:30:00,Lutoban North MPA,2,Shallow,27,6,1,Coralliophila,0-5,7,0,7,1,67dd0b82dc012e2cbf3e7322
+Leslie Cano,Leslie Cano,2025-03-21 11:30:00,Lutoban North MPA,2,Shallow,27,6,1,Drupella,0-5,1,0,1,1,67dd0b82dc012e2cbf3e7322
+Leslie Cano,Leslie Cano,2025-03-22 09:00:00,Lutoban Pier,3,Medium,27,8,1,Coralliophila,0-5,6,0,6,1,67de445edc012e2cbf3e7453
+Leslie Cano,Leslie Cano,2025-03-22 09:00:00,Lutoban Pier,3,Medium,27,8,1,Trash - Fishing Line,>120,1,0,1,1,67de445edc012e2cbf3e7453
+freja hjordt christensen,freja hjordt christensen,2025-03-22 10:30:00,Lutoban South MPA,3,Medium,27,14,1,Coralliophila,0-5,16,0,16,1,67de53efdc012e2cbf3e74e6
+freja hjordt christensen,freja hjordt christensen,2025-03-22 10:30:00,Lutoban South MPA,3,Medium,27,14,1,Crown of Thorns,5-10,1,0,1,1,67de53efdc012e2cbf3e74e6
+freja hjordt christensen,freja hjordt christensen,2025-03-22 10:30:00,Lutoban South MPA,3,Medium,27,14,1,Trash - Fishing Line,0-5,3,0,3,1,67de53efdc012e2cbf3e74e6
+freja hjordt christensen,freja hjordt christensen,2025-03-22 10:30:00,Lutoban South MPA,3,Medium,27,14,1,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,67de53efdc012e2cbf3e74e6
+freja hjordt christensen,freja hjordt christensen,2025-03-22 10:30:00,Lutoban South MPA,3,Medium,27,14,1,Trash - Plastic Bag,5-10,1,0,1,1,67de53efdc012e2cbf3e74e6
+freja hjordt christensen,freja hjordt christensen,2025-03-22 10:30:00,Lutoban South MPA,3,Medium,27,14,1,Trash - Fishing Line,10-15,1,0,1,1,67de53efdc012e2cbf3e74e6
+Bettina,Toby Cooper,2025-03-25 09:00:00,Lutoban South MPA,3,Medium,27,12,2,Coralliophila,0-5,12,0,12,1,67e28673dc012e2cbf3e7797
+Bettina,Toby Cooper,2025-03-25 09:00:00,Lutoban South MPA,3,Medium,27,12,2,Drupella,0-5,9,0,9,1,67e28673dc012e2cbf3e7797
+Leslie Cano,Leslie Cano,2025-03-25 09:00:00,Maluay Malatapay MPA,2,Deep,27,14,1,Trash - Fish Cage (not in use),70-80,1,0,1,1,67e34348dc012e2cbf3e78f8
+Leslie Cano,Leslie Cano,2025-03-25 09:00:00,Maluay Malatapay MPA,2,Deep,27,14,1,Trash - Hard Plastic Bottle,20-25,1,0,1,1,67e34348dc012e2cbf3e78f8
+Bettina,Bettina,2025-03-25 11:00:00,Lutoban South MPA,3,Shallow,28,10,1,Coralliophila,0-5,32,0,32,1,67e2886adc012e2cbf3e77ab
+Bettina,Bettina,2025-03-25 11:00:00,Lutoban South MPA,3,Shallow,28,10,1,Drupella,0-5,34,0,34,1,67e2886adc012e2cbf3e77ab
+Leslie Cano,Leslie Cano,2025-03-25 11:00:00,Maluay Malatapay MPA,2,Shallow,27,14,1,Coralliophila,0-5,2,0,2,1,67e343a7dc012e2cbf3e790e
+Leslie Cano,Leslie Cano,2025-03-25 11:00:00,Maluay Malatapay MPA,2,Shallow,27,14,1,Drupella,0-5,11,0,11,1,67e343a7dc012e2cbf3e790e
+Leslie Cano,Leslie Cano,2025-03-25 11:00:00,Maluay Malatapay MPA,2,Shallow,27,14,1,Trash - Hard Plastic Cutlery,10-15,1,0,1,1,67e343a7dc012e2cbf3e790e
+Stefan Dahinden,Stefan Dahinden,2025-03-26 09:00:00,Basak Can-Unsang MPA,2,Deep,29,18,0,Trash - Fishing Line,>120,1,0,1,1,67e392a3dc012e2cbf3e79bd
+Stefan Dahinden,Stefan Dahinden,2025-03-26 09:00:00,Basak Can-Unsang MPA,2,Deep,29,18,0,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,67e392a3dc012e2cbf3e79bd
+Joanna Lund,Joanna Lund,2025-03-26 09:00:00,Guinsuan MPA,1,Deep,28,10,2,Trash - Fishing Line,>120,6,0,6,1,67e3988adc012e2cbf3e79ff
+Joanna Lund,Joanna Lund,2025-03-26 09:00:00,Guinsuan MPA,1,Deep,28,10,2,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,67e3988adc012e2cbf3e79ff
+Joanna Lund,Joanna Lund,2025-03-26 09:00:00,Guinsuan MPA,1,Deep,28,10,2,Trash - Plastic Bag,20-25,1,0,1,1,67e3988adc012e2cbf3e79ff
+Joanna Lund,Joanna Lund,2025-03-26 09:00:00,Guinsuan MPA,1,Deep,28,10,2,Trash - Plastic Bag,30-35,1,0,1,1,67e3988adc012e2cbf3e79ff
+Joanna Lund,Joanna Lund,2025-03-26 09:00:00,Guinsuan MPA,1,Deep,28,10,2,Trash - Soft Plastic Wrapper,10-15,2,0,2,1,67e3988adc012e2cbf3e79ff
+Joanna Lund,Joanna Lund,2025-03-26 09:00:00,Guinsuan MPA,1,Deep,28,10,2,Trash - Soft Plastic (Other),40-45,1,0,1,1,67e3988adc012e2cbf3e79ff
+Teun  Boogaard,Teun  Boogaard,2025-03-26 09:00:00,Guinsuan MPA,1,Shallow,27,10,2,Coralliophila,0-5,1,0,1,1,67e39bb8dc012e2cbf3e7a2f
+Bettina,Bettina,2025-03-26 09:00:00,Basak Can-Unsang MPA,2,Shallow,29,12,1,Coralliophila,0-5,4,0,4,1,67e39cc2dc012e2cbf3e7a7b
+Bettina,Bettina,2025-03-26 09:00:00,Basak Can-Unsang MPA,2,Shallow,29,12,1,Drupella,0-5,7,0,7,1,67e39cc2dc012e2cbf3e7a7b
+Bettina,Bettina,2025-03-26 09:00:00,Basak Can-Unsang MPA,2,Shallow,29,12,1,Trash - Fishing Line,>120,1,0,1,1,67e39cc2dc012e2cbf3e7a7b
+freja hjordt christensen,freja hjordt christensen,2025-03-26 09:30:00,Guinsuan MPA,2,Shallow,27,10,3,Drupella,0-5,6,0,6,1,67e39c2ddc012e2cbf3e7a53
+Lieve Buijs,Lieve Buijs,2025-03-26 09:30:00,Guinsuan MPA,2,Deep,27,10,1,Trash - Soft Plastic Wrapper,0-5,2,0,2,1,67e39dcadc012e2cbf3e7a9f
+Lieve Buijs,Lieve Buijs,2025-03-26 09:30:00,Guinsuan MPA,2,Deep,27,10,1,Trash - Soft Plastic Wrapper,0-5,2,0,2,1,67e39dcadc012e2cbf3e7aa6
+Teun  Boogaard,Teun  Boogaard,2025-03-26 09:30:00,Guinsuan MPA,1,Shallow,27,10,3,Coralliophila,0-5,1,0,1,1,67ea5d15670256cc32a29b38
+freja hjordt christensen,Teun  Boogaard,2025-03-26 11:00:00,Lutoban South MPA,1,Deep,27,8,1,Coralliophila,0-5,3,0,3,1,67e39d6adc012e2cbf3e7a87
+freja hjordt christensen,Teun  Boogaard,2025-03-26 11:00:00,Lutoban South MPA,1,Deep,27,8,1,Drupella,0-5,2,0,2,1,67e39d6adc012e2cbf3e7a87
+freja hjordt christensen,Teun  Boogaard,2025-03-26 11:00:00,Lutoban South MPA,1,Deep,27,8,1,Trash - Fishing Line,>120,3,0,3,1,67e39d6adc012e2cbf3e7a87
+freja hjordt christensen,Teun  Boogaard,2025-03-26 11:00:00,Lutoban South MPA,1,Deep,27,8,1,Trash - Fishing Line,0-5,3,0,3,1,67e39d6adc012e2cbf3e7a87
+freja hjordt christensen,Teun  Boogaard,2025-03-26 11:00:00,Lutoban South MPA,1,Deep,27,8,1,Trash - Fishing Line,20-25,3,0,3,1,67e39d6adc012e2cbf3e7a87
+Bettina,Bettina,2025-03-26 11:00:00,Basak Can-Unsang MPA,2,Medium,29,12,1,Drupella,0-5,1,0,1,1,67e39ddddc012e2cbf3e7aae
+Leslie Cano,Leslie Cano,2025-03-26 11:00:00,Basak Can-Unsang MPA,1,Medium,27,14,2,Drupella,0-5,1,0,1,1,67e3a511dc012e2cbf3e7af5
+Leslie Cano,Leslie Cano,2025-03-26 11:00:00,Basak Can-Unsang MPA,1,Medium,27,14,2,Trash - Fishing Line,>120,4,0,4,1,67e3a511dc012e2cbf3e7af5
+Teun  Boogaard,freja hjordt christensen,2025-03-26 12:00:00,Lutoban South MPA,1,Shallow,27,12,1,Coralliophila,0-5,27,0,27,1,67e39db8dc012e2cbf3e7a96
+Teun  Boogaard,freja hjordt christensen,2025-03-26 12:00:00,Lutoban South MPA,1,Shallow,27,12,1,Drupella,0-5,8,0,8,1,67e39db8dc012e2cbf3e7a96
+Lieve Buijs,Lieve Buijs,2025-03-26 12:00:00,Lutoban South MPA,2,Deep,27,14,0,Trash - Fishing Line,>120,2,0,2,1,67e3a016dc012e2cbf3e7ab5
+Lieve Buijs,Lieve Buijs,2025-03-26 12:00:00,Lutoban South MPA,2,Deep,27,14,0,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,67e3a016dc012e2cbf3e7ab5
+Lieve Buijs,Lieve Buijs,2025-03-26 12:00:00,Lutoban South MPA,2,Deep,27,14,0,Trash - Textiles and Bags,30-35,1,0,1,1,67e3a016dc012e2cbf3e7ab5
+Lieve Buijs,Lieve Buijs,2025-03-26 12:00:00,Lutoban South MPA,2,Deep,27,14,0,Trash - Fishing Line,45-50,1,0,1,1,67e3a016dc012e2cbf3e7ab5
+Lieve Buijs,Lieve Buijs,2025-03-26 12:00:00,Lutoban South MPA,2,Deep,27,14,0,Trash - Fishing Line,0-5,2,0,2,1,67e3a016dc012e2cbf3e7ab5
+Lieve Buijs,Lieve Buijs,2025-03-26 12:00:00,Lutoban South MPA,2,Deep,27,14,0,Trash - Fishing Line,5-10,2,0,2,1,67e3a016dc012e2cbf3e7ab5
+freja hjordt christensen,freja hjordt christensen,2025-03-29 09:00:00,Salag MPA,2,Deep,27,10,0,Coralliophila,0-5,6,0,6,1,67e90ed2dc012e2cbf3e80d0
+freja hjordt christensen,freja hjordt christensen,2025-03-29 09:00:00,Salag MPA,2,Deep,27,10,0,Drupella,0-5,1,0,1,1,67e90ed2dc012e2cbf3e80d0
+freja hjordt christensen,freja hjordt christensen,2025-03-29 09:00:00,Salag MPA,2,Deep,27,10,0,Trash - Fishing Line,>120,1,0,1,1,67e90ed2dc012e2cbf3e80d0
+Bethel Benjamin,Bethel Benjamin,2025-03-29 09:30:00,Latason MPA,2,Shallow,27,14,0,Coralliophila,0-5,59,0,59,1,67e75ba6dc012e2cbf3e7e88
+Bethel Benjamin,Bethel Benjamin,2025-03-29 09:30:00,Latason MPA,2,Shallow,27,14,0,Drupella,0-5,16,0,16,1,67e75ba6dc012e2cbf3e7e88
+Bethel Benjamin,Bethel Benjamin,2025-03-29 09:30:00,Latason MPA,2,Shallow,27,14,0,Trash - Fishing Line,50-60,2,0,2,1,67e75ba6dc012e2cbf3e7e88
+Lieve Buijs,Lieve Buijs,2025-03-29 09:30:00,Latason MPA,2,Medium,27,12,0,Drupella,0-5,4,0,4,1,67e7a35cdc012e2cbf3e7f5f
+Lieve Buijs,Lieve Buijs,2025-03-29 09:30:00,Latason MPA,2,Medium,27,12,0,Trash - Fishing Line,>120,2,0,2,1,67e7a35cdc012e2cbf3e7f5f
+Lieve Buijs,Lieve Buijs,2025-03-29 09:30:00,Latason MPA,2,Medium,27,12,0,Trash - Metal,30-35,1,0,1,1,67e7a35cdc012e2cbf3e7f5f
+Lieve Buijs,Lieve Buijs,2025-03-29 09:30:00,Latason MPA,2,Medium,27,12,0,Trash - Textiles and Bags,25-30,1,0,1,1,67e7a35cdc012e2cbf3e7f5f
+Lieve Buijs,Lieve Buijs,2025-03-29 09:30:00,Latason MPA,2,Medium,27,12,0,Trash - Metal,15-20,1,0,1,1,67e7a35cdc012e2cbf3e7f5f
+Lieve Buijs,Lieve Buijs,2025-03-29 09:30:00,Latason MPA,2,Medium,27,12,0,Trash - Fishing Line,20-25,2,0,2,1,67e7a35cdc012e2cbf3e7f5f
+Lieve Buijs,Lieve Buijs,2025-03-29 09:30:00,Latason MPA,2,Medium,27,12,0,Trash - Hard Plastic (Other),15-20,1,0,1,1,67e7a35cdc012e2cbf3e7f5f
+Bettina,Bettina,2025-03-29 11:00:00,Salag MPA,1,Medium,29,10,0,Coralliophila,0-5,14,0,14,0,67e794fedc012e2cbf3e7f0a
+Bettina,Bettina,2025-03-29 11:00:00,Salag MPA,1,Medium,29,10,0,Drupella,0-5,6,0,6,0,67e794fedc012e2cbf3e7f0a
+Bettina,Bettina,2025-03-29 11:00:00,Salag MPA,1,Medium,29,10,0,Crown of Thorns,40-45,1,0,1,0,67e794fedc012e2cbf3e7f0a
+Bettina,Bettina,2025-03-29 11:00:00,Salag MPA,1,Medium,29,10,0,Coralliophila,0-5,14,0,14,1,67e794ffdc012e2cbf3e7f15
+Bettina,Bettina,2025-03-29 11:00:00,Salag MPA,1,Medium,29,10,0,Drupella,0-5,6,0,6,1,67e794ffdc012e2cbf3e7f15
+Bettina,Bettina,2025-03-29 11:00:00,Salag MPA,1,Medium,29,10,0,Crown of Thorns,40-45,1,0,1,1,67e794ffdc012e2cbf3e7f15
+Bettina,Bettina,2025-03-29 11:00:00,Salag MPA,1,Medium,29,10,0,Coralliophila,0-5,14,0,14,0,67e79500dc012e2cbf3e7f20
+Bettina,Bettina,2025-03-29 11:00:00,Salag MPA,1,Medium,29,10,0,Drupella,0-5,6,0,6,0,67e79500dc012e2cbf3e7f20
+Bettina,Bettina,2025-03-29 11:00:00,Salag MPA,1,Medium,29,10,0,Crown of Thorns,40-45,1,0,1,0,67e79500dc012e2cbf3e7f20
+Leslie Cano,Leslie Cano,2025-03-29 11:30:00,Latason MPA,1,Shallow,27,14,0,Coralliophila,0-5,10,0,10,1,67e79454dc012e2cbf3e7edd
+Leslie Cano,Leslie Cano,2025-03-29 11:30:00,Latason MPA,1,Shallow,27,14,0,Drupella,0-5,5,0,5,1,67e79454dc012e2cbf3e7edd
+Leslie Cano,Leslie Cano,2025-03-29 11:30:00,Latason MPA,1,Shallow,27,14,0,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,67e79454dc012e2cbf3e7edd
+Bethel Benjamin,Bethel Benjamin,2025-03-29 11:30:00,Latason MPA,3,Shallow,28,12,0,Drupella,0-5,32,0,32,1,67eb27d4670256cc32a29d06
+Bethel Benjamin,Bethel Benjamin,2025-03-29 11:30:00,Latason MPA,3,Shallow,28,12,0,Coralliophila,0-5,67,0,67,1,67eb27d4670256cc32a29d06
+Bethel Benjamin,Bethel Benjamin,2025-03-29 11:30:00,Latason MPA,3,Shallow,28,12,0,Trash - Fishing Line,>120,1,0,1,1,67eb27d4670256cc32a29d06
+Bethel Benjamin,Bethel Benjamin,2025-03-29 11:30:00,Latason MPA,3,Shallow,28,12,0,Trash - Fishing Line,35-40,2,0,2,1,67eb27d4670256cc32a29d06
+Teun  Boogaard,Teun  Boogaard,2025-03-31 09:00:00,Salag MPA,2,Medium,27,10,0,Drupella,0-5,21,0,21,1,67ea5dec670256cc32a29b41
+Teun  Boogaard,Teun  Boogaard,2025-03-31 09:00:00,Salag MPA,2,Medium,27,10,0,Coralliophila,0-5,20,0,20,1,67ea5dec670256cc32a29b41
+Teun  Boogaard,Teun  Boogaard,2025-03-31 09:00:00,Salag MPA,2,Medium,27,10,0,Trash - Fishing Line,>120,2,0,2,1,67ea5dec670256cc32a29b41
+Teun  Boogaard,Teun  Boogaard,2025-03-31 09:30:00,Lutoban Pier,1,Deep,27,10,1,Coralliophila,0-5,14,0,14,1,67ea622f670256cc32a29ba3
+Teun  Boogaard,Teun  Boogaard,2025-03-31 09:30:00,Lutoban Pier,1,Deep,27,10,1,Trash - Fishing Line,>120,5,0,5,1,67ea622f670256cc32a29ba3
+Teun  Boogaard,Teun  Boogaard,2025-03-31 11:00:00,Lutoban Pier,1,Medium,27,6,2,Coralliophila,0-5,9,0,9,1,67ea638f670256cc32a29bd5
+Teun  Boogaard,Teun  Boogaard,2025-03-31 11:00:00,Lutoban Pier,1,Medium,27,6,2,Trash - Plastic Bag,30-35,1,0,1,1,67ea638f670256cc32a29bd5
+Bethel Benjamin,Joanna Lund,2025-04-01 11:00:00,Mojon MPA,1,Medium,28,8,0,Coralliophila,0-5,11,3,14,1,67ee5b3f670256cc32a2abdc
+Bethel Benjamin,Joanna Lund,2025-04-01 11:00:00,Mojon MPA,1,Medium,28,8,0,Trash - Fishing Line,25-30,1,0,1,1,67ee5b3f670256cc32a2abdc
+Bethel Benjamin,Joanna Lund,2025-04-01 11:00:00,Mojon MPA,1,Medium,28,8,0,Trash - Fishing Line,70-80,1,0,1,1,67ee5b3f670256cc32a2abdc
+Bethel Benjamin,Joanna Lund,2025-04-01 11:00:00,Mojon MPA,1,Medium,28,8,0,Trash - Hard Plastic Bottle,15-20,2,0,2,1,67ee5b3f670256cc32a2abdc
+Bethel Benjamin,Joanna Lund,2025-04-01 11:00:00,Mojon MPA,1,Medium,28,8,0,Trash - Other,50-60,1,0,1,1,67ee5b3f670256cc32a2abdc
+Bethel Benjamin,Joanna Lund,2025-04-02 09:00:00,Latason MPA,2,Medium,27,10,1,Drupella,0-5,3,0,3,1,67ec9ed0670256cc32a2a2d0
+Bethel Benjamin,Joanna Lund,2025-04-02 09:00:00,Latason MPA,2,Medium,27,10,1,Coralliophila,0-5,44,5,49,1,67ec9ed0670256cc32a2a2d0
+Bethel Benjamin,Joanna Lund,2025-04-02 09:00:00,Latason MPA,2,Medium,27,10,1,Trash - Fishing Line,>120,0,5,5,1,67ec9ed0670256cc32a2a2d0
+Bethel Benjamin,Joanna Lund,2025-04-02 09:00:00,Latason MPA,2,Medium,27,10,1,Trash - Fishing Line,40-45,1,2,3,1,67ec9ed0670256cc32a2a2d0
+Bethel Benjamin,Joanna Lund,2025-04-02 09:00:00,Latason MPA,2,Medium,27,10,1,Trash - Fishing Line,10-15,1,0,1,1,67ec9ed0670256cc32a2a2d0
+Bethel Benjamin,Joanna Lund,2025-04-02 09:00:00,Latason MPA,2,Medium,27,10,1,Trash - Fishing Line,5-10,1,0,1,1,67ec9ed0670256cc32a2a2d0
+Bethel Benjamin,Joanna Lund,2025-04-02 09:00:00,Latason MPA,2,Medium,27,10,1,Trash - Fishing Line,70-80,1,0,1,1,67ec9ed0670256cc32a2a2d0
+Matt Rutledge,Matt Rutledge,2025-04-02 09:00:00,Latason MPA,1,Medium,28,10,1,Coralliophila,0-5,1,0,1,1,67ece643670256cc32a2a4d3
+Bethel Benjamin,Joanna Lund,2025-04-02 11:00:00,Latason MPA,2,Shallow,27,10,1,Drupella,0-5,1,12,13,1,67ecec3a670256cc32a2a554
+Bethel Benjamin,Joanna Lund,2025-04-02 11:00:00,Latason MPA,2,Shallow,27,10,1,Coralliophila,0-5,38,31,69,1,67ecec3a670256cc32a2a554
+Bethel Benjamin,Joanna Lund,2025-04-02 11:00:00,Latason MPA,2,Shallow,27,10,1,Trash - Fishing Line,30-35,0,1,1,1,67ecec3a670256cc32a2a554
+Bethel Benjamin,Joanna Lund,2025-04-02 11:00:00,Latason MPA,2,Shallow,27,10,1,Trash - Plastic Bag,15-20,1,0,1,1,67ecec3a670256cc32a2a554
+Bethel Benjamin,Joanna Lund,2025-04-02 11:00:00,Latason MPA,2,Shallow,27,10,1,Trash - Fishing Line,70-80,0,1,1,1,67ecec3a670256cc32a2a554
+Bethel Benjamin,Joanna Lund,2025-04-02 11:00:00,Latason MPA,2,Shallow,27,10,1,Trash - Glass and Ceramics,25-30,0,1,1,1,67ecec3a670256cc32a2a554
+Matt Rutledge,Matt Rutledge,2025-04-02 11:00:00,Latason MPA,3,Medium,28,10,1,Coralliophila,0-5,22,0,22,1,67efa36b670256cc32a2adff
+Joanna Lund,Joanna Lund,2025-04-03 09:00:00,Antulang,1,Deep,28,12,1,Drupella,0-5,2,0,2,1,67ee5542670256cc32a2ab24
+Joanna Lund,Joanna Lund,2025-04-03 09:00:00,Antulang,1,Deep,28,12,1,Trash - Fishing Line,>120,7,0,7,1,67ee5542670256cc32a2ab24
+Matt Rutledge,Matt Rutledge,2025-04-03 11:00:00,Lutoban North MPA,3,Medium,28,12,1,Drupella,0-5,50,0,50,1,67efa454670256cc32a2ae23
+Matt Rutledge,Matt Rutledge,2025-04-03 11:00:00,Lutoban North MPA,3,Medium,28,12,1,Coralliophila,0-5,4,0,4,1,67efa454670256cc32a2ae23
+Matt Rutledge,Matt Rutledge,2025-04-03 11:00:00,Lutoban North MPA,3,Medium,28,12,1,Trash - Fishing Line,>120,5,0,5,1,67efa454670256cc32a2ae23
+Matt Rutledge,Matt Rutledge,2025-04-04 09:00:00,Lutoban North MPA,2,Deep,28,12,1,Drupella,0-5,1,0,1,1,67efa3f1670256cc32a2ae10
+Matt Rutledge,Matt Rutledge,2025-04-04 09:00:00,Lutoban North MPA,2,Deep,28,12,1,Trash - Fishing Line,>120,7,0,7,1,67efa3f1670256cc32a2ae10
+Matt Rutledge,Matt Rutledge,2025-04-04 09:00:00,Maluay Malatapay MPA,3,Medium,28,10,1,Coralliophila,0-5,3,0,3,1,67efa59d670256cc32a2ae54
+Matt Rutledge,Matt Rutledge,2025-04-04 11:00:00,Maluay Malatapay MPA,3,Shallow,28,8,2,Drupella,0-5,18,0,18,1,67efa58c670256cc32a2ae3d
+Matt Rutledge,Matt Rutledge,2025-04-04 11:00:00,Maluay Malatapay MPA,3,Shallow,28,8,2,Coralliophila,0-5,69,0,69,1,67efa58c670256cc32a2ae3d
+Matt Rutledge,Matt Rutledge,2025-04-04 11:00:00,Maluay Malatapay MPA,3,Shallow,28,8,2,Trash - Fishing Line,>120,5,0,5,1,67efa58c670256cc32a2ae3d
+Joanna Lund,Joanna Lund,2025-04-04 11:30:00,Maluay Malatapay MPA,2,Deep,28,10,1,Coralliophila,0-5,1,0,1,1,67f0cb3d670256cc32a2afc3
+Joanna Lund,Joanna Lund,2025-04-04 11:30:00,Maluay Malatapay MPA,2,Deep,28,10,1,Trash - Fishing Line,>120,8,0,8,1,67f0cb3d670256cc32a2afc3
+Joanna Lund,Joanna Lund,2025-04-04 11:30:00,Maluay Malatapay MPA,2,Deep,28,10,1,Trash - Fishing Line,50-60,1,0,1,1,67f0cb3d670256cc32a2afc3
+Joanna Lund,Joanna Lund,2025-04-04 11:30:00,Maluay Malatapay MPA,2,Deep,28,10,1,Trash - Soft Plastic Wrapper,20-25,1,0,1,1,67f0cb3d670256cc32a2afc3
+Bethel Benjamin,Matt Rutledge,2025-04-07 09:30:00,Kookoos,3,Deep,28,8,0,Drupella,0-5,21,27,48,1,67f33ad0670256cc32a2b2af
+Bethel Benjamin,Matt Rutledge,2025-04-07 09:30:00,Kookoos,3,Deep,28,8,0,Coralliophila,0-5,0,12,12,1,67f33ad0670256cc32a2b2af
+Bethel Benjamin,Matt Rutledge,2025-04-07 09:30:00,Kookoos,3,Deep,28,8,0,Trash - Fishing Line,>120,1,1,2,1,67f33ad0670256cc32a2b2af
+Bethel Benjamin,Matt Rutledge,2025-04-07 09:30:00,Kookoos,3,Deep,28,8,0,Trash - Fishing Line,35-40,2,0,2,1,67f33ad0670256cc32a2b2af
+Bethel Benjamin,Matt Rutledge,2025-04-07 09:30:00,Kookoos,3,Deep,28,8,0,Trash - Soft Plastic Wrapper,0-5,3,0,3,1,67f33ad0670256cc32a2b2af
+Bethel Benjamin,Matt Rutledge,2025-04-07 09:30:00,Kookoos,3,Deep,28,8,0,Trash - Fishing Line,25-30,1,0,1,1,67f33ad0670256cc32a2b2af
+Bethel Benjamin,Matt Rutledge,2025-04-07 11:30:00,Kookoos,3,Shallow,28,8,1,Drupella,0-5,67,57,124,1,67f39a1f670256cc32a2b35f
+Bethel Benjamin,Matt Rutledge,2025-04-07 11:30:00,Kookoos,3,Shallow,28,8,1,Coralliophila,0-5,3,5,8,1,67f39a1f670256cc32a2b35f
+Bethel Benjamin,Matt Rutledge,2025-04-07 11:30:00,Kookoos,3,Shallow,28,8,1,Trash - Fishing Line,25-30,0,3,3,1,67f39a1f670256cc32a2b35f
+Bethel Benjamin,Matt Rutledge,2025-04-07 11:30:00,Kookoos,3,Shallow,28,8,1,Trash - Soft Plastic Wrapper,10-15,0,1,1,1,67f39a1f670256cc32a2b35f
+Sherwin Badlaan,Anna Nazarova,2025-04-08 09:30:00,Guinsuan MPA,2,Deep,28,14,2,Drupella,0-5,4,0,4,1,67f4e147670256cc32a2b4ef
+Sherwin Badlaan,Anna Nazarova,2025-04-08 09:30:00,Guinsuan MPA,2,Deep,28,14,2,Coralliophila,0-5,3,0,3,1,67f4e147670256cc32a2b4ef
+Sherwin Badlaan,Bethel Benjamin,2025-04-08 10:30:00,Guinsuan MPA,1,Medium,28,14,4,Drupella,0-5,6,0,6,1,67f4e1f2670256cc32a2b4fc
+Sherwin Badlaan,Bethel Benjamin,2025-04-08 10:30:00,Guinsuan MPA,1,Medium,28,14,4,Coralliophila,0-5,4,0,4,1,67f4e1f2670256cc32a2b4fc
+Toby Cooper,Toby Cooper,2025-04-08 15:00:00,Lutoban South MPA,2,Deep,29,8,2,Crown of Thorns,25-30,1,0,1,1,67f4e64a670256cc32a2b562
+Toby Cooper,Toby Cooper,2025-04-08 15:00:00,Lutoban South MPA,2,Deep,29,8,2,Trash - Fishing Line,0-5,5,0,5,1,67f4e64a670256cc32a2b562
+Toby Cooper,Toby Cooper,2025-04-08 15:00:00,Lutoban South MPA,2,Deep,29,8,2,Trash - Other,10-15,1,0,1,1,67f4e64a670256cc32a2b562
+Loris Kramer,Loris Kramer,2025-04-09 08:30:00,Andulay MPA,3,Deep,29,10,1,Drupella,0-5,1,0,1,1,67f63b4c670256cc32a2ba13
+Loris Kramer,Loris Kramer,2025-04-09 08:30:00,Andulay MPA,3,Deep,29,10,1,Coralliophila,0-5,7,0,7,1,67f63b4c670256cc32a2ba13
+Loris Kramer,Loris Kramer,2025-04-09 11:00:00,Andulay MPA,3,Medium,29,10,1,Drupella,0-5,13,0,13,1,67f63b96670256cc32a2ba1e
+Loris Kramer,Loris Kramer,2025-04-09 11:00:00,Andulay MPA,3,Medium,29,10,1,Coralliophila,0-5,1,0,1,1,67f63b96670256cc32a2ba1e
+Loris Kramer,Loris Kramer,2025-04-09 11:00:00,Andulay MPA,3,Medium,29,10,1,Trash - Textiles and Bags,100-110,1,0,1,1,67f63b96670256cc32a2ba1e
+Loris Kramer,Loris Kramer,2025-04-09 11:30:00,Andulay MPA,3,Shallow,29,10,1,Drupella,0-5,27,0,27,1,67f63bdd670256cc32a2ba2b
+Loris Kramer,Loris Kramer,2025-04-09 11:30:00,Andulay MPA,3,Shallow,29,10,1,Coralliophila,0-5,12,0,12,1,67f63bdd670256cc32a2ba2b
+Loris Kramer,Loris Kramer,2025-04-09 11:30:00,Andulay MPA,3,Shallow,29,10,1,Crown of Thorns,5-10,1,0,1,1,67f63bdd670256cc32a2ba2b
+Naomi Westlake,Naomi Westlake,2025-04-10 09:00:00,Antulang,3,Deep,27,10,1,Drupella,0-5,2,0,2,1,67f72ed5670256cc32a2bbcc
+Naomi Westlake,Naomi Westlake,2025-04-10 09:00:00,Antulang,3,Deep,27,10,1,Coralliophila,0-5,4,0,4,1,67f72ed5670256cc32a2bbcc
+Ceasar Ruiz,Ceasar Ruiz,2025-04-10 10:30:00,Basak Can-Unsang MPA,1,Deep,28,10,2,Drupella,0-5,12,0,12,1,67f89c2a670256cc32a2c07d
+Ceasar Ruiz,Ceasar Ruiz,2025-04-10 10:30:00,Basak Can-Unsang MPA,1,Deep,28,10,2,Coralliophila,0-5,2,0,2,1,67f89c2a670256cc32a2c07d
+Ceasar Ruiz,Ceasar Ruiz,2025-04-10 10:30:00,Basak Can-Unsang MPA,1,Deep,28,10,2,Trash - Plastic Bag,50-60,2,0,2,1,67f89c2a670256cc32a2c07d
+Ceasar Ruiz,Ceasar Ruiz,2025-04-10 10:30:00,Basak Can-Unsang MPA,1,Deep,28,10,2,Trash - Fishing Line,60-70,1,0,1,1,67f89c2a670256cc32a2c07d
+Naomi Westlake,Naomi Westlake,2025-04-10 11:00:00,Antulang,3,Medium,27,10,2,Drupella,0-5,21,0,21,1,67f75d07670256cc32a2bcb5
+Naomi Westlake,Naomi Westlake,2025-04-10 11:00:00,Antulang,3,Medium,27,10,2,Coralliophila,0-5,12,0,12,1,67f75d07670256cc32a2bcb5
+Naomi Westlake,Naomi Westlake,2025-04-10 11:00:00,Antulang,3,Medium,27,10,2,Trash - Fishing Line,>120,4,0,4,1,67f75d07670256cc32a2bcb5
+Naomi Westlake,Naomi Westlake,2025-04-10 11:00:00,Antulang,3,Medium,27,10,2,Trash - Fishing Line,100-110,1,0,1,1,67f75d07670256cc32a2bcb5
+Naomi Westlake,Naomi Westlake,2025-04-10 11:00:00,Antulang,3,Medium,27,10,2,Trash - Fishing Line,70-80,1,0,1,1,67f75d07670256cc32a2bcb5
+Joanna Lund,Joanna Lund,2025-04-10 11:00:00,Andulay MPA,1,Medium,28,10,0,Drupella,0-5,29,0,29,1,67f8d664670256cc32a2c29c
+Joanna Lund,Joanna Lund,2025-04-10 11:00:00,Andulay MPA,1,Medium,28,10,0,Coralliophila,0-5,42,0,42,1,67f8d664670256cc32a2c29c
+Joanna Lund,Joanna Lund,2025-04-10 11:00:00,Andulay MPA,1,Medium,28,10,0,Trash - Soft Plastic (Other),15-20,1,0,1,1,67f8d664670256cc32a2c29c
+Joanna Lund,Joanna Lund,2025-04-10 11:00:00,Andulay MPA,1,Medium,28,10,0,Trash - Diapers and Nappies,15-20,1,0,1,1,67f8d664670256cc32a2c29c
+Naomi Westlake,Naomi Westlake,2025-04-10 11:30:00,Antulang,3,Shallow,27,10,2,Drupella,0-5,52,0,52,1,67f75de7670256cc32a2bd1e
+Naomi Westlake,Naomi Westlake,2025-04-10 11:30:00,Antulang,3,Shallow,27,10,2,Coralliophila,0-5,28,0,28,1,67f75de7670256cc32a2bd1e
+Naomi Westlake,Naomi Westlake,2025-04-10 11:30:00,Antulang,3,Shallow,27,10,2,Trash - Fishing Line,10-15,1,0,1,1,67f75de7670256cc32a2bd1e
+Naomi Westlake,Naomi Westlake,2025-04-10 11:30:00,Antulang,3,Shallow,27,10,2,Trash - Fishing Line,40-45,1,0,1,1,67f75de7670256cc32a2bd1e
+Toby Cooper,Toby Cooper,2025-04-11 09:00:00,Basak Can-Unsang MPA,1,Deep,28,14,2,Coralliophila,0-5,4,0,4,1,67f8b50e670256cc32a2c1af
+Toby Cooper,Toby Cooper,2025-04-11 09:00:00,Basak Can-Unsang MPA,1,Deep,28,14,2,Trash - Fishing Line,>120,1,0,1,1,67f8b50e670256cc32a2c1af
+Toby Cooper,Toby Cooper,2025-04-11 09:00:00,Basak Can-Unsang MPA,1,Deep,28,14,2,Trash - Soft Plastic Wrapper,20-25,1,0,1,1,67f8b50e670256cc32a2c1af
+Toby Cooper,Toby Cooper,2025-04-11 09:00:00,Basak Can-Unsang MPA,1,Deep,28,14,2,Trash - Glass and Ceramics,25-30,1,0,1,1,67f8b50e670256cc32a2c1af
+Joanna Lund,Joanna Lund,2025-04-11 09:00:00,Maluay Malatapay MPA,3,Deep,28,12,2,Coralliophila,0-5,2,0,2,1,67f8d725670256cc32a2c2ab
+Joanna Lund,Joanna Lund,2025-04-11 09:00:00,Maluay Malatapay MPA,3,Deep,28,12,2,Trash - Fishing Line,>120,4,0,4,1,67f8d725670256cc32a2c2ab
+Joanna Lund,Joanna Lund,2025-04-11 09:00:00,Maluay Malatapay MPA,3,Deep,28,12,2,Trash - Fishing Line,35-40,5,0,5,1,67f8d725670256cc32a2c2ab
+Joanna Lund,Joanna Lund,2025-04-11 09:00:00,Maluay Malatapay MPA,3,Deep,28,12,2,Trash - Soft Plastic Wrapper,10-15,3,0,3,1,67f8d725670256cc32a2c2ab
+Joanna Lund,Joanna Lund,2025-04-11 09:00:00,Maluay Malatapay MPA,3,Deep,28,12,2,Trash - Fishing Line,70-80,6,0,6,1,67f8d725670256cc32a2c2ab
+Joanna Lund,Joanna Lund,2025-04-11 09:00:00,Maluay Malatapay MPA,3,Deep,28,12,2,Trash - Soft Plastic (Other),15-20,1,0,1,1,67f8d725670256cc32a2c2ab
+Toby Cooper,Toby Cooper,2025-04-11 11:00:00,Basak Can-Unsang MPA,2,Deep,28,14,1,Trash - Fishing Line,>120,1,0,1,1,67f8b550670256cc32a2c1c2
+Joanna Lund,Joanna Lund,2025-04-11 11:00:00,Maluay Malatapay MPA,1,Medium,28,10,1,Coralliophila,0-5,2,0,2,1,67f8da50670256cc32a2c2be
+Joanna Lund,Joanna Lund,2025-04-11 11:00:00,Maluay Malatapay MPA,1,Medium,28,10,1,Trash - Fishing Line,>120,4,0,4,1,67f8da50670256cc32a2c2be
+Joanna Lund,Joanna Lund,2025-04-11 11:00:00,Maluay Malatapay MPA,1,Medium,28,10,1,Trash - Fishing Line,50-60,3,0,3,1,67f8da50670256cc32a2c2be
+Joanna Lund,Joanna Lund,2025-04-11 11:00:00,Maluay Malatapay MPA,1,Medium,28,10,1,Trash - Plastic Bag,20-25,3,0,3,1,67f8da50670256cc32a2c2be
+Joanna Lund,Joanna Lund,2025-04-11 11:00:00,Maluay Malatapay MPA,1,Medium,28,10,1,Trash - Fishing Line,30-35,2,0,2,1,67f8da50670256cc32a2c2be
+Joanna Lund,Joanna Lund,2025-04-11 11:00:00,Maluay Malatapay MPA,1,Medium,28,10,1,Trash - Hard Plastic Cutlery,10-15,1,0,1,1,67f8da50670256cc32a2c2be
+Joanna Lund,Joanna Lund,2025-04-11 11:00:00,Maluay Malatapay MPA,1,Medium,28,10,1,Trash - Soft Plastic (Other),10-15,1,0,1,1,67f8da50670256cc32a2c2be
+Joanna Lund,Joanna Lund,2025-04-11 11:00:00,Maluay Malatapay MPA,1,Medium,28,10,1,Trash - Hard Plastic (Other),15-20,1,0,1,1,67f8da50670256cc32a2c2be
+Jennifer Bloodworth,Jennifer Bloodworth,2025-04-15 07:30:00,Kookoos,3,Shallow,29,14,0,Drupella,0-5,86,0,86,1,67feed20913ea289af41ffe4
+Jennifer Bloodworth,Jennifer Bloodworth,2025-04-15 07:30:00,Kookoos,3,Shallow,29,14,0,Coralliophila,0-5,2,0,2,1,67feed20913ea289af41ffe4
+Jennifer Bloodworth,Jennifer Bloodworth,2025-04-15 07:30:00,Kookoos,2,Shallow,29,14,0,Drupella,0-5,69,0,69,1,67feede9913ea289af41ffef
+Jennifer Bloodworth,Jennifer Bloodworth,2025-04-15 07:30:00,Kookoos,2,Shallow,29,14,0,Coralliophila,0-5,1,0,1,1,67feede9913ea289af41ffef
+Jennifer Bloodworth,Jennifer Bloodworth,2025-04-15 07:30:00,Kookoos,2,Shallow,29,14,0,Trash - Hard Plastic (Other),15-20,1,0,1,1,67feede9913ea289af41ffef
+Jennifer Bloodworth,Jennifer Bloodworth,2025-04-15 07:30:00,Kookoos,2,Shallow,29,14,0,Trash - Textiles and Bags,30-35,1,0,1,1,67feede9913ea289af41ffef
+Maud Boerrigter,Sterre Kuijpers,2025-04-15 09:00:00,Kookoos,2,Deep,28,14,2,Drupella,0-5,16,0,16,1,67fde805913ea289af41fb45
+Maud Boerrigter,Sterre Kuijpers,2025-04-15 09:00:00,Kookoos,2,Deep,28,14,2,Coralliophila,0-5,10,0,10,1,67fde805913ea289af41fb45
+Toby Cooper,Toby Cooper,2025-04-15 09:00:00,Santa Catalina Cawitan,1,Shallow,28,4,0,Coralliophila,0-5,46,0,46,1,67fe3669913ea289af41fe4a
+Toby Cooper,Toby Cooper,2025-04-15 09:00:00,Santa Catalina Cawitan,1,Shallow,28,4,0,Trash - Fishing Line,>120,3,0,3,1,67fe3669913ea289af41fe4a
+Toby Cooper,Toby Cooper,2025-04-15 09:00:00,Santa Catalina Cawitan,1,Shallow,28,4,0,Trash - Soft Plastic Wrapper,10-15,1,0,1,1,67fe3669913ea289af41fe4a
+Rebekka Rudolph,Sherwin Badlaan,2025-04-15 09:00:00,Lutoban Pier,2,Medium,28,8,1,Drupella,0-5,3,0,3,1,67fe558a913ea289af41fef2
+Rebekka Rudolph,Sherwin Badlaan,2025-04-15 09:00:00,Lutoban Pier,2,Medium,28,8,1,Coralliophila,0-5,16,0,16,1,67fe558a913ea289af41fef2
+Sherwin Badlaan,Rebekka Rudolph,2025-04-15 10:30:00,Lutoban Pier,1,Shallow,28,6,1,Drupella,0-5,9,0,9,1,67fe276e913ea289af41fdde
+Sherwin Badlaan,Rebekka Rudolph,2025-04-15 10:30:00,Lutoban Pier,1,Shallow,28,6,1,Coralliophila,0-5,23,0,23,1,67fe276e913ea289af41fdde
+Sterre Kuijpers,Sterre Kuijpers,2025-04-15 11:00:00,Kookoos,1,Medium,28,14,2,Coralliophila,0-5,19,0,19,1,67fde87c913ea289af41fba5
+Sterre Kuijpers,Sterre Kuijpers,2025-04-15 11:00:00,Kookoos,1,Medium,28,14,2,Drupella,0-5,61,0,61,1,67fde87c913ea289af41fba5
+Toby Cooper,Toby Cooper,2025-04-15 11:30:00,Santa Catalina Manalongon,2,Shallow,28,6,0,Trash - Soft Plastic Wrapper,15-20,6,0,6,1,67fe36f2913ea289af41fe57
+Toby Cooper,Toby Cooper,2025-04-15 11:30:00,Santa Catalina Manalongon,2,Shallow,28,6,0,Trash - Hard Plastic Bottle,15-20,2,0,2,1,67fe36f2913ea289af41fe57
+Toby Cooper,Toby Cooper,2025-04-15 11:30:00,Santa Catalina Manalongon,2,Shallow,28,6,0,Trash - Textiles and Bags,45-50,4,0,4,1,67fe36f2913ea289af41fe57
+Toby Cooper,Toby Cooper,2025-04-15 11:30:00,Santa Catalina Manalongon,1,Shallow,28,6,0,Drupella,0-5,2,0,2,1,67fe374f913ea289af41fe64
+Toby Cooper,Toby Cooper,2025-04-15 11:30:00,Santa Catalina Manalongon,1,Shallow,28,6,0,Coralliophila,0-5,6,0,6,1,67fe374f913ea289af41fe64
+Toby Cooper,Toby Cooper,2025-04-15 11:30:00,Santa Catalina Manalongon,1,Shallow,28,6,0,Trash - Soft Plastic Wrapper,15-20,3,0,3,1,67fe374f913ea289af41fe64
+Toby Cooper,Toby Cooper,2025-04-15 11:30:00,Santa Catalina Manalongon,1,Shallow,28,6,0,Trash - Hard Plastic Bottle,25-30,4,0,4,1,67fe374f913ea289af41fe64
+Toby Cooper,Toby Cooper,2025-04-15 11:30:00,Santa Catalina Manalongon,1,Shallow,28,6,0,Trash - Textiles and Bags,15-20,2,0,2,1,67fe374f913ea289af41fe64
+oona shah,oona shah,2025-04-15 15:00:00,Andulay MPA,2,Medium,28,12,2,Drupella,0-5,43,0,43,1,67fe1bac913ea289af41fd75
+oona shah,oona shah,2025-04-15 15:00:00,Andulay MPA,2,Medium,28,12,2,Coralliophila,0-5,44,0,44,1,67fe1bac913ea289af41fd75
+oona shah,oona shah,2025-04-15 15:00:00,Andulay MPA,2,Medium,28,12,2,Crown of Thorns,15-20,1,0,1,1,67fe1bac913ea289af41fd75
+Rebekka Rudolph,Sterre Kuijpers,2025-04-15 20:30:00,Andulay MPA,1,Shallow,28,8,0,Drupella,0-5,23,0,23,1,67fe55db913ea289af41fefd
+Rebekka Rudolph,Sterre Kuijpers,2025-04-15 20:30:00,Andulay MPA,1,Shallow,28,8,0,Coralliophila,0-5,39,0,39,1,67fe55db913ea289af41fefd
+Rebekka Rudolph,Sterre Kuijpers,2025-04-16 09:00:00,Antulang,2,Deep,28,14,0,Coralliophila,0-5,23,0,23,1,67ff3d57913ea289af420292
+Maud Boerrigter,oona shah,2025-04-16 09:00:00,Lutoban South MPA,3,Deep,28,10,1,Drupella,0-5,3,0,3,1,67ff3e28913ea289af4202c8
+Maud Boerrigter,oona shah,2025-04-16 09:00:00,Lutoban South MPA,3,Deep,28,10,1,Trash - Fishing Line,>120,1,0,1,1,67ff3e28913ea289af4202c8
+PO HSU CHU,PO HSU CHU,2025-04-16 09:00:00,Antulang,1,Medium,28,8,1,Drupella,0-5,4,0,4,1,67ff3efb913ea289af4202e5
+PO HSU CHU,PO HSU CHU,2025-04-16 09:00:00,Antulang,1,Medium,28,8,1,Coralliophila,0-5,2,0,2,1,67ff3efb913ea289af4202e5
+PO HSU CHU,PO HSU CHU,2025-04-16 09:00:00,Antulang,1,Medium,28,8,1,Trash - Fishing Line,>120,1,0,1,1,67ff3efb913ea289af4202e5
+PO HSU CHU,PO HSU CHU,2025-04-16 09:30:00,Antulang,2,Shallow,28,8,1,Drupella,0-5,12,0,12,1,67ff4004913ea289af42031e
+PO HSU CHU,PO HSU CHU,2025-04-16 09:30:00,Antulang,2,Shallow,28,8,1,Coralliophila,0-5,1,0,1,1,67ff4004913ea289af42031e
+Jomel Caguicla,Maud Boerrigter,2025-04-16 10:00:00,Lutoban South MPA,2,Medium,28,10,1,Drupella,0-5,0,24,24,1,67ff3ea9913ea289af4202d4
+Jomel Caguicla,Maud Boerrigter,2025-04-16 10:00:00,Lutoban South MPA,2,Medium,28,10,1,Coralliophila,0-5,1,2,3,1,67ff3ea9913ea289af4202d4
+Rebekka Rudolph,Sterre Kuijpers,2025-04-16 11:00:00,Antulang,3,Shallow,28,10,1,Drupella,0-5,86,0,86,1,67ff3dfa913ea289af42029c
+Rebekka Rudolph,Sterre Kuijpers,2025-04-16 11:00:00,Antulang,3,Shallow,28,10,1,Coralliophila,0-5,41,0,41,1,67ff3dfa913ea289af42029c
+Oona Shah,Jomel Caguicla,2025-04-17 08:30:00,Lutoban North MPA,1,Deep,27,8,2,Drupella,0-5,1,0,1,1,68008cd4913ea289af420712
+Oona Shah,Jomel Caguicla,2025-04-17 08:30:00,Lutoban North MPA,1,Deep,27,8,2,Trash - Fishing Line,>120,4,0,4,1,68008cd4913ea289af420712
+Oona Shah,Jomel Caguicla,2025-04-17 08:30:00,Lutoban North MPA,1,Deep,27,8,2,Trash - Soft Plastic Wrapper,5-10,1,0,1,1,68008cd4913ea289af420712
+Rebekka Rudolph,Sterre Kuijpers,2025-04-17 09:00:00,Latason MPA,2,Medium,28,6,1,Drupella,0-5,11,0,11,1,6800908d913ea289af4207f8
+Rebekka Rudolph,Sterre Kuijpers,2025-04-17 09:00:00,Latason MPA,2,Medium,28,6,1,Coralliophila,0-5,50,0,50,1,6800908d913ea289af4207f8
+Rebekka Rudolph,Sterre Kuijpers,2025-04-17 09:00:00,Latason MPA,2,Medium,28,6,1,Trash - Rope,>120,1,0,1,1,6800908d913ea289af4207f8
+Po Hsu Chu,Po Hsu Chu,2025-04-17 09:00:00,Latason MPA,1,Medium,28,8,1,Drupella,0-5,7,0,7,1,68009ba6913ea289af4208c0
+Po Hsu Chu,Po Hsu Chu,2025-04-17 09:00:00,Latason MPA,1,Medium,28,8,1,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,68009ba6913ea289af4208c0
+Oona Shah,Jomel Caguicla,2025-04-17 11:00:00,Lutoban North MPA,1,Medium,28,10,2,Drupella,0-5,14,0,14,1,68008d98913ea289af420720
+Oona Shah,Jomel Caguicla,2025-04-17 11:00:00,Lutoban North MPA,1,Medium,28,10,2,Coralliophila,0-5,72,0,72,1,68008d98913ea289af420720
+Oona Shah,Jomel Caguicla,2025-04-17 11:00:00,Lutoban North MPA,1,Medium,28,10,2,Trash - Fishing Line,>120,2,0,2,1,68008d98913ea289af420720
+Rebekka Rudolph,Sterre Kuijpers,2025-04-17 11:00:00,Latason MPA,3,Shallow,27,4,1,Drupella,0-5,39,0,39,1,6800910f913ea289af420805
+Rebekka Rudolph,Sterre Kuijpers,2025-04-17 11:00:00,Latason MPA,3,Shallow,27,4,1,Coralliophila,0-5,30,0,30,1,6800910f913ea289af420805
+Po Hsu Chu,Diana Isabel,2025-04-17 11:00:00,Latason MPA,1,Shallow,28,8,1,Drupella,0-5,20,0,20,1,68009ca8913ea289af4208cc
+Jomel Caguicla,Oona Shah,2025-04-18 08:30:00,Lutoban Pier,3,Deep,28,8,2,Coralliophila,0-5,2,3,5,1,6801e41b913ea289af420c3b
+Jomel Caguicla,Oona Shah,2025-04-18 08:30:00,Lutoban Pier,3,Deep,28,8,2,Trash - Fishing Line,>120,7,0,7,1,6801e41b913ea289af420c3b
+Rebekka Rudolph,Sterre Kuijpers,2025-04-18 09:00:00,Maluay Malatapay MPA,1,Deep,28,10,0,Drupella,0-5,2,0,2,1,6801e7f1913ea289af420ce6
+Rebekka Rudolph,Sterre Kuijpers,2025-04-18 09:00:00,Maluay Malatapay MPA,1,Deep,28,10,0,Trash - Glass and Ceramics,30-35,1,0,1,1,6801e7f1913ea289af420ce6
+Rebekka Rudolph,Sterre Kuijpers,2025-04-18 09:00:00,Maluay Malatapay MPA,1,Deep,28,10,0,Trash - Metal,10-15,1,0,1,1,6801e7f1913ea289af420ce6
+Po Hsu Chu,Teun  Boogaard,2025-04-18 09:00:00,Salag MPA,1,Shallow,27,14,1,Drupella,0-5,18,0,18,1,68023cd5913ea289af420fd5
+Po Hsu Chu,Teun  Boogaard,2025-04-18 09:00:00,Salag MPA,1,Shallow,27,14,1,Coralliophila,0-5,17,0,17,1,68023cd5913ea289af420fd5
+Jomel Caguicla,Oona Shah,2025-04-18 10:30:00,Lutoban Pier,1,Shallow,28,10,1,Drupella,0-5,21,61,82,1,6801e407913ea289af420c24
+Jomel Caguicla,Oona Shah,2025-04-18 10:30:00,Lutoban Pier,1,Shallow,28,10,1,Coralliophila,0-5,78,171,249,1,6801e407913ea289af420c24
+Jomel Caguicla,Oona Shah,2025-04-18 10:30:00,Lutoban Pier,1,Shallow,28,10,1,Trash - Fishing Line,>120,0,1,1,1,6801e407913ea289af420c24
+Jomel Caguicla,Oona Shah,2025-04-18 11:00:00,Lutoban Pier,2,Shallow,28,10,1,Drupella,0-5,7,32,39,1,6801e884913ea289af420cf5
+Jomel Caguicla,Oona Shah,2025-04-18 11:00:00,Lutoban Pier,2,Shallow,28,10,1,Coralliophila,0-5,36,85,121,1,6801e884913ea289af420cf5
+Jomel Caguicla,Oona Shah,2025-04-18 11:00:00,Lutoban Pier,2,Shallow,28,10,1,Trash - Fishing Line,>120,2,0,2,1,6801e884913ea289af420cf5
+Rebekka Rudolph,Sterre Kuijpers,2025-04-18 11:00:00,Maluay Malatapay MPA,2,Medium,28,8,0,Drupella,0-5,10,0,10,1,6801e8f8913ea289af420d01
+Rebekka Rudolph,Sterre Kuijpers,2025-04-18 11:00:00,Maluay Malatapay MPA,2,Medium,28,8,0,Coralliophila,0-5,26,0,26,1,6801e8f8913ea289af420d01
+Rebekka Rudolph,Sterre Kuijpers,2025-04-18 11:00:00,Maluay Malatapay MPA,2,Medium,28,8,0,Trash - Plastic Bag,5-10,1,0,1,1,6801e8f8913ea289af420d01
+Rebekka Rudolph,Sterre Kuijpers,2025-04-18 11:00:00,Maluay Malatapay MPA,2,Medium,28,8,0,Trash - Soft Plastic Wrapper,10-15,1,0,1,1,6801e8f8913ea289af420d01
+Rebekka Rudolph,Sterre Kuijpers,2025-04-18 11:00:00,Maluay Malatapay MPA,2,Medium,28,8,0,Trash - Rope,>120,0,1,1,1,6801e8f8913ea289af420d01
+Rebekka Rudolph,Sterre Kuijpers,2025-04-18 11:00:00,Maluay Malatapay MPA,2,Medium,28,8,0,Trash - Metal,5-10,1,0,1,1,6801e8f8913ea289af420d01
+Rebekka Rudolph,Sterre Kuijpers,2025-04-18 11:00:00,Maluay Malatapay MPA,2,Medium,28,8,0,Trash - Metal,10-15,1,0,1,1,6801e8f8913ea289af420d01
+Po Hsu Chu,Po Hsu Chu,2025-04-18 11:00:00,Salag MPA,3,Shallow,28,12,1,Drupella,0-5,22,0,22,1,6801fa92913ea289af420eb9
+Po Hsu Chu,Po Hsu Chu,2025-04-18 11:00:00,Salag MPA,3,Shallow,28,12,1,Coralliophila,0-5,2,0,2,1,6801fa92913ea289af420eb9
+Po Hsu Chu,Po Hsu Chu,2025-04-18 11:00:00,Salag MPA,3,Shallow,28,12,1,Trash - Rope,100-110,1,0,1,1,6801fa92913ea289af420eb9
+Po Hsu Chu,Po Hsu Chu,2025-04-18 11:00:00,Salag MPA,3,Shallow,28,12,1,Trash - Textiles and Bags,15-20,1,0,1,1,6801fa92913ea289af420eb9
+Po Hsu Chu,Po Hsu Chu,2025-04-18 11:00:00,Salag MPA,3,Shallow,28,12,1,Trash - Textiles and Bags,40-45,1,0,1,1,6801fa92913ea289af420eb9
+Rebekka Rudolph,Sterre Kuijpers,2025-04-19 09:00:00,Kookoos,1,Deep,27,8,1,Drupella,0-5,1,0,1,1,680329c7913ea289af421225
+Rebekka Rudolph,Sterre Kuijpers,2025-04-19 09:00:00,Kookoos,1,Deep,27,8,1,Coralliophila,0-5,12,0,12,1,680329c7913ea289af421225
+Rebekka Rudolph,Sterre Kuijpers,2025-04-19 09:00:00,Kookoos,1,Deep,27,8,1,Trash - Fishing Line,>120,4,0,4,1,680329c7913ea289af421225
+Rebekka Rudolph,Sterre Kuijpers,2025-04-19 09:00:00,Kookoos,1,Deep,27,8,1,Trash - Fishing Line,30-35,2,0,2,1,680329c7913ea289af421225
+Rebekka Rudolph,Sterre Kuijpers,2025-04-19 09:00:00,Kookoos,1,Deep,27,8,1,Trash - Fishing Line,45-50,3,0,3,1,680329c7913ea289af421225
+Rebekka Rudolph,Sterre Kuijpers,2025-04-19 09:00:00,Kookoos,1,Deep,27,8,1,Trash - Fishing Line,90-100,9,0,9,1,680329c7913ea289af421225
+Rebekka Rudolph,Sterre Kuijpers,2025-04-19 09:00:00,Kookoos,1,Deep,27,8,1,Trash - Metal,25-30,1,0,1,1,680329c7913ea289af421225
+Maud Boerrigter,Maud Boerrigter,2025-04-19 09:00:00,Andulay MPA,1,Deep,28,10,1,Drupella,0-5,3,0,3,1,680393ae913ea289af42166d
+Maud Boerrigter,Maud Boerrigter,2025-04-19 09:00:00,Andulay MPA,1,Deep,28,10,1,Coralliophila,0-5,11,0,11,1,680393ae913ea289af42166d
+Sterre Kuijpers,Sterre Kuijpers,2025-04-19 11:00:00,Kookoos,2,Medium,28,10,1,Drupella,0-5,46,0,46,1,68033569913ea289af42130f
+Sterre Kuijpers,Sterre Kuijpers,2025-04-19 11:00:00,Kookoos,2,Medium,28,10,1,Coralliophila,0-5,20,0,20,1,68033569913ea289af42130f
+Maud Boerrigter,Maud Boerrigter,2025-04-19 11:00:00,Andulay MPA,3,Shallow,28,10,1,Drupella,0-5,48,0,48,1,680393f9913ea289af421678
+Maud Boerrigter,Maud Boerrigter,2025-04-19 11:00:00,Andulay MPA,3,Shallow,28,10,1,Coralliophila,0-5,31,0,31,1,680393f9913ea289af421678
+Maud Boerrigter,Maud Boerrigter,2025-04-19 11:00:00,Andulay MPA,3,Shallow,28,10,1,Crown of Thorns,15-20,1,0,1,1,680393f9913ea289af421678
+Maud Boerrigter,Maud Boerrigter,2025-04-19 11:30:00,Andulay MPA,2,Shallow,28,10,1,Drupella,0-5,42,0,42,1,6803942f913ea289af421685
+Maud Boerrigter,Maud Boerrigter,2025-04-19 11:30:00,Andulay MPA,2,Shallow,28,10,1,Coralliophila,0-5,31,0,31,1,6803942f913ea289af421685
+Maud Boerrigter,Sterre Kuijpers,2025-04-22 09:30:00,Kookoos,1,Deep,28,14,1,Drupella,0-5,7,0,7,1,68072f66913ea289af421827
+Maud Boerrigter,Sterre Kuijpers,2025-04-22 09:30:00,Kookoos,1,Deep,28,14,1,Coralliophila,0-5,15,0,15,1,68072f66913ea289af421827
+Maud Boerrigter,Sterre Kuijpers,2025-04-22 09:30:00,Kookoos,1,Deep,28,14,1,Trash - Fishing Line,>120,2,0,2,1,68072f66913ea289af421827
+Maud Boerrigter,Sterre Kuijpers,2025-04-22 09:30:00,Kookoos,1,Deep,28,14,1,Trash - Fishing Line,60-70,2,0,2,1,68072f66913ea289af421827
+Po Hsu Chu,Teun  Boogaard,2025-04-22 09:30:00,Andulay MPA,3,Deep,28,10,0,Drupella,0-5,12,0,12,1,68081e7b913ea289af421ce9
+Po Hsu Chu,Teun  Boogaard,2025-04-22 09:30:00,Andulay MPA,3,Deep,28,10,0,Coralliophila,0-5,14,0,14,1,68081e7b913ea289af421ce9
+Po Hsu Chu,Teun  Boogaard,2025-04-22 09:30:00,Andulay MPA,3,Deep,28,10,0,Trash - Plastic Bag,15-20,3,0,3,1,68081e7b913ea289af421ce9
+Po Hsu Chu,Teun  Boogaard,2025-04-22 09:30:00,Andulay MPA,3,Deep,28,10,0,Trash - Fishing Line,20-25,1,0,1,1,68081e7b913ea289af421ce9
+Po Hsu Chu,Teun  Boogaard,2025-04-22 09:30:00,Andulay MPA,3,Deep,28,10,0,Trash - Fishing Line,100-110,2,0,2,1,68081e7b913ea289af421ce9
+Po Hsu Chu,Teun  Boogaard,2025-04-22 09:30:00,Andulay MPA,3,Deep,28,10,0,Trash - Soft Plastic Wrapper,15-20,1,0,1,1,68081e7b913ea289af421ce9
+Jomel Caguicla,Sherwin Badlaan,2025-04-22 09:30:00,Lutoban North MPA,1,Deep,28,10,0,Coralliophila,0-5,1,1,2,1,680828cf913ea289af421d2a
+Jomel Caguicla,Sherwin Badlaan,2025-04-22 09:30:00,Lutoban North MPA,1,Deep,28,10,0,Drupella,0-5,0,3,3,1,680828cf913ea289af421d2a
+Jomel Caguicla,Sherwin Badlaan,2025-04-22 09:30:00,Lutoban North MPA,1,Deep,28,10,0,Trash - Fishing Line,>120,1,0,1,1,680828cf913ea289af421d2a
+Po Hsu Chu,Teun  Boogaard,2025-04-22 11:00:00,Andulay MPA,2,Shallow,28,12,0,Drupella,0-5,39,0,39,1,68081ef8913ea289af421cfc
+Po Hsu Chu,Teun  Boogaard,2025-04-22 11:00:00,Andulay MPA,2,Shallow,28,12,0,Coralliophila,0-5,44,0,44,1,68081ef8913ea289af421cfc
+Po Hsu Chu,Teun  Boogaard,2025-04-22 11:00:00,Andulay MPA,2,Shallow,28,12,0,Crown of Thorns,25-30,3,0,3,1,68081ef8913ea289af421cfc
+Rebekka Rudolph,Jomel Caguicla,2025-04-22 11:30:00,Lutoban North MPA,1,Shallow,28,10,1,Drupella,0-5,16,0,16,1,68072f91913ea289af421835
+Rebekka Rudolph,Jomel Caguicla,2025-04-22 11:30:00,Lutoban North MPA,1,Shallow,28,10,1,Coralliophila,0-5,47,0,47,1,68072f91913ea289af421835
+Rebekka Rudolph,Jomel Caguicla,2025-04-22 11:30:00,Lutoban North MPA,1,Shallow,28,10,1,Trash - Fishing Line,>120,1,0,1,1,68072f91913ea289af421835
+Maud Boerrigter,Oona Shah,2025-04-22 11:30:00,Kookoos,1,Medium,28,14,1,Drupella,0-5,24,0,24,1,68073414913ea289af4218b5
+Maud Boerrigter,Oona Shah,2025-04-22 11:30:00,Kookoos,1,Medium,28,14,1,Coralliophila,0-5,81,0,81,1,68073414913ea289af4218b5
+Maud Boerrigter,Oona Shah,2025-04-22 11:30:00,Kookoos,1,Medium,28,14,1,Trash - Fishing Line,>120,4,0,4,1,68073414913ea289af4218b5
+Maud Boerrigter,Oona Shah,2025-04-22 11:30:00,Kookoos,1,Medium,28,14,1,Trash - Metal,10-15,1,0,1,1,68073414913ea289af4218b5
+Po Hsu Chu,Teun  Boogaard,2025-04-23 08:30:00,Lutoban South MPA,1,Medium,28,10,0,Drupella,0-5,5,0,5,1,68097359913ea289af42248d
+Po Hsu Chu,Teun  Boogaard,2025-04-23 08:30:00,Lutoban South MPA,1,Medium,28,10,0,Coralliophila,0-5,32,0,32,1,68097359913ea289af42248d
+Po Hsu Chu,Teun  Boogaard,2025-04-23 08:30:00,Lutoban South MPA,1,Medium,28,10,0,Trash - Fishing Line,>120,1,0,1,1,68097359913ea289af42248d
+Po Hsu Chu,Teun  Boogaard,2025-04-23 08:30:00,Lutoban South MPA,1,Medium,28,10,0,Trash - Fishing Line,50-60,1,0,1,1,68097359913ea289af42248d
+Po Hsu Chu,Teun  Boogaard,2025-04-23 08:30:00,Lutoban South MPA,1,Medium,28,10,0,Trash - Metal,25-30,1,0,1,1,68097359913ea289af42248d
+Po Hsu Chu,Teun  Boogaard,2025-04-23 08:30:00,Lutoban South MPA,1,Medium,28,10,0,Trash - Metal,15-20,1,0,1,1,68097359913ea289af42248d
+Sherwin Badlaan,Rebekka Rudolph,2025-04-23 09:30:00,Basak Can-Unsang MPA,1,Shallow,28,14,1,Drupella,0-5,6,0,6,1,6808a42c913ea289af421fda
+Sherwin Badlaan,Rebekka Rudolph,2025-04-23 09:30:00,Basak Can-Unsang MPA,1,Shallow,28,14,1,Coralliophila,0-5,2,0,2,1,6808a42c913ea289af421fda
+Oona Shah,Sterre Kuijpers,2025-04-23 09:30:00,Salag MPA,3,Deep,28,18,1,Drupella,0-5,4,0,4,1,6808dcc4913ea289af4221a7
+Oona Shah,Sterre Kuijpers,2025-04-23 09:30:00,Salag MPA,3,Deep,28,18,1,Coralliophila,0-5,14,0,14,1,6808dcc4913ea289af4221a7
+Po Hsu Chu,Po Hsu Chu,2025-04-23 10:30:00,Lutoban South MPA,2,Shallow,28,10,0,Drupella,0-5,4,0,4,1,68096f52913ea289af422482
+Po Hsu Chu,Po Hsu Chu,2025-04-23 10:30:00,Lutoban South MPA,2,Shallow,28,10,0,Trash - Metal,15-20,1,0,1,1,68096f52913ea289af422482
+Maud Boerrigter,Sterre Kuijpers,2025-04-23 11:00:00,Salag MPA,2,Shallow,28,16,1,Drupella,0-5,53,0,53,1,6808dcd6913ea289af4221b1
+Maud Boerrigter,Sterre Kuijpers,2025-04-23 11:00:00,Salag MPA,2,Shallow,28,16,1,Coralliophila,0-5,83,0,83,1,6808dcd6913ea289af4221b1
+Oona Shah,Oona Shah,2025-04-24 08:30:00,Antulang,2,Medium,28,16,1,Drupella,0-5,5,0,5,1,6809bd5d913ea289af4225a5
+Oona Shah,Oona Shah,2025-04-24 08:30:00,Antulang,2,Medium,28,16,1,Coralliophila,0-5,50,0,50,1,6809bd5d913ea289af4225a5
+Oona Shah,Oona Shah,2025-04-24 08:30:00,Antulang,2,Medium,28,16,1,Trash - Fishing Line,>120,9,0,9,1,6809bd5d913ea289af4225a5
+Oona Shah,Oona Shah,2025-04-24 08:30:00,Antulang,2,Medium,28,16,1,Trash - Fishing Line,70-80,1,0,1,1,6809bd5d913ea289af4225a5
+Oona Shah,Oona Shah,2025-04-24 08:30:00,Antulang,2,Medium,28,16,1,Trash - Other,5-10,1,0,1,1,6809bd5d913ea289af4225a5
+Po Hsu Chu,Sherwin Badlaan,2025-04-24 09:00:00,Guinsuan MPA,1,Deep,28,14,2,Drupella,0-5,5,0,5,1,6809cac5913ea289af4225fb
+Po Hsu Chu,Sherwin Badlaan,2025-04-24 09:00:00,Guinsuan MPA,1,Deep,28,14,2,Coralliophila,0-5,7,0,7,1,6809cac5913ea289af4225fb
+Po Hsu Chu,Sherwin Badlaan,2025-04-24 09:00:00,Guinsuan MPA,1,Deep,28,14,2,Trash - Fishing Line,80-90,1,0,1,1,6809cac5913ea289af4225fb
+Po Hsu Chu,Sherwin Badlaan,2025-04-24 09:00:00,Guinsuan MPA,1,Deep,28,14,2,Trash - Soft Plastic Wrapper,10-15,1,0,1,1,6809cac5913ea289af4225fb
+Po Hsu Chu,Sherwin Badlaan,2025-04-24 09:00:00,Guinsuan MPA,1,Deep,28,14,2,Trash - Plastic Bag,25-30,1,0,1,1,6809cac5913ea289af4225fb
+Po Hsu Chu,Sherwin Badlaan,2025-04-24 09:00:00,Guinsuan MPA,1,Deep,28,14,2,Trash - Soft Plastic Wrapper,5-10,1,0,1,1,6809cac5913ea289af4225fb
+Teun  Boogaard,Sterre Kuijpers,2025-04-24 09:00:00,Maluay Malatapay MPA,3,Deep,28,10,1,Drupella,0-5,4,0,4,1,6809dab6913ea289af4227af
+Teun  Boogaard,Sterre Kuijpers,2025-04-24 09:00:00,Maluay Malatapay MPA,3,Deep,28,10,1,Coralliophila,0-5,11,0,11,1,6809dab6913ea289af4227af
+Teun  Boogaard,Sterre Kuijpers,2025-04-24 09:00:00,Maluay Malatapay MPA,3,Deep,28,10,1,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,6809dab6913ea289af4227af
+Teun  Boogaard,Sterre Kuijpers,2025-04-24 09:00:00,Maluay Malatapay MPA,3,Deep,28,10,1,Trash - Plastic Bag,35-40,1,0,1,1,6809dab6913ea289af4227af
+Teun  Boogaard,Sterre Kuijpers,2025-04-24 09:00:00,Maluay Malatapay MPA,3,Deep,28,10,1,Trash - Glass and Ceramics,20-25,8,0,8,1,6809dab6913ea289af4227af
+Teun  Boogaard,Sterre Kuijpers,2025-04-24 09:00:00,Maluay Malatapay MPA,3,Deep,28,10,1,Trash - Paper and Card,15-20,2,0,2,1,6809dab6913ea289af4227af
+Teun  Boogaard,Sterre Kuijpers,2025-04-24 09:00:00,Maluay Malatapay MPA,3,Deep,28,10,1,Trash - Metal,20-25,5,0,5,1,6809dab6913ea289af4227af
+Rebekka Rudolph,Oona Shah,2025-04-24 10:30:00,Antulang,1,Shallow,28,12,1,Drupella,0-5,146,0,146,1,6809be3b913ea289af4225df
+Rebekka Rudolph,Oona Shah,2025-04-24 10:30:00,Antulang,1,Shallow,28,12,1,Coralliophila,0-5,92,0,92,1,6809be3b913ea289af4225df
+Rebekka Rudolph,Oona Shah,2025-04-24 10:30:00,Antulang,1,Shallow,28,12,1,Crown of Thorns,15-20,1,0,1,1,6809be3b913ea289af4225df
+Rebekka Rudolph,Oona Shah,2025-04-24 10:30:00,Antulang,1,Shallow,28,12,1,Trash - Rope,>120,1,0,1,1,6809be3b913ea289af4225df
+Rebekka Rudolph,Oona Shah,2025-04-24 10:30:00,Antulang,1,Shallow,28,12,1,Trash - Metal,>120,1,0,1,1,6809be3b913ea289af4225df
+Po Hsu Chu,Jomel Caguicla,2025-04-24 11:00:00,Latason MPA,3,Medium,29,10,0,Drupella,0-5,2,0,2,1,6809d42e913ea289af422611
+Po Hsu Chu,Jomel Caguicla,2025-04-24 11:00:00,Latason MPA,3,Medium,29,10,0,Coralliophila,0-5,31,0,31,1,6809d42e913ea289af422611
+Po Hsu Chu,Jomel Caguicla,2025-04-24 11:00:00,Latason MPA,3,Medium,29,10,0,Trash - Fishing Line,>120,4,0,4,1,6809d42e913ea289af422611
+Po Hsu Chu,Jomel Caguicla,2025-04-24 11:00:00,Latason MPA,3,Medium,29,10,0,Trash - Fishing Line,35-40,1,0,1,1,6809d42e913ea289af422611
+Po Hsu Chu,Jomel Caguicla,2025-04-24 11:00:00,Latason MPA,3,Medium,29,10,0,Trash - Metal,45-50,1,0,1,1,6809d42e913ea289af422611
+Sterre Kuijpers,Sterre Kuijpers,2025-04-24 11:30:00,Maluay Malatapay MPA,3,Medium,28,10,1,Drupella,0-5,22,0,22,1,6809d8fa913ea289af4227a1
+Sterre Kuijpers,Sterre Kuijpers,2025-04-24 11:30:00,Maluay Malatapay MPA,3,Medium,28,10,1,Coralliophila,0-5,20,0,20,1,6809d8fa913ea289af4227a1
+Sterre Kuijpers,Sterre Kuijpers,2025-04-24 11:30:00,Maluay Malatapay MPA,3,Medium,28,10,1,Trash - Fishing Line,15-20,1,0,1,1,6809d8fa913ea289af4227a1
+Jomel Caguicla,Po Hsu Chu,2025-04-25 09:00:00,Lutoban Pier,2,Deep,28,14,1,Drupella,0-5,5,0,5,1,680b1925913ea289af4229ff
+Jomel Caguicla,Po Hsu Chu,2025-04-25 09:00:00,Lutoban Pier,2,Deep,28,14,1,Coralliophila,0-5,0,3,3,1,680b1925913ea289af4229ff
+Jomel Caguicla,Po Hsu Chu,2025-04-25 09:00:00,Lutoban Pier,2,Deep,28,14,1,Trash - Fishing Line,>120,1,4,5,1,680b1925913ea289af4229ff
+Jomel Caguicla,Po Hsu Chu,2025-04-25 09:00:00,Lutoban Pier,2,Deep,28,14,1,Trash - Soft Plastic Wrapper,0-5,1,0,1,1,680b1925913ea289af4229ff
+Jomel Caguicla,Po Hsu Chu,2025-04-25 09:00:00,Lutoban Pier,2,Deep,28,14,1,Trash - Fishing Line,80-90,0,3,3,1,680b1925913ea289af4229ff
+Jomel Caguicla,Po Hsu Chu,2025-04-25 09:00:00,Lutoban Pier,2,Deep,28,14,1,Trash - Fishing Line,60-70,0,5,5,1,680b1925913ea289af4229ff
+Jomel Caguicla,Po Hsu Chu,2025-04-25 09:00:00,Lutoban Pier,2,Deep,28,14,1,Trash - Metal,80-90,0,1,1,1,680b1925913ea289af4229ff
+Jomel Caguicla,Po Hsu Chu,2025-04-25 09:00:00,Lutoban Pier,2,Deep,28,14,1,Trash - Metal,60-70,0,1,1,1,680b1925913ea289af4229ff
+Maud Boerrigter,Oona Shah,2025-04-25 09:00:00,Lutoban South MPA,3,Deep,28,12,1,Drupella,0-5,1,0,1,1,680b24b4913ea289af422acc
+Maud Boerrigter,Oona Shah,2025-04-25 09:00:00,Lutoban South MPA,3,Deep,28,12,1,Coralliophila,0-5,3,0,3,1,680b24b4913ea289af422acc
+Maud Boerrigter,Oona Shah,2025-04-25 09:00:00,Lutoban South MPA,3,Deep,28,12,1,Trash - Fishing Line,>120,1,0,1,1,680b24b4913ea289af422acc
+Po Hsu Chu,Jomel Caguicla,2025-04-25 10:30:00,Lutoban Pier,3,Shallow,29,12,0,Drupella,0-5,12,0,12,1,680b19c6913ea289af422a15
+Po Hsu Chu,Jomel Caguicla,2025-04-25 10:30:00,Lutoban Pier,3,Shallow,29,12,0,Coralliophila,0-5,20,0,20,1,680b19c6913ea289af422a15
+Po Hsu Chu,Jomel Caguicla,2025-04-25 10:30:00,Lutoban Pier,3,Shallow,29,12,0,Crown of Thorns,35-40,1,0,1,1,680b19c6913ea289af422a15
+Po Hsu Chu,Jomel Caguicla,2025-04-25 10:30:00,Lutoban Pier,3,Shallow,29,12,0,Trash - Fishing Line,50-60,3,0,3,1,680b19c6913ea289af422a15
+Rebekka Rudolph,Teun  Boogaard,2025-04-25 11:00:00,Kookoos,1,Shallow,28,14,2,Drupella,0-5,23,0,23,1,680b1c08913ea289af422a63
+Rebekka Rudolph,Teun  Boogaard,2025-04-25 11:00:00,Kookoos,1,Shallow,28,14,2,Coralliophila,0-5,37,0,37,1,680b1c08913ea289af422a63
+Maud Boerrigter,Sterre Kuijpers,2025-04-25 11:00:00,Lutoban South MPA,3,Shallow,28,12,1,Drupella,0-5,22,0,22,1,680b2550913ea289af422ad9
+Maud Boerrigter,Sterre Kuijpers,2025-04-25 11:00:00,Lutoban South MPA,3,Shallow,28,12,1,Coralliophila,0-5,28,0,28,1,680b2550913ea289af422ad9
+Daniel Harris,Bethel Benjamin,2025-04-29 09:00:00,Kookoos,2,Deep,28,16,1,Drupella,0-5,17,8,25,1,681078ee913ea289af422fe2
+Daniel Harris,Bethel Benjamin,2025-04-29 09:00:00,Kookoos,2,Deep,28,16,1,Coralliophila,0-5,15,12,27,1,681078ee913ea289af422fe2
+Daniel Harris,Bethel Benjamin,2025-04-29 09:00:00,Kookoos,2,Deep,28,16,1,Trash - Fishing Line,50-60,2,0,2,1,681078ee913ea289af422fe2
+Daniel Harris,Bethel Benjamin,2025-04-29 09:00:00,Kookoos,2,Deep,28,16,1,Trash - Diapers and Nappies,15-20,1,0,1,1,681078ee913ea289af422fe2
+Jorge David,Jorge David,2025-04-29 09:00:00,Antulang,1,Medium,28,12,1,Drupella,0-5,2,0,2,1,68107996913ea289af423015
+Jorge David,Jorge David,2025-04-29 09:00:00,Antulang,1,Medium,28,12,1,Coralliophila,0-5,13,0,13,1,68107996913ea289af423015
+Oliver Colassis,Oliver Colassis,2025-04-29 11:00:00,Antulang,2,Shallow,29,14,2,Drupella,0-5,34,0,34,1,6810787b913ea289af422fa1
+Oliver Colassis,Oliver Colassis,2025-04-29 11:00:00,Antulang,2,Shallow,29,14,2,Coralliophila,0-5,24,0,24,1,6810787b913ea289af422fa1
+Daniel Harris,Bethel Benjamin,2025-04-29 11:00:00,Kookoos,3,Medium,28,18,1,Drupella,0-5,12,31,43,1,681079c5913ea289af423020
+Daniel Harris,Bethel Benjamin,2025-04-29 11:00:00,Kookoos,3,Medium,28,18,1,Coralliophila,0-5,7,35,42,1,681079c5913ea289af423020
+Daniel Harris,Bethel Benjamin,2025-04-29 11:00:00,Kookoos,3,Medium,28,18,1,Trash - Fishing Line,25-30,1,0,1,1,681079c5913ea289af423020
+Daniel Harris,Bethel Benjamin,2025-04-29 11:00:00,Kookoos,3,Medium,28,18,1,Trash - Fishing Line,15-20,1,0,1,1,681079c5913ea289af423020
+Daniel Harris,Bethel Benjamin,2025-04-29 11:00:00,Kookoos,3,Medium,28,18,1,Trash - Soft Plastic Wrapper,15-20,1,0,1,1,681079c5913ea289af423020
+Daniel Harris,Bethel Benjamin,2025-04-29 11:00:00,Kookoos,3,Medium,28,18,1,Trash - Glass and Ceramics,5-10,1,0,1,1,681079c5913ea289af423020
+Oliver Colassis,Daniel Harris,2025-04-30 09:00:00,Lutoban North MPA,2,Medium,28,10,0,Coralliophila,0-5,13,13,26,1,6811c261913ea289af4232a6
+Oliver Colassis,Daniel Harris,2025-04-30 09:00:00,Lutoban North MPA,2,Medium,28,10,0,Drupella,0-5,5,5,10,1,6811c261913ea289af4232a6
+Oliver Colassis,Daniel Harris,2025-04-30 09:00:00,Lutoban North MPA,2,Medium,28,10,0,Trash - Soft Plastic Wrapper,0-5,1,1,2,1,6811c261913ea289af4232a6
+Daniel Harris,Jorge David,2025-04-30 11:00:00,Lutoban North MPA,3,Shallow,28,10,0,Drupella,0-5,53,1,54,1,6811c255913ea289af423298
+Daniel Harris,Jorge David,2025-04-30 11:00:00,Lutoban North MPA,3,Shallow,28,10,0,Coralliophila,0-5,12,24,36,1,6811c255913ea289af423298
+Oliver Colassis,Oliver Colassis,2025-05-01 09:00:00,Andulay MPA,2,Deep,28,12,0,Drupella,0-5,8,0,8,1,6812fdc4913ea289af4235ca
+Oliver Colassis,Oliver Colassis,2025-05-01 09:00:00,Andulay MPA,2,Deep,28,12,0,Coralliophila,0-5,2,0,2,1,6812fdc4913ea289af4235ca
+Daniel Harris,Daniel Harris,2025-05-01 10:00:00,Lutoban North MPA,1,Shallow,28,10,2,Drupella,0-5,19,0,19,1,68131a93913ea289af4236e6
+Daniel Harris,Daniel Harris,2025-05-01 10:00:00,Lutoban North MPA,1,Shallow,28,10,2,Coralliophila,0-5,22,0,22,1,68131a93913ea289af4236e6
+Jorge David,Jorge David,2025-05-01 11:00:00,Antulang,1,Medium,28,12,0,Drupella,0-5,1,0,1,1,68130064913ea289af42365d
+Jorge David,Jorge David,2025-05-01 11:00:00,Antulang,1,Medium,28,12,0,Coralliophila,0-5,1,0,1,1,68130064913ea289af42365d
+Madelaine Church,Bethel Benjamin,2025-05-02 09:00:00,Lutoban Pier,2,Medium,28,14,2,Coralliophila,0-5,24,31,55,1,68142ab8913ea289af4237f6
+Madelaine Church,Bethel Benjamin,2025-05-02 09:00:00,Lutoban Pier,2,Medium,28,14,2,Drupella,0-5,7,37,44,1,68142ab8913ea289af4237f6
+Madelaine Church,Bethel Benjamin,2025-05-02 09:00:00,Lutoban Pier,2,Medium,28,14,2,Trash - Fishing Line,25-30,4,2,6,1,68142ab8913ea289af4237f6
+Madelaine Church,Bethel Benjamin,2025-05-02 09:00:00,Lutoban Pier,2,Medium,28,14,2,Trash - Fishing Line,50-60,1,0,1,1,68142ab8913ea289af4237f6
+Madelaine Church,Bethel Benjamin,2025-05-02 09:00:00,Lutoban Pier,2,Medium,28,14,2,Trash - Hard Plastic (Other),10-15,0,1,1,1,68142ab8913ea289af4237f6
+Madelaine Church,Bethel Benjamin,2025-05-02 09:00:00,Lutoban Pier,2,Medium,28,14,2,Trash - Soft Plastic Wrapper,5-10,0,1,1,1,68142ab8913ea289af4237f6
+Madelaine Church,Bethel Benjamin,2025-05-02 09:00:00,Lutoban Pier,2,Medium,28,14,2,Trash - Soft Plastic Wrapper,10-15,0,1,1,1,68142ab8913ea289af4237f6
