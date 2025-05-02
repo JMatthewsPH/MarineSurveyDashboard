@@ -10,8 +10,10 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 import numpy as np
+import math
+from plotly.subplots import make_subplots
 
 # Import branding utilities
 from utils.branding import display_logo, add_favicon
@@ -19,6 +21,425 @@ from utils.branding import display_logo, add_favicon
 # Important: This page is intentionally ISOLATED from other parts of the application
 # It doesn't use the shared DataProcessor or database connections to avoid
 # any interference with the production dashboards
+
+# Helper functions for dashboard-style visualizations
+
+# Metrics calculation functions
+def calculate_hard_coral_cover(substrate_df, site_name=None):
+    """Calculate hard coral cover percentage from substrate data"""
+    if substrate_df.empty:
+        return pd.DataFrame(columns=['date', 'value'])
+    
+    # Convert date to datetime
+    substrate_df['Date'] = pd.to_datetime(substrate_df['Date'])
+    
+    # Filter by site if specified
+    if site_name:
+        substrate_df = substrate_df[substrate_df['Site'].str.strip() == site_name.strip()]
+    
+    # Filter for valid surveys
+    substrate_df = substrate_df[substrate_df['Survey_Status'] == 1]
+    
+    if substrate_df.empty:
+        return pd.DataFrame(columns=['date', 'value'])
+    
+    # Group by survey ID and date
+    coral_data = []
+    
+    for survey_id, survey_df in substrate_df.groupby(['Survey_ID', 'Date']):
+        date = survey_df['Date'].iloc[0]
+        site = survey_df['Site'].iloc[0].replace(' MPA', '').strip()
+        
+        # Calculate total points
+        total_points = survey_df['Total'].sum()
+        
+        # Calculate hard coral cover
+        hard_coral_points = survey_df[survey_df['Group'].str.contains('Hard Coral')]['Total'].sum()
+        
+        if total_points > 0:
+            hard_coral_cover = (hard_coral_points / total_points) * 100
+            coral_data.append({
+                'date': date,
+                'site': site,
+                'value': hard_coral_cover
+            })
+    
+    # Convert to DataFrame
+    result_df = pd.DataFrame(coral_data)
+    
+    # If multiple surveys on same date for same site, average the values
+    if not result_df.empty:
+        result_df = result_df.groupby(['date', 'site']).agg({'value': 'mean'}).reset_index()
+    
+    return result_df
+
+def calculate_fleshy_algae_cover(substrate_df, site_name=None):
+    """Calculate fleshy algae cover percentage from substrate data"""
+    if substrate_df.empty:
+        return pd.DataFrame(columns=['date', 'value'])
+    
+    # Convert date to datetime
+    substrate_df['Date'] = pd.to_datetime(substrate_df['Date'])
+    
+    # Filter by site if specified
+    if site_name:
+        substrate_df = substrate_df[substrate_df['Site'].str.strip() == site_name.strip()]
+    
+    # Filter for valid surveys
+    substrate_df = substrate_df[substrate_df['Survey_Status'] == 1]
+    
+    if substrate_df.empty:
+        return pd.DataFrame(columns=['date', 'value'])
+    
+    # Group by survey ID and date
+    algae_data = []
+    
+    for survey_id, survey_df in substrate_df.groupby(['Survey_ID', 'Date']):
+        date = survey_df['Date'].iloc[0]
+        site = survey_df['Site'].iloc[0].replace(' MPA', '').strip()
+        
+        # Calculate total points
+        total_points = survey_df['Total'].sum()
+        
+        # Calculate fleshy algae cover (exclude Coralline and Halimeda)
+        fleshy_algae_points = survey_df[
+            survey_df['Group'].str.contains('Algae') & 
+            ~survey_df['Group'].str.contains('Coralline') & 
+            ~survey_df['Group'].str.contains('Halimeda')
+        ]['Total'].sum()
+        
+        if total_points > 0:
+            fleshy_algae_cover = (fleshy_algae_points / total_points) * 100
+            algae_data.append({
+                'date': date,
+                'site': site,
+                'value': fleshy_algae_cover
+            })
+    
+    # Convert to DataFrame
+    result_df = pd.DataFrame(algae_data)
+    
+    # If multiple surveys on same date for same site, average the values
+    if not result_df.empty:
+        result_df = result_df.groupby(['date', 'site']).agg({'value': 'mean'}).reset_index()
+    
+    return result_df
+
+def calculate_fish_biomass(fish_df, site_name=None):
+    """
+    Calculate commercial fish biomass from fish survey data
+    
+    Args:
+        fish_df: Fish survey DataFrame
+        site_name: Optional site name to filter
+        
+    Returns:
+        DataFrame with date and value columns
+    """
+    if fish_df.empty:
+        return pd.DataFrame(columns=['date', 'value'])
+    
+    # Convert date to datetime
+    fish_df['Date'] = pd.to_datetime(fish_df['Date'])
+    
+    # Filter by site if specified
+    if site_name:
+        fish_df = fish_df[fish_df['Site'].str.strip() == site_name.strip()]
+    
+    # Filter for valid surveys
+    fish_df = fish_df[fish_df['Survey_Status'] == 1]
+    
+    if fish_df.empty:
+        return pd.DataFrame(columns=['date', 'value'])
+        
+    # Commercial fish families
+    commercial_species = [
+        'Snapper', 'Grouper', 'Sweetlips', 'Trevally', 'Barracuda', 
+        'Emperor', 'Parrotfish', 'Rabbitfish', 'Surgeonfish', 'Wrasse',
+        'Goatfish', 'Triggerfish', 'Tuna', 'Mackerel'
+    ]
+    
+    # Functions to convert size ranges to average sizes in cm
+    def get_average_size(size_range):
+        if pd.isna(size_range) or size_range == '':
+            return 0
+        try:
+            # Handle ranges like "0-5" or "20-25"
+            if '-' in size_range:
+                lower, upper = map(float, size_range.split('-'))
+                return (lower + upper) / 2
+            # Handle single values
+            return float(size_range)
+        except:
+            return 0
+    
+    # Calculate biomass for each fish family using length-weight relationships
+    # W = a * L^b where W is weight in grams, L is length in cm
+    def calculate_weight(length, a=0.01, b=3.0):
+        """Calculate weight in kg using length-weight relationship"""
+        # Use standard values if specific ones are not available
+        # Default values approximate average for many reef fish
+        weight_grams = a * (length ** b)
+        return weight_grams / 1000  # Convert to kg
+    
+    # Calculate biomass for each survey
+    biomass_data = []
+    
+    for survey_id, survey_df in fish_df.groupby(['Survey_ID', 'Date']):
+        date = survey_df['Date'].iloc[0]
+        site = survey_df['Site'].iloc[0].replace(' MPA', '').strip()
+        
+        # Filter commercial species
+        commercial_fish = survey_df[survey_df['Species'].str.contains('|'.join(commercial_species), case=False)]
+        
+        if commercial_fish.empty:
+            continue
+            
+        # Calculate biomass
+        total_biomass = 0
+        
+        for _, fish in commercial_fish.iterrows():
+            avg_size = get_average_size(fish['Size'])
+            count = fish['Total']
+            
+            if avg_size > 0 and count > 0:
+                # Biomass = number of fish * weight per fish
+                fish_weight = calculate_weight(avg_size)
+                biomass = count * fish_weight
+                total_biomass += biomass
+        
+        # Standard transect area (in square meters)
+        transect_area = 150  # 5m width x 30m length
+        
+        # Convert to biomass per 100m²
+        biomass_per_100sqm = (total_biomass / transect_area) * 100
+        
+        biomass_data.append({
+            'date': date,
+            'site': site,
+            'value': biomass_per_100sqm
+        })
+    
+    # Convert to DataFrame
+    result_df = pd.DataFrame(biomass_data)
+    
+    # If multiple surveys on same date for same site, average the values
+    if not result_df.empty:
+        result_df = result_df.groupby(['date', 'site']).agg({'value': 'mean'}).reset_index()
+    
+    return result_df
+
+def calculate_fish_density(fish_df, fish_type, site_name=None):
+    """
+    Calculate fish density by type from fish survey data
+    
+    Args:
+        fish_df: Fish survey DataFrame
+        fish_type: Type of fish ('herbivore', 'carnivore', 'omnivore', 'corallivore')
+        site_name: Optional site name to filter
+    
+    Returns:
+        DataFrame with date and value columns
+    """
+    if fish_df.empty:
+        return pd.DataFrame(columns=['date', 'value'])
+    
+    # Convert date to datetime
+    fish_df['Date'] = pd.to_datetime(fish_df['Date'])
+    
+    # Filter by site if specified
+    if site_name:
+        fish_df = fish_df[fish_df['Site'].str.strip() == site_name.strip()]
+    
+    # Filter for valid surveys
+    fish_df = fish_df[fish_df['Survey_Status'] == 1]
+    
+    if fish_df.empty:
+        return pd.DataFrame(columns=['date', 'value'])
+    
+    # Fish categorization dictionary
+    fish_categories = {
+        'herbivore': [
+            'Parrotfish', 'Surgeonfish', 'Rabbitfish', 'Damselfish', 
+            'Angelfish', 'Butterflyfish'
+        ],
+        'carnivore': [
+            'Snapper', 'Grouper', 'Sweetlips', 'Trevally', 'Barracuda', 
+            'Emperor', 'Shark', 'Tuna', 'Mackerel', 'Squirrelfish'
+        ],
+        'omnivore': [
+            'Wrasse', 'Goatfish', 'Triggerfish', 'Bream', 'Basslet', 
+            'Dottyback', 'Fusilier', 'Bannerfish', 'Trumpetfish'
+        ],
+        'corallivore': [
+            'Butterflyfish'
+        ]
+    }
+    
+    # Get target fish species
+    target_species = fish_categories.get(fish_type.lower(), [])
+    
+    if not target_species:
+        return pd.DataFrame(columns=['date', 'value'])
+    
+    # Calculate fish density for each survey
+    density_data = []
+    
+    for survey_id, survey_df in fish_df.groupby(['Survey_ID', 'Date']):
+        date = survey_df['Date'].iloc[0]
+        site = survey_df['Site'].iloc[0].replace(' MPA', '').strip()
+        
+        # Filter for target species
+        target_fish = survey_df[survey_df['Species'].str.contains('|'.join(target_species), case=False)]
+        
+        # Calculate total count
+        total_count = target_fish['Total'].sum()
+        
+        # Standard transect area (in square meters)
+        transect_area = 150  # 5m width x 30m length
+        
+        # Convert to density per 100m²
+        density = (total_count / transect_area) * 100
+        
+        density_data.append({
+            'date': date,
+            'site': site,
+            'value': density
+        })
+    
+    # Convert to DataFrame
+    result_df = pd.DataFrame(density_data)
+    
+    # If multiple surveys on same date for same site, average the values
+    if not result_df.empty:
+        result_df = result_df.groupby(['date', 'site']).agg({'value': 'mean'}).reset_index()
+    
+    return result_df
+def format_season(date_obj):
+    """Convert date to season format, matching the Site Dashboard"""
+    month = date_obj.month
+    year = date_obj.year
+
+    if 3 <= month <= 5:  # Q1: MAR-MAY
+        return f'MAR-MAY {year}'
+    elif 6 <= month <= 8:  # Q2: JUN-AUG
+        return f'JUN-AUG {year}'
+    elif 9 <= month <= 11:  # Q3: SEP-NOV
+        return f'SEP-NOV {year}'
+    else:  # Q4: DEC-FEB
+        # If it's December, it's the start of Q4 for next year
+        if month == 12:
+            return f'DEC-FEB {year + 1}'
+        # If it's January or February, it's end of Q4 for current year
+        return f'DEC-FEB {year}'
+
+def create_dashboard_time_series(data, title, y_label, show_confidence_interval=False):
+    """
+    Create a time series chart similar to Site Dashboard, with 
+    consistent styling and optional confidence intervals
+    
+    Args:
+        data: DataFrame with 'date' and 'value' columns
+        title: Chart title
+        y_label: Y-axis label
+        show_confidence_interval: Whether to display confidence intervals
+    """
+    # Create base figure
+    fig = go.Figure()
+    
+    # Configure chart options for mobile responsiveness
+    config = {
+        'displaylogo': False,
+        'responsive': True,
+        'displayModeBar': True,
+        # Define the exact buttons to show: zoom in, zoom out, reset view, download
+        'modeBarButtons': [['zoomIn2d', 'zoomOut2d', 'resetScale2d', 'toImage']],
+        'scrollZoom': False,  # Disable scroll zoom on mobile to prevent accidental zooming
+        'doubleClick': 'reset',  # Double tap to reset the view
+        'showTips': True,  # Show tips for better usability
+        'displayModeBar': 'hover'  # Only show mode bar on hover to save space
+    }
+    
+    # If no data, return empty figure
+    if data.empty:
+        return fig, config
+    
+    # Sort data by date
+    data = data.sort_values('date')
+    
+    # Format dates as seasons for labels
+    data['season'] = data['date'].apply(format_season)
+    
+    # Add the main line
+    fig.add_trace(go.Scatter(
+        x=data['date'],
+        y=data['value'],
+        mode='lines+markers',
+        name=y_label,
+        line=dict(width=2, color='rgb(0, 123, 255)'),
+        marker=dict(size=6, color='rgb(0, 123, 255)')
+    ))
+    
+    # Add confidence interval if requested
+    if show_confidence_interval and len(data) > 1:
+        # Calculate 95% confidence interval
+        values = data['value'].values
+        n = len(values)
+        std_err = np.std(values, ddof=1) / np.sqrt(n)
+        t_value = 1.96  # Approximately 95% CI
+        ci = t_value * std_err
+        
+        # Ensure lower bound doesn't go below zero (important for percentages)
+        lower_bound = np.maximum(0, data['value'] - ci)
+        upper_bound = data['value'] + ci
+        
+        # Add confidence interval as a filled area
+        fig.add_trace(go.Scatter(
+            x=data['date'].tolist() + data['date'].tolist()[::-1],
+            y=upper_bound.tolist() + lower_bound.tolist()[::-1],
+            fill='toself',
+            fillcolor='rgba(0, 123, 255, 0.2)',
+            line=dict(color='rgba(255, 255, 255, 0)'),
+            hoverinfo="skip",
+            showlegend=False
+        ))
+    
+    # Layout styling to match dashboard
+    fig.update_layout(
+        title=title,
+        xaxis_title='Survey Date',
+        yaxis_title=y_label,
+        hovermode='closest',
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+        ),
+        margin=dict(l=10, r=10, t=50, b=50),
+        height=450,
+        plot_bgcolor='white',
+        font=dict(family="Arial, sans-serif", size=12)
+    )
+    
+    # Configure axis styling
+    fig.update_xaxes(
+        tickangle=45,
+        tickfont=dict(size=10),
+        gridcolor='lightgray',
+        showgrid=True
+    )
+    
+    fig.update_yaxes(
+        gridcolor='lightgray',
+        showgrid=True,
+        zeroline=True,
+        zerolinecolor='lightgray',
+        zerolinewidth=1
+    )
+    
+    return fig, config
 
 # Page configuration
 st.set_page_config(
@@ -350,13 +771,15 @@ def analyze_substrate_data(df):
     
     # Basic statistics
     num_surveys = df['Survey_ID'].nunique()
-    num_sites = df['Site'].nunique()
+    num_sites = df['Site'].unique()
+    num_substrate_types = df['Group'].nunique() if 'Group' in df.columns else 0
     date_range = f"{df['Date'].min().strftime('%Y-%m-%d')} to {df['Date'].max().strftime('%Y-%m-%d')}"
     
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3, col4 = st.columns(4)
     col1.metric("Number of Surveys", num_surveys)
-    col2.metric("Number of Sites", num_sites)
-    col3.metric("Date Range", date_range)
+    col2.metric("Number of Sites", len(num_sites))
+    col3.metric("Number of Substrate Types", num_substrate_types)
+    col4.metric("Date Range", date_range)
     
     # Show sites
     st.subheader("Sites in Dataset")
