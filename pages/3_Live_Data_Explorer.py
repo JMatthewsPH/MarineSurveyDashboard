@@ -560,11 +560,8 @@ def analyze_invertebrate_data(df):
         selected_date_obj = pd.to_datetime(selected_date).date()
         filtered_df = filtered_df[pd.to_datetime(filtered_df['Date']).dt.date == selected_date_obj]
     
-    # Display filtered dataframe
+    # Hide filtered dataframe (removed as requested)
     if len(filtered_df) > 0:
-        st.subheader("Filtered Data Sample")
-        st.dataframe(filtered_df.head(20), use_container_width=True)
-        
         # Calculate metrics
         st.subheader("Invertebrate Counts by Species")
         
@@ -677,11 +674,8 @@ def analyze_predation_data(df):
         selected_date_obj = pd.to_datetime(selected_date).date()
         filtered_df = filtered_df[pd.to_datetime(filtered_df['Date']).dt.date == selected_date_obj]
     
-    # Display filtered dataframe
+    # Hide filtered dataframe (removed as requested)
     if len(filtered_df) > 0:
-        st.subheader("Filtered Data Sample")
-        st.dataframe(filtered_df.head(20), use_container_width=True)
-        
         # Calculate metrics
         st.subheader("Predation Analysis")
         
@@ -809,11 +803,8 @@ def analyze_substrate_data(df):
         selected_date_obj = pd.to_datetime(selected_date).date()
         filtered_df = filtered_df[pd.to_datetime(filtered_df['Date']).dt.date == selected_date_obj]
     
-    # Display filtered dataframe
+    # Hide filtered dataframe (removed as requested)
     if len(filtered_df) > 0:
-        st.subheader("Filtered Data Sample")
-        st.dataframe(filtered_df.head(20), use_container_width=True)
-        
         # Calculate hard coral cover
         st.subheader("Calculated Metrics")
         
@@ -1724,9 +1715,8 @@ if data_source == "Use Sample Files":
                 file_path = os.path.join(data_dir, selected_file)
                 df = pd.read_csv(file_path)
                 
-                # Display raw data sample
-                st.subheader("Raw Data Sample")
-                st.dataframe(df.head(5), use_container_width=True)
+                # Hide raw data sample
+                # Raw data sample has been removed as requested
                 
                 # Detect survey type
                 survey_type = detect_survey_type(df)
