@@ -1983,6 +1983,153 @@ if data_source == "Use Sample Files":
                 # Detect survey type
                 survey_type = detect_survey_type(df)
                 
+                # Add diagnostic view for Andulay commercial fish
+                if survey_type == "fish" and "DBMCP_Fish" in selected_file:
+                    # Create an expandable section for the diagnostic data
+                    with st.expander("Diagnostic: Andulay Commercial Fish Data"):
+                        st.subheader("Commercial Fish at Andulay")
+                        
+                        # Filter for Andulay site
+                        andulay_data = df[df['Site'].str.contains('Andulay', case=False)]
+                        
+                        if not andulay_data.empty:
+                            # Commercial fish species
+                            commercial_species = [
+                                'Snapper', 'Grouper', 'Sweetlips', 'Trevally', 'Barracuda', 
+                                'Emperor', 'Parrotfish', 'Rabbitfish', 'Surgeonfish',
+                                'Goatfish', 'Triggerfish', 'Tuna', 'Mackerel', 'Fusilier',
+                                'Unicornfish', 'Soldierfish', 'Bream', 'Big Eye', 'Bigeye'
+                            ]
+                            
+                            # Find commercial fish
+                            is_commercial = andulay_data['Species'].str.contains('|'.join(commercial_species), case=False)
+                            commercial_fish = andulay_data[is_commercial]
+                            
+                            if not commercial_fish.empty:
+                                # Group by species and size
+                                comm_summary = commercial_fish.groupby(['Species', 'Size'])['Total'].sum().reset_index()
+                                comm_summary = comm_summary.sort_values(['Species', 'Size'])
+                                
+                                st.write(f"Found {len(commercial_fish)} commercial fish records at Andulay")
+                                st.dataframe(comm_summary, use_container_width=True)
+                                
+                                # Calculate biomass for each species
+                                st.subheader("Commercial Biomass Calculation Details")
+                                
+                                # Load biomass parameters
+                                try:
+                                    biomass_params_file = "attached_assets/Fish Data Analysis - Biomass CO.csv"
+                                    if os.path.exists(biomass_params_file):
+                                        biomass_params_df = pd.read_csv(biomass_params_file)
+                                        # Convert to dictionary for faster lookups
+                                        biomass_params = {}
+                                        for _, row in biomass_params_df.iterrows():
+                                            if pd.notna(row['Species']) and pd.notna(row['Coeff a']) and pd.notna(row['Coeff b']):
+                                                biomass_params[row['Species']] = (float(row['Coeff a']), float(row['Coeff b']))
+                                    else:
+                                        biomass_params = {}
+                                except Exception as e:
+                                    st.warning(f"Error loading biomass parameters: {str(e)}")
+                                    biomass_params = {}
+                                
+                                # Helper function for average size calculation
+                                def get_avg_size(size_range):
+                                    if pd.isna(size_range):
+                                        return None
+                                    
+                                    # Convert to string if numeric
+                                    if not isinstance(size_range, str):
+                                        try:
+                                            return float(size_range)
+                                        except (ValueError, TypeError):
+                                            return None
+                                            
+                                    # Handle range format (e.g., "5-10")
+                                    if '-' in size_range:
+                                        parts = size_range.split('-')
+                                        try:
+                                            min_size = float(parts[0])
+                                            max_size = float(parts[1])
+                                            return (min_size + max_size) / 2
+                                        except (ValueError, IndexError):
+                                            return None
+                                            
+                                    # Handle single value as string
+                                    try:
+                                        return float(size_range)
+                                    except (ValueError, TypeError):
+                                        return None
+                                
+                                # Calculate biomass per species
+                                biomass_details = []
+                                total_biomass = 0
+                                
+                                for _, fish in commercial_fish.iterrows():
+                                    species = fish['Species']
+                                    size = fish['Size']
+                                    count = fish['Total']
+                                    survey_id = fish['Survey_ID']
+                                    
+                                    # Calculate average size
+                                    avg_size = get_avg_size(size)
+                                    
+                                    if avg_size is not None and avg_size > 0 and count > 0:
+                                        # Get biomass parameters
+                                        a, b = 0.01, 3.0  # Default values
+                                        
+                                        if species in biomass_params:
+                                            a, b = biomass_params[species]
+                                        else:
+                                            # Try to find partial match
+                                            found = False
+                                            if ' - ' in species:
+                                                family = species.split(' - ')[0]
+                                                family_other = f"{family} - Other"
+                                                
+                                                if family_other in biomass_params:
+                                                    a, b = biomass_params[family_other]
+                                                    found = True
+                                                elif family in biomass_params:
+                                                    a, b = biomass_params[family]
+                                                    found = True
+                                        
+                                        # Calculate weight
+                                        weight_grams = a * (avg_size ** b)
+                                        weight_kg = weight_grams / 1000
+                                        
+                                        # Total biomass for this entry
+                                        fish_biomass = weight_kg * count
+                                        total_biomass += fish_biomass
+                                        
+                                        biomass_details.append({
+                                            'Survey_ID': survey_id,
+                                            'Species': species,
+                                            'Size Range': size,
+                                            'Average Size (cm)': avg_size,
+                                            'Count': count,
+                                            'Parameter a': a,
+                                            'Parameter b': b,
+                                            'Individual Weight (kg)': weight_kg,
+                                            'Total Biomass (kg)': fish_biomass
+                                        })
+                                
+                                # Display biomass calculation details
+                                biomass_df = pd.DataFrame(biomass_details)
+                                st.dataframe(biomass_df, use_container_width=True)
+                                
+                                # Display total summary
+                                st.subheader("Total Biomass Summary")
+                                transect_area = 150  # 5m width x 30m length
+                                biomass_per_100sqm = (total_biomass / transect_area) * 100
+                                
+                                st.write(f"Total Commercial Biomass: {total_biomass:.2f} kg")
+                                st.write(f"Transect Area: {transect_area} m²")
+                                st.write(f"Commercial Biomass per 100m²: {biomass_per_100sqm:.2f} kg/100m²")
+                            else:
+                                st.warning("No commercial fish found at Andulay site.")
+                        else:
+                            st.warning("No data found for Andulay site.")
+                
                 if survey_type == "substrate":
                     st.success("Detected Substrate Survey Data")
                     analyze_substrate_data(df)
