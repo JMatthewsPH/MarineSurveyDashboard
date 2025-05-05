@@ -1584,6 +1584,16 @@ def analyze_fish_data(df):
         survey_groups = filtered_df.groupby('Survey_ID')
         
         survey_metrics = []
+        commercial_metrics = []
+        
+        # Commercial fish families/species list
+        commercial_species = [
+            'Snapper', 'Grouper', 'Sweetlips', 'Trevally', 'Barracuda', 
+            'Emperor', 'Parrotfish', 'Rabbitfish', 'Surgeonfish', 'Wrasse',
+            'Goatfish', 'Triggerfish', 'Tuna', 'Mackerel', 'Fusilier',
+            'Unicornfish', 'Soldierfish', 'Bream', 'Big Eye', 'Bigeye'
+        ]
+        
         for survey_id, survey_data in survey_groups:
             # Get survey metadata from first row
             first_row = survey_data.iloc[0]
@@ -1631,6 +1641,11 @@ def analyze_fish_data(df):
                     
                     # Calculate weight for each fish species
                     total_biomass = 0
+                    commercial_biomass = 0
+                    
+                    # Identify commercial fish species
+                    is_commercial = survey_data['Species'].str.contains('|'.join(commercial_species), case=False)
+                    commercial_fish = survey_data[is_commercial]
                     
                     # Calculate biomass for each row (species)
                     for _, fish in survey_data.iterrows():
@@ -1669,14 +1684,35 @@ def analyze_fish_data(df):
                         # Add to total biomass
                         biomass = weight_kg * count
                         total_biomass += biomass
+                        
+                        # Check if this is a commercial species
+                        if any(comm_sp in species for comm_sp in commercial_species):
+                            commercial_biomass += biomass
+                    
+                    # Calculate biomass per 100m²
+                    transect_area = 150  # 5m width x 30m length
+                    commercial_biomass_per_100sqm = (commercial_biomass / transect_area) * 100
+                    
+                    # Add to commercial metrics for quarter analysis
+                    quarter = get_quarter(pd.to_datetime(date))
+                    commercial_metrics.append({
+                        'Survey_ID': survey_id,
+                        'Site': site,
+                        'Date': pd.to_datetime(date),
+                        'Quarter': quarter,
+                        'QuarterLabel': format_season(pd.to_datetime(date)),
+                        'Commercial_Biomass': commercial_biomass_per_100sqm
+                    })
                     
                     # Store total biomass in grams
                     survey_data['Total_Biomass'] = total_biomass * 1000  # Store in grams for consistency
                 except Exception as e:
                     total_biomass = None
+                    commercial_biomass = None
                     st.warning(f"Could not calculate biomass: {str(e)}")
             else:
                 total_biomass = None
+                commercial_biomass = None
             
             # Add to metrics list
             survey_metrics.append({
@@ -1684,14 +1720,75 @@ def analyze_fish_data(df):
                 'Site': site,
                 'Date': date,
                 'Total_Fish': total_fish,
-                'Total_Biomass': total_biomass
+                'Total_Biomass': total_biomass,
+                'Commercial_Biomass': commercial_biomass if 'commercial_biomass' in locals() and commercial_biomass is not None else None
             })
         
         # Convert to DataFrame
         metrics_df = pd.DataFrame(survey_metrics)
         
-        # Display metrics
+        # Display individual survey metrics
+        st.subheader("Survey Metrics")
         st.dataframe(metrics_df, use_container_width=True)
+        
+        # Calculate and display average commercial biomass by quarter
+        if len(commercial_metrics) > 0:
+            commercial_df = pd.DataFrame(commercial_metrics)
+            
+            # Group by quarter and calculate average
+            quarterly_biomass = commercial_df.groupby(['QuarterLabel', 'Quarter', 'Site'])['Commercial_Biomass'].agg(
+                avg_biomass=('mean'),
+                num_surveys=('count')
+            ).reset_index()
+            
+            # Sort by date (quarter)
+            quarterly_biomass = quarterly_biomass.sort_values(by=['Quarter'])
+            
+            # Display the quarterly data
+            st.subheader("Average Commercial Biomass by Quarter")
+            st.write("Commercial biomass per 100m² averaged by 3-month survey periods")
+            
+            # Create the chart
+            fig = px.bar(
+                quarterly_biomass,
+                x='QuarterLabel',
+                y='avg_biomass',
+                color='Site',
+                labels={
+                    'QuarterLabel': 'Survey Period',
+                    'avg_biomass': 'Average Commercial Biomass (kg/100m²)',
+                    'Site': 'Site'
+                },
+                title='Average Commercial Fish Biomass by Quarter',
+                hover_data=['num_surveys']
+            )
+            
+            # Update hover template to show number of surveys
+            fig.update_traces(
+                hovertemplate='<b>%{x}</b><br>' +
+                              'Site: %{color}<br>' +
+                              'Avg. Biomass: %{y:.2f} kg/100m²<br>' +
+                              'Number of Surveys: %{customdata[0]}'
+            )
+            
+            # Update layout for better mobile viewing
+            fig.update_layout(
+                xaxis_tickangle=45,
+                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+                margin=dict(l=10, r=10, t=50, b=100)
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+            
+            # Add explanation of calculation
+            st.info("""
+            **How is this calculated?**
+            1. For each survey, we calculate the commercial fish biomass based on species-specific length-weight relationships.
+            2. Commercial fish include: Snapper, Grouper, Sweetlips, Trevally, Barracuda, Emperor, Parrotfish, Rabbitfish, Surgeonfish, Wrasse, Goatfish, Triggerfish, Tuna, Mackerel, Fusilier, Unicornfish, Soldierfish, Bream, and Big Eye.
+            3. Surveys are grouped into 3-month periods (quarters) by season.
+            4. The average biomass is calculated by dividing the total commercial biomass by the number of surveys in each period.
+            5. Results are standardized to kg per 100m² for comparison across sites.
+            """)
         
         # Visualize
         st.subheader("Species Breakdown")
