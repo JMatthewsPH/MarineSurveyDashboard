@@ -156,7 +156,8 @@ def calculate_fish_biomass(fish_df, site_name=None):
     commercial_species = [
         'Snapper', 'Grouper', 'Sweetlips', 'Trevally', 'Barracuda', 
         'Emperor', 'Parrotfish', 'Rabbitfish', 'Surgeonfish', 'Wrasse',
-        'Goatfish', 'Triggerfish', 'Tuna', 'Mackerel'
+        'Goatfish', 'Triggerfish', 'Tuna', 'Mackerel', 'Fusilier',
+        'Unicornfish', 'Soldierfish', 'Bream', 'Big Eye', 'Bigeye'
     ]
     
     # Functions to convert size ranges to average sizes in cm
