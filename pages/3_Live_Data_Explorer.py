@@ -1520,11 +1520,8 @@ def analyze_fish_data(df):
         selected_date_obj = pd.to_datetime(selected_date).date()
         filtered_df = filtered_df[pd.to_datetime(filtered_df['Date']).dt.date == selected_date_obj]
     
-    # Display filtered dataframe
+    # Hide filtered dataframe (removed as requested)
     if len(filtered_df) > 0:
-        st.subheader("Filtered Data Sample")
-        st.dataframe(filtered_df.head(20), use_container_width=True)
-        
         # Calculate fish metrics
         st.subheader("Calculated Metrics")
         
