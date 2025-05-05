@@ -173,12 +173,47 @@ def calculate_fish_biomass(fish_df, site_name=None):
         except:
             return 0
     
+    # Load species-specific length-weight parameters
+    try:
+        biomass_params_file = "attached_assets/Fish Data Analysis - Biomass CO.csv"
+        if os.path.exists(biomass_params_file):
+            biomass_params_df = pd.read_csv(biomass_params_file)
+            # Convert to dictionary for faster lookups
+            species_params = {}
+            for _, row in biomass_params_df.iterrows():
+                if pd.notna(row['Species']) and pd.notna(row['Coeff a']) and pd.notna(row['Coeff b']):
+                    species_params[row['Species']] = (float(row['Coeff a']), float(row['Coeff b']))
+        else:
+            species_params = {}
+    except Exception as e:
+        st.warning(f"Error loading biomass parameters: {str(e)}")
+        species_params = {}
+    
     # Calculate biomass for each fish family using length-weight relationships
     # W = a * L^b where W is weight in grams, L is length in cm
-    def calculate_weight(length, a=0.01, b=3.0):
-        """Calculate weight in kg using length-weight relationship"""
-        # Use standard values if specific ones are not available
-        # Default values approximate average for many reef fish
+    def calculate_weight(length, species=None, a=0.01, b=3.0):
+        """
+        Calculate weight in kg using length-weight relationship
+        
+        Args:
+            length: Fish length in cm
+            species: Species name to lookup specific parameters
+            a, b: Default parameters if species-specific ones aren't found
+        """
+        # Try to get species-specific parameters
+        if species and species in species_params:
+            a, b = species_params[species]
+        elif species and ' - ' in species:
+            # Try family-level parameters
+            family = species.split(' - ')[0]
+            family_other = f"{family} - Other"
+            
+            if family_other in species_params:
+                a, b = species_params[family_other]
+            elif family in species_params:
+                a, b = species_params[family]
+                
+        # Calculate weight
         weight_grams = a * (length ** b)
         return weight_grams / 1000  # Convert to kg
     
@@ -201,10 +236,11 @@ def calculate_fish_biomass(fish_df, site_name=None):
         for _, fish in commercial_fish.iterrows():
             avg_size = get_average_size(fish['Size'])
             count = fish['Total']
+            species = fish['Species']
             
             if avg_size > 0 and count > 0:
                 # Biomass = number of fish * weight per fish
-                fish_weight = calculate_weight(avg_size)
+                fish_weight = calculate_weight(avg_size, species=species)
                 biomass = count * fish_weight
                 total_biomass += biomass
         
@@ -1556,11 +1592,67 @@ def analyze_fish_data(df):
                     
                     survey_data['Average_Size'] = survey_data['Size'].apply(get_average_size)
                     
-                    # Basic formula: biomass ∝ length^3
-                    # This is a simplification - real calculations would use species-specific coefficients
-                    survey_data['Estimated_Weight'] = (survey_data['Average_Size'] ** 3) * 0.01  # Simple cubic relationship
-                    survey_data['Total_Biomass'] = survey_data['Estimated_Weight'] * survey_data['Total']
-                    total_biomass = survey_data['Total_Biomass'].sum()
+                    # Load species-specific length-weight parameters
+                    try:
+                        # Load coefficients from CSV file
+                        biomass_params_file = "attached_assets/Fish Data Analysis - Biomass CO.csv"
+                        if os.path.exists(biomass_params_file):
+                            biomass_params_df = pd.read_csv(biomass_params_file)
+                            # Convert to dictionary for faster lookups
+                            biomass_params = {}
+                            for _, row in biomass_params_df.iterrows():
+                                if pd.notna(row['Species']) and pd.notna(row['Coeff a']) and pd.notna(row['Coeff b']):
+                                    biomass_params[row['Species']] = (float(row['Coeff a']), float(row['Coeff b']))
+                        else:
+                            st.warning(f"Biomass parameters file not found: {biomass_params_file}")
+                            biomass_params = {}
+                    except Exception as e:
+                        st.warning(f"Error loading biomass parameters: {str(e)}")
+                        biomass_params = {}
+                    
+                    # Calculate weight for each fish species
+                    total_biomass = 0
+                    
+                    # Calculate biomass for each row (species)
+                    for _, fish in survey_data.iterrows():
+                        species = fish['Species']
+                        count = fish['Total']
+                        avg_size = fish['Average_Size']
+                        
+                        if pd.isna(avg_size) or pd.isna(count) or avg_size <= 0 or count <= 0:
+                            continue
+                            
+                        # Look for exact species match first, then try partial match, then default values
+                        if species in biomass_params:
+                            a, b = biomass_params[species]
+                        else:
+                            # Try to find partial match (e.g., "Parrotfish - XXX" matches "Parrotfish - Other")
+                            found = False
+                            if ' - ' in species:
+                                family = species.split(' - ')[0]
+                                family_other = f"{family} - Other"
+                                
+                                if family_other in biomass_params:
+                                    a, b = biomass_params[family_other]
+                                    found = True
+                                elif family in biomass_params:
+                                    a, b = biomass_params[family]
+                                    found = True
+                            
+                            if not found:
+                                # Default values if no match is found
+                                a, b = 0.01, 3.0
+                        
+                        # Calculate weight in grams
+                        weight_grams = a * (avg_size ** b)
+                        weight_kg = weight_grams / 1000  # Convert to kg
+                        
+                        # Add to total biomass
+                        biomass = weight_kg * count
+                        total_biomass += biomass
+                    
+                    # Store total biomass in grams
+                    survey_data['Total_Biomass'] = total_biomass * 1000  # Store in grams for consistency
                 except Exception as e:
                     total_biomass = None
                     st.warning(f"Could not calculate biomass: {str(e)}")
