@@ -155,7 +155,7 @@ def calculate_fish_biomass(fish_df, site_name=None):
     # Commercial fish families
     commercial_species = [
         'Snapper', 'Grouper', 'Sweetlips', 'Trevally', 'Barracuda', 
-        'Emperor', 'Parrotfish', 'Rabbitfish', 'Surgeonfish', 'Wrasse',
+        'Emperor', 'Parrotfish', 'Rabbitfish', 'Surgeonfish',
         'Goatfish', 'Triggerfish', 'Tuna', 'Mackerel', 'Fusilier',
         'Unicornfish', 'Soldierfish', 'Bream', 'Big Eye', 'Bigeye'
     ]
@@ -1590,7 +1590,7 @@ def analyze_fish_data(df):
         # Commercial fish families/species list
         commercial_species = [
             'Snapper', 'Grouper', 'Sweetlips', 'Trevally', 'Barracuda', 
-            'Emperor', 'Parrotfish', 'Rabbitfish', 'Surgeonfish', 'Wrasse',
+            'Emperor', 'Parrotfish', 'Rabbitfish', 'Surgeonfish',
             'Goatfish', 'Triggerfish', 'Tuna', 'Mackerel', 'Fusilier',
             'Unicornfish', 'Soldierfish', 'Bream', 'Big Eye', 'Bigeye'
         ]
@@ -1841,7 +1841,7 @@ def analyze_fish_data(df):
             st.info("""
             **How is this calculated?**
             1. For each survey, we calculate the commercial fish biomass based on species-specific length-weight relationships.
-            2. Commercial fish include: Snapper, Grouper, Sweetlips, Trevally, Barracuda, Emperor, Parrotfish, Rabbitfish, Surgeonfish, Wrasse, Goatfish, Triggerfish, Tuna, Mackerel, Fusilier, Unicornfish, Soldierfish, Bream, and Big Eye.
+            2. Commercial fish include: Snapper, Grouper, Sweetlips, Trevally, Barracuda, Emperor, Parrotfish, Rabbitfish, Surgeonfish, Goatfish, Triggerfish, Tuna, Mackerel, Fusilier, Unicornfish, Soldierfish, Bream, and Big Eye.
             3. Surveys are grouped into 3-month periods (quarters) by season.
             4. The average biomass is calculated by dividing the total commercial biomass by the number of surveys in each period.
             5. Results are standardized to kg per 100m² for comparison across sites.
