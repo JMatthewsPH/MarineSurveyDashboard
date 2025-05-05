@@ -2074,7 +2074,7 @@ if data_source == "Use Sample Files":
                 survey_type = detect_survey_type(df)
 
                 # Add diagnostic view for Andulay commercial fish
-                if survey_type == "fish" and "DBMCP_Fish" in selected_file:
+                if survey_type == "fish" and isinstance(selected_file, str) and "DBMCP_Fish" in selected_file:
                     # Create an expandable section for the diagnostic data
                     with st.expander("Diagnostic: Andulay Commercial Fish Data"):
                         st.subheader("Commercial Fish at Andulay")
@@ -2092,7 +2092,7 @@ if data_source == "Use Sample Files":
                             ]
 
                             # Find commercial fish
-                            is_commercial = andulay_data['Species'].str.contains('|'.join(commercial_species), case=False)
+                            is_commercial = andulay_data['Species'].str.contains('|'.join(commercial_species), case=False, na=False)
                             commercial_fish = andulay_data[is_commercial]
 
                             if not commercial_fish.empty:
