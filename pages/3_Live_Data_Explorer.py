@@ -1748,9 +1748,39 @@ def analyze_fish_data(df):
             st.subheader("Average Commercial Biomass by Quarter")
             st.write("Commercial biomass per 100m² averaged by 3-month survey periods")
             
-            # Create the chart
+            # Get unique sites for comparison selection
+            available_sites = sorted(commercial_df['Site'].unique())
+            
+            # Add site selection filters similar to Site Dashboard
+            col1, col2 = st.columns([1, 1])
+            
+            with col1:
+                primary_site = st.selectbox(
+                    "Select Primary Site", 
+                    available_sites,
+                    index=0 if available_sites else None,
+                    key="biomass_primary_site"
+                )
+            
+            with col2:
+                comparison_sites = st.multiselect(
+                    "Select Sites to Compare", 
+                    [site for site in available_sites if site != primary_site],
+                    key="biomass_comparison_sites"
+                )
+            
+            # Create a list of sites to display
+            sites_to_display = [primary_site] + comparison_sites
+            
+            # Filter quarterly data for selected sites
+            filtered_quarterly = quarterly_biomass[quarterly_biomass['Site'].isin(sites_to_display)]
+            
+            # Ensure consistent sorting by quarter
+            filtered_quarterly = filtered_quarterly.sort_values(by=['Quarter'])
+            
+            # Create the chart with the filtered data
             fig = px.bar(
-                quarterly_biomass,
+                filtered_quarterly,
                 x='QuarterLabel',
                 y='avg_biomass',
                 color='Site',
@@ -1760,7 +1790,8 @@ def analyze_fish_data(df):
                     'Site': 'Site'
                 },
                 title='Average Commercial Fish Biomass by Quarter',
-                hover_data=['num_surveys']
+                hover_data=['num_surveys'],
+                color_discrete_sequence=px.colors.qualitative.G10  # Using a color scheme that works well for differentiation
             )
             
             # Update hover template to show number of surveys
