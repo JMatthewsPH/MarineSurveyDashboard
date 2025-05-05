@@ -166,12 +166,13 @@ def calculate_fish_biomass(fish_df, site_name=None):
             return 0
         try:
             # Handle ranges like "0-5" or "20-25"
-            if '-' in size_range:
+            if isinstance(size_range, str) and '-' in size_range:
                 lower, upper = map(float, size_range.split('-'))
                 return (lower + upper) / 2
             # Handle single values
             return float(size_range)
-        except:
+        except (ValueError, TypeError):
+            # If we can't convert to float, return 0
             return 0
     
     # Load species-specific length-weight parameters
@@ -1609,7 +1610,20 @@ def analyze_fish_data(df):
                     # Convert size ranges to numeric estimates
                     # Extract the average size from ranges like "5-10"
                     def get_average_size(size_range):
-                        if isinstance(size_range, str) and '-' in size_range:
+                        # Handle None or NaN values
+                        if pd.isna(size_range):
+                            return None
+                            
+                        # Convert to string if numeric
+                        if not isinstance(size_range, str):
+                            try:
+                                # If it's already a number, just return it as float
+                                return float(size_range)
+                            except (ValueError, TypeError):
+                                return None
+                                
+                        # Handle range format (e.g., "5-10")
+                        if '-' in size_range:
                             parts = size_range.split('-')
                             try:
                                 min_size = float(parts[0])
@@ -1617,7 +1631,12 @@ def analyze_fish_data(df):
                                 return (min_size + max_size) / 2
                             except (ValueError, IndexError):
                                 return None
-                        return size_range
+                                
+                        # Handle single value as string
+                        try:
+                            return float(size_range)
+                        except (ValueError, TypeError):
+                            return None
                     
                     survey_data['Average_Size'] = survey_data['Size'].apply(get_average_size)
                     
@@ -1654,6 +1673,13 @@ def analyze_fish_data(df):
                         avg_size = fish['Average_Size']
                         
                         if pd.isna(avg_size) or pd.isna(count) or avg_size <= 0 or count <= 0:
+                            continue
+                            
+                        # Make sure avg_size is a number
+                        try:
+                            avg_size = float(avg_size)
+                        except (ValueError, TypeError):
+                            # Skip this fish if size can't be converted to float
                             continue
                             
                         # Look for exact species match first, then try partial match, then default values
