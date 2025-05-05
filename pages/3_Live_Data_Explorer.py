@@ -530,16 +530,6 @@ which focuses on collecting and analyzing biophysical data on locally-managed MP
 - Assess regional reef health and resilience
 - Assess threats and sustainability of local MPAs at continuing to provide desired goods for the community
 
-### Methodology Overview
-MCP uses stratified random sampling with 30-meter transects across three depth ranges (3-7m, 9-13m, 15-19m):
-
-- **Substrate Surveys**: Point intercept transect method with identification every 25cm (120 points per transect)
-- **Fish Surveys**: Visual census on 5m wide belt transects (2.5m on each side of the line), with fish identified and measured in 5cm increments
-- **Invertebrate Surveys**: Belt transect method covering 150m² per transect (5m×30m), with specimens measured in centimeter increments
-- **Predation Surveys**: Tracking coral predators and assessing their impact on reef health
-
-Data is collected on a seasonal basis to track changes in MPA ecosystems over time.
-
 Use the tools below to explore the different survey types and understand the ecological health of the monitored areas.
 """)
 
