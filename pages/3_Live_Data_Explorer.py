@@ -1889,6 +1889,33 @@ def analyze_fish_data(df):
         st.warning("No data available for the selected filters.")
 
 # Function to detect survey type from CSV
+def filter_valid_surveys(df):
+    """
+    Filter dataframe to include only rows with Survey_Status = 1
+    Ensures numeric conversion of Survey_Status column to avoid string comparison issues
+    
+    Args:
+        df: Pandas DataFrame to filter
+        
+    Returns:
+        Tuple of (filtered_df, valid_count, invalid_count, total_count)
+    """
+    if 'Survey_Status' not in df.columns:
+        return df, 0, 0, df.shape[0]
+    
+    # Ensure Survey_Status is numeric for comparison
+    df['Survey_Status'] = pd.to_numeric(df['Survey_Status'], errors='coerce').fillna(0).astype(int)
+    
+    # Get counts for reporting
+    valid_count = df[df['Survey_Status'] == 1].shape[0]
+    invalid_count = df[df['Survey_Status'] != 1].shape[0]
+    total_count = df.shape[0]
+    
+    # Filter the DataFrame
+    filtered_df = df[df['Survey_Status'] == 1]
+    
+    return filtered_df, valid_count, invalid_count, total_count
+
 def detect_survey_type(df):
     """
     Detect survey type from CSV columns and content
@@ -1982,6 +2009,13 @@ if data_source == "Use Sample Files":
                 # Load data
                 file_path = os.path.join(data_dir, selected_file)
                 df = pd.read_csv(file_path)
+                
+                # Filter for valid surveys
+                df, valid_count, invalid_count, total_count = filter_valid_surveys(df)
+                
+                # Show notice about filtering if needed
+                if 'Survey_Status' in df.columns and invalid_count > 0:
+                    st.info(f"Filtered data to include only valid surveys (Survey_Status = 1). Removed {invalid_count} of {total_count} rows ({(invalid_count/total_count*100):.1f}%).")
                 
                 # Hide raw data sample
                 # Raw data sample has been removed as requested
