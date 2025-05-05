@@ -147,7 +147,10 @@ def calculate_fish_biomass(fish_df, site_name=None):
         fish_df = fish_df[fish_df['Site'].str.strip() == site_name.strip()]
     
     # Filter for valid surveys
-    fish_df = fish_df[fish_df['Survey_Status'] == 1]
+    if 'Survey_Status' in fish_df.columns:
+        # Ensure Survey_Status is numeric for comparison
+        fish_df['Survey_Status'] = pd.to_numeric(fish_df['Survey_Status'], errors='coerce').fillna(0).astype(int)
+        fish_df = fish_df[fish_df['Survey_Status'] == 1]
     
     if fish_df.empty:
         return pd.DataFrame(columns=['date', 'value'])
@@ -290,7 +293,10 @@ def calculate_fish_density(fish_df, fish_type, site_name=None):
         fish_df = fish_df[fish_df['Site'].str.strip() == site_name.strip()]
     
     # Filter for valid surveys
-    fish_df = fish_df[fish_df['Survey_Status'] == 1]
+    if 'Survey_Status' in fish_df.columns:
+        # Ensure Survey_Status is numeric for comparison
+        fish_df['Survey_Status'] = pd.to_numeric(fish_df['Survey_Status'], errors='coerce').fillna(0).astype(int)
+        fish_df = fish_df[fish_df['Survey_Status'] == 1]
     
     if fish_df.empty:
         return pd.DataFrame(columns=['date', 'value'])
