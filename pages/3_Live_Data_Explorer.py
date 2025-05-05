@@ -369,6 +369,24 @@ def format_season(date_obj):
             return f'DEC-FEB {year + 1}'
         # If it's January or February, it's end of Q4 for current year
         return f'DEC-FEB {year}'
+        
+def get_quarter(date_obj):
+    """Get the quarter/season for a date for grouping"""
+    month = date_obj.month
+    year = date_obj.year
+    
+    if 3 <= month <= 5:  # Q1: MAR-MAY
+        return (year, 1)
+    elif 6 <= month <= 8:  # Q2: JUN-AUG
+        return (year, 2)
+    elif 9 <= month <= 11:  # Q3: SEP-NOV
+        return (year, 3)
+    else:  # Q4: DEC-FEB
+        # If December, it's the start of Q4 for the next year
+        if month == 12:
+            return (year + 1, 4)
+        # If January or February, it's end of Q4 for current year
+        return (year, 4)
 
 def create_dashboard_time_series(data, title, y_label, show_confidence_interval=False):
     """
