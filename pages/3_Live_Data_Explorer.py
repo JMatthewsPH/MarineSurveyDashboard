@@ -1855,39 +1855,38 @@ def analyze_fish_data(df):
                 if 'Average_Size' not in filtered_data.columns:
                     # We need to calculate average size from the raw data
                     # Add error handling for the case where Size column contains non-numeric values
-                    st.warning("Processing size data. This might take a moment for large datasets...")
+                    st.info("Processing size data...")
                     
-                    # Helper function for size conversion - same as the one used in the biomass calculation
                     def get_avg_size(size_range):
+                        """Convert size ranges to numeric values"""
                         if pd.isna(size_range):
                             return None
-                        
-                        # Convert to string if numeric
-                        if not isinstance(size_range, str):
-                            try:
-                                return float(size_range)
-                            except (ValueError, TypeError):
-                                return None
-                                
-                        # Handle range format (e.g., "5-10")
-                        if '-' in size_range:
-                            parts = size_range.split('-')
-                            try:
-                                min_size = float(parts[0])
-                                max_size = float(parts[1])
-                                return (min_size + max_size) / 2
-                            except (ValueError, IndexError):
-                                return None
-                                
-                        # Handle single value as string
+                            
                         try:
-                            return float(size_range)
-                        except (ValueError, TypeError):
+                            # If already numeric, return as float
+                            if isinstance(size_range, (int, float)):
+                                return float(size_range)
+                                
+                            # Clean the string
+                            size_str = str(size_range).strip()
+                            
+                            # Handle range format (e.g. "5-10")
+                            if '-' in size_str:
+                                low, high = map(float, size_str.split('-'))
+                                return (low + high) / 2
+                                
+                            # Handle single value
+                            return float(size_str)
+                        except (ValueError, TypeError, AttributeError):
                             return None
-                    
-                    # Apply the function to get average sizes
+                            
+                    # Create size categories
                     try:
+                        # First convert sizes to numeric values
                         filtered_data['Average_Size'] = filtered_data['Size'].apply(get_avg_size)
+                        
+                        # Remove rows where size conversion failed
+                        filtered_data = filtered_data.dropna(subset=['Average_Size'])
                     except Exception as e:
                         st.error(f"Error calculating average sizes: {str(e)}. Using raw 'Size' column instead.")
                         # Fall back to using the raw Size column for grouping
