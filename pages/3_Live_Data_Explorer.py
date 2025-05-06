@@ -816,7 +816,7 @@ def analyze_substrate_data(df):
     st.subheader("Dataset Overview")
 
     # Basic statistics
-    num_surveys = df['Survey_ID'].nunique()
+    numsurveys = df['Survey_ID'].nunique()
     num_sites = df['Site'].unique()
     num_substrate_types = df['Group'].nunique() if 'Group' in df.columns else 0
     date_range = f"{df['Date'].min().strftime('%Y-%m-%d')} to {df['Date'].max().strftime('%Y-%m-%d')}"
@@ -1521,7 +1521,7 @@ def analyze_fish_data(df):
         total_count = df.shape[0]
 
         # Filter the DataFrame
-        df = df[df['Survey_Status'] == 1]
+        df = df[df['Survey_Status'] ==1]
 
         # Show notice about filtering
         if invalid_count > 0:
@@ -1574,6 +1574,11 @@ def analyze_fish_data(df):
 
     # Hide filtered dataframe (removed as requested)
     if len(filtered_df) > 0:
+        # Check if Size column exists before proceeding
+        if 'Size' not in filtered_df.columns:
+            st.error("Size column not found in the dataset. Please ensure your data includes size measurements.")
+            return
+
         # Calculate fish metrics
         st.subheader("Calculated Metrics")
 
@@ -1749,7 +1754,7 @@ def analyze_fish_data(df):
         # Convert to DataFrame
         metrics_df = pd.DataFrame(survey_metrics)
 
-        # Display individual survey metrics
+        # Calculate metrics
         st.subheader("Survey Metrics")
         st.dataframe(metrics_df, use_container_width=True)
 
@@ -1856,20 +1861,20 @@ def analyze_fish_data(df):
                     # We need to calculate average size from the raw data
                     # Add error handling for the case where Size column contains non-numeric values
                     st.info("Processing size data...")
-                    
+
                     def get_avg_size(size_range):
                         """Convert size ranges to numeric values"""
                         if pd.isna(size_range):
                             return None
-                            
+
                         try:
                             # If already numeric, return as float
                             if isinstance(size_range, (int, float)):
                                 return float(size_range)
-                                
+
                             # Clean the string and handle common formatting issues
                             size_str = str(size_range).strip().replace(' ', '')
-                            
+
                             # Handle range format (e.g. "5-10" or "5 - 10")
                             if '-' in size_str:
                                 try:
@@ -1881,41 +1886,41 @@ def analyze_fish_data(df):
                                             return (low + high) / 2
                                 except:
                                     pass
-                                    
+
                             # Try direct conversion for single values
                             try:
                                 return float(size_str)
                             except:
                                 return None
-                                
+
                         except (ValueError, TypeError, AttributeError):
                             return None
-                            
+
                         return None
-                            
+
                     # Create size categories
                     try:
                         # Ensure Size column exists
                         if 'Size' not in filtered_data.columns:
                             st.error("Size column not found in the dataset")
                             return
-                            
+
                         # Convert sizes to numeric values
                         filtered_data['Average_Size'] = filtered_data['Size'].apply(get_avg_size)
-                        
+
                         # Report conversion statistics
                         total_rows = len(filtered_data)
                         converted_rows = filtered_data['Average_Size'].notna().sum()
                         if converted_rows < total_rows:
                             st.info(f"Successfully converted {converted_rows} of {total_rows} size values. {total_rows - converted_rows} values could not be converted.")
-                        
+
                         # Remove rows where size conversion failed
                         filtered_data = filtered_data.dropna(subset=['Average_Size'])
                     except Exception as e:
                         st.error(f"Error calculating average sizes: {str(e)}. Using raw 'Size' column instead.")
                         # Fall back to using the raw Size column for grouping
                         size_dist = filtered_data.groupby(['Site', 'Size'])['Total'].sum().reset_index()
-                        
+
                         # Create bar chart
                         fig = px.bar(
                             size_dist,
@@ -1930,7 +1935,7 @@ def analyze_fish_data(df):
                             },
                             title='Commercial Fish Size Distribution'
                         )
-                        
+
                         # Skip the rest of the Size Distribution code since we're handling it differently
                         try:
                             # Update layout for better mobile viewing
@@ -1939,14 +1944,14 @@ def analyze_fish_data(df):
                                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
                                 margin=dict(l=10, r=10, t=50, b=100)
                             )
-                            
+
                             st.plotly_chart(fig, use_container_width=True)
                         except Exception as e:
                             st.error(f"Error displaying chart: {str(e)}")
-                        
+
                         # Skip the rest of this branch by returning from this function
                         return
-                
+
                 # Only continue here if we successfully have Average_Size
                 try:
                     # Calculate size distribution
@@ -1965,7 +1970,7 @@ def analyze_fish_data(df):
                 # Create size distribution chart
                 x_column = 'Size_Category' if 'Size_Category' in size_dist.columns else 'Size'
                 x_label = 'Size Range' if x_column == 'Size_Category' else 'Size Range (cm)'
-                
+
                 fig = px.bar(
                     size_dist,
                     x=x_column,
