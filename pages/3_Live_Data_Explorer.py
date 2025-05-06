@@ -1851,24 +1851,106 @@ def analyze_fish_data(df):
                 )
 
             else:  # Size Distribution
-                # Calculate size distribution
-                filtered_data['Size_Category'] = pd.cut(
-                    filtered_data['Average_Size'],
-                    bins=[0, 10, 20, 30, 40, 50, float('inf')],
-                    labels=['0-10 cm', '11-20 cm', '21-30 cm', '31-40 cm', '41-50 cm', '>50 cm']
-                )
+                # Check if we have size data
+                if 'Average_Size' not in filtered_data.columns:
+                    # We need to calculate average size from the raw data
+                    # Add error handling for the case where Size column contains non-numeric values
+                    st.warning("Processing size data. This might take a moment for large datasets...")
+                    
+                    # Helper function for size conversion - same as the one used in the biomass calculation
+                    def get_avg_size(size_range):
+                        if pd.isna(size_range):
+                            return None
+                        
+                        # Convert to string if numeric
+                        if not isinstance(size_range, str):
+                            try:
+                                return float(size_range)
+                            except (ValueError, TypeError):
+                                return None
+                                
+                        # Handle range format (e.g., "5-10")
+                        if '-' in size_range:
+                            parts = size_range.split('-')
+                            try:
+                                min_size = float(parts[0])
+                                max_size = float(parts[1])
+                                return (min_size + max_size) / 2
+                            except (ValueError, IndexError):
+                                return None
+                                
+                        # Handle single value as string
+                        try:
+                            return float(size_range)
+                        except (ValueError, TypeError):
+                            return None
+                    
+                    # Apply the function to get average sizes
+                    try:
+                        filtered_data['Average_Size'] = filtered_data['Size'].apply(get_avg_size)
+                    except Exception as e:
+                        st.error(f"Error calculating average sizes: {str(e)}. Using raw 'Size' column instead.")
+                        # Fall back to using the raw Size column for grouping
+                        size_dist = filtered_data.groupby(['Site', 'Size'])['Total'].sum().reset_index()
+                        
+                        # Create bar chart
+                        fig = px.bar(
+                            size_dist,
+                            x='Size',
+                            y='Total',
+                            color='Site',
+                            barmode='group',
+                            labels={
+                                'Size': 'Size Range (cm)',
+                                'Total': 'Number of Fish',
+                                'Site': 'Site'
+                            },
+                            title='Commercial Fish Size Distribution'
+                        )
+                        
+                        # Skip the rest of the Size Distribution code since we're handling it differently
+                        try:
+                            # Update layout for better mobile viewing
+                            fig.update_layout(
+                                xaxis_tickangle=45,
+                                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+                                margin=dict(l=10, r=10, t=50, b=100)
+                            )
+                            
+                            st.plotly_chart(fig, use_container_width=True)
+                        except Exception as e:
+                            st.error(f"Error displaying chart: {str(e)}")
+                        
+                        # Skip the rest of this branch by returning from this function
+                        return
+                
+                # Only continue here if we successfully have Average_Size
+                try:
+                    # Calculate size distribution
+                    filtered_data['Size_Category'] = pd.cut(
+                        pd.to_numeric(filtered_data['Average_Size'], errors='coerce'),
+                        bins=[0, 10, 20, 30, 40, 50, float('inf')],
+                        labels=['0-10 cm', '11-20 cm', '21-30 cm', '31-40 cm', '41-50 cm', '>50 cm']
+                    )
 
-                size_dist = filtered_data.groupby(['Site', 'Size_Category'])['Total'].sum().reset_index()
+                    size_dist = filtered_data.groupby(['Site', 'Size_Category'])['Total'].sum().reset_index()
+                except Exception as e:
+                    st.error(f"Error categorizing sizes: {str(e)}. Using raw 'Size' column instead.")
+                    # Fall back to using the raw Size column
+                    size_dist = filtered_data.groupby(['Site', 'Size'])['Total'].sum().reset_index()
 
                 # Create size distribution chart
+                x_column = 'Size_Category' if 'Size_Category' in size_dist.columns else 'Size'
+                x_label = 'Size Range' if x_column == 'Size_Category' else 'Size Range (cm)'
+                
                 fig = px.bar(
                     size_dist,
-                    x='Size_Category',
+                    x=x_column,
                     y='Total',
                     color='Site',
                     barmode='group',
                     labels={
-                        'Size_Category': 'Size Range',
+                        x_column: x_label,
                         'Total': 'Number of Fish',
                         'Site': 'Site'
                     },
