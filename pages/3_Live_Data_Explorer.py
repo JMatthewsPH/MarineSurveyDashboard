@@ -1867,23 +1867,47 @@ def analyze_fish_data(df):
                             if isinstance(size_range, (int, float)):
                                 return float(size_range)
                                 
-                            # Clean the string
-                            size_str = str(size_range).strip()
+                            # Clean the string and handle common formatting issues
+                            size_str = str(size_range).strip().replace(' ', '')
                             
-                            # Handle range format (e.g. "5-10")
+                            # Handle range format (e.g. "5-10" or "5 - 10")
                             if '-' in size_str:
-                                low, high = map(float, size_str.split('-'))
-                                return (low + high) / 2
+                                try:
+                                    parts = size_str.split('-')
+                                    if len(parts) == 2:
+                                        low = float(parts[0].strip())
+                                        high = float(parts[1].strip())
+                                        if low <= high:
+                                            return (low + high) / 2
+                                except:
+                                    pass
+                                    
+                            # Try direct conversion for single values
+                            try:
+                                return float(size_str)
+                            except:
+                                return None
                                 
-                            # Handle single value
-                            return float(size_str)
                         except (ValueError, TypeError, AttributeError):
                             return None
                             
+                        return None
+                            
                     # Create size categories
                     try:
-                        # First convert sizes to numeric values
+                        # Ensure Size column exists
+                        if 'Size' not in filtered_data.columns:
+                            st.error("Size column not found in the dataset")
+                            return
+                            
+                        # Convert sizes to numeric values
                         filtered_data['Average_Size'] = filtered_data['Size'].apply(get_avg_size)
+                        
+                        # Report conversion statistics
+                        total_rows = len(filtered_data)
+                        converted_rows = filtered_data['Average_Size'].notna().sum()
+                        if converted_rows < total_rows:
+                            st.info(f"Successfully converted {converted_rows} of {total_rows} size values. {total_rows - converted_rows} values could not be converted.")
                         
                         # Remove rows where size conversion failed
                         filtered_data = filtered_data.dropna(subset=['Average_Size'])
