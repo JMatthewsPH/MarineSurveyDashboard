@@ -1517,7 +1517,7 @@ def analyze_fish_data(df):
     # Filter for valid rows based on Survey_Status = 1
     if 'Survey_Status' in df.columns:
         valid_count = df[df['Survey_Status'] == 1].shape[0]
-        invalid_count = df[df['Survey_Status'] != 1== 1].shape[0]
+        invalid_count = df[df['Survey_Status'] != 1].shape[0]
         total_count = df.shape[0]
 
         # Filter the DataFrame
