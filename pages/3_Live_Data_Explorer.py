@@ -1659,7 +1659,7 @@ def analyze_fish_data(df):
                     commercial_biomass = 0
 
                     # Identify commercial fish species
-                    is_commercial = survey_data['Species'].str.contains('|'.join(commercial_species), case=False)
+                    is_commercial = survey_data['Species'].str.contains('|'.join(commercial_species), case=False, na=False)
                     commercial_fish = survey_data[is_commercial]
 
                     # Calculate biomass for each row (species)
@@ -1708,7 +1708,7 @@ def analyze_fish_data(df):
                         total_biomass += biomass
 
                         # Check if this is a commercial species
-                        if any(comm_sp in species for comm_sp in commercial_species):
+                        if isinstance(species, str) and any(comm_sp in species for comm_sp in commercial_species):
                             commercial_biomass += biomass
 
                     # Calculate biomass per 100m²
@@ -1876,13 +1876,17 @@ def analyze_fish_data(df):
                 )
 
             # Update hover template to show number of surveys
-            if 'hover_data' in fig.data[0].args:
-                fig.update_traces(
-                    hovertemplate='<b>%{x}</b><br>' +
-                                  'Site: %{color}<br>' +
-                                  'Avg. Biomass: %{y:.2f} kg/100m²<br>' +
-                                  'Number of Surveys: %{customdata[0]}'
-                )
+            try:
+                if view_type in ["Quarterly Averages", "Annual Trends"]:
+                    fig.update_traces(
+                        hovertemplate='<b>%{x}</b><br>' +
+                                     'Site: %{color}<br>' +
+                                     'Avg. Biomass: %{y:.2f} kg/100m²<br>' +
+                                     'Number of Surveys: %{customdata[0]}'
+                    )
+            except Exception as e:
+                # Skip hover template update if there's an error
+                pass
 
             # Update layout for better mobile viewing
             fig.update_layout(
