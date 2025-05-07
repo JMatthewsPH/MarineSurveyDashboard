@@ -574,7 +574,7 @@ class DataProcessor:
             }
         
         # Get site names for batch loading
-        site_names = [site['name'] for site in sites]
+        site_names = [site.name for site in sites]
         
         # Use batch loading for biomass data
         biomass_data_by_site = _self.batch_get_biomass_data(site_names, start_date='2017-01-01')
@@ -659,10 +659,10 @@ class DataProcessor:
             return pd.DataFrame()
             
         # Get site names for batch loading
-        site_names = [site['name'] for site in sites]
+        site_names = [site.name for site in sites]
         
         # Create a mapping from site name to municipality for use in the final matrix
-        site_municipalities = {site['name']: site['municipality'] for site in sites}
+        site_municipalities = {site.name: site.municipality for site in sites}
         
         # Use batch loading for all metrics
         biomass_data_by_site = _self.batch_get_biomass_data(site_names, start_date='2017-01-01')
@@ -745,10 +745,10 @@ class DataProcessor:
             start_date = '2017-01-01'
             
         # Get site names for batch loading
-        site_names = [site['name'] for site in sites]
+        site_names = [site.name for site in sites]
         
         # Create a mapping from site name to municipality for use in the final dataset
-        site_municipalities = {site['name']: site['municipality'] for site in sites}
+        site_municipalities = {site.name: site.municipality for site in sites}
         
         # Use batch loading based on the metric type
         if metric == 'biomass':

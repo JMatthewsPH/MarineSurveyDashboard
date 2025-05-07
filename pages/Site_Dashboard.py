@@ -89,13 +89,13 @@ def get_data_processor():
 
 data_processor, graph_generator = get_data_processor()
 
-# Get all sites (now returned as dictionaries)
+# Get all sites
 sites = data_processor.get_sites()
 
 # Create ordered groups by municipality
-zamboanguita_sites = sorted([site['name'] for site in sites if site['municipality'] == "Zamboanguita"])
-siaton_sites = sorted([site['name'] for site in sites if site['municipality'] == "Siaton"])
-santa_catalina_sites = sorted([site['name'] for site in sites if site['municipality'] == "Santa Catalina"])
+zamboanguita_sites = sorted([site.name for site in sites if site.municipality == "Zamboanguita"])
+siaton_sites = sorted([site.name for site in sites if site.municipality == "Siaton"])
+santa_catalina_sites = sorted([site.name for site in sites if site.municipality == "Santa Catalina"])
 
 # Combine in desired order for display in sidebar
 site_names = zamboanguita_sites + siaton_sites + santa_catalina_sites
@@ -276,7 +276,7 @@ with st.sidebar:
 
 # Display site content
 if selected_site:
-    selected_site_obj = next((site for site in sites if site['name'] == selected_site), None)
+    selected_site_obj = next((site for site in sites if site.name == selected_site), None)
     if selected_site_obj:
         # Display small logo at the top of the dashboard
         display_logo(size="small")
@@ -317,11 +317,11 @@ if selected_site:
             
             # Get description based on language
             if language_code == 'en':
-                description = selected_site_obj['description_en']
+                description = selected_site_obj.description_en
             elif language_code == 'tl':
-                description = selected_site_obj['description_fil']  # Using Filipino description for Tagalog
+                description = selected_site_obj.description_fil  # Using Filipino description for Tagalog
             else:  # Cebuano - fallback to English for now
-                description = selected_site_obj['description_en']
+                description = selected_site_obj.description_en
                 
             # Default description if not available
             if not description:
@@ -334,7 +334,7 @@ if selected_site:
 
 
         # Get current site's municipality
-        site_municipality = selected_site_obj['municipality'] if selected_site_obj else None
+        site_municipality = selected_site_obj.municipality if selected_site_obj else None
 
         # Sidebar metric comparisons and date range selection
         with st.sidebar:
@@ -440,7 +440,7 @@ if selected_site:
             # Get the min and max dates from all surveys 
             all_surveys = []
             for site in sites:
-                site_surveys = data_processor.get_biomass_data(site['name'])
+                site_surveys = data_processor.get_biomass_data(site.name)
                 if not site_surveys.empty:
                     all_surveys.append(site_surveys)
             
@@ -510,7 +510,7 @@ if selected_site:
                 biomass_compare_sites = [extract_site_name(site) for site in biomass_compare_sites if extract_site_name(site)]
                 if biomass_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
-                    site_to_muni = {site['name']: site['municipality'] for site in sites}
+                    site_to_muni = {site.name: site.municipality for site in sites}
                     biomass_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in biomass_compare_sites]
                         
             elif biomass_comparison == "Compare with Average":
@@ -554,7 +554,7 @@ if selected_site:
                 coral_compare_sites = [extract_site_name(site) for site in coral_compare_sites if extract_site_name(site)]
                 if coral_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
-                    site_to_muni = {site['name']: site['municipality'] for site in sites}
+                    site_to_muni = {site.name: site.municipality for site in sites}
                     coral_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in coral_compare_sites]
             elif coral_comparison == "Compare with Average":
                 coral_compare_scope = st.selectbox(
@@ -591,7 +591,7 @@ if selected_site:
                 algae_compare_sites = [option.strip() for option in algae_compare_sites if option.startswith("  ")]
                 if algae_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
-                    site_to_muni = {site['name']: site['municipality'] for site in sites}
+                    site_to_muni = {site.name: site.municipality for site in sites}
                     algae_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in algae_compare_sites]
             elif algae_comparison == "Compare with Average":
                 algae_compare_scope = st.selectbox(
@@ -628,7 +628,7 @@ if selected_site:
                 herbivore_compare_sites = [option.strip() for option in herbivore_compare_sites if option.startswith("  ")]
                 if herbivore_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
-                    site_to_muni = {site['name']: site['municipality'] for site in sites}
+                    site_to_muni = {site.name: site.municipality for site in sites}
                     herbivore_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in herbivore_compare_sites]
             elif herbivore_comparison == "Compare with Average":
                 herbivore_compare_scope = st.selectbox(
@@ -665,7 +665,7 @@ if selected_site:
                 carnivore_compare_sites = [option.strip() for option in carnivore_compare_sites if option.startswith("  ")]
                 if carnivore_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
-                    site_to_muni = {site['name']: site['municipality'] for site in sites}
+                    site_to_muni = {site.name: site.municipality for site in sites}
                     carnivore_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in carnivore_compare_sites]
             elif carnivore_comparison == "Compare with Average":
                 carnivore_compare_scope = st.selectbox(
@@ -702,7 +702,7 @@ if selected_site:
                 omnivore_compare_sites = [option.strip() for option in omnivore_compare_sites if option.startswith("  ")]
                 if omnivore_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
-                    site_to_muni = {site['name']: site['municipality'] for site in sites}
+                    site_to_muni = {site.name: site.municipality for site in sites}
                     omnivore_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in omnivore_compare_sites]
             elif omnivore_comparison == "Compare with Average":
                 omnivore_compare_scope = st.selectbox(
@@ -739,7 +739,7 @@ if selected_site:
                 corallivore_compare_sites = [option.strip() for option in corallivore_compare_sites if option.startswith("  ")]
                 if corallivore_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
-                    site_to_muni = {site['name']: site['municipality'] for site in sites}
+                    site_to_muni = {site.name: site.municipality for site in sites}
                     corallivore_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in corallivore_compare_sites]
             elif corallivore_comparison == "Compare with Average":
                 corallivore_compare_scope = st.selectbox(
@@ -776,7 +776,7 @@ if selected_site:
                 bleaching_compare_sites = [option.strip() for option in bleaching_compare_sites if option.startswith("  ")]
                 if bleaching_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
-                    site_to_muni = {site['name']: site['municipality'] for site in sites}
+                    site_to_muni = {site.name: site.municipality for site in sites}
                     bleaching_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in bleaching_compare_sites]
             elif bleaching_comparison == "Compare with Average":
                 bleaching_compare_scope = st.selectbox(
@@ -813,7 +813,7 @@ if selected_site:
                 rubble_compare_sites = [option.strip() for option in rubble_compare_sites if option.startswith("  ")]
                 if rubble_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
-                    site_to_muni = {site['name']: site['municipality'] for site in sites}
+                    site_to_muni = {site.name: site.municipality for site in sites}
                     rubble_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in rubble_compare_sites]
             elif rubble_comparison == "Compare with Average":
                 rubble_compare_scope = st.selectbox(
