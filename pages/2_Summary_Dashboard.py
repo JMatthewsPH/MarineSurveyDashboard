@@ -43,7 +43,26 @@ data_processor = get_data_processor()
 # Get graph generator
 graph_generator = GraphGenerator(data_processor)
 
-# Apply consolidated CSS
+# Apply critical CSS directly in the page first
+st.markdown("""
+<style>
+/* Critical styles for immediate display */
+body {
+    font-family: sans-serif;
+    opacity: 1;
+    transition: opacity 0.2s;
+}
+.site-card { 
+    border: 1px solid #eee;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    transition: transform 0.2s;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# Then apply the main CSS
 st.markdown(load_css(), unsafe_allow_html=True)
 
 # Display logo at the top

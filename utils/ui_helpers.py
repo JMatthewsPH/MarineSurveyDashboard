@@ -126,32 +126,12 @@ def load_css():
         str: HTML style tag with consolidated CSS
     """
     try:
+        # Read the CSS file
         with open('assets/styles.css') as f:
             css_content = f.read()
             
-        # Combine main CSS and critical CSS in a single string to avoid display issues
-        return """
-        <style media="all" onload="this.media='all'; this.onload=null;">
-        /* Main styles - loaded asynchronously */
-        """ + css_content + """
-        </style>
-        
-        <style>
-        /* Critical styles for immediate display */
-        body {
-            font-family: sans-serif;
-            opacity: 1;
-            transition: opacity 0.2s;
-        }
-        .site-card { 
-            border: 1px solid #eee;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            transition: transform 0.2s;
-        }
-        </style>
-        """
+        # Return a simple style tag with the content
+        return f"<style>{css_content}</style>"
     except Exception as e:
         print(f"Error loading CSS: {e}")
         # Return minimal CSS if the file can't be loaded
@@ -159,6 +139,13 @@ def load_css():
         <style>
         /* Minimal fallback styles */
         body { font-family: sans-serif; }
+        .site-card { 
+            border: 1px solid #eee;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            transition: transform 0.2s;
+        }
         .loader {
             border: 8px solid #f3f3f3;
             border-top: 8px solid #3498db;

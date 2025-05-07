@@ -14,10 +14,27 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Import centralized CSS loader
-from utils.ui_helpers import load_css
+# Apply critical CSS directly in the page
+st.markdown("""
+<style>
+/* Critical styles for immediate display */
+body {
+    font-family: sans-serif;
+    opacity: 1;
+    transition: opacity 0.2s;
+}
+.site-card { 
+    border: 1px solid #eee;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    transition: transform 0.2s;
+}
+</style>
+""", unsafe_allow_html=True)
 
-# Apply consolidated CSS styles
+# Import and apply the main CSS after the critical styles
+from utils.ui_helpers import load_css
 st.markdown(load_css(), unsafe_allow_html=True)
 
 # Add JavaScript to ensure the Home link is visible in navigation
