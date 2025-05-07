@@ -108,14 +108,16 @@ class DataProcessor:
                 self._db = db
                 return db
 
-    @st.cache_data(ttl=3600, show_spinner=False)
+    @st.cache_data(ttl=24*3600, show_spinner=False)  # Cache for 24 hours - site data rarely changes
     def get_sites(_self):  # Added underscore to ignore self in caching
         """Get all sites with their municipalities"""
         try:
             db = _self._get_session()
             logger.info("Fetching all sites from database")
             # Use the query builder to get sites
-            return QueryBuilder.all_sites(db)
+            sites = QueryBuilder.all_sites(db)
+            logger.info(f"Successfully fetched {len(sites)} sites from database")
+            return sites
         except Exception as e:
             logger.error(f"Error fetching sites: {str(e)}")
             # Return empty list on error to prevent app crashes

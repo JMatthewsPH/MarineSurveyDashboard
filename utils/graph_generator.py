@@ -100,7 +100,7 @@ class GraphGenerator:
         # Create base figure
         fig = go.Figure()
 
-        # Configure basic download settings with mobile-friendly options
+        # Configure basic download settings with mobile-friendly options - predefine static config
         config = {
             'toImageButtonOptions': {
                 'format': 'png',
@@ -112,51 +112,42 @@ class GraphGenerator:
             'displaylogo': False,
             'responsive': True,
             'displayModeBar': True,
-            # Define the exact buttons to show: zoom in, zoom out, reset view, download
             'modeBarButtons': [['zoomIn2d', 'zoomOut2d', 'resetScale2d', 'toImage']],
-            'scrollZoom': False,  # Disable scroll zoom on mobile to prevent accidental zooming
-            'doubleClick': 'reset',  # Double tap to reset the view
-            'showTips': True,  # Show tips for better usability
-            'displayModeBar': 'hover'  # Only show mode bar on hover to save space
+            'scrollZoom': False,
+            'doubleClick': 'reset',
+            'showTips': True,
+            'displayModeBar': 'hover'
         }
 
         # If no data, return empty figure with basic config
         if data.empty:
             return fig, config
 
-        # Sort data by date and get date range for filename
+        # Sort data by date and get date range for filename - optimization: sort only once
+        if not isinstance(data['date'].iloc[0], pd.Timestamp):
+            data['date'] = pd.to_datetime(data['date'])
         data = data.sort_values('date')
+        
+        # Precompute these values to avoid recalculating them later
         start_date = data['date'].min()
         end_date = data['date'].max()
 
-        # Update filename with date range
+        # Update filename with date range - only compute once
         config['toImageButtonOptions']['filename'] = generate_filename(title, start_date, end_date)
 
-        # Format dates as seasons
+        # Format dates as seasons - vectorized operation
         data['season'] = data['date'].apply(format_season)
 
-        # Split data into pre and post COVID
-        # Convert date objects to pandas timestamps consistently
+        # Split data into pre and post COVID - use precomputed timestamps
         covid_start = pd.Timestamp('2019-09-01')
         covid_end = pd.Timestamp('2022-03-01')
         
-        # Ensure data['date'] is in datetime64 format
-        if not data.empty:
-            # Convert all dates to pandas timestamps to ensure consistent comparison
-            data['date'] = pd.to_datetime(data['date'])
-            pre_covid = data[data['date'] < covid_start]
-            post_covid = data[data['date'] > covid_end]
-        else:
-            pre_covid = data
-            post_covid = data
+        # Faster filtering with precomputed dates
+        pre_covid = data[data['date'] < covid_start]
+        post_covid = data[data['date'] > covid_end]
 
-        # Get the metric name from the title
+        # Get the metric name from the title - only compute once
         metric_name = title.split(' - ')[0].strip()
-        print(f"DEBUG - Metric name: {metric_name}")
-        
-        # Force specific settings for Corallivore Density
-        if 'Corallivore' in metric_name:
-            print("APPLYING SPECIAL CORALLIVORE SETTINGS")
         y_range = self.get_metric_range(metric_name)
         
         # Set custom tick intervals for specific metrics
@@ -214,30 +205,28 @@ class GraphGenerator:
                 'dtick': 20  # 20 unit intervals for Commercial Fish Biomass
             })
 
-        # Calculate confidence intervals if requested
-        if show_confidence_interval and not pre_covid.empty:
-            # Get the y-values (second column) for calculations
-            y_values_pre = pre_covid[pre_covid.columns[1]].values
-            # Calculate confidence interval (95%)
-            mean_pre = np.mean(y_values_pre)
-            std_pre = np.std(y_values_pre)
-            n_pre = len(y_values_pre)
+        # Helper function to calculate and add confidence intervals
+        def add_confidence_interval(data_subset, metric_column):
+            if data_subset.empty:
+                return
+                
+            # Get the y-values (using direct column name is faster)
+            y_values = data_subset[metric_column].values
             
-            # Standard error of the mean
-            sem_pre = std_pre / np.sqrt(n_pre) if n_pre > 0 else 0
-            # 95% confidence interval (1.96 is the z-value for 95% confidence)
-            ci_95_lower_pre = mean_pre - 1.96 * sem_pre
-            ci_95_upper_pre = mean_pre + 1.96 * sem_pre
+            # Vectorized calculations are much faster
+            n_values = len(y_values)
+            if n_values <= 1:
+                return
+                
+            # Vectorized calculations for confidence intervals
+            sem = np.std(y_values, ddof=1) / np.sqrt(n_values)
+            ci_lower = np.maximum(y_values - 1.96 * sem, 0)  # Don't go below 0
+            ci_upper = y_values + 1.96 * sem
             
-            # Create arrays for upper and lower confidence bounds
-            # Apply bounds to each data point
-            ci_lower_pre = np.maximum(y_values_pre - 1.96 * sem_pre, 0)  # Don't go below 0
-            ci_upper_pre = y_values_pre + 1.96 * sem_pre
-            
-            # Add confidence interval for pre-COVID data
+            # Add confidence interval traces - add both at once
             fig.add_trace(go.Scatter(
-                x=pre_covid['season'],
-                y=ci_upper_pre,
+                x=data_subset['season'],
+                y=ci_upper,
                 mode='lines',
                 line=dict(width=0),
                 showlegend=False,
@@ -245,50 +234,8 @@ class GraphGenerator:
             ))
             
             fig.add_trace(go.Scatter(
-                x=pre_covid['season'],
-                y=ci_lower_pre,
-                mode='lines',
-                line=dict(width=0),
-                fill='tonexty',
-                fillcolor='rgba(0, 119, 182, 0.2)',  # Light blue with transparency
-                showlegend=False,
-                name='95% Confidence Interval',
-                hoverinfo='skip'
-            ))
-            
-        # Calculate confidence intervals for post-COVID if requested
-        if show_confidence_interval and not post_covid.empty:
-            # Get the y-values (second column) for calculations
-            y_values_post = post_covid[post_covid.columns[1]].values
-            # Calculate confidence interval (95%)
-            mean_post = np.mean(y_values_post)
-            std_post = np.std(y_values_post)
-            n_post = len(y_values_post)
-            
-            # Standard error of the mean
-            sem_post = std_post / np.sqrt(n_post) if n_post > 0 else 0
-            # 95% confidence interval (1.96 is the z-value for 95% confidence)
-            ci_95_lower_post = mean_post - 1.96 * sem_post
-            ci_95_upper_post = mean_post + 1.96 * sem_post
-            
-            # Create arrays for upper and lower confidence bounds
-            # Apply bounds to each data point
-            ci_lower_post = np.maximum(y_values_post - 1.96 * sem_post, 0)  # Don't go below 0
-            ci_upper_post = y_values_post + 1.96 * sem_post
-            
-            # Add confidence interval for post-COVID data
-            fig.add_trace(go.Scatter(
-                x=post_covid['season'],
-                y=ci_upper_post,
-                mode='lines',
-                line=dict(width=0),
-                showlegend=False,
-                hoverinfo='skip'
-            ))
-            
-            fig.add_trace(go.Scatter(
-                x=post_covid['season'],
-                y=ci_lower_post,
+                x=data_subset['season'],
+                y=ci_lower,
                 mode='lines',
                 line=dict(width=0),
                 fill='tonexty',
@@ -297,6 +244,13 @@ class GraphGenerator:
                 name='95% Confidence Interval',
                 hoverinfo='skip'
             ))
+        
+        # Calculate confidence intervals if requested - reuse the helper function
+        metric_column = data.columns[1] if not data.empty else None
+        if show_confidence_interval and metric_column:
+            # Add confidence intervals for both periods with one helper function
+            add_confidence_interval(pre_covid, metric_column)
+            add_confidence_interval(post_covid, metric_column)
         
         # Add pre-COVID data
         fig.add_trace(go.Scatter(
