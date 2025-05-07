@@ -7,6 +7,7 @@ from .query_builder import QueryBuilder
 import streamlit as st
 from contextlib import contextmanager
 import logging
+import time  # Added for performance timing measurements
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, 
@@ -169,7 +170,7 @@ class DataProcessor:
             # Return empty DataFrame to prevent application crashes
             return pd.DataFrame(columns=['date', metric])
             
-    @st.cache_data(ttl=3600, show_spinner=False)
+    @st.cache_data(ttl=6*3600, show_spinner=False)  # Cache for 6 hours to balance freshness and performance
     def batch_get_metric_data(_self, site_names: list, metric: str, start_date='2017-01-01'):
         """
         Efficiently fetch metric data for multiple sites in a single database query
@@ -197,15 +198,13 @@ class DataProcessor:
             # Use common session management
             db = _self._get_session()
             
-            # First, get all site IDs in a single query
-            site_name_to_id = {}
-            site_id_to_name = {}
+            # Performance optimization: Get all site mappings in one go from the cached sites list
+            # This avoids a separate database query just for the sites
+            all_sites = _self.get_sites()
             
-            # Query all sites at once rather than one at a time
-            sites = db.query(Site).filter(Site.name.in_(site_names)).all()
-            for site in sites:
-                site_name_to_id[site.name] = site.id
-                site_id_to_name[site.id] = site.name
+            # Create site name to ID map from the already fetched site list
+            site_name_to_id = {site.name: site.id for site in all_sites if site.name in site_names}
+            site_id_to_name = {site.id: site.name for site in all_sites if site.name in site_names}
                 
             # Handle case where some sites aren't found
             missing_sites = set(site_names) - set(site_name_to_id.keys())
@@ -215,32 +214,51 @@ class DataProcessor:
             # Get all site IDs we found
             site_ids = list(site_id_to_name.keys())
             
-            # Fetch all metric data in a single query
+            if not site_ids:
+                logger.warning("No valid site IDs found for the requested sites")
+                return {site: pd.DataFrame(columns=['date', metric]) for site in site_names}
+            
+            # Fetch all metric data in a single optimized query
+            start_time = time.time()
             results_by_site_id = QueryBuilder.batch_metric_data(
                 db, site_ids, column_name, start_date
             )
+            query_time = time.time() - start_time
+            logger.info(f"Batch query completed in {query_time:.2f} seconds")
             
-            # Convert results to DataFrames by site name
+            # Convert results to DataFrames by site name - optimize with preallocation
             results = {}
+            
+            # Process data in a more optimized way - avoid redundant DataFrame creations
             for site_id, data in results_by_site_id.items():
-                site_name = site_id_to_name[site_id]
-                df = pd.DataFrame(data, columns=['date', metric])
-                logger.info(f"Found {len(df)} {metric} surveys for {site_name}")
-                results[site_name] = df
+                if site_id in site_id_to_name:
+                    site_name = site_id_to_name[site_id]
+                    if data:  # Only create DataFrame if we have data
+                        df = pd.DataFrame(data, columns=['date', metric])
+                        # Pre-convert dates to improve chart rendering speed later
+                        df['date'] = pd.to_datetime(df['date'])
+                        logger.info(f"Found {len(df)} {metric} surveys for {site_name}")
+                        results[site_name] = df
+                    else:
+                        # Empty DataFrame with proper column types
+                        results[site_name] = pd.DataFrame({'date': pd.Series(dtype='datetime64[ns]'), 
+                                                          metric: pd.Series(dtype='float64')})
                 
-            # Add empty DataFrames for sites with no data
+            # Add empty DataFrames for sites with no data - with proper column types
             for site_name in site_names:
-                if site_name not in results and site_name in site_name_to_id:
-                    logger.info(f"No {metric} surveys found for {site_name}")
-                    results[site_name] = pd.DataFrame(columns=['date', metric])
+                if site_name not in results:
+                    results[site_name] = pd.DataFrame({'date': pd.Series(dtype='datetime64[ns]'), 
+                                                      metric: pd.Series(dtype='float64')})
                     
-            print(f"DEBUG - Batch loaded {metric} data for {len(results)} sites")
+            logger.info(f"Successfully batch loaded {metric} data for {len(results)} sites")
             return results
             
         except Exception as e:
             logger.error(f"Error batch fetching metric data: {str(e)}")
-            # Return empty DataFrames to prevent application crashes
-            return {site: pd.DataFrame(columns=['date', metric]) for site in site_names}
+            # Return empty DataFrames to prevent application crashes - with proper column types
+            return {site: pd.DataFrame({'date': pd.Series(dtype='datetime64[ns]'), 
+                                       metric: pd.Series(dtype='float64')}) 
+                   for site in site_names}
 
     @st.cache_data(ttl=3600, show_spinner=False)
     def get_average_metric_data(_self, metric: str, exclude_site=None, municipality=None, start_date='2017-01-01'):

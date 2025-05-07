@@ -113,13 +113,14 @@ def create_loading_placeholder(container, message="Loading data...", height=400)
                    f"</div></div>", unsafe_allow_html=True)
     return placeholder
 
-@st.cache_data
+@st.cache_data(ttl=24*3600)  # Cache CSS for 24 hours - it rarely changes
 def load_css():
     """
-    Load the consolidated application CSS
+    Load the consolidated application CSS with optimized loading strategy
     
     This function centralizes CSS loading to ensure consistency across all pages
-    and prevent duplicate CSS declarations.
+    and prevent duplicate CSS declarations. Uses optimized loading to prevent
+    render blocking.
     
     Returns:
         str: HTML style tag with consolidated CSS
@@ -127,7 +128,32 @@ def load_css():
     try:
         with open('assets/styles.css') as f:
             css_content = f.read()
-        return f'<style>{css_content}</style>'
+            
+        # Optimize CSS by adding media="all" for non-blocking loading
+        # Add onload attribute to execute when the stylesheet is loaded
+        return f"""
+        <style media="all" onload="this.media='all'; this.onload=null;">
+        /* Optimized for faster page rendering */
+        {css_content}
+        </style>
+        
+        <!-- Critical CSS for immediate display - reduce layout shifts -->
+        <style>
+        /* Core critical styles that should load immediately */
+        body {{
+            font-family: sans-serif;
+            opacity: 1;
+            transition: opacity 0.2s;
+        }}
+        .site-card {{ 
+            border: 1px solid #eee;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            transition: transform 0.2s;
+        }}
+        </style>
+        """
     except Exception as e:
         print(f"Error loading CSS: {e}")
         # Return minimal CSS if the file can't be loaded

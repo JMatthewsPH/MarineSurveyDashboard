@@ -1,5 +1,6 @@
 import streamlit as st
 import os
+import time
 from utils.data_processor import DataProcessor
 from utils.database import get_db
 from utils.translations import TRANSLATIONS
@@ -122,30 +123,43 @@ st.markdown(f"""
 
 
 
-# Initialize database connection
-@st.cache_resource
+# Initialize database connection with improved session management
+@st.cache_resource(ttl=3600)  # Cache the processor for 1 hour, then refresh for a new session
 def get_processor():
+    """
+    Get a cached data processor instance with a managed database session
+    This helps improve performance by reusing the database connection
+    while also ensuring the connection is periodically refreshed
+    """
     db = next(get_db())
-    return DataProcessor(db)
+    processor = DataProcessor(db)
+    return processor
 
+# Get data processor with performance logging
+start_time = time.time()
 data_processor = get_processor()
+processing_time = time.time() - start_time
 
-# Get all sites
+# Get all sites with performance tracking
+start_time = time.time()
 sites = data_processor.get_sites()
+site_load_time = time.time() - start_time
+if site_load_time > 0.5:  # Only log if it's slow
+    print(f"Site data loading took {site_load_time:.2f} seconds")
 
-# Create ordered groups by municipality
-zamboanguita_sites = sorted(
-    [site for site in sites if site.municipality == "Zamboanguita"],
-    key=lambda x: x.name
-)
-siaton_sites = sorted(
-    [site for site in sites if site.municipality == "Siaton"],
-    key=lambda x: x.name
-)
-santa_catalina_sites = sorted(
-    [site for site in sites if site.municipality == "Santa Catalina"],
-    key=lambda x: x.name
-)
+# Import from ui_helpers
+from utils.ui_helpers import skeleton_text_placeholder
+
+# Efficiently group sites by municipality
+municipalities = {}
+for site in sites:
+    if site.municipality not in municipalities:
+        municipalities[site.municipality] = []
+    municipalities[site.municipality].append(site)
+
+# Sort each group
+for muni in municipalities:
+    municipalities[muni] = sorted(municipalities[muni], key=lambda x: x.name)
 
 # Function to create site card with translations
 def create_site_card(site):
@@ -178,8 +192,7 @@ def create_site_card(site):
         </div>
     """, unsafe_allow_html=True)
 
-# Display sites by municipality with translations
-# Add municipality headers to translations
+# Define municipality display names with translations
 municipality_names = {
     "en": {
         "Zamboanguita": "Zamboanguita Sites",
@@ -198,26 +211,18 @@ municipality_names = {
     }
 }
 
-if zamboanguita_sites:
-    st.header(municipality_names[language_code]["Zamboanguita"])
-    cols = st.columns(3)
-    for idx, site in enumerate(zamboanguita_sites):
-        with cols[idx % 3]:
-            create_site_card(site)
+# Define the order of municipalities for display
+display_order = ["Zamboanguita", "Siaton", "Santa Catalina"]
 
-if siaton_sites:
-    st.header(municipality_names[language_code]["Siaton"])
-    cols = st.columns(3)
-    for idx, site in enumerate(siaton_sites):
-        with cols[idx % 3]:
-            create_site_card(site)
-
-if santa_catalina_sites:
-    st.header(municipality_names[language_code]["Santa Catalina"])
-    cols = st.columns(3)
-    for idx, site in enumerate(santa_catalina_sites):
-        with cols[idx % 3]:
-            create_site_card(site)
+# Performance improvement - render cards more efficiently
+for municipality in display_order:
+    if municipality in municipalities and municipalities[municipality]:
+        with st.expander(municipality_names[language_code][municipality], expanded=True):
+            # Create a grid layout for site cards
+            cols = st.columns(3)
+            for idx, site in enumerate(municipalities[municipality]):
+                with cols[idx % 3]:
+                    create_site_card(site)
 
 # Clean up
 db = next(get_db())
