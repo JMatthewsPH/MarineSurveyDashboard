@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import time
 from datetime import datetime, timedelta
 import plotly.express as px
 import plotly.graph_objects as go
@@ -32,16 +33,25 @@ add_favicon()
 
 
 
-# Initialize data processor
+# Initialize data processor with optimized caching
 @st.cache_resource(ttl=3600)
 def get_data_processor():
+    """
+    Get cached data processor and graph generator instances
+    Uses a single database connection for both to reduce overhead
+    """
     with get_db_session() as db:
-        return DataProcessor(db)
+        data_processor = DataProcessor(db)
+        # Pass the same data processor to graph generator to avoid duplicate db connections
+        graph_generator = GraphGenerator(data_processor)
+        return data_processor, graph_generator
 
-data_processor = get_data_processor()
-
-# Get graph generator
-graph_generator = GraphGenerator(data_processor)
+# Get processors with performance logging
+start_time = time.time()
+data_processor, graph_generator = get_data_processor()
+init_time = time.time() - start_time
+if init_time > 0.5:  # Log if initialization is slow
+    print(f"Data processor initialization took {init_time:.2f} seconds")
 
 # Apply critical CSS directly in the page first
 st.markdown("""

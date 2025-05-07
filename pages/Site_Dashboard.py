@@ -1,4 +1,5 @@
 import streamlit as st
+import time
 
 # Page configuration must be the first Streamlit command
 st.set_page_config(
@@ -100,13 +101,24 @@ LANGUAGE_DISPLAY = {
     "ceb": "Cebuano"
 }
 
-# Initialize processors
-@st.cache_resource
+# Initialize processors with optimized caching
+@st.cache_resource(ttl=3600)  # Cache for 1 hour to reduce database connection overhead
 def get_data_processor():
+    """
+    Get cached data processor and graph generator instances
+    Uses a single database connection for both to reduce overhead
+    """
     db = next(get_db())
-    return DataProcessor(db), GraphGenerator(DataProcessor(db))
+    data_processor = DataProcessor(db)
+    # Pass the same data processor to graph generator to avoid duplicate db connections
+    return data_processor, GraphGenerator(data_processor)
 
+# Get processors with performance logging
+start_time = time.time()
 data_processor, graph_generator = get_data_processor()
+init_time = time.time() - start_time
+if init_time > 0.5:  # Log if initialization is slow
+    print(f"Data processor initialization took {init_time:.2f} seconds")
 
 # Get all sites
 sites = data_processor.get_sites()
@@ -224,18 +236,19 @@ with st.sidebar:
                 default_index = i
                 break
     
-    # Function to handle site selection change
+    # Function to handle site selection change with debouncing
     def on_site_change():
         # Get the value from session state
         option = st.session_state.site_selector
         # Only process if it's a site (starts with spaces)
         if option.startswith("  "):
             site = option.strip()
-            if site in site_names:
+            if site in site_names and site != st.session_state.get('selected_site_name'):
                 # Update both session state and URL params
                 st.session_state.selected_site_name = site
                 st.query_params["site"] = site
-                # Force a rerun to apply the change immediately
+                # Force a rerun to apply the change immediately but don't do this if we're already
+                # showing the correct site (improves performance)
                 st.rerun()
     
     # Create the dropdown with the correct default selection and callback
