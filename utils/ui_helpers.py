@@ -129,8 +129,15 @@ def load_css():
         with open('assets/styles.css') as f:
             css_content = f.read()
             
-        # Critical CSS that should load immediately to prevent layout shifts
-        critical_css = """
+        # Combine main CSS and critical CSS in a single string to avoid display issues
+        return """
+        <style media="all" onload="this.media='all'; this.onload=null;">
+        /* Main styles - loaded asynchronously */
+        """ + css_content + """
+        </style>
+        
+        <style>
+        /* Critical styles for immediate display */
         body {
             font-family: sans-serif;
             opacity: 1;
@@ -143,19 +150,6 @@ def load_css():
             margin-bottom: 15px;
             transition: transform 0.2s;
         }
-        """
-            
-        # Combine critical CSS and deferred loading of main CSS
-        return f"""
-        <style media="all" onload="this.media='all'; this.onload=null;">
-        /* Optimized for faster page rendering */
-        {css_content}
-        </style>
-        
-        <!-- Critical CSS for immediate display - reduce layout shifts -->
-        <style>
-        /* Core critical styles that should load immediately */
-        {critical_css}
         </style>
         """
     except Exception as e:
