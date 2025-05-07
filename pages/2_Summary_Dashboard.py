@@ -86,25 +86,36 @@ st.markdown(f"<div class='subtitle'>{TRANSLATIONS[st.session_state.language]['al
 with st.sidebar:
     st.title(TRANSLATIONS[st.session_state.language]['settings'])
     
-    # Language selection
+    # Language display mapping
     LANGUAGE_DISPLAY = {
         "en": "English",
         "tl": "Tagalog",
         "ceb": "Cebuano"
     }
     
-    selected_language = st.selectbox(
+    # Function to handle language change
+    def on_language_change():
+        # Get the selected language display name
+        selected_language = st.session_state.language_selector
+        
+        # Convert display language back to language code
+        for code, name in LANGUAGE_DISPLAY.items():
+            if name == selected_language:
+                # Only update and rerun if language actually changed
+                if code != st.session_state.language:
+                    st.session_state.language = code
+                    # Force a rerun to apply the language change
+                    st.rerun()
+                break
+    
+    # Language selection with callback
+    st.selectbox(
         TRANSLATIONS[st.session_state.language]['lang_toggle'],
         list(LANGUAGE_DISPLAY.values()),
         key="language_selector",
-        index=list(LANGUAGE_DISPLAY.values()).index(LANGUAGE_DISPLAY.get(st.session_state.language, "English"))
+        index=list(LANGUAGE_DISPLAY.values()).index(LANGUAGE_DISPLAY.get(st.session_state.language, "English")),
+        on_change=on_language_change
     )
-    
-    # Convert display language back to language code
-    for code, name in LANGUAGE_DISPLAY.items():
-        if name == selected_language:
-            st.session_state.language = code
-            break
     
     # Streamlit navigation is now automatically handled in the sidebar
     
