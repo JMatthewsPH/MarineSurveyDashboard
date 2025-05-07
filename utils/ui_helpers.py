@@ -129,8 +129,23 @@ def load_css():
         with open('assets/styles.css') as f:
             css_content = f.read()
             
-        # Optimize CSS by adding media="all" for non-blocking loading
-        # Add onload attribute to execute when the stylesheet is loaded
+        # Critical CSS that should load immediately to prevent layout shifts
+        critical_css = """
+        body {
+            font-family: sans-serif;
+            opacity: 1;
+            transition: opacity 0.2s;
+        }
+        .site-card { 
+            border: 1px solid #eee;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            transition: transform 0.2s;
+        }
+        """
+            
+        # Combine critical CSS and deferred loading of main CSS
         return f"""
         <style media="all" onload="this.media='all'; this.onload=null;">
         /* Optimized for faster page rendering */
@@ -140,18 +155,7 @@ def load_css():
         <!-- Critical CSS for immediate display - reduce layout shifts -->
         <style>
         /* Core critical styles that should load immediately */
-        body {{
-            font-family: sans-serif;
-            opacity: 1;
-            transition: opacity 0.2s;
-        }}
-        .site-card {{ 
-            border: 1px solid #eee;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            transition: transform 0.2s;
-        }}
+        {critical_css}
         </style>
         """
     except Exception as e:
