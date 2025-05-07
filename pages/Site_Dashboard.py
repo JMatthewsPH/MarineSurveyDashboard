@@ -301,9 +301,13 @@ if selected_site:
                 height=300
             )
             
-            # Display the image (in a real app, this would be loaded asynchronously)
+            # Display the site image
             image_placeholder.empty()
-            st.image("https://via.placeholder.com/400x300", use_container_width=True, 
+            
+            # Use the site's image_url if available, otherwise use a placeholder
+            image_path = selected_site_obj.image_url if selected_site_obj.image_url else "https://via.placeholder.com/400x300"
+            
+            st.image(image_path, use_container_width=True, 
                      output_format="JPEG", caption=selected_site)
 
         with cols[1]:
