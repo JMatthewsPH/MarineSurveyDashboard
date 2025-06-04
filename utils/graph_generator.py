@@ -169,9 +169,13 @@ class GraphGenerator:
         current_date = datetime.now()
         complete_seasons = generate_season_timeline(earliest_date, current_date)
         
-        # Create a complete dataframe with all seasons
+        # Create a complete dataframe with all seasons, excluding COVID period indicators
         seasons_with_data = set(data['season'].tolist())
         complete_data = []
+        
+        # Define COVID period seasons to exclude from "Data Collection Ongoing" indicators
+        covid_start = pd.Timestamp('2019-09-01')
+        covid_end = pd.Timestamp('2022-03-01')
         
         for season in complete_seasons:
             if season in seasons_with_data:
@@ -184,13 +188,28 @@ class GraphGenerator:
                     'date': season_data['date']
                 })
             else:
-                # Add placeholder for missing data
-                complete_data.append({
-                    'season': season,
-                    'value': None,
-                    'has_data': False,
-                    'date': None
-                })
+                # Check if this season falls within COVID period
+                # Parse season to get approximate date for comparison
+                season_year = int(season.split()[-1])
+                if 'MAR-MAY' in season:
+                    season_date = pd.Timestamp(f'{season_year}-03-01')
+                elif 'JUN-AUG' in season:
+                    season_date = pd.Timestamp(f'{season_year}-06-01')
+                elif 'SEP-NOV' in season:
+                    season_date = pd.Timestamp(f'{season_year}-09-01')
+                else:  # DEC-FEB
+                    season_date = pd.Timestamp(f'{season_year-1}-12-01')
+                
+                # Only add "Data Collection Ongoing" indicator if NOT in COVID period
+                is_covid_period = covid_start <= season_date <= covid_end
+                
+                if not is_covid_period:
+                    complete_data.append({
+                        'season': season,
+                        'value': None,
+                        'has_data': False,
+                        'date': None
+                    })
         
         complete_df = pd.DataFrame(complete_data)
         
@@ -571,16 +590,37 @@ class GraphGenerator:
                 range=[0, 300]  # Reduced from 1000 to better fit actual data
             )
         
-        # Add text annotation for data collection ongoing
+        # Add text annotation for data collection ongoing (only for post-COVID periods)
         if not data_without_values.empty:
             # Find the latest season with data and the first season without data
             if not data_with_values.empty:
                 latest_season_idx = max([complete_seasons.index(s) for s in data_with_values['season']])
-                if latest_season_idx < len(complete_seasons) - 1:
-                    first_without_data_idx = latest_season_idx + 1
-                    first_without_data = complete_seasons[first_without_data_idx]
+                
+                # Look for the first season without data that's AFTER COVID period
+                post_covid_threshold = pd.Timestamp('2022-03-01')
+                first_without_data = None
+                
+                for idx in range(latest_season_idx + 1, len(complete_seasons)):
+                    season = complete_seasons[idx]
+                    season_year = int(season.split()[-1])
                     
-                    # Add annotation
+                    # Parse season to get approximate date
+                    if 'MAR-MAY' in season:
+                        season_date = pd.Timestamp(f'{season_year}-03-01')
+                    elif 'JUN-AUG' in season:
+                        season_date = pd.Timestamp(f'{season_year}-06-01')
+                    elif 'SEP-NOV' in season:
+                        season_date = pd.Timestamp(f'{season_year}-09-01')
+                    else:  # DEC-FEB
+                        season_date = pd.Timestamp(f'{season_year-1}-12-01')
+                    
+                    # If this season is after COVID and has no data, use it for annotation
+                    if season_date > post_covid_threshold and season in data_without_values['season'].values:
+                        first_without_data = season
+                        break
+                
+                # Add annotation only if we found a post-COVID season without data
+                if first_without_data:
                     fig.add_annotation(
                         x=first_without_data,
                         y=y_range['max'] * 0.9,
