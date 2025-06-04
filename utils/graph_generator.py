@@ -380,15 +380,38 @@ class GraphGenerator:
         if covid_gap_start and covid_gap_end and not pre_covid.empty and not post_covid.empty:
             last_pre_covid = pre_covid.iloc[-1]
             first_post_covid = post_covid.iloc[0]
-            fig.add_trace(go.Scatter(
-                x=[last_pre_covid['season'], first_post_covid['season']],
-                y=[last_pre_covid[pre_covid.columns[1]], first_post_covid[post_covid.columns[1]]],
-                name='COVID-19 Period (No Data)',
-                line=dict(color='#888888', dash='dot', width=1),
-                mode='lines',
-                opacity=0.3,
-                showlegend=False
-            ))
+            
+            # Find the x-axis positions for the seasons
+            x_positions = list(complete_df['season'].unique())
+            try:
+                x0_pos = x_positions.index(last_pre_covid['season'])
+                x1_pos = x_positions.index(first_post_covid['season'])
+                
+                # Add dotted line as a shape annotation
+                fig.add_shape(
+                    type="line",
+                    x0=x0_pos,
+                    y0=last_pre_covid[pre_covid.columns[1]],
+                    x1=x1_pos,
+                    y1=first_post_covid[post_covid.columns[1]],
+                    line=dict(
+                        color="#888888",
+                        width=2,
+                        dash="dot"
+                    ),
+                    opacity=0.6
+                )
+            except (ValueError, IndexError):
+                # Fallback to trace method if position lookup fails
+                fig.add_trace(go.Scatter(
+                    x=[last_pre_covid['season'], first_post_covid['season']],
+                    y=[last_pre_covid[pre_covid.columns[1]], first_post_covid[post_covid.columns[1]]],
+                    name='COVID-19 Period (No Data)',
+                    line=dict(color='#888888', dash='dot', width=1),
+                    mode='lines',
+                    opacity=0.3,
+                    showlegend=False
+                ))
 
         # Apply date range filter if provided
         if date_range and len(date_range) == 2:
