@@ -383,10 +383,9 @@ class GraphGenerator:
                     
                     # Filter the primary data
                     data = data[(data['date'] >= start_dt) & (data['date'] <= end_dt)]
-                    # Recalculate COVID gap after date filtering
-                    if covid_gap_start and covid_gap_end:
-                        pre_covid = data[data['date'] <= covid_gap_start]
-                        post_covid = data[data['date'] >= covid_gap_end]
+                    # Recalculate COVID period after date filtering
+                    pre_covid = data[data['date'] < covid_start]
+                    post_covid = data[data['date'] > covid_end]
                     
                     # Update chart title with date range info
                     date_range_str = f"{start_dt.strftime('%b %Y')} - {end_dt.strftime('%b %Y')}"
