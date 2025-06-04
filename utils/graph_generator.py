@@ -384,7 +384,7 @@ class GraphGenerator:
                 x=[last_pre_covid['season'], first_post_covid['season']],
                 y=[last_pre_covid[pre_covid.columns[1]], first_post_covid[post_covid.columns[1]]],
                 name='COVID-19 Period (No Data)',
-                line=dict(color='#888888', dash='dot', width=2),
+                line=dict(color='#888888', dash='dashdot', width=2),
                 mode='lines',
                 opacity=0.8,
                 showlegend=False
