@@ -308,44 +308,63 @@ class GraphGenerator:
             add_confidence_interval(pre_covid, metric_column)
             add_confidence_interval(post_covid, metric_column)
         
-        # Add data with existing values (blue line)
-        data_with_values = complete_df[complete_df['has_data'] == True]
-        if not data_with_values.empty:
+        # Add primary site data with COVID gap handling
+        if not pre_covid.empty and not post_covid.empty:
+            # Add pre-COVID data
             fig.add_trace(go.Scatter(
-                x=data_with_values['season'],
-                y=data_with_values['value'],
+                x=pre_covid['season'],
+                y=pre_covid[data.columns[1]],
+                name=y_label,
+                line=dict(color='#0077b6', dash='solid'),
+                mode='lines+markers'
+            ))
+            
+            # Add post-COVID data
+            fig.add_trace(go.Scatter(
+                x=post_covid['season'],
+                y=post_covid[data.columns[1]],
+                name=y_label,
+                line=dict(color='#0077b6', dash='solid'),
+                mode='lines+markers',
+                showlegend=False  # Don't duplicate in legend
+            ))
+            
+            # Add COVID gap connector (dotted line between last pre-COVID and first post-COVID points)
+            last_pre = pre_covid.iloc[-1]
+            first_post = post_covid.iloc[0]
+            fig.add_trace(go.Scatter(
+                x=[last_pre['season'], first_post['season']],
+                y=[last_pre[data.columns[1]], first_post[data.columns[1]]],
+                line=dict(color='#cccccc', dash='dot', width=2),
+                mode='lines',
+                name='COVID Gap',
+                showlegend=False
+            ))
+        elif not data.empty:
+            # No COVID gap, add all data as one trace
+            fig.add_trace(go.Scatter(
+                x=data['season'],
+                y=data[data.columns[1]],
                 name=y_label,
                 line=dict(color='#0077b6', dash='solid'),
                 mode='lines+markers'
             ))
 
-        # Add placeholder markers for seasons without data (grey) - exclude COVID gap periods
-        data_without_values = complete_df[complete_df['has_data'] == False]
-        if not data_without_values.empty:
-            # Filter out seasons that fall within the COVID period
-            filtered_seasons = []
-            for season in data_without_values['season']:
-                # Parse season to determine if it's within COVID period
-                season_year = int(season.split()[-1])
-                if 'MAR-MAY' in season:
-                    season_date = pd.Timestamp(f'{season_year}-03-01')
-                elif 'JUN-AUG' in season:
-                    season_date = pd.Timestamp(f'{season_year}-06-01')
-                elif 'SEP-NOV' in season:
-                    season_date = pd.Timestamp(f'{season_year}-09-01')
-                else:  # DEC-FEB
-                    season_date = pd.Timestamp(f'{season_year-1}-12-01')
-                
-                # Only include if NOT in COVID period
-                if not (covid_start <= season_date <= covid_end):
-                    filtered_seasons.append(season)
+        # Add placeholder markers for future seasons only (post-COVID ongoing data collection)
+        future_seasons = [s for s in complete_seasons if s not in data['season'].values]
+        if future_seasons:
+            # Filter to only include seasons after the latest data point
+            if not data.empty:
+                latest_data_season = data['season'].iloc[-1]
+                latest_index = complete_seasons.index(latest_data_season) if latest_data_season in complete_seasons else -1
+                future_seasons = complete_seasons[latest_index + 1:] if latest_index >= 0 else []
             
-            if filtered_seasons:
+            if future_seasons:
                 # Use mid-range value for positioning the grey markers
                 mid_y = (y_range['min'] + y_range['max']) / 2
                 fig.add_trace(go.Scatter(
-                    x=filtered_seasons,
-                    y=[mid_y] * len(filtered_seasons),
+                    x=future_seasons,
+                    y=[mid_y] * len(future_seasons),
                     name='Data Collection Ongoing',
                     line=dict(color='#cccccc', dash='dash'),
                     marker=dict(color='#cccccc', size=8, symbol='x'),
@@ -422,6 +441,7 @@ class GraphGenerator:
                     start_filter, end_filter = date_range
                     if start_filter and end_filter and not comp_df.empty:
                         # Convert to datetime for consistent comparison
+                        comp_df = comp_df.copy()
                         comp_df['date'] = pd.to_datetime(comp_df['date'])
                         
                         # Convert filter dates to pandas timestamps for consistent comparison
@@ -592,44 +612,35 @@ class GraphGenerator:
                 range=[0, 300]  # Reduced from 1000 to better fit actual data
             )
         
-        # Add text annotation for data collection ongoing (only for post-COVID periods)
-        if not data_without_values.empty:
-            # Find the latest season with data and the first season without data
-            if not data_with_values.empty:
-                latest_season_idx = max([complete_seasons.index(s) for s in data_with_values['season']])
+        # Add text annotation for ongoing data collection (only for future seasons)
+        if not data.empty:
+            # Find seasons that are after the latest data point
+            latest_data_season = data['season'].iloc[-1]
+            if latest_data_season in complete_seasons:
+                latest_season_idx = complete_seasons.index(latest_data_season)
+                future_seasons_for_annotation = complete_seasons[latest_season_idx + 1:]
                 
-                # Look for the first season without data that's AFTER COVID period
-                first_without_data = None
-                
-                for idx in range(latest_season_idx + 1, len(complete_seasons)):
-                    season = complete_seasons[idx]
-                    season_year = int(season.split()[-1])
+                if future_seasons_for_annotation:
+                    first_future_season = future_seasons_for_annotation[0]
                     
-                    # Parse season to get approximate date
-                    if 'MAR-MAY' in season:
-                        season_date = pd.Timestamp(f'{season_year}-03-01')
-                    elif 'JUN-AUG' in season:
-                        season_date = pd.Timestamp(f'{season_year}-06-01')
-                    elif 'SEP-NOV' in season:
-                        season_date = pd.Timestamp(f'{season_year}-09-01')
-                    else:  # DEC-FEB
-                        season_date = pd.Timestamp(f'{season_year-1}-12-01')
-                    
-                    # If this season is after COVID and has no data, use it for annotation
-                    if season_date > covid_end and season in data_without_values['season'].values:
-                        first_without_data = season
-                        break
-                
-                # Add annotation only if we found a post-COVID season without data
-                if first_without_data:
+                    # Add annotation for ongoing data collection
+                    mid_y = (y_range['min'] + y_range['max']) / 2
                     fig.add_annotation(
-                        x=first_without_data,
-                        y=y_range['max'] * 0.9,
-                        text="Data Collection Ongoing",
+                        x=first_future_season,
+                        y=mid_y,
+                        text="Data Collection<br>Ongoing",
                         showarrow=True,
                         arrowhead=2,
                         arrowsize=1,
                         arrowwidth=2,
+                        arrowcolor="#666666",
+                        ax=0,
+                        ay=-40,
+                        font=dict(size=10, color="#666666"),
+                        bgcolor="rgba(255, 255, 255, 0.8)",
+                        bordercolor="#666666",
+                        borderwidth=1
+                    )
                         arrowcolor="#666666",
                         bgcolor="rgba(255,255,255,0.8)",
                         bordercolor="#666666",
