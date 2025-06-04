@@ -381,64 +381,16 @@ class GraphGenerator:
             last_pre_covid = pre_covid.iloc[-1]
             first_post_covid = post_covid.iloc[0]
             
-            # Create dotted line effect with multiple small segments
-            x_start = last_pre_covid['season']
-            x_end = first_post_covid['season']
-            y_start = last_pre_covid[pre_covid.columns[1]]
-            y_end = first_post_covid[post_covid.columns[1]]
-            
-            # Get all seasons between start and end to create intermediate points
-            all_seasons = list(complete_df['season'].unique())
-            try:
-                start_idx = all_seasons.index(x_start)
-                end_idx = all_seasons.index(x_end)
-                
-                # Create dotted pattern by adding multiple short line segments
-                num_segments = abs(end_idx - start_idx) * 3  # 3 segments per season gap
-                x_points = []
-                y_points = []
-                
-                for i in range(num_segments + 1):
-                    if i % 2 == 0:  # Only add every other point for dotted effect
-                        progress = i / num_segments
-                        # Linear interpolation for position
-                        if start_idx < end_idx:
-                            x_pos = start_idx + progress * (end_idx - start_idx)
-                        else:
-                            x_pos = start_idx - progress * (start_idx - end_idx)
-                        
-                        y_pos = y_start + progress * (y_end - y_start)
-                        
-                        # Convert position back to season
-                        season_idx = int(round(x_pos))
-                        if 0 <= season_idx < len(all_seasons):
-                            x_points.append(all_seasons[season_idx])
-                            y_points.append(y_pos)
-                
-                # Add the dotted line as multiple markers
-                if len(x_points) > 1:
-                    fig.add_trace(go.Scatter(
-                        x=x_points,
-                        y=y_points,
-                        name='COVID-19 Period (No Data)',
-                        line=dict(color='#888888', width=0),  # No line, only markers
-                        marker=dict(color='#888888', size=4, symbol='line-ns'),
-                        mode='markers',
-                        opacity=0.6,
-                        showlegend=False
-                    ))
-                        
-            except (ValueError, IndexError):
-                # Simple fallback
-                fig.add_trace(go.Scatter(
-                    x=[x_start, x_end],
-                    y=[y_start, y_end],
-                    name='COVID-19 Period (No Data)',
-                    line=dict(color='#888888', dash='dash', width=1),
-                    mode='lines',
-                    opacity=0.5,
-                    showlegend=False
-                ))
+            # Use a simple dashed gray line for COVID period
+            fig.add_trace(go.Scatter(
+                x=[last_pre_covid['season'], first_post_covid['season']],
+                y=[last_pre_covid[pre_covid.columns[1]], first_post_covid[post_covid.columns[1]]],
+                name='COVID-19 Period (No Data)',
+                line=dict(color='#888888', dash='dash', width=2),
+                mode='lines',
+                opacity=0.7,
+                showlegend=False
+            ))
 
         # Apply date range filter if provided
         if date_range and len(date_range) == 2:
