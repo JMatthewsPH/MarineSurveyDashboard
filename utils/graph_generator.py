@@ -641,12 +641,6 @@ class GraphGenerator:
                         bordercolor="#666666",
                         borderwidth=1
                     )
-                        arrowcolor="#666666",
-                        bgcolor="rgba(255,255,255,0.8)",
-                        bordercolor="#666666",
-                        borderwidth=1,
-                        font=dict(size=12, color="#666666")
-                    )
             
         return fig, config
 
