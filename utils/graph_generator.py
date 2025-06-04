@@ -194,32 +194,13 @@ class GraphGenerator:
         
         complete_df = pd.DataFrame(complete_data)
         
-        # Dynamically determine COVID gap based on actual data interruption for this site
-        # Find the largest gap in data collection to identify COVID period
-        if len(data) > 1:
-            data_sorted = data.sort_values('date')
-            data_sorted['date_diff'] = data_sorted['date'].diff()
-            
-            # Find the largest gap (assuming COVID gap is the biggest interruption)
-            max_gap_idx = data_sorted['date_diff'].idxmax()
-            if pd.notna(max_gap_idx) and data_sorted.loc[max_gap_idx, 'date_diff'].days > 365:  # Gap > 1 year
-                covid_gap_start = data_sorted[data_sorted.index < max_gap_idx]['date'].max()
-                covid_gap_end = data_sorted.loc[max_gap_idx, 'date']
-                
-                pre_covid = data[data['date'] <= covid_gap_start]
-                post_covid = data[data['date'] >= covid_gap_end]
-            else:
-                # No significant gap found, treat all data as continuous
-                pre_covid = data
-                post_covid = pd.DataFrame()
-                covid_gap_start = None
-                covid_gap_end = None
-        else:
-            # Insufficient data to determine gaps
-            pre_covid = data
-            post_covid = pd.DataFrame()
-            covid_gap_start = None
-            covid_gap_end = None
+        # Split data into pre and post COVID - use fixed dates but check for actual gaps
+        covid_start = pd.Timestamp('2019-09-01')
+        covid_end = pd.Timestamp('2022-03-01')
+        
+        # Faster filtering with precomputed dates
+        pre_covid = data[data['date'] < covid_start]
+        post_covid = data[data['date'] > covid_end]
 
         # Get the metric name from the title - only compute once
         metric_name = title.split(' - ')[0].strip()
@@ -341,27 +322,23 @@ class GraphGenerator:
         # Add placeholder markers for seasons without data (grey) - exclude COVID gap periods
         data_without_values = complete_df[complete_df['has_data'] == False]
         if not data_without_values.empty:
-            # Filter out seasons that fall within the detected COVID gap
+            # Filter out seasons that fall within the COVID period
             filtered_seasons = []
-            if covid_gap_start and covid_gap_end:
-                for season in data_without_values['season']:
-                    # Parse season to determine if it's within COVID gap
-                    season_year = int(season.split()[-1])
-                    if 'MAR-MAY' in season:
-                        season_date = pd.Timestamp(f'{season_year}-03-01')
-                    elif 'JUN-AUG' in season:
-                        season_date = pd.Timestamp(f'{season_year}-06-01')
-                    elif 'SEP-NOV' in season:
-                        season_date = pd.Timestamp(f'{season_year}-09-01')
-                    else:  # DEC-FEB
-                        season_date = pd.Timestamp(f'{season_year-1}-12-01')
-                    
-                    # Only include if NOT in COVID gap period
-                    if not (covid_gap_start <= season_date <= covid_gap_end):
-                        filtered_seasons.append(season)
-            else:
-                # No COVID gap detected, use all seasons without data
-                filtered_seasons = data_without_values['season'].tolist()
+            for season in data_without_values['season']:
+                # Parse season to determine if it's within COVID period
+                season_year = int(season.split()[-1])
+                if 'MAR-MAY' in season:
+                    season_date = pd.Timestamp(f'{season_year}-03-01')
+                elif 'JUN-AUG' in season:
+                    season_date = pd.Timestamp(f'{season_year}-06-01')
+                elif 'SEP-NOV' in season:
+                    season_date = pd.Timestamp(f'{season_year}-09-01')
+                else:  # DEC-FEB
+                    season_date = pd.Timestamp(f'{season_year-1}-12-01')
+                
+                # Only include if NOT in COVID period
+                if not (covid_start <= season_date <= covid_end):
+                    filtered_seasons.append(season)
             
             if filtered_seasons:
                 # Use mid-range value for positioning the grey markers
@@ -376,19 +353,17 @@ class GraphGenerator:
                     hovertemplate='%{x}<br>Data Collection Ongoing<extra></extra>'
                 ))
 
-        # Add COVID period indicator if a gap was detected
-        if covid_gap_start and covid_gap_end and not pre_covid.empty and not post_covid.empty:
+        # Add COVID period indicator if data exists on both sides
+        if not pre_covid.empty and not post_covid.empty:
             last_pre_covid = pre_covid.iloc[-1]
             first_post_covid = post_covid.iloc[0]
-            
-            # Use a simple dashed gray line for COVID period
             fig.add_trace(go.Scatter(
                 x=[last_pre_covid['season'], first_post_covid['season']],
                 y=[last_pre_covid[pre_covid.columns[1]], first_post_covid[post_covid.columns[1]]],
                 name='COVID-19 Period (No Data)',
-                line=dict(color='#888888', dash='dash', width=2),
+                line=dict(color='#888888', dash='dot', width=1),
+                opacity=0.3,
                 mode='lines',
-                opacity=0.7,
                 showlegend=False
             ))
 
@@ -625,7 +600,6 @@ class GraphGenerator:
                 latest_season_idx = max([complete_seasons.index(s) for s in data_with_values['season']])
                 
                 # Look for the first season without data that's AFTER COVID period
-                post_covid_threshold = pd.Timestamp('2022-03-01')
                 first_without_data = None
                 
                 for idx in range(latest_season_idx + 1, len(complete_seasons)):
@@ -643,7 +617,7 @@ class GraphGenerator:
                         season_date = pd.Timestamp(f'{season_year-1}-12-01')
                     
                     # If this season is after COVID and has no data, use it for annotation
-                    if season_date > post_covid_threshold and season in data_without_values['season'].values:
+                    if season_date > covid_end and season in data_without_values['season'].values:
                         first_without_data = season
                         break
                 
