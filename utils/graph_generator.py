@@ -22,6 +22,32 @@ def format_season(date_obj):
         # If it's January or February, it's end of Q4 for current year
         return f'DEC-FEB {year}'
 
+def generate_season_timeline(start_date, end_date=None):
+    """Generate all seasons from start_date to end_date (or current date)"""
+    if end_date is None:
+        end_date = datetime.now()
+    
+    seasons = []
+    current = pd.to_datetime(start_date)
+    target_end = pd.to_datetime(end_date)
+    
+    while current <= target_end:
+        season = format_season(current)
+        if season not in seasons:
+            seasons.append(season)
+        
+        # Move to next season (3 months)
+        if current.month in [3, 4, 5]:  # MAR-MAY -> JUN-AUG
+            current = current.replace(month=6, day=1)
+        elif current.month in [6, 7, 8]:  # JUN-AUG -> SEP-NOV
+            current = current.replace(month=9, day=1)
+        elif current.month in [9, 10, 11]:  # SEP-NOV -> DEC-FEB
+            current = current.replace(month=12, day=1)
+        else:  # DEC-FEB -> MAR-MAY (next year)
+            current = current.replace(year=current.year + 1, month=3, day=1)
+    
+    return seasons
+
 def generate_filename(title: str, start_date=None, end_date=None) -> str:
     """Generate a filename based on the plot title and date range"""
     # Remove any special characters and convert spaces to underscores
@@ -137,7 +163,37 @@ class GraphGenerator:
 
         # Format dates as seasons - vectorized operation
         data['season'] = data['date'].apply(format_season)
-
+        
+        # Generate complete season timeline from earliest data to current date
+        earliest_date = data['date'].min() if not data.empty else pd.Timestamp('2017-01-01')
+        current_date = datetime.now()
+        complete_seasons = generate_season_timeline(earliest_date, current_date)
+        
+        # Create a complete dataframe with all seasons
+        seasons_with_data = set(data['season'].tolist())
+        complete_data = []
+        
+        for season in complete_seasons:
+            if season in seasons_with_data:
+                # Use actual data
+                season_data = data[data['season'] == season].iloc[0]
+                complete_data.append({
+                    'season': season,
+                    'value': season_data[data.columns[1]],
+                    'has_data': True,
+                    'date': season_data['date']
+                })
+            else:
+                # Add placeholder for missing data
+                complete_data.append({
+                    'season': season,
+                    'value': None,
+                    'has_data': False,
+                    'date': None
+                })
+        
+        complete_df = pd.DataFrame(complete_data)
+        
         # Split data into pre and post COVID - use precomputed timestamps
         covid_start = pd.Timestamp('2019-09-01')
         covid_end = pd.Timestamp('2022-03-01')
@@ -252,24 +308,31 @@ class GraphGenerator:
             add_confidence_interval(pre_covid, metric_column)
             add_confidence_interval(post_covid, metric_column)
         
-        # Add pre-COVID data
-        fig.add_trace(go.Scatter(
-            x=pre_covid['season'],
-            y=pre_covid[pre_covid.columns[1]],
-            name=y_label,
-            line=dict(color='#0077b6', dash='solid'),
-            mode='lines+markers'
-        ))
+        # Add data with existing values (blue line)
+        data_with_values = complete_df[complete_df['has_data'] == True]
+        if not data_with_values.empty:
+            fig.add_trace(go.Scatter(
+                x=data_with_values['season'],
+                y=data_with_values['value'],
+                name=y_label,
+                line=dict(color='#0077b6', dash='solid'),
+                mode='lines+markers'
+            ))
 
-        # Add post-COVID data
-        fig.add_trace(go.Scatter(
-            x=post_covid['season'],
-            y=post_covid[post_covid.columns[1]],
-            name=y_label,
-            line=dict(color='#0077b6', dash='solid'),
-            mode='lines+markers',
-            showlegend=False
-        ))
+        # Add placeholder markers for seasons without data (grey)
+        data_without_values = complete_df[complete_df['has_data'] == False]
+        if not data_without_values.empty:
+            # Use mid-range value for positioning the grey markers
+            mid_y = (y_range['min'] + y_range['max']) / 2
+            fig.add_trace(go.Scatter(
+                x=data_without_values['season'],
+                y=[mid_y] * len(data_without_values),
+                name='Data Collection Ongoing',
+                line=dict(color='#cccccc', dash='dash'),
+                marker=dict(color='#cccccc', size=8, symbol='x'),
+                mode='markers',
+                hovertemplate='%{x}<br>Data Collection Ongoing<extra></extra>'
+            ))
 
         # Add COVID period indicator if data exists on both sides
         if not pre_covid.empty and not post_covid.empty:
@@ -349,7 +412,8 @@ class GraphGenerator:
                         comp_df = comp_df[(comp_df['date'] >= start_dt) & (comp_df['date'] <= end_dt)]
                 
                 # Sort and format data
-                comp_df = comp_df.sort_values('date')
+                if not comp_df.empty and 'date' in comp_df.columns:
+                    comp_df = comp_df.sort_values('date')
                 
                 # Ensure comp_df['date'] is in datetime64 format
                 if not comp_df.empty:
@@ -459,6 +523,8 @@ class GraphGenerator:
                 'tickangle': 45,
                 'automargin': True,
                 'type': 'category',
+                'categoryorder': 'array',
+                'categoryarray': complete_seasons,
                 'tickfont': {'size': 10},
                 'title': {'standoff': 50}
             },
@@ -504,6 +570,31 @@ class GraphGenerator:
                 dtick=50,  # 50 unit intervals (reduced from 200)
                 range=[0, 300]  # Reduced from 1000 to better fit actual data
             )
+        
+        # Add text annotation for data collection ongoing
+        if not data_without_values.empty:
+            # Find the latest season with data and the first season without data
+            if not data_with_values.empty:
+                latest_season_idx = max([complete_seasons.index(s) for s in data_with_values['season']])
+                if latest_season_idx < len(complete_seasons) - 1:
+                    first_without_data_idx = latest_season_idx + 1
+                    first_without_data = complete_seasons[first_without_data_idx]
+                    
+                    # Add annotation
+                    fig.add_annotation(
+                        x=first_without_data,
+                        y=y_range['max'] * 0.9,
+                        text="Data Collection Ongoing",
+                        showarrow=True,
+                        arrowhead=2,
+                        arrowsize=1,
+                        arrowwidth=2,
+                        arrowcolor="#666666",
+                        bgcolor="rgba(255,255,255,0.8)",
+                        bordercolor="#666666",
+                        borderwidth=1,
+                        font=dict(size=12, color="#666666")
+                    )
             
         return fig, config
 
