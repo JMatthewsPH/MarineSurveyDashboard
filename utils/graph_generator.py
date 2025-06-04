@@ -337,8 +337,8 @@ class GraphGenerator:
                 y=[last_pre[data.columns[1]], first_post[data.columns[1]]],
                 line=dict(color='#cccccc', dash='dot', width=2),
                 mode='lines',
-                name='COVID Gap',
-                showlegend=False
+                name='COVID-19 Period (No Data)',
+                showlegend=True
             ))
         elif not data.empty:
             # No COVID gap, add all data as one trace
@@ -523,10 +523,10 @@ class GraphGenerator:
                     fig.add_trace(go.Scatter(
                         x=[last_pre['season'], first_post['season']],
                         y=[last_pre[comp_df.columns[1]], first_post[comp_df.columns[1]]],
-                        line=dict(color=color, dash='dot', width=1),
-                        opacity=0.3,
+                        line=dict(color='#cccccc', dash='dot', width=2),
                         mode='lines',
-                        showlegend=False
+                        name='COVID-19 Period (No Data)' if i == 0 else '',
+                        showlegend=(i == 0)  # Only show in legend once
                     ))
 
         # Update layout with fixed y-axis range
