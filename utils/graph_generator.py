@@ -381,35 +381,62 @@ class GraphGenerator:
             last_pre_covid = pre_covid.iloc[-1]
             first_post_covid = post_covid.iloc[0]
             
-            # Find the x-axis positions for the seasons
-            x_positions = list(complete_df['season'].unique())
+            # Create dotted line effect with multiple small segments
+            x_start = last_pre_covid['season']
+            x_end = first_post_covid['season']
+            y_start = last_pre_covid[pre_covid.columns[1]]
+            y_end = first_post_covid[post_covid.columns[1]]
+            
+            # Get all seasons between start and end to create intermediate points
+            all_seasons = list(complete_df['season'].unique())
             try:
-                x0_pos = x_positions.index(last_pre_covid['season'])
-                x1_pos = x_positions.index(first_post_covid['season'])
+                start_idx = all_seasons.index(x_start)
+                end_idx = all_seasons.index(x_end)
                 
-                # Add dotted line as a shape annotation
-                fig.add_shape(
-                    type="line",
-                    x0=x0_pos,
-                    y0=last_pre_covid[pre_covid.columns[1]],
-                    x1=x1_pos,
-                    y1=first_post_covid[post_covid.columns[1]],
-                    line=dict(
-                        color="#888888",
-                        width=2,
-                        dash="dot"
-                    ),
-                    opacity=0.6
-                )
+                # Create dotted pattern by adding multiple short line segments
+                num_segments = abs(end_idx - start_idx) * 3  # 3 segments per season gap
+                x_points = []
+                y_points = []
+                
+                for i in range(num_segments + 1):
+                    if i % 2 == 0:  # Only add every other point for dotted effect
+                        progress = i / num_segments
+                        # Linear interpolation for position
+                        if start_idx < end_idx:
+                            x_pos = start_idx + progress * (end_idx - start_idx)
+                        else:
+                            x_pos = start_idx - progress * (start_idx - end_idx)
+                        
+                        y_pos = y_start + progress * (y_end - y_start)
+                        
+                        # Convert position back to season
+                        season_idx = int(round(x_pos))
+                        if 0 <= season_idx < len(all_seasons):
+                            x_points.append(all_seasons[season_idx])
+                            y_points.append(y_pos)
+                
+                # Add the dotted line as multiple markers
+                if len(x_points) > 1:
+                    fig.add_trace(go.Scatter(
+                        x=x_points,
+                        y=y_points,
+                        name='COVID-19 Period (No Data)',
+                        line=dict(color='#888888', width=0),  # No line, only markers
+                        marker=dict(color='#888888', size=4, symbol='line-ns'),
+                        mode='markers',
+                        opacity=0.6,
+                        showlegend=False
+                    ))
+                        
             except (ValueError, IndexError):
-                # Fallback to trace method if position lookup fails
+                # Simple fallback
                 fig.add_trace(go.Scatter(
-                    x=[last_pre_covid['season'], first_post_covid['season']],
-                    y=[last_pre_covid[pre_covid.columns[1]], first_post_covid[post_covid.columns[1]]],
+                    x=[x_start, x_end],
+                    y=[y_start, y_end],
                     name='COVID-19 Period (No Data)',
-                    line=dict(color='#888888', dash='dot', width=1),
+                    line=dict(color='#888888', dash='dash', width=1),
                     mode='lines',
-                    opacity=0.3,
+                    opacity=0.5,
                     showlegend=False
                 ))
 
