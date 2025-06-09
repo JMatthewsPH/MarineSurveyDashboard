@@ -75,7 +75,7 @@ def parse_period_to_date(period: str) -> datetime:
 
 def parse_period_to_season(period: str) -> str:
     """
-    Convert period string to quarter format for consistency with existing data.
+    Convert period string to descriptive season format (Mar-May, Jun-Aug, etc.).
     """
     parts = period.strip().split()
     season = parts[0]
@@ -91,12 +91,12 @@ def parse_period_to_season(period: str) -> str:
     else:
         year = int(year_part)
     
-    # Map seasons to quarters
-    season_quarters = {
-        'Spring': 'Q1',   # MAR-MAY
-        'Summer': 'Q2',   # JUN-AUG
-        'Autumn': 'Q3',   # SEP-NOV
-        'Winter': 'Q4'    # DEC-FEB
+    # Map seasons to descriptive format
+    season_descriptions = {
+        'Spring': 'MAR-MAY',   
+        'Summer': 'JUN-AUG',   
+        'Autumn': 'SEP-NOV',   
+        'Winter': 'DEC-FEB'    
     }
     
     # For winter, if the format is "Winter 24/25", use the second year
@@ -107,8 +107,8 @@ def parse_period_to_season(period: str) -> str:
         else:
             year += 1900
     
-    quarter = season_quarters.get(season, 'Q1')
-    return f"{year}{quarter}"
+    season_desc = season_descriptions.get(season, 'MAR-MAY')
+    return f"{season_desc} {year}"
 
 def clean_numeric_value(value):
     """Convert string numbers with commas to float, handling invalid values."""
