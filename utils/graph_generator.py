@@ -164,16 +164,42 @@ class GraphGenerator:
         # Format dates as seasons - vectorized operation
         data['season'] = data['date'].apply(format_season)
         
-        # Generate complete season timeline from earliest data to current date
-        earliest_date = data['date'].min() if not data.empty else pd.Timestamp('2017-01-01')
-        current_date = datetime.now()
-        complete_seasons = generate_season_timeline(earliest_date, current_date)
+        # Split data into pre and post COVID periods to create timeline with gap
+        covid_start = pd.Timestamp('2019-09-01')
+        covid_end = pd.Timestamp('2022-03-01')
         
-        # Create a complete dataframe with all seasons, excluding COVID period indicators
+        pre_covid_data = data[data['date'] < covid_start]
+        post_covid_data = data[data['date'] > covid_end]
+        
+        # Generate timeline excluding COVID gap periods
+        display_seasons = []
+        
+        # Add pre-COVID timeline
+        if not pre_covid_data.empty:
+            pre_covid_seasons = generate_season_timeline(
+                pre_covid_data['date'].min(), 
+                pre_covid_data['date'].max()
+            )
+            display_seasons.extend(pre_covid_seasons)
+        
+        # Add post-COVID timeline (from actual data to current date)
+        if not post_covid_data.empty:
+            post_covid_seasons = generate_season_timeline(
+                post_covid_data['date'].min(),
+                datetime.now()
+            )
+            display_seasons.extend(post_covid_seasons)
+        
+        # If no COVID gap exists, use full timeline
+        if pre_covid_data.empty or post_covid_data.empty:
+            earliest_date = data['date'].min() if not data.empty else pd.Timestamp('2017-01-01')
+            display_seasons = generate_season_timeline(earliest_date, datetime.now())
+        
+        # Create dataframe only for seasons we want to display (excluding COVID gap)
         seasons_with_data = set(data['season'].tolist())
         complete_data = []
         
-        for season in complete_seasons:
+        for season in display_seasons:
             if season in seasons_with_data:
                 # Use actual data
                 season_data = data[data['season'] == season].iloc[0]
@@ -184,13 +210,33 @@ class GraphGenerator:
                     'date': season_data['date']
                 })
             else:
-                # Add placeholder for missing data (COVID gap will be handled separately)
-                complete_data.append({
-                    'season': season,
-                    'value': None,
-                    'has_data': False,
-                    'date': None
-                })
+                # Only add placeholder for genuine future seasons (after latest data)
+                if not data.empty:
+                    latest_date = data['date'].max()
+                    try:
+                        # Parse season to approximate date for comparison
+                        year = int(season.split()[-1])
+                        if 'MAR-MAY' in season:
+                            season_date = pd.Timestamp(f'{year}-04-01')
+                        elif 'JUN-AUG' in season:
+                            season_date = pd.Timestamp(f'{year}-07-01')
+                        elif 'SEP-NOV' in season:
+                            season_date = pd.Timestamp(f'{year}-10-01')
+                        elif 'DEC-FEB' in season:
+                            season_date = pd.Timestamp(f'{year}-01-01')
+                        else:
+                            continue
+                        
+                        # Only add if this is a future season
+                        if season_date > latest_date:
+                            complete_data.append({
+                                'season': season,
+                                'value': None,
+                                'has_data': False,
+                                'date': None
+                            })
+                    except:
+                        continue
         
         complete_df = pd.DataFrame(complete_data)
         
@@ -351,13 +397,13 @@ class GraphGenerator:
             ))
 
         # Add placeholder markers for future seasons only (post-COVID ongoing data collection)
-        future_seasons = [s for s in complete_seasons if s not in data['season'].values]
+        future_seasons = [s for s in display_seasons if s not in data['season'].values]
         if future_seasons:
             # Filter to only include seasons after the latest data point
             if not data.empty:
                 latest_data_season = data['season'].iloc[-1]
-                latest_index = complete_seasons.index(latest_data_season) if latest_data_season in complete_seasons else -1
-                future_seasons = complete_seasons[latest_index + 1:] if latest_index >= 0 else []
+                latest_index = display_seasons.index(latest_data_season) if latest_data_season in display_seasons else -1
+                future_seasons = display_seasons[latest_index + 1:] if latest_index >= 0 else []
             
             if future_seasons:
                 # Use mid-range value for positioning the grey markers
@@ -565,7 +611,7 @@ class GraphGenerator:
                 'automargin': True,
                 'type': 'category',
                 'categoryorder': 'array',
-                'categoryarray': complete_seasons,
+                'categoryarray': display_seasons,
                 'tickfont': {'size': 10},
                 'title': {'standoff': 50}
             },
@@ -616,9 +662,9 @@ class GraphGenerator:
         if not data.empty:
             # Find seasons that are after the latest data point
             latest_data_season = data['season'].iloc[-1]
-            if latest_data_season in complete_seasons:
-                latest_season_idx = complete_seasons.index(latest_data_season)
-                future_seasons_for_annotation = complete_seasons[latest_season_idx + 1:]
+            if latest_data_season in display_seasons:
+                latest_season_idx = display_seasons.index(latest_data_season)
+                future_seasons_for_annotation = display_seasons[latest_season_idx + 1:]
                 
                 if future_seasons_for_annotation:
                     first_future_season = future_seasons_for_annotation[0]
