@@ -922,15 +922,21 @@ if selected_site:
                 site_data_dict = data_processor.batch_get_biomass_data(biomass_compare_sites, start_date='2017-01-01')
                 
                 # Convert to the format expected by the graph generator
-                comparison_data_list = [df for site, df in site_data_dict.items() if not df.empty]
+                comparison_data_list = []
+                actual_comparison_labels = []
+                
+                for site_name in biomass_compare_sites:
+                    if site_name in site_data_dict and not site_data_dict[site_name].empty:
+                        comparison_data_list.append(site_data_dict[site_name])
+                        # Use custom labels if provided, otherwise use site name
+                        if biomass_compare_labels and len(biomass_compare_labels) > len(actual_comparison_labels):
+                            actual_comparison_labels.append(biomass_compare_labels[len(actual_comparison_labels)])
+                        else:
+                            actual_comparison_labels.append(site_name)
                 
                 if comparison_data_list:
                     biomass_comparison_data = comparison_data_list
-                    # Use custom labels if provided
-                    if biomass_compare_labels:
-                        biomass_comparison_labels = biomass_compare_labels
-                    else:
-                        biomass_comparison_labels = biomass_compare_sites
+                    biomass_comparison_labels = actual_comparison_labels
                         
             elif biomass_comparison == "Compare with Average":
                 municipality = site_municipality if biomass_compare_scope == "Municipality Average" else None
