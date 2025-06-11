@@ -64,50 +64,42 @@ class DataProcessor:
         
     def _get_session(self):
         """
-        Get an active database session, either the existing one or a new one
-        
-        This is a helper method to ensure we're always using an active session
-        with proper error handling and transaction management
+        Get an active database session with improved error handling and retry logic
         """
-        try:
-            # Check if we have a valid active session
-            if hasattr(self, '_db') and self._db and self._db.is_active:
-                try:
-                    # Test the connection with a simple query
-                    from sqlalchemy import text
-                    self._db.execute(text("SELECT 1"))
-                    return self._db
-                except Exception as conn_err:
-                    # Connection error occurred, try to safely roll back any pending transaction
-                    logger.warning(f"Database connection error: {conn_err}. Rolling back...")
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                # Check if we have a valid active session
+                if hasattr(self, '_db') and self._db and self._db.is_active:
                     try:
-                        self._db.rollback()
-                    except Exception:
-                        # If rollback fails, just continue with getting a new session
-                        pass
-                    
-                    # Close the problematic connection
-                    try:
-                        self._db.close()
-                    except Exception:
-                        pass
-                    
-                    # Connection is bad, set to None so we'll create a new one
-                    self._db = None
-            
-            # If we reached here, we need a new session
-            logger.info("Creating new database session")
-            with get_db_session() as db:
-                # Store the reference
-                self._db = db
-                return db
+                        # Test the connection with a simple query
+                        from sqlalchemy import text
+                        self._db.execute(text("SELECT 1"))
+                        return self._db
+                    except Exception as conn_err:
+                        logger.warning(f"Database connection test failed (attempt {attempt + 1}): {conn_err}")
+                        # Force session cleanup
+                        try:
+                            self._db.close()
+                        except Exception:
+                            pass
+                        self._db = None
                 
-        except Exception as e:
-            # For any other error, log and create a fresh session
-            logger.warning(f"Error managing database session: {e}. Creating new session.")
-            with get_db_session() as db:
-                self._db = db
-                return db
+                # Create a new session using the database utility
+                from .database import get_db
+                self._db = next(get_db())
+                logger.info(f"Created new database session (attempt {attempt + 1})")
+                return self._db
+                
+            except Exception as e:
+                logger.error(f"Session creation failed (attempt {attempt + 1}): {e}")
+                if attempt == max_retries - 1:
+                    raise
+                # Wait before retry
+                import time
+                time.sleep(0.5)
+        
+        raise Exception("Failed to establish database connection after retries")
 
     @st.cache_data(ttl=24*3600, show_spinner=False)  # Cache for 24 hours - site data rarely changes
     def get_sites(_self):  # Added underscore to ignore self in caching
