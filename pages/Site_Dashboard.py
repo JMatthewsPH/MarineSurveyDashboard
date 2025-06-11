@@ -937,6 +937,10 @@ if selected_site:
                 if comparison_data_list:
                     biomass_comparison_data = comparison_data_list
                     biomass_comparison_labels = actual_comparison_labels
+                    # Debug logging
+                    print(f"DEBUG - Biomass comparison: {len(comparison_data_list)} datasets, labels: {actual_comparison_labels}")
+                    for i, df in enumerate(comparison_data_list):
+                        print(f"  Dataset {i}: {len(df)} records, columns: {list(df.columns)}")
                         
             elif biomass_comparison == "Compare with Average":
                 municipality = site_municipality if biomass_compare_scope == "Municipality Average" else None
