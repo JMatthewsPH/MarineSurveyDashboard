@@ -142,7 +142,7 @@ st.markdown(f"""
 
 
 # Initialize database connection with improved session management
-@st.cache_resource(ttl=3600)  # Cache the processor for 1 hour, then refresh for a new session
+@st.cache_resource(ttl=60)  # Reduced cache to 1 minute to pick up database changes
 def get_processor():
     """
     Get a cached data processor instance with a managed database session
