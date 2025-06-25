@@ -481,9 +481,7 @@ class GraphGenerator:
                     labels_list = [f'Comparison {i+1}' for i in range(len(comparison_list))]
             
             # Process each comparison dataset
-            print(f"DEBUG - Graph generator processing {len(comparison_list)} comparison datasets")
             for i, (comp_df, label) in enumerate(zip(comparison_list, labels_list)):
-                print(f"DEBUG - Processing dataset {i}: {label}, {len(comp_df)} records")
                 # Apply date range filter if specified
                 if date_range and len(date_range) == 2:
                     start_filter, end_filter = date_range
@@ -528,7 +526,6 @@ class GraphGenerator:
                 
                 # Add pre-COVID comparison data
                 if not pre_covid_comp.empty:
-                    print(f"DEBUG - Adding pre-COVID trace for {label}: {len(pre_covid_comp)} points")
                     fig.add_trace(go.Scatter(
                         x=pre_covid_comp['season'],
                         y=pre_covid_comp[comp_df.columns[1]],
@@ -540,7 +537,6 @@ class GraphGenerator:
                 
                 # Add post-COVID comparison data
                 if not post_covid_comp.empty:
-                    print(f"DEBUG - Adding post-COVID trace for {label}: {len(post_covid_comp)} points")
                     fig.add_trace(go.Scatter(
                         x=post_covid_comp['season'],
                         y=post_covid_comp[comp_df.columns[1]],
