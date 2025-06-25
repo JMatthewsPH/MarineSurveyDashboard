@@ -46,6 +46,7 @@ class Site(Base):
     image_url = Column(String)
     description_en = Column(String)
     description_fil = Column(String)
+    description_ceb = Column(String)
 
     surveys = relationship("Survey", back_populates="site")
 
