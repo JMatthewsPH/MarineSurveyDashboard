@@ -357,7 +357,10 @@ if selected_site:
                 description = selected_site_obj.description_en
             elif language_code == 'tl':
                 description = selected_site_obj.description_fil  # Using Filipino description for Tagalog
-            else:  # Cebuano - fallback to English for now
+            elif language_code == 'ceb':
+                # For Cebuano, use Filipino description as it's closer linguistically, fallback to English
+                description = selected_site_obj.description_fil or selected_site_obj.description_en
+            else:
                 description = selected_site_obj.description_en
                 
             # Default description if not available

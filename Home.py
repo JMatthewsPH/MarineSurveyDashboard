@@ -186,7 +186,10 @@ def create_site_card(site):
         description = site.description_en
     elif language_code == 'tl':
         description = site.description_fil  # Using Filipino description for Tagalog
-    else:  # Cebuano - fallback to English for now
+    elif language_code == 'ceb':
+        # For Cebuano, use Filipino description as it's closer linguistically, fallback to English
+        description = site.description_fil or site.description_en
+    else:
         description = site.description_en
         
     # Default description if not available
