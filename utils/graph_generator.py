@@ -1144,9 +1144,9 @@ class GraphGenerator:
             import plotly.graph_objects as go
             import numpy as np
             
-            # Clean the data
+            # Clean the data - replace NaN with 0 instead of dropping rows
             clean_data = matrix_data.copy()
-            clean_data = clean_data.dropna(subset=[metric_column])
+            clean_data[metric_column] = clean_data[metric_column].fillna(0)
             
             if clean_data.empty:
                 # Return empty chart if no data
