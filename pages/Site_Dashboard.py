@@ -14,8 +14,25 @@ st.set_page_config(
     }
 )
 
-# Hide this page from navigation using JavaScript
-hide_page_js = """
+# Hide anchor elements and this page from navigation
+hide_anchors_and_page_js = """
+<style>
+/* Hide Streamlit's automatic header anchors */
+.stMarkdown h1 .anchor-link,
+.stMarkdown h2 .anchor-link,
+.stMarkdown h3 .anchor-link,
+.stMarkdown h4 .anchor-link,
+.stMarkdown h5 .anchor-link,
+.stMarkdown h6 .anchor-link,
+h1 > a,
+h2 > a, 
+h3 > a,
+h4 > a,
+h5 > a,
+h6 > a {
+    display: none !important;
+}
+</style>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     function hideNavItem() {
@@ -45,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 """
 
-st.markdown(hide_page_js, unsafe_allow_html=True)
+st.markdown(hide_anchors_and_page_js, unsafe_allow_html=True)
 
 import os
 import pandas as pd

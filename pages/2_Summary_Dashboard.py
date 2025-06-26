@@ -30,6 +30,27 @@ if 'language' not in st.session_state:
 # Add favicon
 add_favicon()
 
+# Hide anchor elements with CSS
+st.markdown("""
+<style>
+/* Hide Streamlit's automatic header anchors */
+.stMarkdown h1 .anchor-link,
+.stMarkdown h2 .anchor-link,
+.stMarkdown h3 .anchor-link,
+.stMarkdown h4 .anchor-link,
+.stMarkdown h5 .anchor-link,
+.stMarkdown h6 .anchor-link,
+h1 > a,
+h2 > a, 
+h3 > a,
+h4 > a,
+h5 > a,
+h6 > a {
+    display: none !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 
 
 

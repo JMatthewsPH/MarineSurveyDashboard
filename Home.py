@@ -37,28 +37,31 @@ body {
 from utils.ui_helpers import load_css
 st.markdown(load_css(), unsafe_allow_html=True)
 
-# Add JavaScript to hide anchor elements and fix navigation
+# Simple CSS to hide anchor elements - Streamlit native approach
+st.markdown("""
+<style>
+/* Hide Streamlit's automatic header anchors */
+.stMarkdown h1 .anchor-link,
+.stMarkdown h2 .anchor-link,
+.stMarkdown h3 .anchor-link,
+.stMarkdown h4 .anchor-link,
+.stMarkdown h5 .anchor-link,
+.stMarkdown h6 .anchor-link,
+h1 > a,
+h2 > a, 
+h3 > a,
+h4 > a,
+h5 > a,
+h6 > a {
+    display: none !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# Add JavaScript for navigation fix only
 fix_nav_js = """
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Function to remove unwanted anchor elements
-  function removeAnchors() {
-    // Remove all anchor elements that start with #
-    const anchors = document.querySelectorAll('a[href^="#"]');
-    anchors.forEach(anchor => {
-      anchor.style.display = 'none';
-      anchor.style.visibility = 'hidden';
-      anchor.remove();
-    });
-    
-    // Remove empty anchor elements
-    const emptyAnchors = document.querySelectorAll('a:empty, a[href="#"]');
-    emptyAnchors.forEach(anchor => {
-      anchor.remove();
-    });
-  }
-  
-  // Function to fix navigation
   function fixNavigation() {
     const navElement = document.querySelector('[data-testid="stSidebarNav"]');
     if (navElement) {
