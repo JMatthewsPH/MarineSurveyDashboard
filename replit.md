@@ -104,6 +104,7 @@ The Marine Conservation Philippines Platform is a comprehensive data visualizati
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
-Logo preferences: Use high-quality lossless display with base64 encoding to avoid compression
+Logo preferences: Use high-quality lossless display with base64 encoding to avoid compression, 4"x1.5" sizing for PDFs
 UX preferences: Streamline user interactions - avoid unnecessary clicks (e.g., auto-download PDFs)
 Development approach: Prefer native Streamlit solutions over complex JavaScript when possible
+PDF quality: Professional appearance with proper logo sizing and aspect ratios
