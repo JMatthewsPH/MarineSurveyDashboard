@@ -86,32 +86,49 @@ def add_custom_loading_animation():
             gif_b64 = get_base64_encoded_image(gif_path)
             st.markdown(f'''
                 <style>
-                /* Hide all default Streamlit spinners and running indicators */
-                .stSpinner > div > div,
-                .stSpinner > div > div > div,
-                .stSpinner svg,
+                /* Completely hide and override all Streamlit loading elements */
+                .stSpinner,
+                .stSpinner *,
                 div[data-testid="stStatusWidget"] svg,
-                div[data-testid="stStatusWidget"] .stSpinner,
-                .stApp [data-testid="stStatusWidget"] svg {{
+                div[data-testid="stStatusWidget"] [class*="spinner"],
+                .element-container .stSpinner,
+                .stApp svg[class*="spinner"],
+                .stApp svg[class*="loading"],
+                .stApp div[class*="spinner"] svg {{
                     display: none !important;
                     visibility: hidden !important;
                     opacity: 0 !important;
+                    width: 0 !important;
+                    height: 0 !important;
                 }}
                 
-                /* Replace main spinner with custom GIF */
-                .stSpinner > div {{
+                /* Replace ALL spinner containers with custom GIF */
+                .stSpinner::before,
+                .element-container .stSpinner::before {{
+                    content: "" !important;
+                    display: block !important;
+                    width: 50px !important;
+                    height: 50px !important;
                     background-image: url("data:image/gif;base64,{gif_b64}") !important;
                     background-repeat: no-repeat !important;
                     background-position: center !important;
-                    background-size: 50px 50px !important;
+                    background-size: contain !important;
+                    margin: 0 auto !important;
+                    position: absolute !important;
+                    top: 50% !important;
+                    left: 50% !important;
+                    transform: translate(-50%, -50%) !important;
+                    z-index: 9999 !important;
+                }}
+                
+                .stSpinner {{
+                    position: relative !important;
                     width: 50px !important;
                     height: 50px !important;
                     margin: 0 auto !important;
-                    border: none !important;
-                    animation: none !important;
                 }}
                 
-                /* Replace status widget running indicator */
+                /* Status widget complete override */
                 div[data-testid="stStatusWidget"] {{
                     background-image: url("data:image/gif;base64,{gif_b64}") !important;
                     background-repeat: no-repeat !important;
@@ -119,30 +136,55 @@ def add_custom_loading_animation():
                     background-size: 20px 20px !important;
                     width: 30px !important;
                     height: 30px !important;
-                }}
-                
-                /* Hide text in status widget and replace with custom animation */
-                div[data-testid="stStatusWidget"] > div {{
-                    background-image: url("data:image/gif;base64,{gif_b64}") !important;
-                    background-repeat: no-repeat !important;
-                    background-position: center !important;
-                    background-size: 20px 20px !important;
-                    color: transparent !important;
                     text-indent: -9999px !important;
-                    width: 30px !important;
-                    height: 30px !important;
+                    color: transparent !important;
+                    overflow: hidden !important;
                 }}
                 
-                /* Target any other spinner patterns */
-                .stApp .stSpinner,
-                .stApp [class*="spinner"],
-                .stApp [class*="loading"] {{
-                    background-image: url("data:image/gif;base64,{gif_b64}") !important;
-                    background-repeat: no-repeat !important;
-                    background-position: center !important;
-                    background-size: contain !important;
+                div[data-testid="stStatusWidget"] * {{
+                    display: none !important;
                 }}
                 </style>
+                
+                <script>
+                // JavaScript to aggressively replace any remaining spinners
+                function replaceSpinners() {{
+                    const gifSrc = "data:image/gif;base64,{gif_b64}";
+                    
+                    // Find all spinner elements
+                    const spinners = document.querySelectorAll('.stSpinner, [class*="spinner"], [data-testid="stStatusWidget"]');
+                    
+                    spinners.forEach(spinner => {{
+                        // Hide all children
+                        Array.from(spinner.children).forEach(child => {{
+                            child.style.display = 'none';
+                        }});
+                        
+                        // Replace with custom GIF
+                        spinner.innerHTML = `<img src="${{gifSrc}}" style="width: 30px; height: 30px; display: block; margin: 0 auto;">`;
+                    }});
+                    
+                    // Also target SVG elements specifically
+                    const svgs = document.querySelectorAll('svg[class*="spinner"], svg[class*="loading"]');
+                    svgs.forEach(svg => {{
+                        const img = document.createElement('img');
+                        img.src = gifSrc;
+                        img.style.width = '30px';
+                        img.style.height = '30px';
+                        svg.parentNode.replaceChild(img, svg);
+                    }});
+                }}
+                
+                // Run immediately and set up observers
+                replaceSpinners();
+                
+                // Watch for new elements
+                const observer = new MutationObserver(replaceSpinners);
+                observer.observe(document.body, {{ childList: true, subtree: true }});
+                
+                // Also run periodically
+                setInterval(replaceSpinners, 1000);
+                </script>
             ''', unsafe_allow_html=True)
     except Exception as e:
         print(f"Error adding custom loading animation: {e}")
