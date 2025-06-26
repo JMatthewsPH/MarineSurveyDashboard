@@ -26,6 +26,45 @@
     overflow-x: hidden; /* Prevent horizontal scrolling on mobile */
 }
 
+/* ===== HIDE UNWANTED ANCHOR ELEMENTS ===== */
+/* Hide anchor elements that appear throughout the dashboard without purpose */
+.element-container a[href^="#"]:empty,
+.stMarkdown a[href^="#"]:empty,
+a[href^="#"]:empty {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Hide anchor links that only contain whitespace or are just hash symbols */
+a[href="#"]:empty,
+a[href="#"]:not(:has(*)) {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Hide any standalone anchor elements in headers and text blocks */
+h1 > a[href^="#"]:empty,
+h2 > a[href^="#"]:empty,
+h3 > a[href^="#"]:empty,
+h4 > a[href^="#"]:empty,
+h5 > a[href^="#"]:empty,
+h6 > a[href^="#"]:empty,
+p > a[href^="#"]:empty,
+div > a[href^="#"]:empty {
+    display: none !important;
+}
+
+/* Hide Streamlit's automatic anchor generation for headers */
+.stMarkdown h1 > a[href^="#"],
+.stMarkdown h2 > a[href^="#"],
+.stMarkdown h3 > a[href^="#"],
+.stMarkdown h4 > a[href^="#"],
+.stMarkdown h5 > a[href^="#"],
+.stMarkdown h6 > a[href^="#"] {
+    display: none !important;
+    visibility: hidden !important;
+}
+
 /* Make all Streamlit elements full width */
 .element-container, .stMarkdown, .stDataFrame {
     width: 100% !important;
