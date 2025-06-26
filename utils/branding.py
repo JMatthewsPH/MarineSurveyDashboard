@@ -21,16 +21,11 @@ def display_logo(size="medium"):
     
     config = sizes.get(size, sizes["medium"])
     
-    # Get logo path
-    logo_text_path = os.path.join("assets", "branding", "logo_text.png")
-    fallback_logo_path = os.path.join("attached_assets", "MCP_Data", "Logo Text Color.png")
+    # Get logo path - using the new Logo Text Color.png file
+    logo_path = os.path.join("assets", "branding", "Logo Text Color.png")
     
-    # Try to use the asset in the branding folder, or fall back to attached_assets
-    if os.path.exists(logo_text_path):
-        logo_path = logo_text_path
-    elif os.path.exists(fallback_logo_path):
-        logo_path = fallback_logo_path
-    else:
+    # Check if the logo exists
+    if not os.path.exists(logo_path):
         st.error("Logo not found in assets folder")
         return
         
