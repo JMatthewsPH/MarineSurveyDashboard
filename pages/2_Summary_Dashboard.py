@@ -11,7 +11,7 @@ from utils.data_processor import DataProcessor
 from utils.graph_generator import GraphGenerator
 from utils.translations import TRANSLATIONS
 from utils.database import get_db_session
-from utils.branding import display_logo, add_favicon
+from utils.branding import display_logo, add_favicon, add_custom_loading_animation
 from utils.ui_helpers import loading_spinner, create_loading_placeholder, load_css, skeleton_text_placeholder
 from utils.navigation import display_navigation
 
@@ -27,8 +27,9 @@ st.set_page_config(
 if 'language' not in st.session_state:
     st.session_state.language = 'en'  # Default to English
 
-# Add favicon
+# Add favicon and custom loading animation
 add_favicon()
+add_custom_loading_animation()
 
 # Hide anchor elements with CSS
 st.markdown("""

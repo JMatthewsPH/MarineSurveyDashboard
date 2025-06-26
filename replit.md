@@ -90,6 +90,7 @@ The Marine Conservation Philippines Platform is a comprehensive data visualizati
 - **Health Checks**: Database connection validation and automatic recovery
 
 ## Changelog
+- June 26, 2025: Implemented custom loading animation using AnimRun.gif to replace Streamlit's default spinner with enhanced CSS targeting
 - June 26, 2025: Fine-tuned PDF logo dimensions to 6" x 1.87" for perfect circular proportions after user feedback
 - June 26, 2025: Fixed PDF logo quality issues with improved sizing (4" x 1.5") and proper aspect ratio
 - June 26, 2025: Added branded logo ("Logo Text Color.png") to all PDF reports for professional appearance
