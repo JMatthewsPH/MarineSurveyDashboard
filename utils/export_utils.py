@@ -441,9 +441,17 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
     elements.append(Spacer(1, 0.25*inch))
     
     # Get site information to include municipality
-    sites_df = data_processor.get_sites()
-    site_info = sites_df[sites_df['name'] == site_name].iloc[0] if not sites_df[sites_df['name'] == site_name].empty else None
-    municipality_name = site_info['municipality'] if site_info is not None else "Unknown Municipality"
+    try:
+        sites_df = data_processor.get_sites()
+        site_matches = sites_df[sites_df['name'] == site_name]
+        if not site_matches.empty:
+            site_info = site_matches.iloc[0]
+            municipality_name = str(site_info['municipality']) if 'municipality' in site_info else "Unknown Municipality"
+        else:
+            municipality_name = "Unknown Municipality"
+    except Exception as e:
+        print(f"Error getting municipality info: {e}")
+        municipality_name = "Unknown Municipality"
     
     # Add date and description with improved format
     elements.append(Paragraph(f"Generated on: {datetime.now().strftime('%Y-%B-%d')}", styles['Normal']))

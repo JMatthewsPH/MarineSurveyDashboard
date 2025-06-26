@@ -316,6 +316,9 @@ with st.sidebar:
             )
             
         except Exception as e:
+            import traceback
+            print(f"PDF Generation Error: {str(e)}")
+            print(f"Full traceback: {traceback.format_exc()}")
             st.error(f"Error preparing PDF report: {str(e)}")
             st.info("Please check console for error details.")
     
