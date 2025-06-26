@@ -40,20 +40,33 @@ st.markdown(load_css(), unsafe_allow_html=True)
 # Simple CSS to hide anchor elements - Streamlit native approach
 st.markdown("""
 <style>
-/* Hide Streamlit's automatic header anchors */
+/* Hide only Streamlit's automatic header anchors, not custom site card links */
 .stMarkdown h1 .anchor-link,
 .stMarkdown h2 .anchor-link,
 .stMarkdown h3 .anchor-link,
 .stMarkdown h4 .anchor-link,
 .stMarkdown h5 .anchor-link,
-.stMarkdown h6 .anchor-link,
-h1 > a,
-h2 > a, 
-h3 > a,
-h4 > a,
-h5 > a,
-h6 > a {
+.stMarkdown h6 .anchor-link {
     display: none !important;
+}
+
+/* Hide header anchors only when they are NOT inside site cards */
+.stMarkdown h1 > a:not(.site-card a),
+.stMarkdown h2 > a:not(.site-card a), 
+.stMarkdown h3 > a:not(.site-card a),
+.stMarkdown h4 > a:not(.site-card a),
+.stMarkdown h5 > a:not(.site-card a),
+.stMarkdown h6 > a:not(.site-card a) {
+    display: none !important;
+}
+
+/* Ensure site card buttons and links are visible and functional */
+.site-card a,
+.site-card button,
+.site-button {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 </style>
 """, unsafe_allow_html=True)

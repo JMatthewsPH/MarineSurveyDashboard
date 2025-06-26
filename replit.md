@@ -90,6 +90,10 @@ The Marine Conservation Philippines Platform is a comprehensive data visualizati
 - **Health Checks**: Database connection validation and automatic recovery
 
 ## Changelog
+- June 26, 2025: Enhanced PDF report format with international-friendly date (2025-JUNE-26) and descriptive text including site name and municipality
+- June 26, 2025: Fixed PDF generation error with municipality data retrieval using improved error handling
+- June 26, 2025: Updated PDF filename format to match content date format for consistency
+- June 26, 2025: Refined anchor element hiding to preserve site card navigation buttons while removing unwanted header anchors
 - June 26, 2025: Implemented true one-click PDF export - pre-generates PDFs for immediate download without additional clicks
 - June 26, 2025: Fixed unwanted anchor elements throughout dashboard using native CSS approach targeting Streamlit's header anchors
 - June 26, 2025: Updated logo to use "Logo Text Color.png" with base64 encoding for crisp display quality
