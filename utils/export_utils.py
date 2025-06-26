@@ -705,14 +705,25 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
                 trend = '−'
                 if len(biomass_data) > 1:
                     prev_value = biomass_data.sort_values('date', ascending=False).iloc[1][biomass_column]
-                    if latest_biomass[biomass_column] > prev_value:
-                        trend = '↑'
-                    elif latest_biomass[biomass_column] < prev_value:
-                        trend = '↓'
+                    current_value = latest_biomass[biomass_column]
+                    
+                    # Only compare if both values are not None
+                    if current_value is not None and prev_value is not None:
+                        if current_value > prev_value:
+                            trend = '↑'
+                        elif current_value < prev_value:
+                            trend = '↓'
+                
+                # Handle null values for display
+                biomass_value = latest_biomass[biomass_column]
+                if biomass_value is not None:
+                    biomass_display = f"{biomass_value:.1f} kg/ha"
+                else:
+                    biomass_display = "N/A"
                 
                 summary_rows.append([
                     'Commercial Fish Biomass', 
-                    f"{latest_biomass[biomass_column]:.1f} kg/ha",
+                    biomass_display,
                     latest_biomass['date'].strftime('%Y-%m-%d'),
                     trend
                 ])
@@ -735,21 +746,28 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
                 latest_data = metric_data.sort_values('date', ascending=False).iloc[0]
                 
                 # Format value based on metric type
-                if 'cover' in metric_col.lower():
-                    value_str = f"{latest_data[metric_col]:.1f}%"
-                elif 'density' in metric_col.lower() or any(term in metric.lower() for term in ['herbivore', 'carnivore', 'omnivore', 'corallivore']):
-                    value_str = f"{latest_data[metric_col]:.1f} ind/ha"
+                current_value = latest_data[metric_col]
+                if current_value is not None:
+                    if 'cover' in metric_col.lower():
+                        value_str = f"{current_value:.1f}%"
+                    elif 'density' in metric_col.lower() or any(term in metric.lower() for term in ['herbivore', 'carnivore', 'omnivore', 'corallivore']):
+                        value_str = f"{current_value:.1f} ind/ha"
+                    else:
+                        value_str = f"{current_value:.1f}"
                 else:
-                    value_str = f"{latest_data[metric_col]:.1f}"
+                    value_str = "N/A"
                 
                 # Determine trend
                 trend = '−'
                 if len(metric_data) > 1:
                     prev_value = metric_data.sort_values('date', ascending=False).iloc[1][metric_col]
-                    if latest_data[metric_col] > prev_value:
-                        trend = '↑'
-                    elif latest_data[metric_col] < prev_value:
-                        trend = '↓'
+                    
+                    # Only compare if both values are not None
+                    if current_value is not None and prev_value is not None:
+                        if current_value > prev_value:
+                            trend = '↑'
+                        elif current_value < prev_value:
+                            trend = '↓'
                 
                 # Add to table
                 display_name = data_processor.DISPLAY_NAMES.get(metric_column, metric_column.replace('_', ' ').title())
