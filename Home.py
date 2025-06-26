@@ -165,6 +165,9 @@ st.markdown("<div style='padding-top: 20px;'></div>", unsafe_allow_html=True)
 # Add favicon to the page
 add_favicon()
 
+# Add custom loading animation
+add_custom_loading_animation()
+
 # Display the logo using our branding utility
 display_logo(size="medium")
 
@@ -189,18 +192,17 @@ def get_processor():
     processor = DataProcessor(db)
     return processor
 
-with st.spinner("Loading marine conservation sites..."):
-    # Get data processor with performance logging
-    start_time = time.time()
-    data_processor = get_processor()
-    processing_time = time.time() - start_time
+# Get data processor with performance logging
+start_time = time.time()
+data_processor = get_processor()
+processing_time = time.time() - start_time
 
-    # Get all sites with performance tracking
-    start_time = time.time()
-    sites = data_processor.get_sites()
-    site_load_time = time.time() - start_time
-    if site_load_time > 0.5:  # Only log if it's slow
-        print(f"Site data loading took {site_load_time:.2f} seconds")
+# Get all sites with performance tracking
+start_time = time.time()
+sites = data_processor.get_sites()
+site_load_time = time.time() - start_time
+if site_load_time > 0.5:  # Only log if it's slow
+    print(f"Site data loading took {site_load_time:.2f} seconds")
 
 # Import from ui_helpers
 from utils.ui_helpers import skeleton_text_placeholder

@@ -212,27 +212,37 @@ with st.sidebar:
 # Main dashboard content with multi-column layout
 # Section 1: Overall Statistics
 st.header("Overall Statistics")
+overall_stats_container = st.container()
 
-with st.spinner("Loading summary statistics..."):
-    # Get summary metrics
-    summary_metrics = data_processor.get_all_sites_summary_metrics()
+# Create placeholder for loading state
+with overall_stats_container:
+    stats_placeholder = st.empty()
+    with stats_placeholder:
+        stats_loading = skeleton_text_placeholder(lines=2)
 
-col1, col2 = st.columns(2)
+# Get summary metrics
+summary_metrics = data_processor.get_all_sites_summary_metrics()
 
-with col1:
-    st.metric(
-        label="Total Sites", 
-        value=summary_metrics["site_count"]
-    )
+# Replace placeholder with actual content
+stats_placeholder.empty()
 
-with col2:
-    start = summary_metrics["start_date"]
-    end = summary_metrics["end_date"]
-    date_text = f"{start.strftime('%b %Y')} - {end.strftime('%b %Y')}" if start and end else "No data"
-    st.metric(
-        label="Data Range", 
-        value=date_text
-    )
+with overall_stats_container:
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.metric(
+            label="Total Sites", 
+            value=summary_metrics["site_count"]
+        )
+    
+    with col2:
+        start = summary_metrics["start_date"]
+        end = summary_metrics["end_date"]
+        date_text = f"{start.strftime('%b %Y')} - {end.strftime('%b %Y')}" if start and end else "No data"
+        st.metric(
+            label="Data Range", 
+            value=date_text
+        )
 
 # Section 2: Key Ecological Health Indicators
 st.header("Key Ecological Health Indicators")
