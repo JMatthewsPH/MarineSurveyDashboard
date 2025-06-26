@@ -90,8 +90,9 @@ The Marine Conservation Philippines Platform is a comprehensive data visualizati
 - **Health Checks**: Database connection validation and automatic recovery
 
 ## Changelog
+- June 26, 2025: Implemented true one-click PDF export - pre-generates PDFs for immediate download without additional clicks
+- June 26, 2025: Fixed unwanted anchor elements throughout dashboard using native CSS approach targeting Streamlit's header anchors
 - June 26, 2025: Updated logo to use "Logo Text Color.png" with base64 encoding for crisp display quality
-- June 26, 2025: Enhanced PDF export UX - auto-downloads immediately on "Export PDF" click, removed loading spinner
 - June 25, 2025: Initial setup
 
 ## User Preferences
@@ -99,3 +100,4 @@ The Marine Conservation Philippines Platform is a comprehensive data visualizati
 Preferred communication style: Simple, everyday language.
 Logo preferences: Use high-quality lossless display with base64 encoding to avoid compression
 UX preferences: Streamline user interactions - avoid unnecessary clicks (e.g., auto-download PDFs)
+Development approach: Prefer native Streamlit solutions over complex JavaScript when possible

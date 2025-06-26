@@ -440,9 +440,14 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
     elements.append(Paragraph(f"Marine Conservation Report: {site_name}", title_style))
     elements.append(Spacer(1, 0.25*inch))
     
-    # Add date and description
-    elements.append(Paragraph(f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M')}", styles['Normal']))
-    elements.append(Paragraph("This report contains selected metrics for the specified marine conservation site.", styles['Normal']))
+    # Get site information to include municipality
+    sites_df = data_processor.get_sites()
+    site_info = sites_df[sites_df['name'] == site_name].iloc[0] if not sites_df[sites_df['name'] == site_name].empty else None
+    municipality_name = site_info['municipality'] if site_info is not None else "Unknown Municipality"
+    
+    # Add date and description with improved format
+    elements.append(Paragraph(f"Generated on: {datetime.now().strftime('%Y-%B-%d')}", styles['Normal']))
+    elements.append(Paragraph(f"The below report contains all available graphs for {site_name}, {municipality_name}.", styles['Normal']))
     elements.append(Spacer(1, 0.5*inch))
     
     # Create temp directory for images
