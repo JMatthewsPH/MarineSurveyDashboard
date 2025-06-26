@@ -293,7 +293,7 @@ st.header("Site Comparison Matrix")
 matrix_container = st.container()
 
 with matrix_container:
-    # Create placeholder for heatmap
+    # Create placeholder for comparison chart
     matrix_placeholder = st.empty()
     with matrix_placeholder:
         st.text("Loading site comparison matrix...")
@@ -306,15 +306,41 @@ with matrix_container:
         if municipality_filter:
             matrix_data = matrix_data[matrix_data['municipality'] == municipality_filter]
         
-        # Create heatmap
-        fig, config = graph_generator.create_site_comparison_heatmap(
-            matrix_data=matrix_data,
-            metric_column=selected_metric,
-            title=f"Site Comparison: {comparison_metric}"
+        # Create both heatmap and bar chart options
+        chart_type = st.radio(
+            "Choose visualization:",
+            ["Bar Chart", "Heatmap"],
+            horizontal=True,
+            key="comparison_chart_type"
         )
         
-        # Display heatmap
         matrix_placeholder.empty()
+        
+        if chart_type == "Bar Chart" and selected_metric == "commercial_biomass":
+            # Create grouped bar chart with color coding for commercial biomass
+            fig, config = graph_generator.create_municipality_grouped_bar_chart(
+                matrix_data=matrix_data,
+                metric_column=selected_metric,
+                title=f"Site Comparison: {comparison_metric}",
+                y_axis_label="Commercial Biomass (kg/ha)"
+            )
+        elif chart_type == "Bar Chart":
+            # Create regular bar chart for other metrics
+            fig, config = graph_generator.create_municipality_grouped_bar_chart(
+                matrix_data=matrix_data,
+                metric_column=selected_metric,
+                title=f"Site Comparison: {comparison_metric}",
+                y_axis_label=comparison_metric
+            )
+        else:
+            # Create heatmap
+            fig, config = graph_generator.create_site_comparison_heatmap(
+                matrix_data=matrix_data,
+                metric_column=selected_metric,
+                title=f"Site Comparison: {comparison_metric}"
+            )
+        
+        # Display the selected chart
         matrix_placeholder.plotly_chart(fig, use_container_width=True, config=config)
     else:
         matrix_placeholder.warning("No comparison data available for the selected filters.")
