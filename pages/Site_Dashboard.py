@@ -300,8 +300,8 @@ with st.sidebar:
                 include_biomass=True        # Always include biomass
             )
             
-            # Create timestamp for filename
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            # Create timestamp for filename using same format as PDF content
+            timestamp = datetime.now().strftime("%Y-%B-%d")
             filename = f"{selected_site}_report_{timestamp}.pdf"
             
             # Single download button - generates and downloads in one click
