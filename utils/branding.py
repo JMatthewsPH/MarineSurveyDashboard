@@ -29,10 +29,27 @@ def display_logo(size="medium"):
         st.error("Logo not found in assets folder")
         return
         
-    # Create columns to center and resize the logo
-    cols = st.columns(config["columns"])
-    with cols[1]:
-        st.image(logo_path, width=config["width"])
+    # Use base64 encoding to preserve image quality and avoid Streamlit compression
+    try:
+        logo_base64 = get_base64_encoded_image(logo_path)
+        
+        # Create columns to center the logo
+        cols = st.columns(config["columns"])
+        with cols[1]:
+            # Use HTML img tag with base64 data to preserve quality
+            logo_html = f"""
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <img src="data:image/png;base64,{logo_base64}" 
+                     style="width: {config['width']}px; height: auto; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"
+                     alt="Marine Conservation Philippines Logo">
+            </div>
+            """
+            st.markdown(logo_html, unsafe_allow_html=True)
+    except Exception as e:
+        # Fallback to regular st.image if base64 fails
+        cols = st.columns(config["columns"])
+        with cols[1]:
+            st.image(logo_path, width=config["width"])
 
 def add_favicon():
     """
