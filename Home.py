@@ -189,17 +189,18 @@ def get_processor():
     processor = DataProcessor(db)
     return processor
 
-# Get data processor with performance logging
-start_time = time.time()
-data_processor = get_processor()
-processing_time = time.time() - start_time
+with st.spinner("Loading marine conservation sites..."):
+    # Get data processor with performance logging
+    start_time = time.time()
+    data_processor = get_processor()
+    processing_time = time.time() - start_time
 
-# Get all sites with performance tracking
-start_time = time.time()
-sites = data_processor.get_sites()
-site_load_time = time.time() - start_time
-if site_load_time > 0.5:  # Only log if it's slow
-    print(f"Site data loading took {site_load_time:.2f} seconds")
+    # Get all sites with performance tracking
+    start_time = time.time()
+    sites = data_processor.get_sites()
+    site_load_time = time.time() - start_time
+    if site_load_time > 0.5:  # Only log if it's slow
+        print(f"Site data loading took {site_load_time:.2f} seconds")
 
 # Import from ui_helpers
 from utils.ui_helpers import skeleton_text_placeholder

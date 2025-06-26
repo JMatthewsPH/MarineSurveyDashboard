@@ -901,84 +901,59 @@ if selected_site:
             # Add spacing before first chart
             st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
 
-            # Create a placeholder for the biomass chart with loading indicator
-            biomass_chart_container = st.container()
-            with biomass_chart_container:
-                # Show title for chart
-                st.subheader(f"Commercial Fish Biomass - {selected_site}")
+            # Commercial Fish Biomass Chart
+            st.subheader(f"Commercial Fish Biomass - {selected_site}")
+            
+            with st.spinner("Loading biomass data..."):
+                # Get biomass data and comparison
+                biomass_data = data_processor.get_biomass_data(selected_site)
+                biomass_comparison_data = None
+                biomass_comparison_labels = None
                 
-                # Create a container for the skeleton chart that we can replace later
-                biomass_skeleton_container = st.empty()
-                
-                # Display a skeleton chart while data is loading
-                with biomass_skeleton_container:
-                    # Create a loading placeholder for the biomass chart
-                    create_loading_placeholder(
-                        st, 
-                        message="Loading biomass data...", 
-                        height=400
-                    )
+                if biomass_comparison == "Compare with Sites" and biomass_compare_sites:
+                    # Use batch loading for better performance
+                    site_data_dict = data_processor.batch_get_biomass_data(biomass_compare_sites, start_date='2017-01-01')
                     
-                    st.plotly_chart(
-                        skeleton_chart(height=400, chart_type="line"),
-                        use_container_width=True,
-                        key='biomass_skeleton'
+                    # Convert to the format expected by the graph generator
+                    comparison_data_list = []
+                    actual_comparison_labels = []
+                    
+                    for site_name in biomass_compare_sites:
+                        if site_name in site_data_dict and not site_data_dict[site_name].empty:
+                            comparison_data_list.append(site_data_dict[site_name])
+                            # Use custom labels if provided, otherwise use site name
+                            if biomass_compare_labels and len(biomass_compare_labels) > len(actual_comparison_labels):
+                                actual_comparison_labels.append(biomass_compare_labels[len(actual_comparison_labels)])
+                            else:
+                                actual_comparison_labels.append(site_name)
+                    
+                    if comparison_data_list:
+                        biomass_comparison_data = comparison_data_list
+                        biomass_comparison_labels = actual_comparison_labels
+                            
+                elif biomass_comparison == "Compare with Average":
+                    municipality = site_municipality if biomass_compare_scope == "Municipality Average" else None
+                    avg_data = data_processor.get_average_biomass_data(
+                        exclude_site=selected_site,
+                        municipality=municipality
                     )
-            
-            # Get biomass data and comparison
-            biomass_data = data_processor.get_biomass_data(selected_site)
-            biomass_comparison_data = None
-            biomass_comparison_labels = None
-            
-            if biomass_comparison == "Compare with Sites" and biomass_compare_sites:
-                # Use batch loading for better performance
-                site_data_dict = data_processor.batch_get_biomass_data(biomass_compare_sites, start_date='2017-01-01')
-                
-                # Convert to the format expected by the graph generator
-                comparison_data_list = []
-                actual_comparison_labels = []
-                
-                for site_name in biomass_compare_sites:
-                    if site_name in site_data_dict and not site_data_dict[site_name].empty:
-                        comparison_data_list.append(site_data_dict[site_name])
-                        # Use custom labels if provided, otherwise use site name
-                        if biomass_compare_labels and len(biomass_compare_labels) > len(actual_comparison_labels):
-                            actual_comparison_labels.append(biomass_compare_labels[len(actual_comparison_labels)])
-                        else:
-                            actual_comparison_labels.append(site_name)
-                
-                if comparison_data_list:
-                    biomass_comparison_data = comparison_data_list
-                    biomass_comparison_labels = actual_comparison_labels
+                    if not avg_data.empty:
+                        biomass_comparison_data = avg_data
+                        label = f"{site_municipality} Average" if biomass_compare_scope == "Municipality Average" else "All Sites Average"
+                        biomass_comparison_labels = [label]
                         
-            elif biomass_comparison == "Compare with Average":
-                municipality = site_municipality if biomass_compare_scope == "Municipality Average" else None
-                avg_data = data_processor.get_average_biomass_data(
-                    exclude_site=selected_site,
-                    municipality=municipality
+                # Create the time series chart with date range filtering and confidence interval
+                biomass_fig, biomass_config = graph_generator.create_time_series(
+                    biomass_data,
+                    f"Commercial Fish Biomass - {selected_site}",
+                    "Biomass (kg/ha)",
+                    comparison_data=biomass_comparison_data,
+                    comparison_labels=biomass_comparison_labels,
+                    date_range=date_range,
+                    show_confidence_interval=show_confidence_interval  # Use the checkbox value
                 )
-                if not avg_data.empty:
-                    biomass_comparison_data = avg_data
-                    label = f"{site_municipality} Average" if biomass_compare_scope == "Municipality Average" else "All Sites Average"
-                    biomass_comparison_labels = [label]
-                    
-            # Create the time series chart with date range filtering and confidence interval
-            biomass_fig, biomass_config = graph_generator.create_time_series(
-                biomass_data,
-                f"Commercial Fish Biomass - {selected_site}",
-                "Biomass (kg/ha)",
-                comparison_data=biomass_comparison_data,
-                comparison_labels=biomass_comparison_labels,
-                date_range=date_range,
-                show_confidence_interval=show_confidence_interval  # Use the checkbox value
-            )
-            
-            # Replace the placeholder with the actual chart
-            # Clear the skeleton and display the actual chart
-            biomass_skeleton_container.empty()
-            
-            with biomass_chart_container:
-                # Display the actual chart
+                
+                # Display the chart
                 st.plotly_chart(
                     biomass_fig, 
                     use_container_width=True, 
