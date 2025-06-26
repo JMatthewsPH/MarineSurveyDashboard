@@ -90,6 +90,7 @@ The Marine Conservation Philippines Platform is a comprehensive data visualizati
 - **Health Checks**: Database connection validation and automatic recovery
 
 ## Changelog
+- June 26, 2025: Fixed PDF logo quality issues with improved sizing (4" x 1.5") and proper aspect ratio
 - June 26, 2025: Added branded logo ("Logo Text Color.png") to all PDF reports for professional appearance
 - June 26, 2025: Enhanced PDF report format with international-friendly date (2025-JUNE-26) and descriptive text including site name and municipality
 - June 26, 2025: Fixed PDF generation error with municipality data retrieval using improved error handling
