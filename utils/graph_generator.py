@@ -1128,3 +1128,172 @@ class GraphGenerator:
         }
         
         return fig, config
+    def create_municipality_grouped_bar_chart(self, matrix_data, metric_column, title=None, y_axis_label=None):
+        """
+        Create a bar chart with sites grouped by municipality, using red-yellow-green color coding
+        for health indicators, starting Y-axis from 0
+        
+        Args:
+            matrix_data: DataFrame with site, municipality, and metric columns
+            metric_column: Column name to visualize
+            title: Optional title for the chart
+            y_axis_label: Label for Y-axis including units
+        """
+        try:
+            import plotly.express as px
+            import plotly.graph_objects as go
+            import numpy as np
+            
+            # Clean the data
+            clean_data = matrix_data.copy()
+            clean_data = clean_data.dropna(subset=[metric_column])
+            
+            if clean_data.empty:
+                # Return empty chart if no data
+                fig = go.Figure()
+                fig.add_annotation(
+                    text="No data available for this metric",
+                    xref="paper", yref="paper",
+                    x=0.5, y=0.5,
+                    showarrow=False,
+                    font=dict(size=16, color="gray")
+                )
+                fig.update_layout(
+                    title=title or "No Data Available",
+                    height=400,
+                    template="plotly_white"
+                )
+                config = {'displaylogo': False, 'responsive': True}
+                return fig, config
+            
+            # Sort by municipality and then by site name for consistent ordering
+            clean_data = clean_data.sort_values(['municipality', 'site'])
+            
+            # Create site labels with municipality grouping for X-axis
+            clean_data['site_label'] = clean_data['site']
+            
+            # Determine color mapping based on metric values
+            min_val = clean_data[metric_column].min()
+            max_val = clean_data[metric_column].max()
+            
+            # Create color scale: red (low) -> yellow (medium) -> green (high)
+            # For biomass and positive indicators, high values are green
+            # For negative indicators like bleaching, we'd reverse this
+            if 'biomass' in metric_column.lower() or 'coral' in metric_column.lower():
+                # Higher values are better (green)
+                colorscale = 'RdYlGn'  # Red-Yellow-Green
+            elif 'bleaching' in metric_column.lower() or 'algae' in metric_column.lower():
+                # Lower values are better (reverse scale)
+                colorscale = 'RdYlGn_r'  # Green-Yellow-Red (reversed)
+            else:
+                # Default to red-yellow-green for most metrics
+                colorscale = 'RdYlGn'
+            
+            # Create the bar chart with color mapping
+            fig = px.bar(
+                clean_data,
+                x='site_label',
+                y=metric_column,
+                color=metric_column,
+                color_continuous_scale=colorscale,
+                title=title or f"Site Comparison: {metric_column.replace('_', ' ').title()}",
+                labels={
+                    'site_label': 'Site',
+                    metric_column: y_axis_label or metric_column.replace('_', ' ').title()
+                },
+                hover_data=['municipality']
+            )
+            
+            # Customize the layout
+            fig.update_layout(
+                height=500,
+                template="plotly_white",
+                margin=dict(l=60, r=60, t=80, b=120),
+                xaxis=dict(
+                    title="Sites (Grouped by Municipality)",
+                    tickangle=-45,
+                    tickmode='linear'
+                ),
+                yaxis=dict(
+                    title=y_axis_label or metric_column.replace('_', ' ').title(),
+                    range=[0, max_val * 1.1],  # Start from 0, add 10% padding at top
+                    gridcolor='lightgray'
+                ),
+                showlegend=False  # Hide color legend to save space
+            )
+            
+            # Add municipality group separators
+            municipalities = clean_data['municipality'].unique()
+            x_pos = 0
+            for i, municipality in enumerate(municipalities):
+                muni_data = clean_data[clean_data['municipality'] == municipality]
+                sites_in_muni = len(muni_data)
+                
+                # Add vertical line to separate municipalities (except before first)
+                if i > 0:
+                    fig.add_vline(
+                        x=x_pos - 0.5,
+                        line_width=2,
+                        line_dash="dash",
+                        line_color="gray",
+                        opacity=0.5
+                    )
+                
+                # Add municipality label
+                fig.add_annotation(
+                    x=x_pos + (sites_in_muni - 1) / 2,
+                    y=max_val * 1.05,
+                    text=f"<b>{municipality}</b>",
+                    showarrow=False,
+                    font=dict(size=12, color="darkblue"),
+                    yref="y"
+                )
+                
+                x_pos += sites_in_muni
+            
+            # Enhanced hover template
+            if 'biomass' in metric_column.lower():
+                hover_template = "<b>%{x}</b><br>Municipality: %{customdata[0]}<br>Biomass: %{y:.1f} kg/ha<extra></extra>"
+            elif 'coral' in metric_column.lower() or 'algae' in metric_column.lower():
+                hover_template = "<b>%{x}</b><br>Municipality: %{customdata[0]}<br>Cover: %{y:.1f}%<extra></extra>"
+            elif 'density' in metric_column.lower():
+                hover_template = "<b>%{x}</b><br>Municipality: %{customdata[0]}<br>Density: %{y:.1f} ind/ha<extra></extra>"
+            else:
+                hover_template = "<b>%{x}</b><br>Municipality: %{customdata[0]}<br>Value: %{y:.1f}<extra></extra>"
+            
+            fig.update_traces(hovertemplate=hover_template)
+            
+            # Configure download settings
+            config = {
+                'toImageButtonOptions': {
+                    'format': 'png',
+                    'filename': generate_filename(title or f"Site_Comparison_{metric_column}"),
+                    'height': 800,
+                    'width': 1200,
+                    'scale': 2
+                },
+                'displaylogo': False,
+                'responsive': True,
+                'displayModeBar': True,
+                'modeBarButtons': [['zoomIn2d', 'zoomOut2d', 'resetScale2d', 'toImage']],
+                'scrollZoom': False,
+                'doubleClick': 'reset',
+                'showTips': True,
+                'displayModeBar': 'hover'
+            }
+            
+            return fig, config
+            
+        except Exception as e:
+            print(f"Error creating municipality grouped bar chart: {str(e)}")
+            # Return a simple error chart
+            fig = go.Figure()
+            fig.add_annotation(
+                text=f"Error creating chart: {str(e)}",
+                xref="paper", yref="paper",
+                x=0.5, y=0.5,
+                showarrow=False,
+                font=dict(size=14, color="red")
+            )
+            config = {'displaylogo': False, 'responsive': True}
+            return fig, config

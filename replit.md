@@ -90,6 +90,7 @@ The Marine Conservation Philippines Platform is a comprehensive data visualizati
 - **Health Checks**: Database connection validation and automatic recovery
 
 ## Changelog
+- June 26, 2025: Added municipality-grouped bar chart for site comparison with red-yellow-green health indicators and Y-axis starting from 0
 - June 26, 2025: Restored CSS-based AnimRun.gif animation after `st.spinner()` approach failed to show custom animation
 - June 26, 2025: **ROLLBACK POINT** - CSS-based AnimRun.gif animation working for post-startup loading states
 - June 26, 2025: Implemented custom loading animation using AnimRun.gif to replace Streamlit's default spinner with enhanced CSS targeting
