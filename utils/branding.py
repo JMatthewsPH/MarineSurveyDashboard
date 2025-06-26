@@ -4,6 +4,7 @@ Branding utilities for consistent logo and branding across the application
 
 import streamlit as st
 import os
+import base64
 
 def display_logo(size="medium"):
     """
@@ -12,41 +13,17 @@ def display_logo(size="medium"):
     Args:
         size: Size of the logo - "small", "medium", or "large"
     """
+    logo_path = "assets/branding/Logo Text Color.png"
+    
     # Size configurations
-    sizes = {
-        "small": {"width": 150, "columns": [2, 1, 2]},
-        "medium": {"width": 200, "columns": [1.5, 1, 1.5]},
-        "large": {"width": 300, "columns": [1, 2, 1]}
+    size_configs = {
+        "small": {"width": 200, "columns": [1, 2, 1]},
+        "medium": {"width": 300, "columns": [1, 3, 1]},
+        "large": {"width": 400, "columns": [1, 4, 1]}
     }
     
-    config = sizes.get(size, sizes["medium"])
-    
-    # Get logo path - using the new Logo Text Color.png file
-    logo_path = os.path.join("assets", "branding", "Logo Text Color.png")
-    
-    # Check if the logo exists
-    if not os.path.exists(logo_path):
-        st.error("Logo not found in assets folder")
-        return
-        
-    # Use base64 encoding to preserve image quality and avoid Streamlit compression
-    try:
-        logo_base64 = get_base64_encoded_image(logo_path)
-        
-        # Create columns to center the logo
-        cols = st.columns(config["columns"])
-        with cols[1]:
-            # Use HTML img tag with base64 data to preserve quality
-            logo_html = f"""
-            <div style="display: flex; justify-content: center; align-items: center;">
-                <img src="data:image/png;base64,{logo_base64}" 
-                     style="width: {config['width']}px; height: auto; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"
-                     alt="Marine Conservation Philippines Logo">
-            </div>
-            """
-            st.markdown(logo_html, unsafe_allow_html=True)
-    except Exception as e:
-        # Fallback to regular st.image if base64 fails
+    if os.path.exists(logo_path):
+        config = size_configs.get(size, size_configs["medium"])
         cols = st.columns(config["columns"])
         with cols[1]:
             st.image(logo_path, width=config["width"])
@@ -78,121 +55,17 @@ def add_favicon():
 
 def add_custom_loading_animation():
     """
-    Replace Streamlit's default loading animation with custom AnimRun.gif
+    Placeholder function - now using st.spinner() with custom text instead of CSS override
     """
-    try:
-        gif_path = "assets/branding/AnimRun.gif"
-        if os.path.exists(gif_path):
-            gif_b64 = get_base64_encoded_image(gif_path)
-            st.markdown(f'''
-                <style>
-                /* Completely hide and override all Streamlit loading elements */
-                .stSpinner,
-                .stSpinner *,
-                div[data-testid="stStatusWidget"] svg,
-                div[data-testid="stStatusWidget"] [class*="spinner"],
-                .element-container .stSpinner,
-                .stApp svg[class*="spinner"],
-                .stApp svg[class*="loading"],
-                .stApp div[class*="spinner"] svg {{
-                    display: none !important;
-                    visibility: hidden !important;
-                    opacity: 0 !important;
-                    width: 0 !important;
-                    height: 0 !important;
-                }}
-                
-                /* Replace ALL spinner containers with custom GIF */
-                .stSpinner::before,
-                .element-container .stSpinner::before {{
-                    content: "" !important;
-                    display: block !important;
-                    width: 50px !important;
-                    height: 50px !important;
-                    background-image: url("data:image/gif;base64,{gif_b64}") !important;
-                    background-repeat: no-repeat !important;
-                    background-position: center !important;
-                    background-size: contain !important;
-                    margin: 0 auto !important;
-                    position: absolute !important;
-                    top: 50% !important;
-                    left: 50% !important;
-                    transform: translate(-50%, -50%) !important;
-                    z-index: 9999 !important;
-                }}
-                
-                .stSpinner {{
-                    position: relative !important;
-                    width: 50px !important;
-                    height: 50px !important;
-                    margin: 0 auto !important;
-                }}
-                
-                /* Status widget complete override */
-                div[data-testid="stStatusWidget"] {{
-                    background-image: url("data:image/gif;base64,{gif_b64}") !important;
-                    background-repeat: no-repeat !important;
-                    background-position: center !important;
-                    background-size: 20px 20px !important;
-                    width: 30px !important;
-                    height: 30px !important;
-                    text-indent: -9999px !important;
-                    color: transparent !important;
-                    overflow: hidden !important;
-                }}
-                
-                div[data-testid="stStatusWidget"] * {{
-                    display: none !important;
-                }}
-                </style>
-                
-                <script>
-                // JavaScript to aggressively replace any remaining spinners
-                function replaceSpinners() {{
-                    const gifSrc = "data:image/gif;base64,{gif_b64}";
-                    
-                    // Find all spinner elements
-                    const spinners = document.querySelectorAll('.stSpinner, [class*="spinner"], [data-testid="stStatusWidget"]');
-                    
-                    spinners.forEach(spinner => {{
-                        // Hide all children
-                        Array.from(spinner.children).forEach(child => {{
-                            child.style.display = 'none';
-                        }});
-                        
-                        // Replace with custom GIF
-                        spinner.innerHTML = `<img src="${{gifSrc}}" style="width: 30px; height: 30px; display: block; margin: 0 auto;">`;
-                    }});
-                    
-                    // Also target SVG elements specifically
-                    const svgs = document.querySelectorAll('svg[class*="spinner"], svg[class*="loading"]');
-                    svgs.forEach(svg => {{
-                        const img = document.createElement('img');
-                        img.src = gifSrc;
-                        img.style.width = '30px';
-                        img.style.height = '30px';
-                        svg.parentNode.replaceChild(img, svg);
-                    }});
-                }}
-                
-                // Run immediately and set up observers
-                replaceSpinners();
-                
-                // Watch for new elements
-                const observer = new MutationObserver(replaceSpinners);
-                observer.observe(document.body, {{ childList: true, subtree: true }});
-                
-                // Also run periodically
-                setInterval(replaceSpinners, 1000);
-                </script>
-            ''', unsafe_allow_html=True)
-    except Exception as e:
-        print(f"Error adding custom loading animation: {e}")
+    pass
 
 def get_base64_encoded_image(image_path):
     """
     Get the base64 encoded image
     """
-    import base64
-    with open(image_path, "rb") as img_file:
-        return base64.b64encode(img_file.read()).decode()
+    try:
+        with open(image_path, "rb") as img_file:
+            return base64.b64encode(img_file.read()).decode()
+    except Exception as e:
+        print(f"Error encoding image {image_path}: {e}")
+        return ""
