@@ -37,10 +37,28 @@ body {
 from utils.ui_helpers import load_css
 st.markdown(load_css(), unsafe_allow_html=True)
 
-# Add JavaScript to ensure the Home link is visible in navigation
+# Add JavaScript to hide anchor elements and fix navigation
 fix_nav_js = """
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+  // Function to remove unwanted anchor elements
+  function removeAnchors() {
+    // Remove all anchor elements that start with #
+    const anchors = document.querySelectorAll('a[href^="#"]');
+    anchors.forEach(anchor => {
+      anchor.style.display = 'none';
+      anchor.style.visibility = 'hidden';
+      anchor.remove();
+    });
+    
+    // Remove empty anchor elements
+    const emptyAnchors = document.querySelectorAll('a:empty, a[href="#"]');
+    emptyAnchors.forEach(anchor => {
+      anchor.remove();
+    });
+  }
+  
+  // Function to fix navigation
   function fixNavigation() {
     const navElement = document.querySelector('[data-testid="stSidebarNav"]');
     if (navElement) {
