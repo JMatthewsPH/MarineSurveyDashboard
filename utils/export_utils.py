@@ -346,6 +346,16 @@ def generate_single_chart_pdf(fig, title, site_name):
     doc = SimpleDocTemplate(buffer, pagesize=A4)
     elements = []
     
+    # Add logo at the top
+    try:
+        logo_path = "assets/branding/Logo Text Color.png"
+        if os.path.exists(logo_path):
+            logo = Image(logo_path, width=3*inch, height=1*inch)  # Adjust size as needed
+            elements.append(logo)
+            elements.append(Spacer(1, 0.3*inch))
+    except Exception as e:
+        print(f"Error adding logo to PDF: {e}")
+    
     # Add title
     styles = getSampleStyleSheet()
     title_style = styles['Heading1']
@@ -355,7 +365,7 @@ def generate_single_chart_pdf(fig, title, site_name):
     # Add site name and date
     subtitle_style = styles['Heading2']
     elements.append(Paragraph(f"Site: {site_name}", subtitle_style))
-    elements.append(Paragraph(f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M')}", styles['Normal']))
+    elements.append(Paragraph(f"Generated on: {datetime.now().strftime('%Y-%B-%d')}", styles['Normal']))
     elements.append(Spacer(1, 0.25*inch))
     
     # Add chart title
@@ -433,6 +443,16 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
     # Create PDF document
     doc = SimpleDocTemplate(buffer, pagesize=A4)
     elements = []
+    
+    # Add logo at the top
+    try:
+        logo_path = "assets/branding/Logo Text Color.png"
+        if os.path.exists(logo_path):
+            logo = Image(logo_path, width=3*inch, height=1*inch)  # Adjust size as needed
+            elements.append(logo)
+            elements.append(Spacer(1, 0.3*inch))
+    except Exception as e:
+        print(f"Error adding logo to PDF: {e}")
     
     # Add title
     styles = getSampleStyleSheet()
