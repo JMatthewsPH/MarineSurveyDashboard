@@ -293,33 +293,30 @@ with st.sidebar:
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                 filename = f"{selected_site}_report_{timestamp}.pdf"
                 
-                # Convert PDF bytes to base64 for auto-download
-                import base64
-                b64 = base64.b64encode(pdf_bytes).decode()
+                # Store PDF data in session state to trigger download
+                st.session_state.pdf_data = pdf_bytes
+                st.session_state.pdf_filename = filename
+                st.session_state.trigger_download = True
                 
-                # Create auto-download HTML with JavaScript
-                download_html = f"""
-                <script>
-                function downloadPDF() {{
-                    const link = document.createElement('a');
-                    link.href = 'data:application/pdf;base64,{b64}';
-                    link.download = '{filename}';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                }}
-                // Auto-start download immediately
-                downloadPDF();
-                </script>
-                """
-                
-                # Execute the auto-download
-                st.markdown(download_html, unsafe_allow_html=True)
-                
-                st.success(f"PDF report for {selected_site} downloaded successfully!")
+                st.success(f"PDF report for {selected_site} generated successfully!")
+                st.rerun()  # Rerun to trigger the download
             except Exception as e:
                 st.error(f"Error generating PDF report: {str(e)}")
                 st.info("Please check console for error details.")
+        
+        # Auto-download logic - triggers after PDF generation
+        if st.session_state.get('trigger_download', False):
+            st.download_button(
+                label="⬇️ Your PDF is ready - Click to download",
+                data=st.session_state.pdf_data,
+                file_name=st.session_state.pdf_filename,
+                mime="application/pdf",
+                use_container_width=True,
+                key="auto_download_pdf"
+            )
+            
+            # Clear the trigger after showing download button
+            st.session_state.trigger_download = False
     
 
 # Display site content
