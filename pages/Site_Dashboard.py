@@ -265,63 +265,42 @@ with st.sidebar:
     # Extract actual site name (remove leading spaces if it's a site)
     selected_site = selected_option.strip() if selected_option.startswith("  ") else None
     
-    # PDF Report Export Section - moved below site selection as requested
+    # PDF Report Export Section with single-click download
     if selected_site:
         st.markdown("---")
-        # PDF export button with updated text
-        pdf_report_button = st.button("Export PDF Report")
         
-        # Descriptive text below the button
-        st.markdown("Generate a comprehensive PDF report with all charts for this site")
-        
-        # Handle PDF generation when button is clicked
-        if pdf_report_button:
-            try:
-                # Make sure available_metrics is defined here
-                available_metrics = ["hard_coral", "fleshy_algae", "herbivore", "carnivore",
-                                  "omnivore", "corallivore", "bleaching", "rubble"]
-                
-                # Generate PDF bytes with all metrics and biomass included
-                pdf_bytes = generate_site_report_pdf(
-                    selected_site, 
-                    data_processor, 
-                    metrics=available_metrics,  # Include all metrics
-                    include_biomass=True        # Always include biomass
-                )
-                
-                # Create timestamp for filename
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                filename = f"{selected_site}_report_{timestamp}.pdf"
-                
-                # Convert to base64 for direct download
-                import base64
-                b64 = base64.b64encode(pdf_bytes).decode()
-                
-                # Create invisible download link that auto-clicks
-                download_html = f"""
-                <div id="download-container" style="display: none;">
-                    <a id="download-link" href="data:application/pdf;base64,{b64}" download="{filename}">Download</a>
-                </div>
-                <script>
-                    // Wait for DOM to be ready, then trigger download
-                    setTimeout(function() {{
-                        const link = document.getElementById('download-link');
-                        if (link) {{
-                            link.click();
-                            console.log('PDF download triggered');
-                        }}
-                    }}, 100);
-                </script>
-                """
-                
-                # Execute the auto-download
-                st.markdown(download_html, unsafe_allow_html=True)
-                
-                st.success(f"PDF report for {selected_site} is downloading...")
-                
-            except Exception as e:
-                st.error(f"Error generating PDF report: {str(e)}")
-                st.info("Please check console for error details.")
+        # Generate PDF and create download immediately
+        try:
+            # Make sure available_metrics is defined here
+            available_metrics = ["hard_coral", "fleshy_algae", "herbivore", "carnivore",
+                              "omnivore", "corallivore", "bleaching", "rubble"]
+            
+            # Generate PDF bytes with all metrics and biomass included
+            pdf_bytes = generate_site_report_pdf(
+                selected_site, 
+                data_processor, 
+                metrics=available_metrics,  # Include all metrics
+                include_biomass=True        # Always include biomass
+            )
+            
+            # Create timestamp for filename
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"{selected_site}_report_{timestamp}.pdf"
+            
+            # Single download button - generates and downloads in one click
+            st.download_button(
+                label="Export PDF Report",
+                data=pdf_bytes,
+                file_name=filename,
+                mime="application/pdf",
+                key=f"export_pdf_{selected_site}",
+                use_container_width=True,
+                help="Click to generate and download comprehensive PDF report with all charts"
+            )
+            
+        except Exception as e:
+            st.error(f"Error preparing PDF report: {str(e)}")
+            st.info("Please check console for error details.")
     
 
 # Display site content
