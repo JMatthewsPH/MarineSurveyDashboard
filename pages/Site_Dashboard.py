@@ -277,31 +277,48 @@ with st.sidebar:
         # Handle PDF generation when button is clicked
         if pdf_report_button:
             try:
-                # Make sure available_metrics is defined here
-                available_metrics = ["hard_coral", "fleshy_algae", "herbivore", "carnivore",
-                                  "omnivore", "corallivore", "bleaching", "rubble"]
-                
-                # Generate PDF bytes with all metrics and biomass included
-                pdf_bytes = generate_site_report_pdf(
-                    selected_site, 
-                    data_processor, 
-                    metrics=available_metrics,  # Include all metrics
-                    include_biomass=True        # Always include biomass
-                )
-                
-                # Create timestamp for filename
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                filename = f"{selected_site}_report_{timestamp}.pdf"
-                
-                # Show download button
-                st.download_button(
-                    label="Download PDF Report",
-                    data=pdf_bytes,
-                    file_name=filename,
-                    mime="application/pdf",
-                )
-                
-                st.success(f"PDF report for {selected_site} generated successfully!")
+                # Show loading spinner while generating
+                with st.spinner("Generating PDF report..."):
+                    # Make sure available_metrics is defined here
+                    available_metrics = ["hard_coral", "fleshy_algae", "herbivore", "carnivore",
+                                      "omnivore", "corallivore", "bleaching", "rubble"]
+                    
+                    # Generate PDF bytes with all metrics and biomass included
+                    pdf_bytes = generate_site_report_pdf(
+                        selected_site, 
+                        data_processor, 
+                        metrics=available_metrics,  # Include all metrics
+                        include_biomass=True        # Always include biomass
+                    )
+                    
+                    # Create timestamp for filename
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    filename = f"{selected_site}_report_{timestamp}.pdf"
+                    
+                    # Convert PDF bytes to base64 for auto-download
+                    import base64
+                    b64 = base64.b64encode(pdf_bytes).decode()
+                    
+                    # Create auto-download HTML with JavaScript
+                    download_html = f"""
+                    <script>
+                    function downloadPDF() {{
+                        const link = document.createElement('a');
+                        link.href = 'data:application/pdf;base64,{b64}';
+                        link.download = '{filename}';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    }}
+                    // Auto-start download immediately
+                    downloadPDF();
+                    </script>
+                    """
+                    
+                    # Execute the auto-download
+                    st.markdown(download_html, unsafe_allow_html=True)
+                    
+                st.success(f"PDF report for {selected_site} downloaded successfully!")
             except Exception as e:
                 st.error(f"Error generating PDF report: {str(e)}")
                 st.info("Please check console for error details.")
