@@ -71,7 +71,7 @@ from utils.data_processor import DataProcessor
 from utils.graph_generator import GraphGenerator
 from utils.translations import TRANSLATIONS
 from utils.database import get_db
-from utils.branding import display_logo, add_favicon
+from utils.branding import display_logo, add_favicon, add_custom_loading_animation
 from utils.export_utils import generate_site_report_pdf
 from utils.ui_helpers import (
     loading_spinner, 
@@ -106,6 +106,9 @@ body {
 # Then apply the main CSS styles
 st.markdown(load_css(), unsafe_allow_html=True)
 
+# Apply branding including custom loading animation
+add_favicon()
+add_custom_loading_animation()
 
 # Initialize language in session state if not present
 if 'language' not in st.session_state:

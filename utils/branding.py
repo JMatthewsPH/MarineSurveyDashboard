@@ -76,6 +76,53 @@ def add_favicon():
         """.format(get_base64_encoded_image(favicon_icon_path))
         st.markdown(favicon_html, unsafe_allow_html=True)
 
+def add_custom_loading_animation():
+    """
+    Replace Streamlit's default loading animation with custom AnimRun.gif
+    """
+    try:
+        gif_path = "assets/branding/AnimRun.gif"
+        if os.path.exists(gif_path):
+            gif_b64 = get_base64_encoded_image(gif_path)
+            st.markdown(f'''
+                <style>
+                /* Hide default Streamlit spinner */
+                .stSpinner > div > div {{
+                    display: none !important;
+                }}
+                
+                /* Replace with custom GIF animation */
+                .stSpinner > div {{
+                    background-image: url("data:image/gif;base64,{gif_b64}") !important;
+                    background-repeat: no-repeat !important;
+                    background-position: center !important;
+                    background-size: contain !important;
+                    width: 50px !important;
+                    height: 50px !important;
+                    margin: 0 auto !important;
+                }}
+                
+                /* Also apply to loading states in status widget */
+                .stApp > div[data-testid="stAppViewContainer"] > div[data-testid="stHeader"] div[data-testid="stStatusWidget"] {{
+                    background-image: url("data:image/gif;base64,{gif_b64}") !important;
+                    background-repeat: no-repeat !important;
+                    background-position: center !important;
+                    background-size: 20px 20px !important;
+                }}
+                
+                /* Target the running indicator specifically */
+                .stApp div[data-testid="stStatusWidget"] > div {{
+                    background-image: url("data:image/gif;base64,{gif_b64}") !important;
+                    background-repeat: no-repeat !important;
+                    background-position: center !important;
+                    background-size: 20px 20px !important;
+                    text-indent: -9999px !important;
+                }}
+                </style>
+            ''', unsafe_allow_html=True)
+    except Exception as e:
+        print(f"Error adding custom loading animation: {e}")
+
 def get_base64_encoded_image(image_path):
     """
     Get the base64 encoded image

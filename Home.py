@@ -4,7 +4,7 @@ import time
 from utils.data_processor import DataProcessor
 from utils.database import get_db
 from utils.translations import TRANSLATIONS
-from utils.branding import display_logo, add_favicon
+from utils.branding import display_logo, add_favicon, add_custom_loading_animation
 
 # Page configuration
 st.set_page_config(
@@ -108,7 +108,9 @@ document.addEventListener('DOMContentLoaded', function() {
 """
 st.markdown(fix_nav_js, unsafe_allow_html=True)
 
-
+# Apply branding including custom loading animation
+add_favicon()
+add_custom_loading_animation()
 
 # Initialize language in session state if not present
 if 'language' not in st.session_state:
