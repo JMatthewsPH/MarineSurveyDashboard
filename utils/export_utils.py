@@ -350,8 +350,8 @@ def generate_single_chart_pdf(fig, title, site_name):
     try:
         logo_path = "assets/branding/Logo Text Color.png"
         if os.path.exists(logo_path):
-            # Use proper aspect ratio - the logo is much wider than tall
-            logo = Image(logo_path, width=5*inch, height=1.2*inch)
+            # Preserve circular logo proportions - approximately 6:1.5 ratio
+            logo = Image(logo_path, width=6*inch, height=1.5*inch)
             elements.append(logo)
             elements.append(Spacer(1, 0.2*inch))
     except Exception as e:
@@ -449,8 +449,8 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
     try:
         logo_path = "assets/branding/Logo Text Color.png"
         if os.path.exists(logo_path):
-            # Use proper aspect ratio - the logo is much wider than tall
-            logo = Image(logo_path, width=5*inch, height=1.2*inch)
+            # Preserve circular logo proportions - approximately 6:1.5 ratio
+            logo = Image(logo_path, width=6*inch, height=1.5*inch)
             elements.append(logo)
             elements.append(Spacer(1, 0.2*inch))
     except Exception as e:
