@@ -442,13 +442,15 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
     
     # Get site information to include municipality
     try:
-        sites_df = data_processor.get_sites()
-        site_matches = sites_df[sites_df['name'] == site_name]
-        if not site_matches.empty:
-            site_info = site_matches.iloc[0]
-            municipality_name = str(site_info['municipality']) if 'municipality' in site_info else "Unknown Municipality"
-        else:
-            municipality_name = "Unknown Municipality"
+        sites_list = data_processor.get_sites()  # Returns list of Site objects
+        municipality_name = "Unknown Municipality"
+        
+        # Find the matching site
+        for site in sites_list:
+            if site.name == site_name:
+                municipality_name = site.municipality
+                break
+                
     except Exception as e:
         print(f"Error getting municipality info: {e}")
         municipality_name = "Unknown Municipality"
