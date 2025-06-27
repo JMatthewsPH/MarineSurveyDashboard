@@ -217,9 +217,11 @@ class GraphGenerator:
             if season in seasons_with_data:
                 # Use actual data
                 season_data = data[data['season'] == season].iloc[0]
+                value = season_data[data.columns[1]]
+                print(f"DEBUG: Adding season {season} with value {value}")
                 complete_data.append({
                     'season': season,
-                    'value': season_data[data.columns[1]],
+                    'value': value,
                     'has_data': True,
                     'date': season_data['date']
                 })
