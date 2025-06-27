@@ -39,6 +39,21 @@ a[href^="#"] {
     overflow: hidden !important;
 }
 
+/* ===== HIDE IMAGE FULLSCREEN/EXPAND BUTTONS ===== */
+/* Hide the fullscreen expand button on images */
+[data-testid="stImage"] button,
+.stImage button,
+div[data-testid="stImage"] > div > button,
+div[data-testid="stImage"] button[title*="fullscreen"],
+div[data-testid="stImage"] button[title*="View"],
+div[data-testid="stImage"] button[aria-label*="fullscreen"],
+div[data-testid="stImage"] button[aria-label*="View"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
 
 
 /* Target specific Streamlit-generated anchor patterns */
