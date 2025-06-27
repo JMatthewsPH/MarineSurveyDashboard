@@ -154,7 +154,16 @@ class SummaryGraphGenerator:
                     range=[0, max_val * 1.1] if max_val > 0 else [0, 0],  # Start from 0, add 10% padding at top
                     gridcolor='lightgray'
                 ),
-                showlegend=False  # Hide color legend to save space
+                showlegend=False,  # Hide color legend to save space
+                coloraxis=dict(
+                    colorbar=dict(
+                        len=1.0,  # Make colorbar same height as chart (100%)
+                        thickness=20,  # Standard thickness
+                        x=1.02,  # Position to the right
+                        y=0.5,  # Center vertically
+                        yanchor='middle'
+                    )
+                )
             )
             
             # Add municipality group separators
