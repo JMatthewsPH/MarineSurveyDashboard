@@ -521,6 +521,18 @@ class GraphGenerator:
 
         fig.update_layout(**layout_updates)
         
+        # Force title centering as a final step to ensure it's properly applied
+        fig.update_layout(
+            title={
+                'text': title,
+                'y': 0.95,
+                'x': 0.5,
+                'xanchor': 'center',
+                'yanchor': 'top',
+                'font': {'size': 18}
+            }
+        )
+        
         # Final direct fix for Corallivore Density - ensures that the visualization always shows ticks properly
         if 'Corallivore' in metric_name:
             fig.update_yaxes(
