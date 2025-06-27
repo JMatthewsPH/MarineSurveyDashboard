@@ -90,6 +90,7 @@ The Marine Conservation Philippines Platform is a comprehensive data visualizati
 - **Health Checks**: Database connection validation and automatic recovery
 
 ## Changelog
+- June 27, 2025: Created dedicated SummaryGraphGenerator for Summary Dashboard to resolve commercial biomass visualization issues - now displays properly in both Site Comparison Matrix and Trend Analysis sections
 - June 27, 2025: Fixed COVID gap period to show correct timeframe (Apr 2020 - Mar 2022) to properly include SEP-NOV 2019 and Winter 19/20 data points before gap starts
 - June 26, 2025: Fixed bar chart to display all 15 sites by replacing missing data with 0 values instead of dropping rows
 - June 26, 2025: Added municipality-grouped bar chart for site comparison with red-yellow-green health indicators and Y-axis starting from 0
