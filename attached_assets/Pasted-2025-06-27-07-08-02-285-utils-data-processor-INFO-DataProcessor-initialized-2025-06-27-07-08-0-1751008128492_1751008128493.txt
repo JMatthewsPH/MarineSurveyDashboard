@@ -1,0 +1,82 @@
+2025-06-27 07:08:02,285 - utils.data_processor - INFO - DataProcessor initialized
+2025-06-27 07:08:02,346 - utils.data_processor - INFO - Fetching all sites from database
+2025-06-27 07:08:02,393 - utils.data_processor - INFO - Successfully fetched 15 sites from database
+2025-06-27 07:08:22,532 - utils.data_processor - INFO - DataProcessor initialized
+2025-06-27 07:08:22,550 - utils.data_processor - INFO - Fetching biomass data for site: Basak
+2025-06-27 07:08:22,652 - utils.data_processor - INFO - Found 23 biomass surveys for Basak
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 07:08:22,884 - utils.data_processor - INFO - Fetching hard_coral data for site: Basak
+2025-06-27 07:08:22,944 - utils.data_processor - INFO - Found 23 hard_coral surveys for Basak
+DEBUG - Metric name: Hard Coral Cover
+Available columns for hard_coral: ['date', 'hard_coral']
+2025-06-27 07:08:23,117 - utils.data_processor - INFO - Fetching fleshy_algae data for site: Basak
+2025-06-27 07:08:23,180 - utils.data_processor - INFO - Found 23 fleshy_algae surveys for Basak
+DEBUG - Metric name: Fleshy Algae Cover
+Available columns for fleshy_algae: ['date', 'fleshy_algae']
+2025-06-27 07:08:23,453 - utils.data_processor - INFO - Fetching herbivore data for site: Basak
+2025-06-27 07:08:23,513 - utils.data_processor - INFO - Found 23 herbivore surveys for Basak
+DEBUG - Metric name: Herbivore Density
+Available columns for herbivore: ['date', 'herbivore']
+2025-06-27 07:08:23,702 - utils.data_processor - INFO - Fetching carnivore data for site: Basak
+2025-06-27 07:08:23,762 - utils.data_processor - INFO - Found 23 carnivore surveys for Basak
+DEBUG - Metric name: Carnivore Density
+Available columns for carnivore: ['date', 'carnivore']
+2025-06-27 07:08:23,954 - utils.data_processor - INFO - Fetching omnivore data for site: Basak
+2025-06-27 07:08:24,015 - utils.data_processor - INFO - Found 23 omnivore surveys for Basak
+DEBUG - Metric name: Omnivore Density
+Available columns for omnivore: ['date', 'omnivore']
+2025-06-27 07:08:24,210 - utils.data_processor - INFO - Fetching corallivore data for site: Basak
+2025-06-27 07:08:24,273 - utils.data_processor - INFO - Found 23 corallivore surveys for Basak
+DEBUG - Metric name: Corallivore Density
+Available columns for corallivore: ['date', 'corallivore']
+2025-06-27 07:08:24,461 - utils.data_processor - INFO - Fetching bleaching data for site: Basak
+2025-06-27 07:08:24,521 - utils.data_processor - INFO - Found 23 bleaching surveys for Basak
+DEBUG - Metric name: Bleaching
+Available columns for bleaching: ['date', 'bleaching']
+2025-06-27 07:08:24,722 - utils.data_processor - INFO - Fetching rubble data for site: Basak
+2025-06-27 07:08:24,783 - utils.data_processor - INFO - Found 23 rubble surveys for Basak
+DEBUG - Metric name: Rubble Cover
+Available columns for rubble: ['date', 'rubble']
+2025-06-27 07:08:25,681 - utils.data_processor - INFO - Fetching biomass data for site: Manalongon
+2025-06-27 07:08:25,740 - utils.data_processor - INFO - Found 4 biomass surveys for Manalongon
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 07:08:25,741 - utils.data_processor - INFO - Fetching biomass data for site: Cawitan
+2025-06-27 07:08:25,801 - utils.data_processor - INFO - Found 4 biomass surveys for Cawitan
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 07:08:25,802 - utils.data_processor - INFO - Fetching biomass data for site: Dalakit
+2025-06-27 07:08:25,863 - utils.data_processor - INFO - Found 17 biomass surveys for Dalakit
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 07:08:25,864 - utils.data_processor - INFO - Fetching biomass data for site: Lutoban North
+2025-06-27 07:08:25,924 - utils.data_processor - INFO - Found 24 biomass surveys for Lutoban North
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 07:08:25,925 - utils.data_processor - INFO - Fetching biomass data for site: Malatapay
+2025-06-27 07:08:25,984 - utils.data_processor - INFO - Found 24 biomass surveys for Malatapay
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 07:08:25,985 - utils.data_processor - INFO - Fetching biomass data for site: Kookoos
+2025-06-27 07:08:26,044 - utils.data_processor - INFO - Found 23 biomass surveys for Kookoos
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 07:08:26,046 - utils.data_processor - INFO - Fetching biomass data for site: Salag
+2025-06-27 07:08:26,165 - utils.data_processor - INFO - Found 16 biomass surveys for Salag
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 07:08:26,166 - utils.data_processor - INFO - Fetching biomass data for site: Mojon
+2025-06-27 07:08:26,226 - utils.data_processor - INFO - Found 2 biomass surveys for Mojon
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 07:08:26,227 - utils.data_processor - INFO - Fetching biomass data for site: Lutoban South
+2025-06-27 07:08:26,289 - utils.data_processor - INFO - Found 17 biomass surveys for Lutoban South
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 07:08:26,291 - utils.data_processor - INFO - Fetching biomass data for site: Andulay
+2025-06-27 07:08:26,350 - utils.data_processor - INFO - Found 24 biomass surveys for Andulay
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 07:08:26,352 - utils.data_processor - INFO - Fetching biomass data for site: Antulang
+2025-06-27 07:08:26,412 - utils.data_processor - INFO - Found 22 biomass surveys for Antulang
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 07:08:26,413 - utils.data_processor - INFO - Fetching biomass data for site: Guinsuan
+2025-06-27 07:08:26,472 - utils.data_processor - INFO - Found 24 biomass surveys for Guinsuan
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 07:08:26,473 - utils.data_processor - INFO - Fetching biomass data for site: Lutoban Pier
+2025-06-27 07:08:26,534 - utils.data_processor - INFO - Found 24 biomass surveys for Lutoban Pier
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 07:08:26,535 - utils.data_processor - INFO - Fetching biomass data for site: Latason
+2025-06-27 07:08:26,594 - utils.data_processor - INFO - Found 13 biomass surveys for Latason
+DEBUG - Metric name: Commercial Biomass
+DEBUG: Calculated range 2017-10-01 00:00:00 to 2025-04-01 00:00:00, using 2017-01-01 00:00:00 to 2025-04-01 00:00:00
