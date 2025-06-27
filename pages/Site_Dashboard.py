@@ -68,7 +68,7 @@ import os
 import pandas as pd
 from datetime import datetime, date
 from utils.data_processor import DataProcessor
-from utils.graph_generator import GraphGenerator
+from utils.simple_graph_generator import SimpleGraphGenerator
 from utils.translations import TRANSLATIONS
 from utils.database import get_db
 from utils.branding import display_logo, add_favicon, add_custom_loading_animation
@@ -131,7 +131,7 @@ def get_data_processor():
     db = next(get_db())
     data_processor = DataProcessor(db)
     # Pass the same data processor to graph generator to avoid duplicate db connections
-    return data_processor, GraphGenerator(data_processor)
+    return data_processor, SimpleGraphGenerator(data_processor)
 
 # Get processors with performance logging
 start_time = time.time()
