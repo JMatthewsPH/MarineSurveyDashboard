@@ -947,10 +947,10 @@ if selected_site:
                         label = f"{site_municipality} Average" if biomass_compare_scope == "Municipality Average" else "All Sites Average"
                         biomass_comparison_labels = [label]
                         
-                # Create the time series chart with date range filtering and confidence interval
+                # Create the time series chart with date range filtering and confidence interval (no title)
                 biomass_fig, biomass_config = graph_generator.create_time_series(
                     biomass_data,
-                    f"Commercial Fish Biomass - {selected_site}",
+                    "",  # Empty title since we're using Streamlit title above
                     "Biomass (kg/ha)",
                     comparison_data=biomass_comparison_data,
                     comparison_labels=biomass_comparison_labels,
@@ -1024,7 +1024,7 @@ if selected_site:
                     coral_comparison_labels = [label]
             coral_fig, coral_config = graph_generator.create_time_series(
                 coral_data,
-                f"Hard Coral Cover - {selected_site}",
+                "",  # Empty title since we're using Streamlit title above
                 "Cover (%)",
                 comparison_data=coral_comparison_data,
                 comparison_labels=coral_comparison_labels,
