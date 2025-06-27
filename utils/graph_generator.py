@@ -471,10 +471,12 @@ class GraphGenerator:
             'legend': {
                 'orientation': 'h',
                 'yanchor': 'bottom',
-                'y': -0.6,
+                'y': -0.4,
                 'xanchor': 'center',
                 'x': 0.5,
-                'bgcolor': 'rgba(255, 255, 255, 1)'
+                'bgcolor': 'rgba(255, 255, 255, 1)',
+                'bordercolor': 'rgba(0,0,0,0.1)',
+                'borderwidth': 1
             },
             'autosize': True,  # Enable responsive resizing
             'height': 550,
@@ -482,7 +484,7 @@ class GraphGenerator:
                 'l': 50,
                 'r': 30,
                 't': 80,  # More space for centered title
-                'b': 180
+                'b': 140  # Reduced bottom margin for better legend positioning
             },
             'xaxis': {
                 'tickangle': 45,
