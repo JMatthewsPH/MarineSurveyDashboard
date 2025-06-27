@@ -1,0 +1,186 @@
+2025-06-27 12:20:38,253 - utils.data_processor - INFO - DataProcessor initialized
+2025-06-27 12:20:38,314 - utils.data_processor - INFO - Fetching all sites from database
+2025-06-27 12:20:38,362 - utils.data_processor - INFO - Successfully fetched 15 sites from database
+2025-06-27 12:20:44,851 - utils.data_processor - INFO - DataProcessor initialized
+2025-06-27 12:20:44,856 - utils.data_processor - INFO - Fetching biomass data for site: Manalongon
+2025-06-27 12:20:44,977 - utils.data_processor - INFO - Found 4 biomass surveys for Manalongon
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 12:20:44,978 - utils.data_processor - INFO - Fetching biomass data for site: Cawitan
+2025-06-27 12:20:45,045 - utils.data_processor - INFO - Found 4 biomass surveys for Cawitan
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 12:20:45,047 - utils.data_processor - INFO - Fetching biomass data for site: Dalakit
+2025-06-27 12:20:45,110 - utils.data_processor - INFO - Found 17 biomass surveys for Dalakit
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 12:20:45,111 - utils.data_processor - INFO - Fetching biomass data for site: Kookoos
+2025-06-27 12:20:45,175 - utils.data_processor - INFO - Found 23 biomass surveys for Kookoos
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 12:20:45,176 - utils.data_processor - INFO - Fetching biomass data for site: Andulay
+2025-06-27 12:20:45,240 - utils.data_processor - INFO - Found 23 biomass surveys for Andulay
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 12:20:45,241 - utils.data_processor - INFO - Fetching biomass data for site: Lutoban North
+2025-06-27 12:20:45,307 - utils.data_processor - INFO - Found 23 biomass surveys for Lutoban North
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 12:20:45,308 - utils.data_processor - INFO - Fetching biomass data for site: Malatapay
+2025-06-27 12:20:45,372 - utils.data_processor - INFO - Found 23 biomass surveys for Malatapay
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 12:20:45,373 - utils.data_processor - INFO - Fetching biomass data for site: Salag
+2025-06-27 12:20:45,437 - utils.data_processor - INFO - Found 16 biomass surveys for Salag
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 12:20:45,438 - utils.data_processor - INFO - Fetching biomass data for site: Mojon
+2025-06-27 12:20:45,502 - utils.data_processor - INFO - Found 2 biomass surveys for Mojon
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 12:20:45,503 - utils.data_processor - INFO - Fetching biomass data for site: Basak
+2025-06-27 12:20:45,568 - utils.data_processor - INFO - Found 23 biomass surveys for Basak
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 12:20:45,569 - utils.data_processor - INFO - Fetching biomass data for site: Lutoban South
+2025-06-27 12:20:45,634 - utils.data_processor - INFO - Found 16 biomass surveys for Lutoban South
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 12:20:45,635 - utils.data_processor - INFO - Fetching biomass data for site: Antulang
+2025-06-27 12:20:45,698 - utils.data_processor - INFO - Found 22 biomass surveys for Antulang
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 12:20:45,699 - utils.data_processor - INFO - Fetching biomass data for site: Lutoban Pier
+2025-06-27 12:20:45,765 - utils.data_processor - INFO - Found 23 biomass surveys for Lutoban Pier
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 12:20:45,766 - utils.data_processor - INFO - Fetching biomass data for site: Guinsuan
+2025-06-27 12:20:45,831 - utils.data_processor - INFO - Found 23 biomass surveys for Guinsuan
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 12:20:45,832 - utils.data_processor - INFO - Fetching biomass data for site: Latason
+2025-06-27 12:20:45,898 - utils.data_processor - INFO - Found 13 biomass surveys for Latason
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 12:20:45,905 - utils.data_processor - INFO - Batch fetching biomass data for 15 sites
+2025-06-27 12:20:45,994 - utils.data_processor - INFO - Found 23 biomass surveys for Andulay
+2025-06-27 12:20:45,994 - utils.data_processor - INFO - Found 22 biomass surveys for Antulang
+2025-06-27 12:20:45,995 - utils.data_processor - INFO - Found 23 biomass surveys for Kookoos
+2025-06-27 12:20:45,995 - utils.data_processor - INFO - Found 16 biomass surveys for Salag
+2025-06-27 12:20:45,995 - utils.data_processor - INFO - Found 23 biomass surveys for Basak
+2025-06-27 12:20:45,995 - utils.data_processor - INFO - Found 17 biomass surveys for Dalakit
+2025-06-27 12:20:45,995 - utils.data_processor - INFO - Found 23 biomass surveys for Guinsuan
+2025-06-27 12:20:45,996 - utils.data_processor - INFO - Found 13 biomass surveys for Latason
+2025-06-27 12:20:45,996 - utils.data_processor - INFO - Found 23 biomass surveys for Lutoban North
+2025-06-27 12:20:45,996 - utils.data_processor - INFO - Found 16 biomass surveys for Lutoban South
+2025-06-27 12:20:45,996 - utils.data_processor - INFO - Found 23 biomass surveys for Lutoban Pier
+2025-06-27 12:20:45,996 - utils.data_processor - INFO - Found 23 biomass surveys for Malatapay
+2025-06-27 12:20:45,997 - utils.data_processor - INFO - Found 2 biomass surveys for Mojon
+2025-06-27 12:20:45,997 - utils.data_processor - INFO - Found 4 biomass surveys for Cawitan
+2025-06-27 12:20:45,997 - utils.data_processor - INFO - Found 4 biomass surveys for Manalongon
+DEBUG - Batch loaded biomass data for 15 sites
+2025-06-27 12:20:46,000 - utils.data_processor - INFO - Batch fetching coral cover data for 15 sites
+2025-06-27 12:20:46,070 - utils.data_processor - INFO - Found 23 coral cover surveys for Andulay
+2025-06-27 12:20:46,071 - utils.data_processor - INFO - Found 22 coral cover surveys for Antulang
+2025-06-27 12:20:46,071 - utils.data_processor - INFO - Found 23 coral cover surveys for Kookoos
+2025-06-27 12:20:46,071 - utils.data_processor - INFO - Found 16 coral cover surveys for Salag
+2025-06-27 12:20:46,071 - utils.data_processor - INFO - Found 23 coral cover surveys for Basak
+2025-06-27 12:20:46,072 - utils.data_processor - INFO - Found 17 coral cover surveys for Dalakit
+2025-06-27 12:20:46,072 - utils.data_processor - INFO - Found 23 coral cover surveys for Guinsuan
+2025-06-27 12:20:46,072 - utils.data_processor - INFO - Found 13 coral cover surveys for Latason
+2025-06-27 12:20:46,072 - utils.data_processor - INFO - Found 23 coral cover surveys for Lutoban North
+2025-06-27 12:20:46,072 - utils.data_processor - INFO - Found 16 coral cover surveys for Lutoban South
+2025-06-27 12:20:46,073 - utils.data_processor - INFO - Found 23 coral cover surveys for Lutoban Pier
+2025-06-27 12:20:46,073 - utils.data_processor - INFO - Found 23 coral cover surveys for Malatapay
+2025-06-27 12:20:46,073 - utils.data_processor - INFO - Found 2 coral cover surveys for Mojon
+2025-06-27 12:20:46,073 - utils.data_processor - INFO - Found 4 coral cover surveys for Cawitan
+2025-06-27 12:20:46,073 - utils.data_processor - INFO - Found 4 coral cover surveys for Manalongon
+DEBUG - Batch loaded coral cover data for 15 sites
+2025-06-27 12:20:46,075 - utils.data_processor - INFO - Batch fetching fleshy_algae data for 15 sites
+2025-06-27 12:20:46,122 - utils.data_processor - INFO - Batch query completed in 0.03 seconds
+2025-06-27 12:20:46,123 - utils.data_processor - INFO - Found 23 fleshy_algae surveys for Andulay
+2025-06-27 12:20:46,124 - utils.data_processor - INFO - Found 22 fleshy_algae surveys for Antulang
+2025-06-27 12:20:46,124 - utils.data_processor - INFO - Found 23 fleshy_algae surveys for Kookoos
+2025-06-27 12:20:46,125 - utils.data_processor - INFO - Found 16 fleshy_algae surveys for Salag
+2025-06-27 12:20:46,125 - utils.data_processor - INFO - Found 23 fleshy_algae surveys for Basak
+2025-06-27 12:20:46,126 - utils.data_processor - INFO - Found 17 fleshy_algae surveys for Dalakit
+2025-06-27 12:20:46,126 - utils.data_processor - INFO - Found 23 fleshy_algae surveys for Guinsuan
+2025-06-27 12:20:46,127 - utils.data_processor - INFO - Found 13 fleshy_algae surveys for Latason
+2025-06-27 12:20:46,127 - utils.data_processor - INFO - Found 23 fleshy_algae surveys for Lutoban North
+2025-06-27 12:20:46,128 - utils.data_processor - INFO - Found 16 fleshy_algae surveys for Lutoban South
+2025-06-27 12:20:46,128 - utils.data_processor - INFO - Found 23 fleshy_algae surveys for Lutoban Pier
+2025-06-27 12:20:46,129 - utils.data_processor - INFO - Found 23 fleshy_algae surveys for Malatapay
+2025-06-27 12:20:46,129 - utils.data_processor - INFO - Found 2 fleshy_algae surveys for Mojon
+2025-06-27 12:20:46,130 - utils.data_processor - INFO - Found 4 fleshy_algae surveys for Cawitan
+2025-06-27 12:20:46,130 - utils.data_processor - INFO - Found 4 fleshy_algae surveys for Manalongon
+2025-06-27 12:20:46,130 - utils.data_processor - INFO - Successfully batch loaded fleshy_algae data for 15 sites
+2025-06-27 12:20:46,141 - utils.data_processor - INFO - Batch fetching herbivore data for 15 sites
+2025-06-27 12:20:46,187 - utils.data_processor - INFO - Batch query completed in 0.02 seconds
+2025-06-27 12:20:46,187 - utils.data_processor - INFO - Found 23 herbivore surveys for Andulay
+2025-06-27 12:20:46,188 - utils.data_processor - INFO - Found 22 herbivore surveys for Antulang
+2025-06-27 12:20:46,188 - utils.data_processor - INFO - Found 23 herbivore surveys for Kookoos
+2025-06-27 12:20:46,189 - utils.data_processor - INFO - Found 16 herbivore surveys for Salag
+2025-06-27 12:20:46,189 - utils.data_processor - INFO - Found 23 herbivore surveys for Basak
+2025-06-27 12:20:46,190 - utils.data_processor - INFO - Found 17 herbivore surveys for Dalakit
+2025-06-27 12:20:46,190 - utils.data_processor - INFO - Found 23 herbivore surveys for Guinsuan
+2025-06-27 12:20:46,191 - utils.data_processor - INFO - Found 13 herbivore surveys for Latason
+2025-06-27 12:20:46,191 - utils.data_processor - INFO - Found 23 herbivore surveys for Lutoban North
+2025-06-27 12:20:46,192 - utils.data_processor - INFO - Found 16 herbivore surveys for Lutoban South
+2025-06-27 12:20:46,192 - utils.data_processor - INFO - Found 23 herbivore surveys for Lutoban Pier
+2025-06-27 12:20:46,193 - utils.data_processor - INFO - Found 23 herbivore surveys for Malatapay
+2025-06-27 12:20:46,193 - utils.data_processor - INFO - Found 2 herbivore surveys for Mojon
+2025-06-27 12:20:46,194 - utils.data_processor - INFO - Found 4 herbivore surveys for Cawitan
+2025-06-27 12:20:46,194 - utils.data_processor - INFO - Found 4 herbivore surveys for Manalongon
+2025-06-27 12:20:46,194 - utils.data_processor - INFO - Successfully batch loaded herbivore data for 15 sites
+2025-06-27 12:20:46,196 - utils.data_processor - INFO - Batch fetching omnivore data for 15 sites
+2025-06-27 12:20:46,240 - utils.data_processor - INFO - Batch query completed in 0.02 seconds
+2025-06-27 12:20:46,240 - utils.data_processor - INFO - Found 23 omnivore surveys for Andulay
+2025-06-27 12:20:46,241 - utils.data_processor - INFO - Found 22 omnivore surveys for Antulang
+2025-06-27 12:20:46,241 - utils.data_processor - INFO - Found 23 omnivore surveys for Kookoos
+2025-06-27 12:20:46,242 - utils.data_processor - INFO - Found 16 omnivore surveys for Salag
+2025-06-27 12:20:46,242 - utils.data_processor - INFO - Found 23 omnivore surveys for Basak
+2025-06-27 12:20:46,243 - utils.data_processor - INFO - Found 17 omnivore surveys for Dalakit
+2025-06-27 12:20:46,243 - utils.data_processor - INFO - Found 23 omnivore surveys for Guinsuan
+2025-06-27 12:20:46,244 - utils.data_processor - INFO - Found 13 omnivore surveys for Latason
+2025-06-27 12:20:46,244 - utils.data_processor - INFO - Found 23 omnivore surveys for Lutoban North
+2025-06-27 12:20:46,245 - utils.data_processor - INFO - Found 16 omnivore surveys for Lutoban South
+2025-06-27 12:20:46,245 - utils.data_processor - INFO - Found 23 omnivore surveys for Lutoban Pier
+2025-06-27 12:20:46,246 - utils.data_processor - INFO - Found 23 omnivore surveys for Malatapay
+2025-06-27 12:20:46,246 - utils.data_processor - INFO - Found 2 omnivore surveys for Mojon
+2025-06-27 12:20:46,246 - utils.data_processor - INFO - Found 4 omnivore surveys for Cawitan
+2025-06-27 12:20:46,247 - utils.data_processor - INFO - Found 4 omnivore surveys for Manalongon
+2025-06-27 12:20:46,247 - utils.data_processor - INFO - Successfully batch loaded omnivore data for 15 sites
+2025-06-27 12:20:46,248 - utils.data_processor - INFO - Batch fetching corallivore data for 15 sites
+2025-06-27 12:20:46,295 - utils.data_processor - INFO - Batch query completed in 0.03 seconds
+2025-06-27 12:20:46,296 - utils.data_processor - INFO - Found 23 corallivore surveys for Andulay
+2025-06-27 12:20:46,296 - utils.data_processor - INFO - Found 22 corallivore surveys for Antulang
+2025-06-27 12:20:46,297 - utils.data_processor - INFO - Found 23 corallivore surveys for Kookoos
+2025-06-27 12:20:46,297 - utils.data_processor - INFO - Found 16 corallivore surveys for Salag
+2025-06-27 12:20:46,298 - utils.data_processor - INFO - Found 23 corallivore surveys for Basak
+2025-06-27 12:20:46,299 - utils.data_processor - INFO - Found 17 corallivore surveys for Dalakit
+2025-06-27 12:20:46,299 - utils.data_processor - INFO - Found 23 corallivore surveys for Guinsuan
+2025-06-27 12:20:46,300 - utils.data_processor - INFO - Found 13 corallivore surveys for Latason
+2025-06-27 12:20:46,300 - utils.data_processor - INFO - Found 23 corallivore surveys for Lutoban North
+2025-06-27 12:20:46,301 - utils.data_processor - INFO - Found 16 corallivore surveys for Lutoban South
+2025-06-27 12:20:46,301 - utils.data_processor - INFO - Found 23 corallivore surveys for Lutoban Pier
+2025-06-27 12:20:46,302 - utils.data_processor - INFO - Found 23 corallivore surveys for Malatapay
+2025-06-27 12:20:46,302 - utils.data_processor - INFO - Found 2 corallivore surveys for Mojon
+2025-06-27 12:20:46,303 - utils.data_processor - INFO - Found 4 corallivore surveys for Cawitan
+2025-06-27 12:20:46,303 - utils.data_processor - INFO - Found 4 corallivore surveys for Manalongon
+2025-06-27 12:20:46,303 - utils.data_processor - INFO - Successfully batch loaded corallivore data for 15 sites
+DEBUG: Biomass columns for Manalongon: ['date', 'Commercial Biomass']
+DEBUG: No biomass column found for Manalongon
+DEBUG: Biomass columns for Cawitan: ['date', 'Commercial Biomass']
+DEBUG: No biomass column found for Cawitan
+DEBUG: Biomass columns for Dalakit: ['date', 'Commercial Biomass']
+DEBUG: No biomass column found for Dalakit
+DEBUG: Biomass columns for Kookoos: ['date', 'Commercial Biomass']
+DEBUG: No biomass column found for Kookoos
+DEBUG: Biomass columns for Andulay: ['date', 'Commercial Biomass']
+DEBUG: No biomass column found for Andulay
+DEBUG: Biomass columns for Lutoban North: ['date', 'Commercial Biomass']
+DEBUG: No biomass column found for Lutoban North
+DEBUG: Biomass columns for Malatapay: ['date', 'Commercial Biomass']
+DEBUG: No biomass column found for Malatapay
+DEBUG: Biomass columns for Salag: ['date', 'Commercial Biomass']
+DEBUG: No biomass column found for Salag
+DEBUG: Biomass columns for Mojon: ['date', 'Commercial Biomass']
+DEBUG: No biomass column found for Mojon
+DEBUG: Biomass columns for Basak: ['date', 'Commercial Biomass']
+DEBUG: No biomass column found for Basak
+DEBUG: Biomass columns for Lutoban South: ['date', 'Commercial Biomass']
+DEBUG: No biomass column found for Lutoban South
+DEBUG: Biomass columns for Antulang: ['date', 'Commercial Biomass']
+DEBUG: No biomass column found for Antulang
+DEBUG: Biomass columns for Lutoban Pier: ['date', 'Commercial Biomass']
+DEBUG: No biomass column found for Lutoban Pier
+DEBUG: Biomass columns for Guinsuan: ['date', 'Commercial Biomass']
+DEBUG: No biomass column found for Guinsuan
+DEBUG: Biomass columns for Latason: ['date', 'Commercial Biomass']
+DEBUG: No biomass column found for Latason
+2025-06-27 12:20:46,888 - utils.map_generator - INFO - Created biomass heatmap with 0 sites

@@ -65,11 +65,8 @@ class MapGenerator:
                     biomass_df = self.data_processor.get_biomass_data(site.name)
                     
                     if not biomass_df.empty:
-                        # Debug: Check what columns we actually have
-                        print(f"DEBUG: Biomass columns for {site.name}: {biomass_df.columns.tolist()}")
-                        
                         # Get the most recent biomass value - check column name
-                        possible_cols = ['commercial_biomass', 'biomass', 'commercial_fish_biomass']
+                        possible_cols = ['Commercial Biomass', 'commercial_biomass', 'biomass', 'commercial_fish_biomass']
                         biomass_col = None
                         for col in possible_cols:
                             if col in biomass_df.columns:
@@ -77,12 +74,10 @@ class MapGenerator:
                                 break
                         
                         if biomass_col is None:
-                            print(f"DEBUG: No biomass column found for {site.name}")
                             continue  # Skip if no biomass data
                             
                         latest_biomass = biomass_df[biomass_col].iloc[-1]
                         latest_date = biomass_df['date'].iloc[-1]
-                        print(f"DEBUG: {site.name} biomass: {latest_biomass} on {latest_date}")
                         
                         # Add to heatmap data (lat, lon, weight)
                         # Scale biomass value for better visualization
