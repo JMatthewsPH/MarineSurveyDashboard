@@ -191,6 +191,7 @@ class GraphGenerator:
                 pre_covid_data['date'].min(), 
                 pre_covid_data['date'].max()
             )
+            print(f"DEBUG: Pre-COVID seasons generated: {pre_covid_seasons}")
             display_seasons.extend(pre_covid_seasons)
         
         # Add post-COVID timeline (from actual data to current date)
@@ -208,6 +209,8 @@ class GraphGenerator:
         
         # Create dataframe only for seasons we want to display (excluding COVID gap)
         seasons_with_data = set(data['season'].tolist())
+        print(f"DEBUG: Seasons with actual data: {sorted(seasons_with_data)}")
+        print(f"DEBUG: Display seasons: {display_seasons}")
         complete_data = []
         
         for season in display_seasons:
