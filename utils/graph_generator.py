@@ -928,15 +928,23 @@ class GraphGenerator:
         else:
             y_title = metric_name.replace('_', ' ').title()
         
-        # Set title and layout
+        # Set title and layout with centered title and responsive design
         title = f"Trend Analysis: {metric_name.replace('_', ' ').title()} Across All Sites"
         fig.update_layout(
-            title=title,
+            title={
+                'text': title,
+                'y': 0.95,
+                'x': 0.5,
+                'xanchor': 'center',
+                'yanchor': 'top',
+                'font': {'size': 18}
+            },
             xaxis_title="Date",
             yaxis_title=y_title,
             template="plotly_white",
             height=600,  # Increased height for better visualization
-            margin=dict(l=40, r=120, t=60, b=60),  # Increased right margin for legend
+            margin=dict(l=40, r=120, t=80, b=60),  # More top margin for centered title
+            autosize=True,  # Enable responsive resizing
             legend=dict(
                 orientation="v",  # Change to vertical orientation
                 yanchor="top",

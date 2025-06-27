@@ -450,16 +450,24 @@ class SummaryGraphGenerator:
                 annotation_position="top left"
             )
             
-            # Update layout
+            # Update layout with centered title and responsive design
             y_title = "Commercial Biomass (kg/ha)" if "biomass" in metric_name.lower() else metric_name
             
             fig.update_layout(
-                title=f"Trend Analysis: {metric_name}",
+                title={
+                    'text': f"Trend Analysis: {metric_name}",
+                    'y': 0.95,
+                    'x': 0.5,
+                    'xanchor': 'center',
+                    'yanchor': 'top',
+                    'font': {'size': 18}
+                },
                 xaxis_title="Date",
                 yaxis_title=y_title,
                 height=500,
                 template="plotly_white",
-                margin=dict(l=60, r=60, t=80, b=60),
+                margin=dict(l=60, r=60, t=100, b=60),  # More top margin for centered title
+                autosize=True,  # Enable responsive resizing
                 legend=dict(
                     orientation="v",
                     yanchor="top",
