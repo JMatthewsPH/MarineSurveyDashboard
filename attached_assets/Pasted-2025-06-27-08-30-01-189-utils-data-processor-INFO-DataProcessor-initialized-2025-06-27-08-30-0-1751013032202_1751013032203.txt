@@ -1,0 +1,131 @@
+2025-06-27 08:30:01,189 - utils.data_processor - INFO - DataProcessor initialized
+2025-06-27 08:30:01,252 - utils.data_processor - INFO - Fetching all sites from database
+2025-06-27 08:30:01,299 - utils.data_processor - INFO - Successfully fetched 15 sites from database
+2025-06-27 08:30:01,316 - utils.data_processor - INFO - Fetching biomass data for site: Basak
+2025-06-27 08:30:01,382 - utils.data_processor - INFO - Found 23 biomass surveys for Basak
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:30:01,580 - utils.data_processor - INFO - Fetching hard_coral data for site: Basak
+2025-06-27 08:30:01,648 - utils.data_processor - INFO - Found 23 hard_coral surveys for Basak
+DEBUG - Metric name: Hard Coral Cover
+Available columns for hard_coral: ['date', 'hard_coral']
+2025-06-27 08:30:01,824 - utils.data_processor - INFO - Fetching fleshy_algae data for site: Basak
+2025-06-27 08:30:01,890 - utils.data_processor - INFO - Found 23 fleshy_algae surveys for Basak
+DEBUG - Metric name: Fleshy Algae Cover
+Available columns for fleshy_algae: ['date', 'fleshy_algae']
+2025-06-27 08:30:02,084 - utils.data_processor - INFO - Fetching herbivore data for site: Basak
+2025-06-27 08:30:02,151 - utils.data_processor - INFO - Found 23 herbivore surveys for Basak
+DEBUG - Metric name: Herbivore Density
+Available columns for herbivore: ['date', 'herbivore']
+2025-06-27 08:30:02,460 - utils.data_processor - INFO - Fetching carnivore data for site: Basak
+2025-06-27 08:30:02,527 - utils.data_processor - INFO - Found 23 carnivore surveys for Basak
+DEBUG - Metric name: Carnivore Density
+Available columns for carnivore: ['date', 'carnivore']
+Available columns for hard_coral: ['date', 'hard_coral']
+2025-06-27 08:30:02,806 - utils.data_processor - INFO - Fetching omnivore data for site: Basak
+Available columns for fleshy_algae: ['date', 'fleshy_algae']
+2025-06-27 08:30:02,885 - utils.data_processor - INFO - Found 23 omnivore surveys for Basak
+DEBUG - Metric name: Omnivore Density
+Available columns for omnivore: ['date', 'omnivore']
+2025-06-27 08:30:03,179 - utils.data_processor - INFO - Fetching corallivore data for site: Basak
+Available columns for herbivore: ['date', 'herbivore']
+2025-06-27 08:30:03,324 - utils.data_processor - INFO - Found 23 corallivore surveys for Basak
+DEBUG - Metric name: Corallivore Density
+Available columns for corallivore: ['date', 'corallivore']
+Available columns for carnivore: ['date', 'carnivore']
+2025-06-27 08:30:03,722 - utils.data_processor - INFO - Fetching bleaching data for site: Basak
+2025-06-27 08:30:03,792 - utils.data_processor - INFO - Found 23 bleaching surveys for Basak
+DEBUG - Metric name: Bleaching
+Available columns for bleaching: ['date', 'bleaching']
+Available columns for omnivore: ['date', 'omnivore']
+2025-06-27 08:30:04,104 - utils.data_processor - INFO - Fetching rubble data for site: Basak
+Available columns for corallivore: ['date', 'corallivore']
+2025-06-27 08:30:04,172 - utils.data_processor - INFO - Found 23 rubble surveys for Basak
+DEBUG - Metric name: Rubble Cover
+Available columns for rubble: ['date', 'rubble']
+Available columns for bleaching: ['date', 'bleaching']
+Available columns for rubble: ['date', 'rubble']
+2025-06-27 08:30:05,705 - utils.data_processor - INFO - Fetching biomass data for site: Manalongon
+2025-06-27 08:30:05,769 - utils.data_processor - INFO - Found 4 biomass surveys for Manalongon
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:30:05,770 - utils.data_processor - INFO - Fetching biomass data for site: Cawitan
+2025-06-27 08:30:05,834 - utils.data_processor - INFO - Found 4 biomass surveys for Cawitan
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:30:05,835 - utils.data_processor - INFO - Fetching biomass data for site: Dalakit
+2025-06-27 08:30:05,900 - utils.data_processor - INFO - Found 17 biomass surveys for Dalakit
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:30:05,901 - utils.data_processor - INFO - Fetching biomass data for site: Lutoban North
+2025-06-27 08:30:05,964 - utils.data_processor - INFO - Found 23 biomass surveys for Lutoban North
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:30:05,966 - utils.data_processor - INFO - Fetching biomass data for site: Malatapay
+2025-06-27 08:30:06,029 - utils.data_processor - INFO - Found 23 biomass surveys for Malatapay
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:30:06,030 - utils.data_processor - INFO - Fetching biomass data for site: Kookoos
+2025-06-27 08:30:06,103 - utils.data_processor - INFO - Found 23 biomass surveys for Kookoos
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:30:06,104 - utils.data_processor - INFO - Fetching biomass data for site: Salag
+2025-06-27 08:30:06,171 - utils.data_processor - INFO - Found 16 biomass surveys for Salag
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:30:06,171 - utils.data_processor - INFO - Fetching biomass data for site: Mojon
+2025-06-27 08:30:06,235 - utils.data_processor - INFO - Found 2 biomass surveys for Mojon
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:30:06,236 - utils.data_processor - INFO - Fetching biomass data for site: Lutoban South
+2025-06-27 08:30:06,300 - utils.data_processor - INFO - Found 16 biomass surveys for Lutoban South
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:30:06,301 - utils.data_processor - INFO - Fetching biomass data for site: Andulay
+2025-06-27 08:30:06,364 - utils.data_processor - INFO - Found 23 biomass surveys for Andulay
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:30:06,365 - utils.data_processor - INFO - Fetching biomass data for site: Antulang
+2025-06-27 08:30:06,431 - utils.data_processor - INFO - Found 22 biomass surveys for Antulang
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:30:06,432 - utils.data_processor - INFO - Fetching biomass data for site: Guinsuan
+2025-06-27 08:30:06,495 - utils.data_processor - INFO - Found 23 biomass surveys for Guinsuan
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:30:06,496 - utils.data_processor - INFO - Fetching biomass data for site: Lutoban Pier
+2025-06-27 08:30:06,559 - utils.data_processor - INFO - Found 23 biomass surveys for Lutoban Pier
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:30:06,560 - utils.data_processor - INFO - Fetching biomass data for site: Latason
+2025-06-27 08:30:06,624 - utils.data_processor - INFO - Found 13 biomass surveys for Latason
+DEBUG - Metric name: Commercial Biomass
+DEBUG: Calculated range 2017-10-01 00:00:00 to 2025-04-01 00:00:00, using 2017-01-01 00:00:00 to 2025-04-01 00:00:00
+2025-06-27 08:30:11,528 - utils.data_processor - INFO - Fetching hard_coral data for site: Lutoban Pier
+2025-06-27 08:30:11,593 - utils.data_processor - INFO - Found 23 hard_coral surveys for Lutoban Pier
+DEBUG - Metric name: Hard Coral Cover
+Available columns for hard_coral: ['date', 'hard_coral']
+2025-06-27 08:30:11,764 - utils.data_processor - INFO - Fetching fleshy_algae data for site: Lutoban Pier
+2025-06-27 08:30:11,827 - utils.data_processor - INFO - Found 23 fleshy_algae surveys for Lutoban Pier
+DEBUG - Metric name: Fleshy Algae Cover
+Available columns for fleshy_algae: ['date', 'fleshy_algae']
+2025-06-27 08:30:12,103 - utils.data_processor - INFO - Fetching herbivore data for site: Lutoban Pier
+Available columns for hard_coral: ['date', 'hard_coral']
+2025-06-27 08:30:12,198 - utils.data_processor - INFO - Found 23 herbivore surveys for Lutoban Pier
+DEBUG - Metric name: Herbivore Density
+Available columns for herbivore: ['date', 'herbivore']
+Available columns for fleshy_algae: ['date', 'fleshy_algae']
+2025-06-27 08:30:12,649 - utils.data_processor - INFO - Fetching carnivore data for site: Lutoban Pier
+2025-06-27 08:30:12,721 - utils.data_processor - INFO - Found 23 carnivore surveys for Lutoban Pier
+DEBUG - Metric name: Carnivore Density
+Available columns for carnivore: ['date', 'carnivore']
+Available columns for herbivore: ['date', 'herbivore']
+2025-06-27 08:30:13,045 - utils.data_processor - INFO - Fetching omnivore data for site: Lutoban Pier
+Available columns for carnivore: ['date', 'carnivore']
+2025-06-27 08:30:13,129 - utils.data_processor - INFO - Found 23 omnivore surveys for Lutoban Pier
+DEBUG - Metric name: Omnivore Density
+Available columns for omnivore: ['date', 'omnivore']
+Available columns for omnivore: ['date', 'omnivore']
+2025-06-27 08:30:13,485 - utils.data_processor - INFO - Fetching corallivore data for site: Lutoban Pier
+2025-06-27 08:30:13,551 - utils.data_processor - INFO - Found 23 corallivore surveys for Lutoban Pier
+DEBUG - Metric name: Corallivore Density
+Available columns for corallivore: ['date', 'corallivore']
+Available columns for corallivore: ['date', 'corallivore']
+2025-06-27 08:30:14,017 - utils.data_processor - INFO - Fetching bleaching data for site: Lutoban Pier
+2025-06-27 08:30:14,090 - utils.data_processor - INFO - Found 23 bleaching surveys for Lutoban Pier
+DEBUG - Metric name: Bleaching
+Available columns for bleaching: ['date', 'bleaching']
+Available columns for bleaching: ['date', 'bleaching']
+Available columns for rubble: ['date', 'rubble']
+2025-06-27 08:30:14,473 - utils.data_processor - INFO - Fetching rubble data for site: Lutoban Pier
+2025-06-27 08:30:14,540 - utils.data_processor - INFO - Found 23 rubble surveys for Lutoban Pier
+DEBUG - Metric name: Rubble Cover
+Available columns for rubble: ['date', 'rubble']
+DEBUG: Calculated range 2017-10-01 00:00:00 to 2025-04-01 00:00:00, using 2017-01-01 00:00:00 to 2025-04-01 00:00:00
+DEBUG: Calculated range 2017-10-01 00:00:00 to 2025-04-01 00:00:00, using 2017-01-01 00:00:00 to 2025-04-01 00:00:00

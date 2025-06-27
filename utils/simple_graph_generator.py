@@ -54,6 +54,16 @@ class SimpleGraphGenerator:
         Data comes clean from database - just plot it
         """
         
+        # Debug logging for Lutoban Pier
+        if 'Lutoban Pier' in title:
+            print(f"DEBUG LUTOBAN SIMPLE: Creating chart for {title}")
+            print(f"DEBUG LUTOBAN SIMPLE: Data shape: {data.shape}")
+            print(f"DEBUG LUTOBAN SIMPLE: Data empty? {data.empty}")
+            if not data.empty:
+                print(f"DEBUG LUTOBAN SIMPLE: Data columns: {list(data.columns)}")
+                print(f"DEBUG LUTOBAN SIMPLE: First few rows:")
+                print(data.head())
+        
         # Chart configuration
         config = {
             'displayModeBar': True,
@@ -105,6 +115,18 @@ class SimpleGraphGenerator:
         pre_covid = data[data['date'] < covid_start]
         post_covid = data[data['date'] > covid_end]
         covid_period = data[(data['date'] >= covid_start) & (data['date'] <= covid_end)]
+        
+        # Debug logging for Lutoban Pier
+        if 'Lutoban Pier' in title:
+            print(f"DEBUG LUTOBAN SIMPLE: COVID period {covid_start} to {covid_end}")
+            print(f"DEBUG LUTOBAN SIMPLE: Pre-COVID data points: {len(pre_covid)}")
+            print(f"DEBUG LUTOBAN SIMPLE: COVID period data points: {len(covid_period)}")
+            print(f"DEBUG LUTOBAN SIMPLE: Post-COVID data points: {len(post_covid)}")
+            if not pre_covid.empty:
+                print(f"DEBUG LUTOBAN SIMPLE: Last pre-COVID: {pre_covid.iloc[-1]['date']} - {pre_covid.iloc[-1]['season']}")
+            if not post_covid.empty:
+                print(f"DEBUG LUTOBAN SIMPLE: First post-COVID: {post_covid.iloc[0]['date']} - {post_covid.iloc[0]['season']}")
+            print(f"DEBUG LUTOBAN SIMPLE: Will add COVID gap line? {not pre_covid.empty and not post_covid.empty}")
         
         # Plot pre-COVID data if exists
         if not pre_covid.empty:
