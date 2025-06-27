@@ -165,8 +165,9 @@ class GraphGenerator:
         data['season'] = data['date'].apply(format_season)
         
         # Split data into pre and post COVID periods to create timeline with gap
-        covid_start = pd.Timestamp('2019-09-01')
-        covid_end = pd.Timestamp('2022-03-01')
+        # COVID gap: from end of Winter 2020 to start of Spring 2021
+        covid_start = pd.Timestamp('2020-03-01')  # End of Winter 2020 season
+        covid_end = pd.Timestamp('2021-03-01')    # Start of Spring 2021 season
         
         pre_covid_data = data[data['date'] < covid_start]
         post_covid_data = data[data['date'] > covid_end]
