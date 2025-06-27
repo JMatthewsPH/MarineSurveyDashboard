@@ -24,12 +24,9 @@ args = "Streamlit App"
 name = "Streamlit App"
 author = "agent"
 
-[workflows.workflow.metadata]
-agentRequireRestartOnSave = false
-
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "streamlit run Home.py --server.port 5000"
+args = "streamlit run Home.py --server.port 5000 --server.address 0.0.0.0 --server.headless true"
 waitForPort = 5000
 
 [[ports]]
