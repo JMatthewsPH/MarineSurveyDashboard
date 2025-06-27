@@ -521,7 +521,7 @@ class GraphGenerator:
 
         fig.update_layout(**layout_updates)
         
-        # Force title centering as a final step to ensure it's properly applied
+        # Force title centering with multiple approaches to ensure it works
         fig.update_layout(
             title={
                 'text': title,
@@ -529,9 +529,24 @@ class GraphGenerator:
                 'x': 0.5,
                 'xanchor': 'center',
                 'yanchor': 'top',
-                'font': {'size': 18}
+                'font': {'size': 18},
+                'pad': {'t': 20}
             }
         )
+        
+        # Also try using annotations as a backup for centering
+        fig.add_annotation(
+            text=f"<b>{title}</b>",
+            xref="paper", yref="paper",
+            x=0.5, y=1.02,
+            xanchor="center", yanchor="bottom",
+            showarrow=False,
+            font=dict(size=18, color="black"),
+            bgcolor="rgba(255,255,255,0)"
+        )
+        
+        # Hide the original title since we're using annotation
+        fig.update_layout(title={'text': ''})
         
         # Final direct fix for Corallivore Density - ensures that the visualization always shows ticks properly
         if 'Corallivore' in metric_name:
