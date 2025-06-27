@@ -177,18 +177,8 @@ with st.sidebar:
     if start_date > end_date:
         st.error(TRANSLATIONS[st.session_state.language]['date_range_error'])
     
-    # Municipality filter option
-    st.header("Filter by Municipality")
-    
-    # Get all municipalities
-    municipalities = sorted(list(set([site.municipality for site in sites])))
-    selected_municipality = st.selectbox(
-        "Select Municipality",
-        ["All Municipalities"] + municipalities,
-        index=0  # Default to "All Municipalities"
-    )
-    
-    municipality_filter = None if selected_municipality == "All Municipalities" else selected_municipality
+    # Municipality filter removed - trend analysis shows all municipalities
+    municipality_filter = None
     
     # Comparison metric selection
     st.header("Comparison Metric")
@@ -346,42 +336,10 @@ st.header("Trend Analysis")
 trend_container = st.container()
 
 with trend_container:
-    # Options for trend analysis
-    col1, col2 = st.columns([1, 2])
-    
-    with col1:
-        grouping_option = st.radio(
-            "Group by:",
-            ["Individual Sites", "Municipality"]
-        )
-        
-        group_by_municipality = grouping_option == "Municipality"
-        
-        highlight_option = st.checkbox("Highlight specific sites", value=False)
-        
-        highlight_sites = None
-        if highlight_option:
-            # Get site names
-            site_names = [site.name for site in sites]
-            if municipality_filter:
-                # Filter sites by municipality
-                filtered_sites = [site.name for site in sites if site.municipality == municipality_filter]
-                highlight_sites = st.multiselect(
-                    "Select sites to highlight:",
-                    filtered_sites,
-                    max_selections=5
-                )
-            else:
-                highlight_sites = st.multiselect(
-                    "Select sites to highlight:",
-                    site_names,
-                    max_selections=5
-                )
-    
     # Create placeholder for trend chart
     trend_placeholder = st.empty()
     with trend_placeholder:
-        st.text("Loading trend analysis chart...")
+        st.text("Loading municipal trend analysis chart...")
     
     # Create municipal average data for trend analysis
     def create_municipal_average_data(metric_name, date_range=None):
