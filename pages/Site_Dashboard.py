@@ -906,8 +906,8 @@ if selected_site:
             # Add spacing before first chart
             st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
 
-            # Commercial Fish Biomass Chart
-            st.subheader(f"Commercial Fish Biomass - {selected_site}")
+            # Commercial Fish Biomass Chart with centered title
+            st.markdown(f"<h3 style='text-align: center;'>Commercial Fish Biomass - {selected_site}</h3>", unsafe_allow_html=True)
             
             with st.spinner("Loading biomass data..."):
                 # Get biomass data and comparison
@@ -973,7 +973,7 @@ if selected_site:
             coral_chart_container = st.container()
             with coral_chart_container:
                 # Show title for chart
-                st.subheader(f"Hard Coral Cover - {selected_site}")
+                st.markdown(f"<h3 style='text-align: center;'>Hard Coral Cover - {selected_site}</h3>", unsafe_allow_html=True)
                 
                 # Create a container for the skeleton chart that we can replace later
                 coral_skeleton_container = st.empty()
