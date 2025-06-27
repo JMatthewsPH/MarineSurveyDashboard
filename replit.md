@@ -92,7 +92,8 @@ The Marine Conservation Philippines Platform is a comprehensive data visualizati
 ## Changelog
 - June 27, 2025: **CHART TITLE CENTERING FIX** - Resolved Plotly title positioning issue where titles defaulted to plot area coordinates instead of paper coordinates, causing misalignment with margins and legends. Now all chart titles are properly centered on charts using paper-relative positioning.
 - June 27, 2025: **MOBILE-OPTIMIZED LAYOUT** - Removed redundant Streamlit titles above charts, keeping only centered Plotly titles on charts for cleaner mobile viewing experience
-- June 27, 2025: **MAJOR DATA UPDATE** - Switched to comprehensive new_data dataset. Commercial biomass now available for ALL 15/15 sites (previously 8/15). Complete data coverage achieved. Dataset extends to April 2025 with 259 total surveys.
+- June 27, 2025: **DATA CLEANUP** - Removed 6 erroneous survey records from MAR-MAY 2021 that fell within COVID gap period (Apr 2020 - Mar 2022). Total dataset now contains 255 surveys.
+- June 27, 2025: **MAJOR DATA UPDATE** - Switched to comprehensive new_data dataset. Commercial biomass now available for ALL 15/15 sites (previously 8/15). Complete data coverage achieved. Dataset extends to April 2025.
 - June 27, 2025: Created dedicated SummaryGraphGenerator for Summary Dashboard to resolve commercial biomass visualization issues - now displays properly in both Site Comparison Matrix and Trend Analysis sections
 - June 27, 2025: Fixed COVID gap period to show correct timeframe (Apr 2020 - Mar 2022) to properly include SEP-NOV 2019 and Winter 19/20 data points before gap starts
 - June 26, 2025: Fixed bar chart to display all 15 sites by replacing missing data with 0 values instead of dropping rows
