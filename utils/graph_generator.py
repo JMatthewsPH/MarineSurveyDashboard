@@ -145,8 +145,13 @@ class GraphGenerator:
             'displayModeBar': 'hover'
         }
 
+        # Debug logging at function start
+        print(f"DEBUG CHART: Starting chart generation for {title}")
+        print(f"DEBUG CHART: Data shape: {data.shape}")
+        
         # If no data, return empty figure with basic config
         if data.empty:
+            print(f"DEBUG CHART: {title} - Data is empty, returning placeholder")
             return fig, config
 
         # Sort data by date and get date range for filename - optimization: sort only once
