@@ -483,7 +483,7 @@ class GraphGenerator:
             'margin': {
                 'l': 50,
                 'r': 30,
-                't': 80,  # More space for centered title
+                't': 100,  # Even more space for annotation title
                 'b': 140  # Reduced bottom margin for better legend positioning
             },
             'xaxis': {
@@ -534,15 +534,16 @@ class GraphGenerator:
             }
         )
         
-        # Also try using annotations as a backup for centering
+        # Use annotation for perfectly centered title
         fig.add_annotation(
             text=f"<b>{title}</b>",
             xref="paper", yref="paper",
-            x=0.5, y=1.02,
+            x=0.5, y=1.05,
             xanchor="center", yanchor="bottom",
             showarrow=False,
             font=dict(size=18, color="black"),
-            bgcolor="rgba(255,255,255,0)"
+            bgcolor="rgba(255,255,255,0)",
+            align="center"
         )
         
         # Hide the original title since we're using annotation
