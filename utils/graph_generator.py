@@ -312,6 +312,10 @@ class GraphGenerator:
             
             # If gap is more than 6 months, it's likely a COVID period
             if months_diff > 6:
+                # Debug logging
+                print(f"DEBUG GAP: {title} - Gap found from {current_date.strftime('%Y-%m-%d')} to {next_date.strftime('%Y-%m-%d')} ({months_diff} months)")
+                print(f"DEBUG GAP: Seasons {complete_df_sorted.iloc[i]['season']} to {complete_df_sorted.iloc[i + 1]['season']}")
+                
                 gaps.append({
                     'before_idx': i,
                     'after_idx': i + 1,
@@ -320,6 +324,8 @@ class GraphGenerator:
                     'before_value': complete_df_sorted.iloc[i]['value'],
                     'after_value': complete_df_sorted.iloc[i + 1]['value']
                 })
+        
+        print(f"DEBUG GAP: {title} - Found {len(gaps)} gaps")
         
         # Add all data points as one trace
         fig.add_trace(go.Scatter(
