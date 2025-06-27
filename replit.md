@@ -90,6 +90,8 @@ The Marine Conservation Philippines Platform is a comprehensive data visualizati
 - **Health Checks**: Database connection validation and automatic recovery
 
 ## Changelog
+- June 27, 2025: Fixed COVID gap period to show correct timeframe (Mar 2020 - Mar 2021) instead of incorrect long gap (Sep 2019 - Mar 2022)
+- June 26, 2025: Fixed bar chart to display all 15 sites by replacing missing data with 0 values instead of dropping rows
 - June 26, 2025: Added municipality-grouped bar chart for site comparison with red-yellow-green health indicators and Y-axis starting from 0
 - June 26, 2025: Restored CSS-based AnimRun.gif animation after `st.spinner()` approach failed to show custom animation
 - June 26, 2025: **ROLLBACK POINT** - CSS-based AnimRun.gif animation working for post-startup loading states
