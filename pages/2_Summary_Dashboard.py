@@ -301,6 +301,16 @@ with matrix_container:
     # Get comparison matrix data
     matrix_data = data_processor.get_site_comparison_matrix()
     
+    # Debug: Check the actual values in the matrix data
+    if matrix_data is not None and not matrix_data.empty:
+        st.write("DEBUG - Commercial Biomass values by site:")
+        for _, row in matrix_data.iterrows():
+            biomass_val = row['commercial_biomass']
+            if biomass_val is None or pd.isna(biomass_val):
+                st.write(f"  {row['site']}: None/NaN (will be converted to 0)")
+            else:
+                st.write(f"  {row['site']}: {biomass_val:.2f} kg/ha")
+    
     if matrix_data is not None and not matrix_data.empty:
         # Apply municipality filter if specified
         if municipality_filter:
