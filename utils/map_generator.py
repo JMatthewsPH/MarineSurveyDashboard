@@ -149,10 +149,11 @@ class MapGenerator:
                 font-size:14px; padding: 10px; border-radius: 5px;
                 box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             ">
-            <h4 style="margin-top: 0;">Biomass Legend</h4>
+            <h4 style="margin-top: 0;">Commercial Biomass</h4>
             <p><i class="glyphicon glyphicon-leaf" style="color: green;"></i> High (≥15 kg/ha)</p>
             <p><i class="glyphicon glyphicon-warning-sign" style="color: orange;"></i> Medium (8-15 kg/ha)</p>
             <p><i class="glyphicon glyphicon-exclamation-sign" style="color: red;"></i> Low (<8 kg/ha)</p>
+            <p style="font-size: 12px; color: #666; margin-top: 5px;">Max: Kookoos 21 kg/ha</p>
             </div>
             '''
             m.get_root().add_child(folium.Element(legend_html))
