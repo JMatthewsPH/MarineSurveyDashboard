@@ -5,10 +5,12 @@ import time
 from datetime import datetime, timedelta
 import plotly.express as px
 import plotly.graph_objects as go
+from streamlit_folium import st_folium
 
 # Import local modules
 from utils.data_processor import DataProcessor
 from utils.summary_graph_generator import SummaryGraphGenerator
+from utils.map_generator import MapGenerator
 from utils.translations import TRANSLATIONS
 from utils.database import get_db_session
 from utils.branding import display_logo, add_favicon, add_custom_loading_animation
@@ -539,6 +541,52 @@ with trend_container:
     else:
         # For other metrics, display a placeholder message
         trend_placeholder.info(f"Trend analysis for {comparison_metric} will be implemented soon.")
+
+# =================================
+# 📍 INTERACTIVE BIOMASS HEATMAP
+# =================================
+
+st.markdown("---")
+st.markdown("## 📍 Interactive Biomass Heatmap")
+st.markdown("Explore the geographic distribution of marine biomass across all MPA sites with this interactive map.")
+
+# Create map generator
+with st.spinner("Loading interactive biomass heatmap..."):
+    try:
+        map_generator = MapGenerator(data_processor)
+        biomass_map = map_generator.create_biomass_heatmap(
+            center_lat=9.15,  # Center between all sites
+            center_lon=123.0,
+            zoom_start=9
+        )
+        
+        # Display the map
+        st.markdown("### 🗺️ Geographic Biomass Distribution")
+        st.markdown("""
+        **How to use this map:**
+        - 🟢 **Green markers**: High biomass sites (≥100 kg/ha)
+        - 🟠 **Orange markers**: Medium biomass sites (50-100 kg/ha)  
+        - 🔴 **Red markers**: Low biomass sites (<50 kg/ha)
+        - 🔥 **Heatmap overlay**: Shows biomass radiation intensity
+        - 🗺️ **Layer control**: Switch between map view and satellite imagery
+        - 📍 **Click markers**: View detailed site information
+        """)
+        
+        # Display the folium map
+        map_data = st_folium(
+            biomass_map, 
+            width=1200, 
+            height=600,
+            returned_objects=["last_object_clicked_popup"]
+        )
+        
+        # Display clicked site information if available
+        if map_data["last_object_clicked_popup"]:
+            st.success("🗺️ **Map Interaction**: Click on any marker to see detailed biomass information for that site!")
+            
+    except Exception as e:
+        st.error(f"Error loading biomass heatmap: {str(e)}")
+        st.info("📍 Interactive biomass heatmap will be available once all site coordinates are properly configured.")
 
 # Add a footer with timestamp
 st.markdown("---")
