@@ -572,10 +572,10 @@ with st.spinner("Loading interactive biomass heatmap..."):
         - 📍 **Click markers**: View detailed site information
         """)
         
-        # Display the folium map
+        # Display the folium map with responsive width
         map_data = st_folium(
             biomass_map, 
-            width=1200, 
+            use_container_width=True,
             height=600,
             returned_objects=["last_object_clicked_popup"]
         )
