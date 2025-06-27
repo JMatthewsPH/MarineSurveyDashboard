@@ -461,7 +461,9 @@ class GraphGenerator:
                 'x': 0.5,
                 'xanchor': 'center',
                 'yanchor': 'top',
-                'font': {'size': 18}  # Slightly larger title
+                'font': {'size': 18},  # Slightly larger title
+                'xref': 'paper',
+                'yref': 'paper'
             },
             'xaxis_title': 'Season',
             'yaxis_title': y_label,
@@ -521,7 +523,7 @@ class GraphGenerator:
 
         fig.update_layout(**layout_updates)
         
-        # Set title with proper centering above legend
+        # Ensure title centering is properly applied
         fig.update_layout(
             title={
                 'text': title,
@@ -530,6 +532,8 @@ class GraphGenerator:
                 'xanchor': 'center',
                 'yanchor': 'top',
                 'font': {'size': 18},
+                'xref': 'paper',
+                'yref': 'paper',
                 'pad': {'t': 20}
             }
         )

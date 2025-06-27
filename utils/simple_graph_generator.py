@@ -240,7 +240,13 @@ class SimpleGraphGenerator:
         
         # Update layout
         fig.update_layout(
-            title=dict(text=title, x=0.5, font=dict(size=18, color='#2c3e50')),
+            title=dict(
+                text=title, 
+                x=0.5, 
+                xanchor='center',
+                xref='paper',
+                font=dict(size=18, color='#2c3e50')
+            ),
             xaxis=dict(
                 title="Season",
                 showgrid=True,
