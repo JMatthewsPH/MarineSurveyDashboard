@@ -43,6 +43,8 @@ class Site(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True, index=True)
     municipality = Column(String)
+    latitude = Column(Float)
+    longitude = Column(Float)
     image_url = Column(String)
     description_en = Column(String)
     description_fil = Column(String)
