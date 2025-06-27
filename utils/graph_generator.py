@@ -177,14 +177,22 @@ class GraphGenerator:
         
 
         
-        # Use all actual data directly - this ensures nothing is lost
-        # Prepare the data with required columns
-        complete_df = data_sorted.copy()
-        complete_df['has_data'] = True
+        # Use all actual data but properly aggregate by season
+        # First, properly aggregate by season (group by season and take the mean)
+        metric_column = data_sorted.columns[1]  # Get the actual metric column name
+        
+        # Group by season and aggregate (using mean for multiple values in same season)
+        aggregated_data = data_sorted.groupby('season').agg({
+            'date': 'first',  # Take first date for each season
+            metric_column: 'mean'  # Average if multiple surveys in same season
+        }).reset_index()
         
         # Rename the metric column to 'value' for consistent processing
-        metric_column = complete_df.columns[1]  # Get the actual metric column name
-        complete_df = complete_df.rename(columns={metric_column: 'value'})
+        complete_df = aggregated_data.rename(columns={metric_column: 'value'})
+        complete_df['has_data'] = True
+        
+        # Sort by date to ensure proper chronological order
+        complete_df = complete_df.sort_values('date')
         
         # Split data into pre and post COVID for gap visualization  
         pre_covid = complete_df[complete_df['date'] < covid_start]
