@@ -301,6 +301,13 @@ with matrix_container:
     # Get comparison matrix data
     matrix_data = data_processor.get_site_comparison_matrix()
     
+    # Debug: Log matrix data structure
+    if matrix_data is not None and not matrix_data.empty:
+        st.write("Debug: Matrix data shape:", matrix_data.shape)
+        st.write("Debug: Matrix data columns:", list(matrix_data.columns))
+        st.write("Debug: Sample data:", matrix_data.head())
+        st.write("Debug: Commercial biomass values:", matrix_data['commercial_biomass'].describe())
+    
     if matrix_data is not None and not matrix_data.empty:
         # Apply municipality filter if specified
         if municipality_filter:
