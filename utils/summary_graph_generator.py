@@ -512,3 +512,149 @@ class SummaryGraphGenerator:
             )
             config = {'displaylogo': False, 'responsive': True}
             return fig, config
+    
+    def create_municipal_trend_chart(self, trend_data, metric_name, show_all_municipalities=True):
+        """
+        Create a trend chart showing municipal averages over time
+        
+        Args:
+            trend_data: DataFrame with columns ['date', 'metric_value', 'municipality']
+            metric_name: Name of the metric being displayed
+            show_all_municipalities: Whether to show all municipalities or just one
+        
+        Returns:
+            tuple: (plotly figure, config dict)
+        """
+        try:
+            if trend_data.empty:
+                fig = go.Figure()
+                fig.add_annotation(
+                    text=f"No {metric_name.lower()} data available",
+                    xref="paper", yref="paper",
+                    x=0.5, y=0.5,
+                    showarrow=False,
+                    font=dict(size=14, color="gray")
+                )
+                config = {'displaylogo': False, 'responsive': True}
+                return fig, config
+            
+            # Color mapping for municipalities
+            color_map = {
+                'All Municipalities': '#1f77b4',  # Blue
+                'Zamboanguita': '#ff7f0e',        # Orange
+                'Santa Catalina': '#2ca02c',      # Green
+                'Siaton': '#d62728'               # Red
+            }
+            
+            fig = go.Figure()
+            
+            # Sort data by date
+            trend_data = trend_data.sort_values('date')
+            
+            # Add trend lines for each municipality
+            for municipality in trend_data['municipality'].unique():
+                muni_data = trend_data[trend_data['municipality'] == municipality]
+                
+                # Format dates for display
+                muni_data = muni_data.copy()
+                muni_data['formatted_date'] = muni_data['date'].apply(format_season)
+                
+                fig.add_trace(go.Scatter(
+                    x=muni_data['date'],
+                    y=muni_data['metric_value'],
+                    mode='lines+markers',
+                    line=dict(
+                        color=color_map.get(municipality, '#1f77b4'),
+                        width=3 if municipality == 'All Municipalities' else 2
+                    ),
+                    marker=dict(
+                        size=8 if municipality == 'All Municipalities' else 6,
+                        color=color_map.get(municipality, '#1f77b4')
+                    ),
+                    name=municipality,
+                    hovertemplate=(
+                        f"<b>{municipality}</b><br>"
+                        + f"{metric_name}: %{{y:.2f}}<br>"
+                        + "Date: %{customdata}<br>"
+                        + "<extra></extra>"
+                    ),
+                    customdata=muni_data['formatted_date']
+                ))
+            
+            # Add COVID-19 gap visualization if applicable
+            covid_start = pd.to_datetime('2020-04-01')
+            covid_end = pd.to_datetime('2022-03-31')
+            
+            # Check if data spans the COVID period
+            data_start = trend_data['date'].min()
+            data_end = trend_data['date'].max()
+            
+            if data_start <= covid_end and data_end >= covid_start:
+                fig.add_vrect(
+                    x0=covid_start, x1=covid_end,
+                    fillcolor="rgba(255, 0, 0, 0.1)",
+                    layer="below",
+                    line_width=0,
+                    annotation_text="COVID-19 Gap",
+                    annotation_position="top left"
+                )
+            
+            # Update layout
+            fig.update_layout(
+                title=dict(
+                    text=f"{metric_name} Trends by Municipality",
+                    x=0.5,
+                    xanchor='center',
+                    font=dict(size=18, family="Arial, sans-serif")
+                ),
+                xaxis=dict(
+                    title="Date",
+                    gridcolor='lightgray',
+                    showgrid=True,
+                    zeroline=False
+                ),
+                yaxis=dict(
+                    title=metric_name,
+                    gridcolor='lightgray',
+                    showgrid=True,
+                    zeroline=False
+                ),
+                plot_bgcolor='white',
+                paper_bgcolor='white',
+                hovermode='x unified',
+                legend=dict(
+                    orientation="h",
+                    yanchor="bottom",
+                    y=1.02,
+                    xanchor="right",
+                    x=1
+                ),
+                margin=dict(l=60, r=40, t=80, b=60)
+            )
+            
+            config = {
+                'displaylogo': False,
+                'responsive': True,
+                'toImageButtonOptions': {
+                    'format': 'png',
+                    'filename': generate_filename(f"{metric_name}_municipal_trends"),
+                    'height': 600,
+                    'width': 1000,
+                    'scale': 2
+                }
+            }
+            
+            return fig, config
+            
+        except Exception as e:
+            logger.error(f"Error creating municipal trend chart: {str(e)}")
+            fig = go.Figure()
+            fig.add_annotation(
+                text=f"Error creating trend chart: {str(e)}",
+                xref="paper", yref="paper",
+                x=0.5, y=0.5,
+                showarrow=False,
+                font=dict(size=14, color="red")
+            )
+            config = {'displaylogo': False, 'responsive': True}
+            return fig, config
