@@ -1,0 +1,95 @@
+2025-06-27 01:30:48,263 - utils.data_processor - INFO - DataProcessor initialized
+2025-06-27 01:30:48,330 - utils.data_processor - INFO - Fetching all sites from database
+2025-06-27 01:30:48,378 - utils.data_processor - INFO - Successfully fetched 15 sites from database
+2025-06-27 01:31:07,224 - utils.data_processor - INFO - DataProcessor initialized
+2025-06-27 01:31:07,234 - utils.data_processor - INFO - Fetching biomass data for site: Andulay
+2025-06-27 01:31:07,346 - utils.data_processor - INFO - Found 24 biomass surveys for Andulay
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:31:07,634 - utils.data_processor - INFO - Fetching hard_coral data for site: Andulay
+2025-06-27 01:31:07,698 - utils.data_processor - INFO - Found 24 hard_coral surveys for Andulay
+DEBUG - Metric name: Hard Coral Cover
+Available columns for hard_coral: ['date', 'hard_coral']
+2025-06-27 01:31:07,872 - utils.data_processor - INFO - Fetching fleshy_algae data for site: Andulay
+2025-06-27 01:31:07,937 - utils.data_processor - INFO - Found 24 fleshy_algae surveys for Andulay
+DEBUG - Metric name: Fleshy Algae Cover
+Available columns for fleshy_algae: ['date', 'fleshy_algae']
+2025-06-27 01:31:08,134 - utils.data_processor - INFO - Fetching herbivore data for site: Andulay
+2025-06-27 01:31:08,198 - utils.data_processor - INFO - Found 24 herbivore surveys for Andulay
+DEBUG - Metric name: Herbivore Density
+Available columns for herbivore: ['date', 'herbivore']
+2025-06-27 01:31:08,379 - utils.data_processor - INFO - Fetching carnivore data for site: Andulay
+2025-06-27 01:31:08,443 - utils.data_processor - INFO - Found 24 carnivore surveys for Andulay
+DEBUG - Metric name: Carnivore Density
+Available columns for carnivore: ['date', 'carnivore']
+2025-06-27 01:31:08,623 - utils.data_processor - INFO - Fetching omnivore data for site: Andulay
+2025-06-27 01:31:08,688 - utils.data_processor - INFO - Found 24 omnivore surveys for Andulay
+DEBUG - Metric name: Omnivore Density
+Available columns for omnivore: ['date', 'omnivore']
+2025-06-27 01:31:08,890 - utils.data_processor - INFO - Fetching corallivore data for site: Andulay
+2025-06-27 01:31:08,954 - utils.data_processor - INFO - Found 24 corallivore surveys for Andulay
+DEBUG - Metric name: Corallivore Density
+Available columns for corallivore: ['date', 'corallivore']
+2025-06-27 01:31:09,149 - utils.data_processor - INFO - Fetching bleaching data for site: Andulay
+2025-06-27 01:31:09,213 - utils.data_processor - INFO - Found 24 bleaching surveys for Andulay
+DEBUG - Metric name: Bleaching
+Available columns for bleaching: ['date', 'bleaching']
+2025-06-27 01:31:09,388 - utils.data_processor - INFO - Fetching rubble data for site: Andulay
+2025-06-27 01:31:09,452 - utils.data_processor - INFO - Found 24 rubble surveys for Andulay
+DEBUG - Metric name: Rubble Cover
+Available columns for rubble: ['date', 'rubble']
+2025-06-27 01:31:10,359 - utils.data_processor - INFO - Fetching biomass data for site: Manalongon
+2025-06-27 01:31:10,423 - utils.data_processor - INFO - Found 3 biomass surveys for Manalongon
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:31:10,424 - utils.data_processor - INFO - Fetching biomass data for site: Cawitan
+2025-06-27 01:31:10,488 - utils.data_processor - INFO - Found 3 biomass surveys for Cawitan
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:31:10,489 - utils.data_processor - INFO - Fetching biomass data for site: Dalakit
+2025-06-27 01:31:10,552 - utils.data_processor - INFO - Found 17 biomass surveys for Dalakit
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:31:10,553 - utils.data_processor - INFO - Fetching biomass data for site: Lutoban North
+2025-06-27 01:31:10,617 - utils.data_processor - INFO - Found 24 biomass surveys for Lutoban North
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:31:10,618 - utils.data_processor - INFO - Fetching biomass data for site: Malatapay
+2025-06-27 01:31:10,681 - utils.data_processor - INFO - Found 23 biomass surveys for Malatapay
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:31:10,682 - utils.data_processor - INFO - Fetching biomass data for site: Kookoos
+2025-06-27 01:31:10,745 - utils.data_processor - INFO - Found 23 biomass surveys for Kookoos
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:31:10,746 - utils.data_processor - INFO - Fetching biomass data for site: Salag
+2025-06-27 01:31:10,810 - utils.data_processor - INFO - Found 16 biomass surveys for Salag
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:31:10,812 - utils.data_processor - INFO - Fetching biomass data for site: Mojon
+2025-06-27 01:31:10,876 - utils.data_processor - INFO - Found 2 biomass surveys for Mojon
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:31:10,877 - utils.data_processor - INFO - Fetching biomass data for site: Basak
+2025-06-27 01:31:10,942 - utils.data_processor - INFO - Found 23 biomass surveys for Basak
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:31:10,943 - utils.data_processor - INFO - Fetching biomass data for site: Lutoban South
+2025-06-27 01:31:11,008 - utils.data_processor - INFO - Found 17 biomass surveys for Lutoban South
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:31:11,010 - utils.data_processor - INFO - Fetching biomass data for site: Antulang
+2025-06-27 01:31:11,073 - utils.data_processor - INFO - Found 22 biomass surveys for Antulang
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:31:11,074 - utils.data_processor - INFO - Fetching biomass data for site: Guinsuan
+2025-06-27 01:31:11,137 - utils.data_processor - INFO - Found 24 biomass surveys for Guinsuan
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:31:11,138 - utils.data_processor - INFO - Fetching biomass data for site: Lutoban Pier
+2025-06-27 01:31:11,202 - utils.data_processor - INFO - Found 24 biomass surveys for Lutoban Pier
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:31:11,203 - utils.data_processor - INFO - Fetching biomass data for site: Latason
+2025-06-27 01:31:11,267 - utils.data_processor - INFO - Found 13 biomass surveys for Latason
+DEBUG - Metric name: Commercial Biomass
+/home/runner/workspace/pages/Site_Dashboard.py:508: FutureWarning: The behavior of DataFrame concatenation with empty or all-NA entries is deprecated. In a future version, this will no longer exclude empty or all-NA columns when determining the result dtypes. To retain the old behavior, exclude the relevant entries before the concat operation.
+  all_data = pd.concat(all_surveys)
+DEBUG: Calculated range 2017-10-01 00:00:00 to 2025-04-01 00:00:00, using 2017-01-01 00:00:00 to 2025-04-01 00:00:00
+2025-06-27 01:31:11.281 Uncaught app execution
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/streamlit/runtime/scriptrunner/exec_code.py", line 121, in exec_func_with_error_handling
+    result = func()
+             ^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/streamlit/runtime/scriptrunner/script_runner.py", line 591, in code_to_exec
+    exec(code, module.__dict__)
+  File "/home/runner/workspace/pages/Site_Dashboard.py", line 951, in <module>
+    biomass_fig, biomass_config = graph_generator.create_time_series(
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: SimpleGraphGenerator.create_time_series() got an unexpected keyword argument 'show_confidence_interval'

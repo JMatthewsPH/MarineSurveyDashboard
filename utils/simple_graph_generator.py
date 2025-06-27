@@ -48,7 +48,7 @@ class SimpleGraphGenerator:
     def __init__(self, data_processor):
         self.data_processor = data_processor
 
-    def create_time_series(self, data, title, y_label, comparison_data=None, comparison_labels=None, date_range=None):
+    def create_time_series(self, data, title, y_label, comparison_data=None, comparison_labels=None, date_range=None, secondary_data=None, secondary_label=None, tertiary_data=None, tertiary_label=None, show_confidence_interval=False):
         """
         Create a simple time series chart
         Data comes clean from database - just plot it
@@ -173,3 +173,58 @@ class SimpleGraphGenerator:
         )
         
         return fig, config
+
+    def create_eco_tourism_chart(self, data, title, observation_type='percentage'):
+        """Create bar chart for eco-tourism data (placeholder)"""
+        fig = go.Figure()
+        fig.add_annotation(
+            text="Eco-tourism charts not yet implemented in simple generator",
+            xref="paper", yref="paper",
+            x=0.5, y=0.5, showarrow=False,
+            font=dict(size=16, color="gray")
+        )
+        return fig
+    
+    def create_site_comparison_heatmap(self, matrix_data, metric_column, title=None):
+        """Create heatmap for site comparison (placeholder)"""
+        fig = go.Figure()
+        fig.add_annotation(
+            text="Heatmap charts not yet implemented in simple generator",
+            xref="paper", yref="paper",
+            x=0.5, y=0.5, showarrow=False,
+            font=dict(size=16, color="gray")
+        )
+        return fig
+    
+    def create_geographic_visualization(self, sites_data, metric_column, title=None):
+        """Create geographic visualization (placeholder)"""
+        fig = go.Figure()
+        fig.add_annotation(
+            text="Geographic charts not yet implemented in simple generator",
+            xref="paper", yref="paper",
+            x=0.5, y=0.5, showarrow=False,
+            font=dict(size=16, color="gray")
+        )
+        return fig
+    
+    def create_multi_site_trend_chart(self, trend_data, metric_name, group_by_municipality=False, highlight_sites=None):
+        """Create multi-site trend chart (placeholder)"""
+        fig = go.Figure()
+        fig.add_annotation(
+            text="Multi-site trend charts not yet implemented in simple generator",
+            xref="paper", yref="paper",
+            x=0.5, y=0.5, showarrow=False,
+            font=dict(size=16, color="gray")
+        )
+        return fig
+    
+    def create_municipality_grouped_bar_chart(self, matrix_data, metric_column, title=None, y_axis_label=None):
+        """Create municipality grouped bar chart (placeholder)"""
+        fig = go.Figure()
+        fig.add_annotation(
+            text="Municipality bar charts not yet implemented in simple generator",
+            xref="paper", yref="paper",
+            x=0.5, y=0.5, showarrow=False,
+            font=dict(size=16, color="gray")
+        )
+        return fig
