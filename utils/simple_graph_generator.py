@@ -169,19 +169,28 @@ class SimpleGraphGenerator:
             last_pre = pre_covid.iloc[-1]
             first_post = post_covid.iloc[0]
             
+            # Check if both Y values are valid (not NaN)
+            last_pre_value = last_pre[metric_column]
+            first_post_value = first_post[metric_column]
+            
             # Debug logging for Lutoban Pier
             if 'Lutoban Pier' in title:
                 print(f"DEBUG LUTOBAN SIMPLE: Adding COVID gap line from {last_pre['season']} to {first_post['season']}")
-                print(f"DEBUG LUTOBAN SIMPLE: Y values: {last_pre[metric_column]} to {first_post[metric_column]}")
+                print(f"DEBUG LUTOBAN SIMPLE: Y values: {last_pre_value} to {first_post_value}")
+                print(f"DEBUG LUTOBAN SIMPLE: Both values valid? {pd.notna(last_pre_value) and pd.notna(first_post_value)}")
             
-            fig.add_trace(go.Scatter(
-                x=[last_pre['season'], first_post['season']],
-                y=[last_pre[metric_column], first_post[metric_column]],
-                line=dict(color='#cccccc', dash='dot', width=2),
-                mode='lines',
-                name='COVID-19 Period (No Data)',
-                showlegend=True
-            ))
+            # Only create gap line if both values are valid (not NaN)
+            if pd.notna(last_pre_value) and pd.notna(first_post_value):
+                fig.add_trace(go.Scatter(
+                    x=[last_pre['season'], first_post['season']],
+                    y=[last_pre_value, first_post_value],
+                    line=dict(color='#cccccc', dash='dot', width=2),
+                    mode='lines',
+                    name='COVID-19 Period (No Data)',
+                    showlegend=True
+                ))
+            elif 'Lutoban Pier' in title:
+                print(f"DEBUG LUTOBAN SIMPLE: Skipping COVID gap line due to NaN values")
         
         # Add "Data Collection Ongoing" indicator for current/future seasons
         if not data.empty:
