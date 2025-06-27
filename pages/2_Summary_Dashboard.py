@@ -301,16 +301,6 @@ with matrix_container:
     # Get comparison matrix data
     matrix_data = data_processor.get_site_comparison_matrix()
     
-    # Debug: Check the actual values in the matrix data
-    if matrix_data is not None and not matrix_data.empty:
-        st.write("DEBUG - Commercial Biomass values by site:")
-        for _, row in matrix_data.iterrows():
-            biomass_val = row['commercial_biomass']
-            if biomass_val is None or pd.isna(biomass_val):
-                st.write(f"  {row['site']}: None/NaN (will be converted to 0)")
-            else:
-                st.write(f"  {row['site']}: {biomass_val:.2f} kg/ha")
-    
     if matrix_data is not None and not matrix_data.empty:
         # Apply municipality filter if specified
         if municipality_filter:
@@ -325,6 +315,14 @@ with matrix_container:
         )
         
         matrix_placeholder.empty()
+        
+        # Show data availability info for commercial biomass
+        if selected_metric == "commercial_biomass":
+            sites_with_data = matrix_data[matrix_data[selected_metric].notna()]['site'].tolist()
+            sites_no_data = matrix_data[matrix_data[selected_metric].isna()]['site'].tolist()
+            
+            if sites_no_data:
+                st.info(f"📊 **Data Status**: {len(sites_with_data)} sites have biomass data, {len(sites_no_data)} sites have no biomass data in database. Sites without data appear as zero on the chart and show 'No data in database' when hovered.")
         
         if chart_type == "Bar Chart" and selected_metric == "commercial_biomass":
             # Create grouped bar chart with color coding for commercial biomass

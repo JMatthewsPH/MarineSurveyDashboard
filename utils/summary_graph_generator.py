@@ -62,9 +62,17 @@ class SummaryGraphGenerator:
             y_axis_label: Label for Y-axis including units
         """
         try:
-            # Clean the data - replace NaN with 0 instead of dropping rows
+            # Clean the data - track which sites have no data vs zero values
             clean_data = matrix_data.copy()
+            
+            # Identify sites with genuine null/NaN values (no data) vs actual zeros
+            no_data_sites = clean_data[clean_data[metric_column].isna()]['site'].tolist()
+            
+            # Replace NaN with 0 for visualization purposes
             clean_data[metric_column] = clean_data[metric_column].fillna(0)
+            
+            # Add a column to track data availability for hover information
+            clean_data['has_data'] = ~matrix_data[metric_column].isna()
             
             if clean_data.empty:
                 # Return empty chart if no data
@@ -169,17 +177,33 @@ class SummaryGraphGenerator:
                 
                 x_pos += sites_in_muni
             
-            # Enhanced hover template
+            # Enhanced hover template with data availability information
             if 'biomass' in metric_column.lower():
-                hover_template = "<b>%{x}</b><br>Municipality: %{customdata[0]}<br>Biomass: %{y:.1f} kg/ha<extra></extra>"
+                hover_template = "<b>%{x}</b><br>Municipality: %{customdata[0]}<br>" + \
+                               "Biomass: %{y:.1f} kg/ha<br>" + \
+                               "<i>%{customdata[1]}</i><extra></extra>"
             elif 'coral' in metric_column.lower() or 'algae' in metric_column.lower():
-                hover_template = "<b>%{x}</b><br>Municipality: %{customdata[0]}<br>Cover: %{y:.1f}%<extra></extra>"
+                hover_template = "<b>%{x}</b><br>Municipality: %{customdata[0]}<br>" + \
+                               "Cover: %{y:.1f}%<br>" + \
+                               "<i>%{customdata[1]}</i><extra></extra>"
             elif 'density' in metric_column.lower():
-                hover_template = "<b>%{x}</b><br>Municipality: %{customdata[0]}<br>Density: %{y:.1f} ind/ha<extra></extra>"
+                hover_template = "<b>%{x}</b><br>Municipality: %{customdata[0]}<br>" + \
+                               "Density: %{y:.1f} ind/ha<br>" + \
+                               "<i>%{customdata[1]}</i><extra></extra>"
             else:
-                hover_template = "<b>%{x}</b><br>Municipality: %{customdata[0]}<br>Value: %{y:.1f}<extra></extra>"
+                hover_template = "<b>%{x}</b><br>Municipality: %{customdata[0]}<br>" + \
+                               "Value: %{y:.1f}<br>" + \
+                               "<i>%{customdata[1]}</i><extra></extra>"
             
-            fig.update_traces(hovertemplate=hover_template)
+            # Prepare custom data with municipality and data availability status
+            clean_data['data_status'] = clean_data['has_data'].apply(
+                lambda x: "Data available" if x else "No data in database"
+            )
+            
+            fig.update_traces(
+                hovertemplate=hover_template,
+                customdata=clean_data[['municipality', 'data_status']].values
+            )
             
             # Configure download settings
             config = {
