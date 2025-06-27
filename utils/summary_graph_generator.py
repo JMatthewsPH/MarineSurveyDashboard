@@ -115,14 +115,13 @@ class SummaryGraphGenerator:
                 # Default to red-yellow-green for most metrics
                 colorscale = 'RdYlGn'
             
-            # Create the bar chart with color mapping
+            # Create the bar chart with color mapping (no title here - will be set in update_layout)
             fig = px.bar(
                 clean_data,
                 x='site_label',
                 y=metric_column,
                 color=metric_column,
                 color_continuous_scale=colorscale,
-                title=title or f"Site Comparison: {metric_column.replace('_', ' ').title()}",
                 labels={
                     'site_label': 'Site',
                     metric_column: y_axis_label or metric_column.replace('_', ' ').title()
