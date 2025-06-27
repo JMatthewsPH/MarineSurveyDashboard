@@ -264,11 +264,15 @@ class SimpleGraphGenerator:
                 xanchor="center",
                 x=0.5,
                 itemsizing="constant",
-                itemwidth=30,
-                traceorder="normal"
+                font=dict(size=11),
+                itemclick="toggleothers",
+                itemdoubleclick="toggle",
+                tracegroupgap=10
             ),
             hovermode='x unified',
-            margin=dict(l=60, r=60, t=120, b=100)
+            margin=dict(l=60, r=60, t=120, b=100),
+            width=800,
+            height=500
         )
         
         return fig, config
