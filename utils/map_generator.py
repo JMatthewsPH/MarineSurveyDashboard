@@ -58,7 +58,9 @@ class MapGenerator:
             # Collect data for heatmap and markers
             heatmap_data = []
             marker_data = []
+            biomass_values = []
             
+            # First pass: collect all biomass values to calculate dynamic thresholds
             for site in sites:
                 if site.latitude and site.longitude:
                     # Get latest biomass data for this site
@@ -77,21 +79,60 @@ class MapGenerator:
                             continue  # Skip if no biomass data
                             
                         latest_biomass = biomass_df[biomass_col].iloc[-1]
+                        biomass_values.append(latest_biomass)
+            
+            # Calculate dynamic thresholds based on data distribution
+            if biomass_values:
+                import numpy as np
+                biomass_array = np.array(biomass_values)
+                max_biomass = np.max(biomass_array)
+                min_biomass = np.min(biomass_array)
+                
+                # Calculate percentile-based thresholds for more dynamic scaling
+                high_threshold = np.percentile(biomass_array, 66.67)  # Top third
+                medium_threshold = np.percentile(biomass_array, 33.33)  # Middle third
+                
+                # Ensure reasonable minimum gaps between thresholds
+                if high_threshold - medium_threshold < 2:
+                    high_threshold = medium_threshold + 2
+                if medium_threshold - min_biomass < 1:
+                    medium_threshold = min_biomass + 1
+            else:
+                # Fallback values if no data
+                max_biomass = 21
+                high_threshold = 15
+                medium_threshold = 8
+            
+            # Second pass: create markers with dynamic thresholds
+            for site in sites:
+                if site.latitude and site.longitude:
+                    # Get latest biomass data for this site
+                    biomass_df = self.data_processor.get_biomass_data(site.name)
+                    
+                    if not biomass_df.empty:
+                        # Get the most recent biomass value
+                        possible_cols = ['Commercial Biomass', 'commercial_biomass', 'biomass', 'commercial_fish_biomass']
+                        biomass_col = None
+                        for col in possible_cols:
+                            if col in biomass_df.columns:
+                                biomass_col = col
+                                break
+                        
+                        if biomass_col is None:
+                            continue  # Skip if no biomass data
+                            
+                        latest_biomass = biomass_df[biomass_col].iloc[-1]
                         latest_date = biomass_df['date'].iloc[-1]
                         
-                        # Add to heatmap data (lat, lon, weight)
-                        # Scale biomass value for better visualization (adjusted for actual data range)
-                        weight = max(0.1, min(latest_biomass / 25, 2.0))  # Normalize to 0.1-2.0 range based on max ~21kg/ha
+                        # Add to heatmap data with dynamic scaling
+                        weight = max(0.1, min(latest_biomass / max_biomass * 2.0, 2.0))
                         heatmap_data.append([site.latitude, site.longitude, weight])
                         
-                        # Determine color based on biomass value (adjusted for actual data range)
-                        # Green: High biomass (15+ kg/ha - top tier)
-                        # Orange: Medium biomass (8-15 kg/ha - moderate)
-                        # Red: Low biomass (<8 kg/ha - needs attention)
-                        if latest_biomass >= 15:
+                        # Determine color based on dynamic thresholds
+                        if latest_biomass >= high_threshold:
                             color = 'green'
                             icon = 'leaf'
-                        elif latest_biomass >= 8:
+                        elif latest_biomass >= medium_threshold:
                             color = 'orange'
                             icon = 'warning-sign'
                         else:
@@ -140,20 +181,20 @@ class MapGenerator:
             # Add layer control
             folium.LayerControl().add_to(m)
             
-            # Add a legend
-            legend_html = '''
+            # Add a dynamic legend based on calculated thresholds
+            legend_html = f'''
             <div style="
                 position: fixed; 
-                bottom: 50px; right: 50px; width: 200px; height: 120px; 
+                bottom: 50px; right: 50px; width: 220px; height: 130px; 
                 background-color: white; border:2px solid grey; z-index:9999; 
                 font-size:14px; padding: 10px; border-radius: 5px;
                 box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             ">
             <h4 style="margin-top: 0;">Commercial Biomass</h4>
-            <p><i class="glyphicon glyphicon-leaf" style="color: green;"></i> High (≥15 kg/ha)</p>
-            <p><i class="glyphicon glyphicon-warning-sign" style="color: orange;"></i> Medium (8-15 kg/ha)</p>
-            <p><i class="glyphicon glyphicon-exclamation-sign" style="color: red;"></i> Low (<8 kg/ha)</p>
-            <p style="font-size: 12px; color: #666; margin-top: 5px;">Max: Kookoos 21 kg/ha</p>
+            <p><i class="glyphicon glyphicon-leaf" style="color: green;"></i> High (≥{high_threshold:.1f} kg/ha)</p>
+            <p><i class="glyphicon glyphicon-warning-sign" style="color: orange;"></i> Medium ({medium_threshold:.1f}-{high_threshold:.1f} kg/ha)</p>
+            <p><i class="glyphicon glyphicon-exclamation-sign" style="color: red;"></i> Low (<{medium_threshold:.1f} kg/ha)</p>
+            <p style="font-size: 12px; color: #666; margin-top: 5px;">Range: {min_biomass:.1f}-{max_biomass:.1f} kg/ha</p>
             </div>
             '''
             m.get_root().add_child(folium.Element(legend_html))
