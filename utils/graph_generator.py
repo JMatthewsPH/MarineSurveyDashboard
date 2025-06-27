@@ -172,6 +172,16 @@ class GraphGenerator:
         pre_covid_data = data[data['date'] < covid_start]
         post_covid_data = data[data['date'] > covid_end]
         
+        # Debug COVID filtering
+        print(f"DEBUG: Total data points: {len(data)}")
+        print(f"DEBUG: Pre-COVID data points: {len(pre_covid_data)}")
+        print(f"DEBUG: Post-COVID data points: {len(post_covid_data)}")
+        if not data.empty:
+            print(f"DEBUG: Data range: {data['date'].min()} to {data['date'].max()}")
+        if not pre_covid_data.empty:
+            print(f"DEBUG: Pre-COVID range: {pre_covid_data['date'].min()} to {pre_covid_data['date'].max()}")
+            print(f"DEBUG: Pre-COVID dates: {sorted(pre_covid_data['date'].tolist())}")
+        
         # Generate timeline excluding COVID gap periods
         display_seasons = []
         
