@@ -906,8 +906,7 @@ if selected_site:
             # Add spacing before first chart
             st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
 
-            # Commercial Fish Biomass Chart with centered title
-            st.markdown(f"<h3 style='text-align: center;'>Commercial Fish Biomass - {selected_site}</h3>", unsafe_allow_html=True)
+            # Commercial Fish Biomass Chart (title will be on chart)
             
             with st.spinner("Loading biomass data..."):
                 # Get biomass data and comparison
@@ -947,10 +946,10 @@ if selected_site:
                         label = f"{site_municipality} Average" if biomass_compare_scope == "Municipality Average" else "All Sites Average"
                         biomass_comparison_labels = [label]
                         
-                # Create the time series chart with date range filtering and confidence interval (no title)
+                # Create the time series chart with date range filtering and confidence interval
                 biomass_fig, biomass_config = graph_generator.create_time_series(
                     biomass_data,
-                    "",  # Empty title since we're using Streamlit title above
+                    f"Commercial Fish Biomass - {selected_site}",  # Title on chart
                     "Biomass (kg/ha)",
                     comparison_data=biomass_comparison_data,
                     comparison_labels=biomass_comparison_labels,
@@ -973,7 +972,7 @@ if selected_site:
             coral_chart_container = st.container()
             with coral_chart_container:
                 # Show title for chart
-                st.markdown(f"<h3 style='text-align: center;'>Hard Coral Cover - {selected_site}</h3>", unsafe_allow_html=True)
+
                 
                 # Create a container for the skeleton chart that we can replace later
                 coral_skeleton_container = st.empty()
@@ -1024,7 +1023,7 @@ if selected_site:
                     coral_comparison_labels = [label]
             coral_fig, coral_config = graph_generator.create_time_series(
                 coral_data,
-                "",  # Empty title since we're using Streamlit title above
+                f"Hard Coral Cover - {selected_site}",  # Title on chart
                 "Cover (%)",
                 comparison_data=coral_comparison_data,
                 comparison_labels=coral_comparison_labels,

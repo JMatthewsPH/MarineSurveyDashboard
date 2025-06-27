@@ -521,22 +521,18 @@ class GraphGenerator:
 
         fig.update_layout(**layout_updates)
         
-        # Only set title if it's not empty (let Streamlit handle titles)
-        if title and title.strip():
-            fig.update_layout(
-                title={
-                    'text': title,
-                    'y': 0.95,
-                    'x': 0.5,
-                    'xanchor': 'center',
-                    'yanchor': 'top',
-                    'font': {'size': 18},
-                    'pad': {'t': 20}
-                }
-            )
-        else:
-            # Completely remove title area to maximize chart space
-            fig.update_layout(title=None)
+        # Set title with proper centering above legend
+        fig.update_layout(
+            title={
+                'text': title,
+                'y': 0.95,
+                'x': 0.5,
+                'xanchor': 'center',
+                'yanchor': 'top',
+                'font': {'size': 18},
+                'pad': {'t': 20}
+            }
+        )
         
         # Final direct fix for Corallivore Density - ensures that the visualization always shows ticks properly
         if 'Corallivore' in metric_name:
