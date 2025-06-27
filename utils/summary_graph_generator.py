@@ -151,27 +151,10 @@ class SummaryGraphGenerator:
                 ),
                 yaxis=dict(
                     title=y_axis_label or metric_column.replace('_', ' ').title(),
-                    range=[0, max_val * 1.1] if max_val > 0 else [0, 10],  # Start from 0, add 10% padding at top
+                    range=[0, max_val * 1.1] if max_val > 0 else [0, 0],  # Start from 0, add 10% padding at top
                     gridcolor='lightgray'
                 ),
-                showlegend=False,  # Keep this false to avoid regular legend
-                coloraxis=dict(
-                    colorbar=dict(
-                        title=dict(
-                            text=y_axis_label or metric_column.replace('_', ' ').title(),
-                            side='right'
-                        ),
-                        thickness=20,
-                        len=0.7,
-                        x=1.02,
-                        cmin=min_val,  # Set colorbar min to match data min
-                        cmax=max_val,  # Set colorbar max to match data max
-                        tickmode='linear',
-                        tick0=min_val,
-                        dtick=(max_val - min_val) / 5 if max_val > min_val else 1,  # 5 tick marks
-                        showticklabels=True
-                    )
-                )
+                showlegend=False  # Hide color legend to save space
             )
             
             # Add municipality group separators

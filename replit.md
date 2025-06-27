@@ -90,6 +90,7 @@ The Marine Conservation Philippines Platform is a comprehensive data visualizati
 - **Health Checks**: Database connection validation and automatic recovery
 
 ## Changelog
+- June 27, 2025: **Y-AXIS DEFAULT RANGE FIX** - Fixed Y-axis default range for empty data cases to show [0,0] instead of [0,10], preventing misleading scale when no data is available.
 - June 27, 2025: **GEOGRAPHIC DISTRIBUTION CHART REMOVAL** - Removed misleading Geographic Distribution chart from Summary Dashboard per user request. Dashboard now shows only relevant sections: Key Metrics, Site Comparison Matrix, and Trend Analysis.
 - June 27, 2025: **LOGO CENTERING AND LINK REMOVAL FIX** - Fixed logo positioning by switching from Streamlit columns to HTML flexbox centering. Removed unwanted clickable link control using CSS pointer-events and base64 encoding for better display control.
 - June 27, 2025: **SITE DASHBOARD COVID GAP DETECTION FIX** - Resolved critical issue where COVID period gap lines weren't appearing in Site Dashboard due to NaN values in post-COVID data points. SimpleGraphGenerator now properly handles missing data by validating both endpoints before creating gap lines. COVID gaps now display correctly for metrics with valid data (Bleaching, Rubble, Hard Coral, Fleshy Algae) while gracefully skipping gap lines for metrics with missing post-COVID values (fish densities, biomass).
