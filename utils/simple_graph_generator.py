@@ -97,15 +97,64 @@ class SimpleGraphGenerator:
                 end_dt = pd.to_datetime(end_filter)
                 data = data[(data['date'] >= start_dt) & (data['date'] <= end_dt)]
         
-        # Plot the main data
-        fig.add_trace(go.Scatter(
-            x=data['season'],
-            y=data[metric_column],
-            name=y_label,
-            line=dict(color='#0077b6', width=3),
-            mode='lines+markers',
-            marker=dict(size=8, color='#0077b6')
-        ))
+        # Check for COVID gap and split data if needed
+        covid_start = pd.Timestamp('2020-04-01')  # Apr 2020
+        covid_end = pd.Timestamp('2022-03-31')    # Mar 2022
+        
+        # Split data into pre and post COVID periods
+        pre_covid = data[data['date'] < covid_start]
+        post_covid = data[data['date'] > covid_end]
+        covid_period = data[(data['date'] >= covid_start) & (data['date'] <= covid_end)]
+        
+        # Plot pre-COVID data if exists
+        if not pre_covid.empty:
+            fig.add_trace(go.Scatter(
+                x=pre_covid['season'],
+                y=pre_covid[metric_column],
+                name=y_label,
+                line=dict(color='#0077b6', width=3),
+                mode='lines+markers',
+                marker=dict(size=8, color='#0077b6'),
+                showlegend=True
+            ))
+        
+        # Plot COVID period data if exists (same style)
+        if not covid_period.empty:
+            fig.add_trace(go.Scatter(
+                x=covid_period['season'],
+                y=covid_period[metric_column],
+                name=y_label,
+                line=dict(color='#0077b6', width=3),
+                mode='lines+markers',
+                marker=dict(size=8, color='#0077b6'),
+                showlegend=False  # Don't duplicate legend
+            ))
+        
+        # Plot post-COVID data if exists
+        if not post_covid.empty:
+            fig.add_trace(go.Scatter(
+                x=post_covid['season'],
+                y=post_covid[metric_column],
+                name=y_label,
+                line=dict(color='#0077b6', width=3),
+                mode='lines+markers',
+                marker=dict(size=8, color='#0077b6'),
+                showlegend=False  # Don't duplicate legend
+            ))
+        
+        # Add COVID gap dotted line if we have data before and after
+        if not pre_covid.empty and not post_covid.empty:
+            last_pre = pre_covid.iloc[-1]
+            first_post = post_covid.iloc[0]
+            
+            fig.add_trace(go.Scatter(
+                x=[last_pre['season'], first_post['season']],
+                y=[last_pre[metric_column], first_post[metric_column]],
+                line=dict(color='#cccccc', dash='dot', width=2),
+                mode='lines',
+                name='COVID-19 Period (No Data)',
+                showlegend=True
+            ))
         
         # Add comparison data if provided
         if comparison_data is not None:
