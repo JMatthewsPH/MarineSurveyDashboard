@@ -164,97 +164,27 @@ class GraphGenerator:
         # Format dates as seasons - vectorized operation
         data['season'] = data['date'].apply(format_season)
         
-        # Split data into pre and post COVID periods to create timeline with gap
-        # COVID gap: from end of Winter 2020 to start of Spring 2022
+        # Define COVID gap period for visual indication
         covid_start = pd.Timestamp('2020-04-01')  # After Winter 2020 season (DEC-FEB 2020)
         covid_end = pd.Timestamp('2022-03-01')    # Start of Spring 2022 season
         
-        pre_covid_data = data[data['date'] < covid_start]
-        post_covid_data = data[data['date'] > covid_end]
+        # Sort data by date to ensure proper timeline ordering
+        data_sorted = data.sort_values('date').copy()
         
-        # Debug COVID filtering
-        print(f"DEBUG: Total data points: {len(data)}")
-        print(f"DEBUG: Pre-COVID data points: {len(pre_covid_data)}")
-        print(f"DEBUG: Post-COVID data points: {len(post_covid_data)}")
-        if not data.empty:
-            print(f"DEBUG: Data range: {data['date'].min()} to {data['date'].max()}")
-        if not pre_covid_data.empty:
-            print(f"DEBUG: Pre-COVID range: {pre_covid_data['date'].min()} to {pre_covid_data['date'].max()}")
-            print(f"DEBUG: Pre-COVID dates: {sorted(pre_covid_data['date'].tolist())}")
+        # Split data for COVID gap visualization but keep all data points
+        pre_covid_data = data_sorted[data_sorted['date'] < covid_start]
+        post_covid_data = data_sorted[data_sorted['date'] > covid_end]
         
-        # Generate timeline excluding COVID gap periods
-        display_seasons = []
+
         
-        # Add pre-COVID timeline
-        if not pre_covid_data.empty:
-            pre_covid_seasons = generate_season_timeline(
-                pre_covid_data['date'].min(), 
-                pre_covid_data['date'].max()
-            )
-            print(f"DEBUG: Pre-COVID seasons generated: {pre_covid_seasons}")
-            display_seasons.extend(pre_covid_seasons)
+        # Use all actual data directly - this ensures nothing is lost
+        # Prepare the data with required columns
+        complete_df = data_sorted.copy()
+        complete_df['has_data'] = True
         
-        # Add post-COVID timeline (from actual data to current date)
-        if not post_covid_data.empty:
-            post_covid_seasons = generate_season_timeline(
-                post_covid_data['date'].min(),
-                datetime.now()
-            )
-            display_seasons.extend(post_covid_seasons)
-        
-        # If no COVID gap exists, use full timeline
-        if pre_covid_data.empty or post_covid_data.empty:
-            earliest_date = data['date'].min() if not data.empty else pd.Timestamp('2017-01-01')
-            display_seasons = generate_season_timeline(earliest_date, datetime.now())
-        
-        # Create dataframe only for seasons we want to display (excluding COVID gap)
-        seasons_with_data = set(data['season'].tolist())
-        print(f"DEBUG: Seasons with actual data: {sorted(seasons_with_data)}")
-        print(f"DEBUG: Display seasons: {display_seasons}")
-        complete_data = []
-        
-        for season in display_seasons:
-            if season in seasons_with_data:
-                # Use actual data
-                season_data = data[data['season'] == season].iloc[0]
-                value = season_data[data.columns[1]]
-                print(f"DEBUG: Adding season {season} with value {value}")
-                complete_data.append({
-                    'season': season,
-                    'value': value,
-                    'has_data': True,
-                    'date': season_data['date']
-                })
-            else:
-                # Only add placeholder for genuine future seasons (after latest data)
-                if not data.empty:
-                    latest_date = data['date'].max()
-                    try:
-                        # Parse season to approximate date for comparison
-                        year = int(season.split()[-1])
-                        if 'MAR-MAY' in season:
-                            season_date = pd.Timestamp(f'{year}-04-01')
-                        elif 'JUN-AUG' in season:
-                            season_date = pd.Timestamp(f'{year}-07-01')
-                        elif 'SEP-NOV' in season:
-                            season_date = pd.Timestamp(f'{year}-10-01')
-                        elif 'DEC-FEB' in season:
-                            season_date = pd.Timestamp(f'{year}-01-01')
-                        else:
-                            continue
-                        
-                        # Only add if this is a future season
-                        if season_date > latest_date:
-                            complete_data.append({
-                                'season': season,
-                                'value': None,
-                                'has_data': False,
-                                'date': None
-                            })
-                    except:
-                        continue
-        
-        complete_df = pd.DataFrame(complete_data)
+        # Rename the metric column to 'value' for consistent processing
+        metric_column = complete_df.columns[1]  # Get the actual metric column name
+        complete_df = complete_df.rename(columns={metric_column: 'value'})
         
         # Split data into pre and post COVID - use fixed dates but check for actual gaps
         covid_start = pd.Timestamp('2019-09-01')

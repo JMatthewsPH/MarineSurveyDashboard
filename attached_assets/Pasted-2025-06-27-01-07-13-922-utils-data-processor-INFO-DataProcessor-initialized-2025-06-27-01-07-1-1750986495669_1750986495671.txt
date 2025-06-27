@@ -1,0 +1,372 @@
+2025-06-27 01:07:13,922 - utils.data_processor - INFO - DataProcessor initialized
+2025-06-27 01:07:13,987 - utils.data_processor - INFO - Fetching all sites from database
+2025-06-27 01:07:14,036 - utils.data_processor - INFO - Successfully fetched 15 sites from database
+2025-06-27 01:07:44,677 - utils.data_processor - INFO - DataProcessor initialized
+2025-06-27 01:07:44,683 - utils.data_processor - INFO - Fetching biomass data for site: Andulay
+2025-06-27 01:07:44,790 - utils.data_processor - INFO - Found 24 biomass surveys for Andulay
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:07:45,168 - utils.data_processor - INFO - Fetching hard_coral data for site: Andulay
+2025-06-27 01:07:45,233 - utils.data_processor - INFO - Found 24 hard_coral surveys for Andulay
+DEBUG - Metric name: Hard Coral Cover
+Available columns for hard_coral: ['date', 'hard_coral']
+2025-06-27 01:07:45,473 - utils.data_processor - INFO - Fetching fleshy_algae data for site: Andulay
+2025-06-27 01:07:45,537 - utils.data_processor - INFO - Found 24 fleshy_algae surveys for Andulay
+DEBUG - Metric name: Fleshy Algae Cover
+Available columns for fleshy_algae: ['date', 'fleshy_algae']
+2025-06-27 01:07:45,776 - utils.data_processor - INFO - Fetching herbivore data for site: Andulay
+2025-06-27 01:07:45,843 - utils.data_processor - INFO - Found 24 herbivore surveys for Andulay
+DEBUG - Metric name: Herbivore Density
+Available columns for herbivore: ['date', 'herbivore']
+2025-06-27 01:07:46,158 - utils.data_processor - INFO - Fetching carnivore data for site: Andulay
+2025-06-27 01:07:46,223 - utils.data_processor - INFO - Found 24 carnivore surveys for Andulay
+DEBUG - Metric name: Carnivore Density
+Available columns for carnivore: ['date', 'carnivore']
+2025-06-27 01:07:46,495 - utils.data_processor - INFO - Fetching omnivore data for site: Andulay
+2025-06-27 01:07:46,566 - utils.data_processor - INFO - Found 24 omnivore surveys for Andulay
+DEBUG - Metric name: Omnivore Density
+Available columns for omnivore: ['date', 'omnivore']
+2025-06-27 01:07:46,846 - utils.data_processor - INFO - Fetching corallivore data for site: Andulay
+2025-06-27 01:07:46,912 - utils.data_processor - INFO - Found 24 corallivore surveys for Andulay
+DEBUG - Metric name: Corallivore Density
+Available columns for corallivore: ['date', 'corallivore']
+2025-06-27 01:07:47,180 - utils.data_processor - INFO - Fetching bleaching data for site: Andulay
+2025-06-27 01:07:47,246 - utils.data_processor - INFO - Found 24 bleaching surveys for Andulay
+DEBUG - Metric name: Bleaching
+Available columns for bleaching: ['date', 'bleaching']
+2025-06-27 01:07:47,466 - utils.data_processor - INFO - Fetching rubble data for site: Andulay
+2025-06-27 01:07:47,531 - utils.data_processor - INFO - Found 24 rubble surveys for Andulay
+DEBUG - Metric name: Rubble Cover
+Available columns for rubble: ['date', 'rubble']
+2025-06-27 01:07:48,552 - utils.data_processor - INFO - Fetching biomass data for site: Manalongon
+2025-06-27 01:07:48,615 - utils.data_processor - INFO - Found 3 biomass surveys for Manalongon
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:07:48,616 - utils.data_processor - INFO - Fetching biomass data for site: Cawitan
+2025-06-27 01:07:48,683 - utils.data_processor - INFO - Found 3 biomass surveys for Cawitan
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:07:48,684 - utils.data_processor - INFO - Fetching biomass data for site: Dalakit
+2025-06-27 01:07:48,756 - utils.data_processor - INFO - Found 17 biomass surveys for Dalakit
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:07:48,757 - utils.data_processor - INFO - Fetching biomass data for site: Lutoban North
+2025-06-27 01:07:48,821 - utils.data_processor - INFO - Found 24 biomass surveys for Lutoban North
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:07:48,822 - utils.data_processor - INFO - Fetching biomass data for site: Malatapay
+2025-06-27 01:07:48,887 - utils.data_processor - INFO - Found 23 biomass surveys for Malatapay
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:07:48,888 - utils.data_processor - INFO - Fetching biomass data for site: Kookoos
+2025-06-27 01:07:48,952 - utils.data_processor - INFO - Found 23 biomass surveys for Kookoos
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:07:48,953 - utils.data_processor - INFO - Fetching biomass data for site: Salag
+2025-06-27 01:07:49,017 - utils.data_processor - INFO - Found 16 biomass surveys for Salag
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:07:49,018 - utils.data_processor - INFO - Fetching biomass data for site: Mojon
+2025-06-27 01:07:49,082 - utils.data_processor - INFO - Found 2 biomass surveys for Mojon
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:07:49,084 - utils.data_processor - INFO - Fetching biomass data for site: Basak
+2025-06-27 01:07:49,147 - utils.data_processor - INFO - Found 23 biomass surveys for Basak
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:07:49,148 - utils.data_processor - INFO - Fetching biomass data for site: Lutoban South
+2025-06-27 01:07:49,216 - utils.data_processor - INFO - Found 17 biomass surveys for Lutoban South
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:07:49,218 - utils.data_processor - INFO - Fetching biomass data for site: Antulang
+2025-06-27 01:07:49,283 - utils.data_processor - INFO - Found 22 biomass surveys for Antulang
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:07:49,284 - utils.data_processor - INFO - Fetching biomass data for site: Guinsuan
+2025-06-27 01:07:49,350 - utils.data_processor - INFO - Found 24 biomass surveys for Guinsuan
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:07:49,351 - utils.data_processor - INFO - Fetching biomass data for site: Lutoban Pier
+2025-06-27 01:07:49,416 - utils.data_processor - INFO - Found 24 biomass surveys for Lutoban Pier
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 01:07:49,417 - utils.data_processor - INFO - Fetching biomass data for site: Latason
+2025-06-27 01:07:49,480 - utils.data_processor - INFO - Found 13 biomass surveys for Latason
+DEBUG - Metric name: Commercial Biomass
+/home/runner/workspace/pages/Site_Dashboard.py:508: FutureWarning: The behavior of DataFrame concatenation with empty or all-NA entries is deprecated. In a future version, this will no longer exclude empty or all-NA columns when determining the result dtypes. To retain the old behavior, exclude the relevant entries before the concat operation.
+  all_data = pd.concat(all_surveys)
+DEBUG: Calculated range 2017-10-01 00:00:00 to 2025-04-01 00:00:00, using 2017-01-01 00:00:00 to 2025-04-01 00:00:00
+DEBUG: Total data points: 24
+DEBUG: Pre-COVID data points: 10
+DEBUG: Post-COVID data points: 13
+DEBUG: Data range: 2017-10-01 00:00:00 to 2025-04-01 00:00:00
+DEBUG: Pre-COVID range: 2017-10-01 00:00:00 to 2020-01-01 00:00:00
+DEBUG: Pre-COVID dates: [Timestamp('2017-10-01 00:00:00'), Timestamp('2018-01-01 00:00:00'), Timestamp('2018-04-01 00:00:00'), Timestamp('2018-07-01 00:00:00'), Timestamp('2018-10-01 00:00:00'), Timestamp('2019-01-01 00:00:00'), Timestamp('2019-04-01 00:00:00'), Timestamp('2019-07-01 00:00:00'), Timestamp('2019-10-01 00:00:00'), Timestamp('2020-01-01 00:00:00')]
+DEBUG: Pre-COVID seasons generated: ['SEP-NOV 2017', 'DEC-FEB 2018', 'MAR-MAY 2018', 'JUN-AUG 2018', 'SEP-NOV 2018', 'DEC-FEB 2019', 'MAR-MAY 2019', 'JUN-AUG 2019', 'SEP-NOV 2019', 'DEC-FEB 2020']
+DEBUG: Seasons with actual data: ['DEC-FEB 2018', 'DEC-FEB 2019', 'DEC-FEB 2020', 'DEC-FEB 2023', 'DEC-FEB 2024', 'DEC-FEB 2025', 'JUN-AUG 2018', 'JUN-AUG 2019', 'JUN-AUG 2022', 'JUN-AUG 2023', 'JUN-AUG 2024', 'MAR-MAY 2018', 'MAR-MAY 2019', 'MAR-MAY 2021', 'MAR-MAY 2022', 'MAR-MAY 2023', 'MAR-MAY 2024', 'MAR-MAY 2025', 'SEP-NOV 2017', 'SEP-NOV 2018', 'SEP-NOV 2019', 'SEP-NOV 2022', 'SEP-NOV 2023', 'SEP-NOV 2024']
+DEBUG: Display seasons: ['SEP-NOV 2017', 'DEC-FEB 2018', 'MAR-MAY 2018', 'JUN-AUG 2018', 'SEP-NOV 2018', 'DEC-FEB 2019', 'MAR-MAY 2019', 'JUN-AUG 2019', 'SEP-NOV 2019', 'DEC-FEB 2020', 'MAR-MAY 2022', 'JUN-AUG 2022', 'SEP-NOV 2022', 'DEC-FEB 2023', 'MAR-MAY 2023', 'JUN-AUG 2023', 'SEP-NOV 2023', 'DEC-FEB 2024', 'MAR-MAY 2024', 'JUN-AUG 2024', 'SEP-NOV 2024', 'DEC-FEB 2025', 'MAR-MAY 2025', 'JUN-AUG 2025']
+DEBUG: Adding season SEP-NOV 2017 with value 24.36
+DEBUG: Adding season DEC-FEB 2018 with value 43.3
+DEBUG: Adding season MAR-MAY 2018 with value 1.95
+DEBUG: Adding season JUN-AUG 2018 with value 64.04
+DEBUG: Adding season SEP-NOV 2018 with value 6.34
+DEBUG: Adding season DEC-FEB 2019 with value 1.43
+DEBUG: Adding season MAR-MAY 2019 with value 6.27
+DEBUG: Adding season JUN-AUG 2019 with value 7.71
+DEBUG: Adding season SEP-NOV 2019 with value 8.84
+DEBUG: Adding season DEC-FEB 2020 with value 3.36
+DEBUG: Adding season MAR-MAY 2022 with value 3.76
+DEBUG: Adding season JUN-AUG 2022 with value 8.27
+DEBUG: Adding season SEP-NOV 2022 with value 16.07
+DEBUG: Adding season DEC-FEB 2023 with value 27.46
+DEBUG: Adding season MAR-MAY 2023 with value 8.07
+DEBUG: Adding season JUN-AUG 2023 with value 17.03
+DEBUG: Adding season SEP-NOV 2023 with value 1.87
+DEBUG: Adding season DEC-FEB 2024 with value 10.28
+DEBUG: Adding season MAR-MAY 2024 with value 60.79
+DEBUG: Adding season JUN-AUG 2024 with value 18.57
+DEBUG: Adding season SEP-NOV 2024 with value 4.17
+DEBUG: Adding season DEC-FEB 2025 with value 3.47
+DEBUG: Adding season MAR-MAY 2025 with value 8.08
+DEBUG: Total data points: 24
+DEBUG: Pre-COVID data points: 10
+DEBUG: Post-COVID data points: 13
+DEBUG: Data range: 2017-10-01 00:00:00 to 2025-04-01 00:00:00
+DEBUG: Pre-COVID range: 2017-10-01 00:00:00 to 2020-01-01 00:00:00
+DEBUG: Pre-COVID dates: [Timestamp('2017-10-01 00:00:00'), Timestamp('2018-01-01 00:00:00'), Timestamp('2018-04-01 00:00:00'), Timestamp('2018-07-01 00:00:00'), Timestamp('2018-10-01 00:00:00'), Timestamp('2019-01-01 00:00:00'), Timestamp('2019-04-01 00:00:00'), Timestamp('2019-07-01 00:00:00'), Timestamp('2019-10-01 00:00:00'), Timestamp('2020-01-01 00:00:00')]
+DEBUG: Pre-COVID seasons generated: ['SEP-NOV 2017', 'DEC-FEB 2018', 'MAR-MAY 2018', 'JUN-AUG 2018', 'SEP-NOV 2018', 'DEC-FEB 2019', 'MAR-MAY 2019', 'JUN-AUG 2019', 'SEP-NOV 2019', 'DEC-FEB 2020']
+DEBUG: Seasons with actual data: ['DEC-FEB 2018', 'DEC-FEB 2019', 'DEC-FEB 2020', 'DEC-FEB 2023', 'DEC-FEB 2024', 'DEC-FEB 2025', 'JUN-AUG 2018', 'JUN-AUG 2019', 'JUN-AUG 2022', 'JUN-AUG 2023', 'JUN-AUG 2024', 'MAR-MAY 2018', 'MAR-MAY 2019', 'MAR-MAY 2021', 'MAR-MAY 2022', 'MAR-MAY 2023', 'MAR-MAY 2024', 'MAR-MAY 2025', 'SEP-NOV 2017', 'SEP-NOV 2018', 'SEP-NOV 2019', 'SEP-NOV 2022', 'SEP-NOV 2023', 'SEP-NOV 2024']
+DEBUG: Display seasons: ['SEP-NOV 2017', 'DEC-FEB 2018', 'MAR-MAY 2018', 'JUN-AUG 2018', 'SEP-NOV 2018', 'DEC-FEB 2019', 'MAR-MAY 2019', 'JUN-AUG 2019', 'SEP-NOV 2019', 'DEC-FEB 2020', 'MAR-MAY 2022', 'JUN-AUG 2022', 'SEP-NOV 2022', 'DEC-FEB 2023', 'MAR-MAY 2023', 'JUN-AUG 2023', 'SEP-NOV 2023', 'DEC-FEB 2024', 'MAR-MAY 2024', 'JUN-AUG 2024', 'SEP-NOV 2024', 'DEC-FEB 2025', 'MAR-MAY 2025', 'JUN-AUG 2025']
+DEBUG: Adding season SEP-NOV 2017 with value 93.93
+DEBUG: Adding season DEC-FEB 2018 with value 50.0
+DEBUG: Adding season MAR-MAY 2018 with value 62.24
+DEBUG: Adding season JUN-AUG 2018 with value 55.09
+DEBUG: Adding season SEP-NOV 2018 with value 63.73
+DEBUG: Adding season DEC-FEB 2019 with value 57.38
+DEBUG: Adding season MAR-MAY 2019 with value 70.0
+DEBUG: Adding season JUN-AUG 2019 with value 40.6
+DEBUG: Adding season SEP-NOV 2019 with value 46.0
+DEBUG: Adding season DEC-FEB 2020 with value 45.78
+DEBUG: Adding season MAR-MAY 2022 with value 41.67
+DEBUG: Adding season JUN-AUG 2022 with value 39.15
+DEBUG: Adding season SEP-NOV 2022 with value 40.35
+DEBUG: Adding season DEC-FEB 2023 with value 28.1
+DEBUG: Adding season MAR-MAY 2023 with value 35.32
+DEBUG: Adding season JUN-AUG 2023 with value 32.04
+DEBUG: Adding season SEP-NOV 2023 with value 28.43
+DEBUG: Adding season DEC-FEB 2024 with value 23.0
+DEBUG: Adding season MAR-MAY 2024 with value 32.56
+DEBUG: Adding season JUN-AUG 2024 with value 35.44
+DEBUG: Adding season SEP-NOV 2024 with value 27.6
+DEBUG: Adding season DEC-FEB 2025 with value 31.11
+DEBUG: Adding season MAR-MAY 2025 with value 28.3
+DEBUG: Total data points: 24
+DEBUG: Pre-COVID data points: 10
+DEBUG: Post-COVID data points: 13
+DEBUG: Data range: 2017-10-01 00:00:00 to 2025-04-01 00:00:00
+DEBUG: Pre-COVID range: 2017-10-01 00:00:00 to 2020-01-01 00:00:00
+DEBUG: Pre-COVID dates: [Timestamp('2017-10-01 00:00:00'), Timestamp('2018-01-01 00:00:00'), Timestamp('2018-04-01 00:00:00'), Timestamp('2018-07-01 00:00:00'), Timestamp('2018-10-01 00:00:00'), Timestamp('2019-01-01 00:00:00'), Timestamp('2019-04-01 00:00:00'), Timestamp('2019-07-01 00:00:00'), Timestamp('2019-10-01 00:00:00'), Timestamp('2020-01-01 00:00:00')]
+DEBUG: Pre-COVID seasons generated: ['SEP-NOV 2017', 'DEC-FEB 2018', 'MAR-MAY 2018', 'JUN-AUG 2018', 'SEP-NOV 2018', 'DEC-FEB 2019', 'MAR-MAY 2019', 'JUN-AUG 2019', 'SEP-NOV 2019', 'DEC-FEB 2020']
+DEBUG: Seasons with actual data: ['DEC-FEB 2018', 'DEC-FEB 2019', 'DEC-FEB 2020', 'DEC-FEB 2023', 'DEC-FEB 2024', 'DEC-FEB 2025', 'JUN-AUG 2018', 'JUN-AUG 2019', 'JUN-AUG 2022', 'JUN-AUG 2023', 'JUN-AUG 2024', 'MAR-MAY 2018', 'MAR-MAY 2019', 'MAR-MAY 2021', 'MAR-MAY 2022', 'MAR-MAY 2023', 'MAR-MAY 2024', 'MAR-MAY 2025', 'SEP-NOV 2017', 'SEP-NOV 2018', 'SEP-NOV 2019', 'SEP-NOV 2022', 'SEP-NOV 2023', 'SEP-NOV 2024']
+DEBUG: Display seasons: ['SEP-NOV 2017', 'DEC-FEB 2018', 'MAR-MAY 2018', 'JUN-AUG 2018', 'SEP-NOV 2018', 'DEC-FEB 2019', 'MAR-MAY 2019', 'JUN-AUG 2019', 'SEP-NOV 2019', 'DEC-FEB 2020', 'MAR-MAY 2022', 'JUN-AUG 2022', 'SEP-NOV 2022', 'DEC-FEB 2023', 'MAR-MAY 2023', 'JUN-AUG 2023', 'SEP-NOV 2023', 'DEC-FEB 2024', 'MAR-MAY 2024', 'JUN-AUG 2024', 'SEP-NOV 2024', 'DEC-FEB 2025', 'MAR-MAY 2025', 'JUN-AUG 2025']
+DEBUG: Adding season SEP-NOV 2017 with value 22.67
+DEBUG: Adding season DEC-FEB 2018 with value 11.5
+DEBUG: Adding season MAR-MAY 2018 with value 24.18
+DEBUG: Adding season JUN-AUG 2018 with value 22.36
+DEBUG: Adding season SEP-NOV 2018 with value 26.33
+DEBUG: Adding season DEC-FEB 2019 with value 24.54
+DEBUG: Adding season MAR-MAY 2019 with value 27.0
+DEBUG: Adding season JUN-AUG 2019 with value 14.35
+DEBUG: Adding season SEP-NOV 2019 with value 16.75
+DEBUG: Adding season DEC-FEB 2020 with value 32.44
+DEBUG: Adding season MAR-MAY 2022 with value 23.07
+DEBUG: Adding season JUN-AUG 2022 with value 26.31
+DEBUG: Adding season SEP-NOV 2022 with value 23.47
+DEBUG: Adding season DEC-FEB 2023 with value 16.71
+DEBUG: Adding season MAR-MAY 2023 with value 16.55
+DEBUG: Adding season JUN-AUG 2023 with value 20.17
+DEBUG: Adding season SEP-NOV 2023 with value 20.07
+DEBUG: Adding season DEC-FEB 2024 with value 17.41
+DEBUG: Adding season MAR-MAY 2024 with value 18.72
+DEBUG: Adding season JUN-AUG 2024 with value 22.44
+DEBUG: Adding season SEP-NOV 2024 with value 15.93
+DEBUG: Adding season DEC-FEB 2025 with value 21.94
+DEBUG: Adding season MAR-MAY 2025 with value 27.8
+DEBUG: Total data points: 24
+DEBUG: Pre-COVID data points: 10
+DEBUG: Post-COVID data points: 13
+DEBUG: Data range: 2017-10-01 00:00:00 to 2025-04-01 00:00:00
+DEBUG: Pre-COVID range: 2017-10-01 00:00:00 to 2020-01-01 00:00:00
+DEBUG: Pre-COVID dates: [Timestamp('2017-10-01 00:00:00'), Timestamp('2018-01-01 00:00:00'), Timestamp('2018-04-01 00:00:00'), Timestamp('2018-07-01 00:00:00'), Timestamp('2018-10-01 00:00:00'), Timestamp('2019-01-01 00:00:00'), Timestamp('2019-04-01 00:00:00'), Timestamp('2019-07-01 00:00:00'), Timestamp('2019-10-01 00:00:00'), Timestamp('2020-01-01 00:00:00')]
+DEBUG: Pre-COVID seasons generated: ['SEP-NOV 2017', 'DEC-FEB 2018', 'MAR-MAY 2018', 'JUN-AUG 2018', 'SEP-NOV 2018', 'DEC-FEB 2019', 'MAR-MAY 2019', 'JUN-AUG 2019', 'SEP-NOV 2019', 'DEC-FEB 2020']
+DEBUG: Seasons with actual data: ['DEC-FEB 2018', 'DEC-FEB 2019', 'DEC-FEB 2020', 'DEC-FEB 2023', 'DEC-FEB 2024', 'DEC-FEB 2025', 'JUN-AUG 2018', 'JUN-AUG 2019', 'JUN-AUG 2022', 'JUN-AUG 2023', 'JUN-AUG 2024', 'MAR-MAY 2018', 'MAR-MAY 2019', 'MAR-MAY 2021', 'MAR-MAY 2022', 'MAR-MAY 2023', 'MAR-MAY 2024', 'MAR-MAY 2025', 'SEP-NOV 2017', 'SEP-NOV 2018', 'SEP-NOV 2019', 'SEP-NOV 2022', 'SEP-NOV 2023', 'SEP-NOV 2024']
+DEBUG: Display seasons: ['SEP-NOV 2017', 'DEC-FEB 2018', 'MAR-MAY 2018', 'JUN-AUG 2018', 'SEP-NOV 2018', 'DEC-FEB 2019', 'MAR-MAY 2019', 'JUN-AUG 2019', 'SEP-NOV 2019', 'DEC-FEB 2020', 'MAR-MAY 2022', 'JUN-AUG 2022', 'SEP-NOV 2022', 'DEC-FEB 2023', 'MAR-MAY 2023', 'JUN-AUG 2023', 'SEP-NOV 2023', 'DEC-FEB 2024', 'MAR-MAY 2024', 'JUN-AUG 2024', 'SEP-NOV 2024', 'DEC-FEB 2025', 'MAR-MAY 2025', 'JUN-AUG 2025']
+DEBUG: Adding season SEP-NOV 2017 with value 59.07
+DEBUG: Adding season DEC-FEB 2018 with value 54.6
+DEBUG: Adding season MAR-MAY 2018 with value 94.12
+DEBUG: Adding season JUN-AUG 2018 with value 33.17
+DEBUG: Adding season SEP-NOV 2018 with value 83.86
+DEBUG: Adding season DEC-FEB 2019 with value 134.33
+DEBUG: Adding season MAR-MAY 2019 with value 292.67
+DEBUG: Adding season JUN-AUG 2019 with value 184.89
+DEBUG: Adding season SEP-NOV 2019 with value 85.6
+DEBUG: Adding season DEC-FEB 2020 with value 223.14
+DEBUG: Adding season MAR-MAY 2022 with value 1236.33
+DEBUG: Adding season JUN-AUG 2022 with value 735.47
+DEBUG: Adding season SEP-NOV 2022 with value 1475.82
+DEBUG: Adding season DEC-FEB 2023 with value 832.08
+DEBUG: Adding season MAR-MAY 2023 with value 536.12
+DEBUG: Adding season JUN-AUG 2023 with value 839.64
+DEBUG: Adding season SEP-NOV 2023 with value 815.33
+DEBUG: Adding season DEC-FEB 2024 with value 626.59
+DEBUG: Adding season MAR-MAY 2024 with value 757.9
+DEBUG: Adding season JUN-AUG 2024 with value 926.7
+DEBUG: Adding season SEP-NOV 2024 with value 710.46
+DEBUG: Adding season DEC-FEB 2025 with value 583.39
+DEBUG: Adding season MAR-MAY 2025 with value 588.63
+DEBUG: Total data points: 24
+DEBUG: Pre-COVID data points: 10
+DEBUG: Post-COVID data points: 13
+DEBUG: Data range: 2017-10-01 00:00:00 to 2025-04-01 00:00:00
+DEBUG: Pre-COVID range: 2017-10-01 00:00:00 to 2020-01-01 00:00:00
+DEBUG: Pre-COVID dates: [Timestamp('2017-10-01 00:00:00'), Timestamp('2018-01-01 00:00:00'), Timestamp('2018-04-01 00:00:00'), Timestamp('2018-07-01 00:00:00'), Timestamp('2018-10-01 00:00:00'), Timestamp('2019-01-01 00:00:00'), Timestamp('2019-04-01 00:00:00'), Timestamp('2019-07-01 00:00:00'), Timestamp('2019-10-01 00:00:00'), Timestamp('2020-01-01 00:00:00')]
+DEBUG: Pre-COVID seasons generated: ['SEP-NOV 2017', 'DEC-FEB 2018', 'MAR-MAY 2018', 'JUN-AUG 2018', 'SEP-NOV 2018', 'DEC-FEB 2019', 'MAR-MAY 2019', 'JUN-AUG 2019', 'SEP-NOV 2019', 'DEC-FEB 2020']
+DEBUG: Seasons with actual data: ['DEC-FEB 2018', 'DEC-FEB 2019', 'DEC-FEB 2020', 'DEC-FEB 2023', 'DEC-FEB 2024', 'DEC-FEB 2025', 'JUN-AUG 2018', 'JUN-AUG 2019', 'JUN-AUG 2022', 'JUN-AUG 2023', 'JUN-AUG 2024', 'MAR-MAY 2018', 'MAR-MAY 2019', 'MAR-MAY 2021', 'MAR-MAY 2022', 'MAR-MAY 2023', 'MAR-MAY 2024', 'MAR-MAY 2025', 'SEP-NOV 2017', 'SEP-NOV 2018', 'SEP-NOV 2019', 'SEP-NOV 2022', 'SEP-NOV 2023', 'SEP-NOV 2024']
+DEBUG: Display seasons: ['SEP-NOV 2017', 'DEC-FEB 2018', 'MAR-MAY 2018', 'JUN-AUG 2018', 'SEP-NOV 2018', 'DEC-FEB 2019', 'MAR-MAY 2019', 'JUN-AUG 2019', 'SEP-NOV 2019', 'DEC-FEB 2020', 'MAR-MAY 2022', 'JUN-AUG 2022', 'SEP-NOV 2022', 'DEC-FEB 2023', 'MAR-MAY 2023', 'JUN-AUG 2023', 'SEP-NOV 2023', 'DEC-FEB 2024', 'MAR-MAY 2024', 'JUN-AUG 2024', 'SEP-NOV 2024', 'DEC-FEB 2025', 'MAR-MAY 2025', 'JUN-AUG 2025']
+DEBUG: Adding season SEP-NOV 2017 with value 62.33
+DEBUG: Adding season DEC-FEB 2018 with value 60.2
+DEBUG: Adding season MAR-MAY 2018 with value 92.5
+DEBUG: Adding season JUN-AUG 2018 with value 27.83
+DEBUG: Adding season SEP-NOV 2018 with value 56.57
+DEBUG: Adding season DEC-FEB 2019 with value 61.17
+DEBUG: Adding season MAR-MAY 2019 with value 76.33
+DEBUG: Adding season JUN-AUG 2019 with value 60.33
+DEBUG: Adding season SEP-NOV 2019 with value 39.8
+DEBUG: Adding season DEC-FEB 2020 with value 75.57
+DEBUG: Adding season MAR-MAY 2022 with value 43.5
+DEBUG: Adding season JUN-AUG 2022 with value 138.67
+DEBUG: Adding season SEP-NOV 2022 with value 210.36
+DEBUG: Adding season DEC-FEB 2023 with value 107.08
+DEBUG: Adding season MAR-MAY 2023 with value 52.69
+DEBUG: Adding season JUN-AUG 2023 with value 144.73
+DEBUG: Adding season SEP-NOV 2023 with value 175.5
+DEBUG: Adding season DEC-FEB 2024 with value 122.0
+DEBUG: Adding season MAR-MAY 2024 with value 200.5
+DEBUG: Adding season JUN-AUG 2024 with value 133.2
+DEBUG: Adding season SEP-NOV 2024 with value 99.62
+DEBUG: Adding season DEC-FEB 2025 with value 86.89
+DEBUG: Adding season MAR-MAY 2025 with value 87.79
+DEBUG: Total data points: 24
+DEBUG: Pre-COVID data points: 10
+DEBUG: Post-COVID data points: 13
+DEBUG: Data range: 2017-10-01 00:00:00 to 2025-04-01 00:00:00
+DEBUG: Pre-COVID range: 2017-10-01 00:00:00 to 2020-01-01 00:00:00
+DEBUG: Pre-COVID dates: [Timestamp('2017-10-01 00:00:00'), Timestamp('2018-01-01 00:00:00'), Timestamp('2018-04-01 00:00:00'), Timestamp('2018-07-01 00:00:00'), Timestamp('2018-10-01 00:00:00'), Timestamp('2019-01-01 00:00:00'), Timestamp('2019-04-01 00:00:00'), Timestamp('2019-07-01 00:00:00'), Timestamp('2019-10-01 00:00:00'), Timestamp('2020-01-01 00:00:00')]
+DEBUG: Pre-COVID seasons generated: ['SEP-NOV 2017', 'DEC-FEB 2018', 'MAR-MAY 2018', 'JUN-AUG 2018', 'SEP-NOV 2018', 'DEC-FEB 2019', 'MAR-MAY 2019', 'JUN-AUG 2019', 'SEP-NOV 2019', 'DEC-FEB 2020']
+DEBUG: Seasons with actual data: ['DEC-FEB 2018', 'DEC-FEB 2019', 'DEC-FEB 2020', 'DEC-FEB 2023', 'DEC-FEB 2024', 'DEC-FEB 2025', 'JUN-AUG 2018', 'JUN-AUG 2019', 'JUN-AUG 2022', 'JUN-AUG 2023', 'JUN-AUG 2024', 'MAR-MAY 2018', 'MAR-MAY 2019', 'MAR-MAY 2021', 'MAR-MAY 2022', 'MAR-MAY 2023', 'MAR-MAY 2024', 'MAR-MAY 2025', 'SEP-NOV 2017', 'SEP-NOV 2018', 'SEP-NOV 2019', 'SEP-NOV 2022', 'SEP-NOV 2023', 'SEP-NOV 2024']
+DEBUG: Display seasons: ['SEP-NOV 2017', 'DEC-FEB 2018', 'MAR-MAY 2018', 'JUN-AUG 2018', 'SEP-NOV 2018', 'DEC-FEB 2019', 'MAR-MAY 2019', 'JUN-AUG 2019', 'SEP-NOV 2019', 'DEC-FEB 2020', 'MAR-MAY 2022', 'JUN-AUG 2022', 'SEP-NOV 2022', 'DEC-FEB 2023', 'MAR-MAY 2023', 'JUN-AUG 2023', 'SEP-NOV 2023', 'DEC-FEB 2024', 'MAR-MAY 2024', 'JUN-AUG 2024', 'SEP-NOV 2024', 'DEC-FEB 2025', 'MAR-MAY 2025', 'JUN-AUG 2025']
+DEBUG: Adding season SEP-NOV 2017 with value 17.27
+DEBUG: Adding season DEC-FEB 2018 with value 25.6
+DEBUG: Adding season MAR-MAY 2018 with value 19.12
+DEBUG: Adding season JUN-AUG 2018 with value 5.06
+DEBUG: Adding season SEP-NOV 2018 with value 36.0
+DEBUG: Adding season DEC-FEB 2019 with value 35.5
+DEBUG: Adding season MAR-MAY 2019 with value 47.5
+DEBUG: Adding season JUN-AUG 2019 with value 45.22
+DEBUG: Adding season SEP-NOV 2019 with value 17.0
+DEBUG: Adding season DEC-FEB 2020 with value 42.71
+DEBUG: Adding season MAR-MAY 2022 with value 15.5
+DEBUG: Adding season JUN-AUG 2022 with value 19.87
+DEBUG: Adding season SEP-NOV 2022 with value 42.0
+DEBUG: Adding season DEC-FEB 2023 with value 20.69
+DEBUG: Adding season MAR-MAY 2023 with value 17.06
+DEBUG: Adding season JUN-AUG 2023 with value 22.09
+DEBUG: Adding season SEP-NOV 2023 with value 23.17
+DEBUG: Adding season DEC-FEB 2024 with value 12.76
+DEBUG: Adding season MAR-MAY 2024 with value 16.7
+DEBUG: Adding season JUN-AUG 2024 with value 19.3
+DEBUG: Adding season SEP-NOV 2024 with value 12.69
+DEBUG: Adding season DEC-FEB 2025 with value 16.39
+DEBUG: Adding season MAR-MAY 2025 with value 12.63
+DEBUG: Total data points: 24
+DEBUG: Pre-COVID data points: 10
+DEBUG: Post-COVID data points: 13
+DEBUG: Data range: 2017-10-01 00:00:00 to 2025-04-01 00:00:00
+DEBUG: Pre-COVID range: 2017-10-01 00:00:00 to 2020-01-01 00:00:00
+DEBUG: Pre-COVID dates: [Timestamp('2017-10-01 00:00:00'), Timestamp('2018-01-01 00:00:00'), Timestamp('2018-04-01 00:00:00'), Timestamp('2018-07-01 00:00:00'), Timestamp('2018-10-01 00:00:00'), Timestamp('2019-01-01 00:00:00'), Timestamp('2019-04-01 00:00:00'), Timestamp('2019-07-01 00:00:00'), Timestamp('2019-10-01 00:00:00'), Timestamp('2020-01-01 00:00:00')]
+DEBUG: Pre-COVID seasons generated: ['SEP-NOV 2017', 'DEC-FEB 2018', 'MAR-MAY 2018', 'JUN-AUG 2018', 'SEP-NOV 2018', 'DEC-FEB 2019', 'MAR-MAY 2019', 'JUN-AUG 2019', 'SEP-NOV 2019', 'DEC-FEB 2020']
+DEBUG: Seasons with actual data: ['DEC-FEB 2018', 'DEC-FEB 2019', 'DEC-FEB 2020', 'DEC-FEB 2023', 'DEC-FEB 2024', 'DEC-FEB 2025', 'JUN-AUG 2018', 'JUN-AUG 2019', 'JUN-AUG 2022', 'JUN-AUG 2023', 'JUN-AUG 2024', 'MAR-MAY 2018', 'MAR-MAY 2019', 'MAR-MAY 2021', 'MAR-MAY 2022', 'MAR-MAY 2023', 'MAR-MAY 2024', 'MAR-MAY 2025', 'SEP-NOV 2017', 'SEP-NOV 2018', 'SEP-NOV 2019', 'SEP-NOV 2022', 'SEP-NOV 2023', 'SEP-NOV 2024']
+DEBUG: Display seasons: ['SEP-NOV 2017', 'DEC-FEB 2018', 'MAR-MAY 2018', 'JUN-AUG 2018', 'SEP-NOV 2018', 'DEC-FEB 2019', 'MAR-MAY 2019', 'JUN-AUG 2019', 'SEP-NOV 2019', 'DEC-FEB 2020', 'MAR-MAY 2022', 'JUN-AUG 2022', 'SEP-NOV 2022', 'DEC-FEB 2023', 'MAR-MAY 2023', 'JUN-AUG 2023', 'SEP-NOV 2023', 'DEC-FEB 2024', 'MAR-MAY 2024', 'JUN-AUG 2024', 'SEP-NOV 2024', 'DEC-FEB 2025', 'MAR-MAY 2025', 'JUN-AUG 2025']
+DEBUG: Adding season SEP-NOV 2017 with value 34.4
+DEBUG: Adding season DEC-FEB 2018 with value 25.4
+DEBUG: Adding season MAR-MAY 2018 with value 32.88
+DEBUG: Adding season JUN-AUG 2018 with value 10.06
+DEBUG: Adding season SEP-NOV 2018 with value 35.43
+DEBUG: Adding season DEC-FEB 2019 with value 40.83
+DEBUG: Adding season MAR-MAY 2019 with value 55.67
+DEBUG: Adding season JUN-AUG 2019 with value 40.22
+DEBUG: Adding season SEP-NOV 2019 with value 23.7
+DEBUG: Adding season DEC-FEB 2020 with value 43.43
+DEBUG: Adding season MAR-MAY 2022 with value 13.83
+DEBUG: Adding season JUN-AUG 2022 with value 17.73
+DEBUG: Adding season SEP-NOV 2022 with value 26.45
+DEBUG: Adding season DEC-FEB 2023 with value 13.62
+DEBUG: Adding season MAR-MAY 2023 with value 14.94
+DEBUG: Adding season JUN-AUG 2023 with value 18.18
+DEBUG: Adding season SEP-NOV 2023 with value 19.5
+DEBUG: Adding season DEC-FEB 2024 with value 19.53
+DEBUG: Adding season MAR-MAY 2024 with value 13.3
+DEBUG: Adding season JUN-AUG 2024 with value 16.4
+DEBUG: Adding season SEP-NOV 2024 with value 11.46
+DEBUG: Adding season DEC-FEB 2025 with value 11.28
+DEBUG: Adding season MAR-MAY 2025 with value 10.79
+DEBUG: Total data points: 24
+DEBUG: Pre-COVID data points: 10
+DEBUG: Post-COVID data points: 13
+DEBUG: Data range: 2017-10-01 00:00:00 to 2025-04-01 00:00:00
+DEBUG: Pre-COVID range: 2017-10-01 00:00:00 to 2020-01-01 00:00:00
+DEBUG: Pre-COVID dates: [Timestamp('2017-10-01 00:00:00'), Timestamp('2018-01-01 00:00:00'), Timestamp('2018-04-01 00:00:00'), Timestamp('2018-07-01 00:00:00'), Timestamp('2018-10-01 00:00:00'), Timestamp('2019-01-01 00:00:00'), Timestamp('2019-04-01 00:00:00'), Timestamp('2019-07-01 00:00:00'), Timestamp('2019-10-01 00:00:00'), Timestamp('2020-01-01 00:00:00')]
+DEBUG: Pre-COVID seasons generated: ['SEP-NOV 2017', 'DEC-FEB 2018', 'MAR-MAY 2018', 'JUN-AUG 2018', 'SEP-NOV 2018', 'DEC-FEB 2019', 'MAR-MAY 2019', 'JUN-AUG 2019', 'SEP-NOV 2019', 'DEC-FEB 2020']
+DEBUG: Seasons with actual data: ['DEC-FEB 2018', 'DEC-FEB 2019', 'DEC-FEB 2020', 'DEC-FEB 2023', 'DEC-FEB 2024', 'DEC-FEB 2025', 'JUN-AUG 2018', 'JUN-AUG 2019', 'JUN-AUG 2022', 'JUN-AUG 2023', 'JUN-AUG 2024', 'MAR-MAY 2018', 'MAR-MAY 2019', 'MAR-MAY 2021', 'MAR-MAY 2022', 'MAR-MAY 2023', 'MAR-MAY 2024', 'MAR-MAY 2025', 'SEP-NOV 2017', 'SEP-NOV 2018', 'SEP-NOV 2019', 'SEP-NOV 2022', 'SEP-NOV 2023', 'SEP-NOV 2024']
+DEBUG: Display seasons: ['SEP-NOV 2017', 'DEC-FEB 2018', 'MAR-MAY 2018', 'JUN-AUG 2018', 'SEP-NOV 2018', 'DEC-FEB 2019', 'MAR-MAY 2019', 'JUN-AUG 2019', 'SEP-NOV 2019', 'DEC-FEB 2020', 'MAR-MAY 2022', 'JUN-AUG 2022', 'SEP-NOV 2022', 'DEC-FEB 2023', 'MAR-MAY 2023', 'JUN-AUG 2023', 'SEP-NOV 2023', 'DEC-FEB 2024', 'MAR-MAY 2024', 'JUN-AUG 2024', 'SEP-NOV 2024', 'DEC-FEB 2025', 'MAR-MAY 2025', 'JUN-AUG 2025']
+DEBUG: Adding season SEP-NOV 2017 with value 6.67
+DEBUG: Adding season DEC-FEB 2018 with value 2.75
+DEBUG: Adding season MAR-MAY 2018 with value 2.56
+DEBUG: Adding season JUN-AUG 2018 with value 1.18
+DEBUG: Adding season SEP-NOV 2018 with value 4.63
+DEBUG: Adding season DEC-FEB 2019 with value 3.81
+DEBUG: Adding season MAR-MAY 2019 with value 4.46
+DEBUG: Adding season JUN-AUG 2019 with value 0.7
+DEBUG: Adding season SEP-NOV 2019 with value 1.67
+DEBUG: Adding season DEC-FEB 2020 with value 3.89
+DEBUG: Adding season MAR-MAY 2022 with value 6.8
+DEBUG: Adding season JUN-AUG 2022 with value 7.19
+DEBUG: Adding season SEP-NOV 2022 with value 10.24
+DEBUG: Adding season DEC-FEB 2023 with value 4.36
+DEBUG: Adding season MAR-MAY 2023 with value 5.84
+DEBUG: Adding season JUN-AUG 2023 with value 1.61
+DEBUG: Adding season SEP-NOV 2023 with value 0.82
+DEBUG: Adding season DEC-FEB 2024 with value 1.62
+DEBUG: Adding season MAR-MAY 2024 with value 2.22
+DEBUG: Adding season JUN-AUG 2024 with value 3.81
+DEBUG: Adding season SEP-NOV 2024 with value 1.03
+DEBUG: Adding season DEC-FEB 2025 with value 0.44
+DEBUG: Adding season MAR-MAY 2025 with value 2.12
+DEBUG: Total data points: 24
+DEBUG: Pre-COVID data points: 10
+DEBUG: Post-COVID data points: 13
+DEBUG: Data range: 2017-10-01 00:00:00 to 2025-04-01 00:00:00
+DEBUG: Pre-COVID range: 2017-10-01 00:00:00 to 2020-01-01 00:00:00
+DEBUG: Pre-COVID dates: [Timestamp('2017-10-01 00:00:00'), Timestamp('2018-01-01 00:00:00'), Timestamp('2018-04-01 00:00:00'), Timestamp('2018-07-01 00:00:00'), Timestamp('2018-10-01 00:00:00'), Timestamp('2019-01-01 00:00:00'), Timestamp('2019-04-01 00:00:00'), Timestamp('2019-07-01 00:00:00'), Timestamp('2019-10-01 00:00:00'), Timestamp('2020-01-01 00:00:00')]
+DEBUG: Pre-COVID seasons generated: ['SEP-NOV 2017', 'DEC-FEB 2018', 'MAR-MAY 2018', 'JUN-AUG 2018', 'SEP-NOV 2018', 'DEC-FEB 2019', 'MAR-MAY 2019', 'JUN-AUG 2019', 'SEP-NOV 2019', 'DEC-FEB 2020']
+DEBUG: Seasons with actual data: ['DEC-FEB 2018', 'DEC-FEB 2019', 'DEC-FEB 2020', 'DEC-FEB 2023', 'DEC-FEB 2024', 'DEC-FEB 2025', 'JUN-AUG 2018', 'JUN-AUG 2019', 'JUN-AUG 2022', 'JUN-AUG 2023', 'JUN-AUG 2024', 'MAR-MAY 2018', 'MAR-MAY 2019', 'MAR-MAY 2021', 'MAR-MAY 2022', 'MAR-MAY 2023', 'MAR-MAY 2024', 'MAR-MAY 2025', 'SEP-NOV 2017', 'SEP-NOV 2018', 'SEP-NOV 2019', 'SEP-NOV 2022', 'SEP-NOV 2023', 'SEP-NOV 2024']
+DEBUG: Display seasons: ['SEP-NOV 2017', 'DEC-FEB 2018', 'MAR-MAY 2018', 'JUN-AUG 2018', 'SEP-NOV 2018', 'DEC-FEB 2019', 'MAR-MAY 2019', 'JUN-AUG 2019', 'SEP-NOV 2019', 'DEC-FEB 2020', 'MAR-MAY 2022', 'JUN-AUG 2022', 'SEP-NOV 2022', 'DEC-FEB 2023', 'MAR-MAY 2023', 'JUN-AUG 2023', 'SEP-NOV 2023', 'DEC-FEB 2024', 'MAR-MAY 2024', 'JUN-AUG 2024', 'SEP-NOV 2024', 'DEC-FEB 2025', 'MAR-MAY 2025', 'JUN-AUG 2025']
+DEBUG: Adding season SEP-NOV 2017 with value 26.8
+DEBUG: Adding season DEC-FEB 2018 with value 21.0
+DEBUG: Adding season MAR-MAY 2018 with value 10.47
+DEBUG: Adding season JUN-AUG 2018 with value 10.36
+DEBUG: Adding season SEP-NOV 2018 with value 12.13
+DEBUG: Adding season DEC-FEB 2019 with value 12.85
+DEBUG: Adding season MAR-MAY 2019 with value 19.93
+DEBUG: Adding season JUN-AUG 2019 with value 21.8
+DEBUG: Adding season SEP-NOV 2019 with value 9.25
+DEBUG: Adding season DEC-FEB 2020 with value 15.89
+DEBUG: Adding season MAR-MAY 2022 with value 14.47
+DEBUG: Adding season JUN-AUG 2022 with value 25.77
+DEBUG: Adding season SEP-NOV 2022 with value 9.12
+DEBUG: Adding season DEC-FEB 2023 with value 15.86
+DEBUG: Adding season MAR-MAY 2023 with value 20.86
+DEBUG: Adding season JUN-AUG 2023 with value 25.26
+DEBUG: Adding season SEP-NOV 2023 with value 31.43
+DEBUG: Adding season DEC-FEB 2024 with value 27.88
+DEBUG: Adding season MAR-MAY 2024 with value 19.17
+DEBUG: Adding season JUN-AUG 2024 with value 17.75
+DEBUG: Adding season SEP-NOV 2024 with value 23.4
+DEBUG: Adding season DEC-FEB 2025 with value 17.78
+DEBUG: Adding season MAR-MAY 2025 with value 16.65
