@@ -30,10 +30,10 @@ def display_logo(size="medium"):
         
         # Create centered logo using HTML to avoid clickable behavior
         st.markdown(f'''
-            <div style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
+            <div style="display: flex; justify-content: center; align-items: center; margin: 20px auto; width: 100%; text-align: center;">
                 <img src="data:image/png;base64,{logo_b64}" 
                      width="{config["width"]}" 
-                     style="max-width: 100%; height: auto; pointer-events: none;">
+                     style="max-width: 100%; height: auto; pointer-events: none; margin: 0 auto; display: block;">
             </div>
         ''', unsafe_allow_html=True)
         
