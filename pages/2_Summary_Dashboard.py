@@ -8,7 +8,7 @@ import plotly.graph_objects as go
 
 # Import local modules
 from utils.data_processor import DataProcessor
-from utils.graph_generator import GraphGenerator
+from utils.summary_graph_generator import SummaryGraphGenerator
 from utils.translations import TRANSLATIONS
 from utils.database import get_db_session
 from utils.branding import display_logo, add_favicon, add_custom_loading_animation
@@ -59,13 +59,13 @@ h6 > a {
 @st.cache_resource(ttl=3600)
 def get_data_processor():
     """
-    Get cached data processor and graph generator instances
+    Get cached data processor and summary graph generator instances
     Uses a single database connection for both to reduce overhead
     """
     with get_db_session() as db:
         data_processor = DataProcessor(db)
-        # Pass the same data processor to graph generator to avoid duplicate db connections
-        graph_generator = GraphGenerator(data_processor)
+        # Pass the same data processor to summary graph generator to avoid duplicate db connections
+        graph_generator = SummaryGraphGenerator(data_processor)
         return data_processor, graph_generator
 
 # Get processors with performance logging
