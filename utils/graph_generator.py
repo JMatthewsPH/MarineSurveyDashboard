@@ -453,7 +453,7 @@ class GraphGenerator:
                         showlegend=(i == 0)  # Only show in legend once
                     ))
 
-        # Update layout with fixed y-axis range
+        # Update layout with fixed y-axis range and responsive design
         layout_updates = {
             'title': {
                 'text': title,
@@ -461,7 +461,7 @@ class GraphGenerator:
                 'x': 0.5,
                 'xanchor': 'center',
                 'yanchor': 'top',
-                'font': {'size': 16}
+                'font': {'size': 18}  # Slightly larger title
             },
             'xaxis_title': 'Season',
             'yaxis_title': y_label,
@@ -476,12 +476,12 @@ class GraphGenerator:
                 'x': 0.5,
                 'bgcolor': 'rgba(255, 255, 255, 1)'
             },
-            'autosize': True,
+            'autosize': True,  # Enable responsive resizing
             'height': 550,
             'margin': {
                 'l': 50,
                 'r': 30,
-                't': 60,
+                't': 80,  # More space for centered title
                 'b': 180
             },
             'xaxis': {
@@ -1053,11 +1053,20 @@ class GraphGenerator:
                 hover_data=['municipality']
             )
             
-            # Customize the layout
+            # Customize the layout with centered title and responsive design
             fig.update_layout(
+                title={
+                    'text': title or f"Site Comparison: {metric_column.replace('_', ' ').title()}",
+                    'y': 0.95,
+                    'x': 0.5,
+                    'xanchor': 'center',
+                    'yanchor': 'top',
+                    'font': {'size': 18}
+                },
                 height=500,
                 template="plotly_white",
-                margin=dict(l=60, r=60, t=80, b=120),
+                margin=dict(l=60, r=60, t=100, b=120),  # More top margin for centered title
+                autosize=True,  # Enable responsive resizing
                 xaxis=dict(
                     title="Sites (Grouped by Municipality)",
                     tickangle=-45,

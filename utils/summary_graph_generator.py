@@ -130,11 +130,20 @@ class SummaryGraphGenerator:
                 hover_data=['municipality']
             )
             
-            # Customize the layout
+            # Customize the layout with centered title and responsive design
             fig.update_layout(
+                title={
+                    'text': title or f"Site Comparison: {metric_column.replace('_', ' ').title()}",
+                    'y': 0.95,
+                    'x': 0.5,
+                    'xanchor': 'center',
+                    'yanchor': 'top',
+                    'font': {'size': 18}
+                },
                 height=500,
                 template="plotly_white",
-                margin=dict(l=60, r=60, t=80, b=120),
+                margin=dict(l=60, r=60, t=100, b=120),  # More top margin for centered title
+                autosize=True,  # Enable responsive resizing
                 xaxis=dict(
                     title="Sites (Grouped by Municipality)",
                     tickangle=-45,
