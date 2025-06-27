@@ -80,15 +80,18 @@ class MapGenerator:
                         latest_date = biomass_df['date'].iloc[-1]
                         
                         # Add to heatmap data (lat, lon, weight)
-                        # Scale biomass value for better visualization
-                        weight = max(0.1, min(latest_biomass / 50, 2.0))  # Normalize to 0.1-2.0 range
+                        # Scale biomass value for better visualization (adjusted for actual data range)
+                        weight = max(0.1, min(latest_biomass / 25, 2.0))  # Normalize to 0.1-2.0 range based on max ~21kg/ha
                         heatmap_data.append([site.latitude, site.longitude, weight])
                         
-                        # Determine color based on biomass value
-                        if latest_biomass >= 100:
+                        # Determine color based on biomass value (adjusted for actual data range)
+                        # Green: High biomass (15+ kg/ha - top tier)
+                        # Orange: Medium biomass (8-15 kg/ha - moderate)
+                        # Red: Low biomass (<8 kg/ha - needs attention)
+                        if latest_biomass >= 15:
                             color = 'green'
                             icon = 'leaf'
-                        elif latest_biomass >= 50:
+                        elif latest_biomass >= 8:
                             color = 'orange'
                             icon = 'warning-sign'
                         else:
@@ -147,9 +150,9 @@ class MapGenerator:
                 box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             ">
             <h4 style="margin-top: 0;">Biomass Legend</h4>
-            <p><i class="glyphicon glyphicon-leaf" style="color: green;"></i> High (≥100 kg/ha)</p>
-            <p><i class="glyphicon glyphicon-warning-sign" style="color: orange;"></i> Medium (50-100 kg/ha)</p>
-            <p><i class="glyphicon glyphicon-exclamation-sign" style="color: red;"></i> Low (<50 kg/ha)</p>
+            <p><i class="glyphicon glyphicon-leaf" style="color: green;"></i> High (≥15 kg/ha)</p>
+            <p><i class="glyphicon glyphicon-warning-sign" style="color: orange;"></i> Medium (8-15 kg/ha)</p>
+            <p><i class="glyphicon glyphicon-exclamation-sign" style="color: red;"></i> Low (<8 kg/ha)</p>
             </div>
             '''
             m.get_root().add_child(folium.Element(legend_html))
