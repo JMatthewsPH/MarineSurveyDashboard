@@ -309,10 +309,10 @@ class GraphGenerator:
         if date_range and len(date_range) == 2:
             start_filter, end_filter = date_range
             if start_filter and end_filter:
-                # Convert data['date'] to datetime64 for consistent comparison
-                if not data.empty:
+                # Convert complete_df['date'] to datetime64 for consistent comparison
+                if not complete_df.empty:
                     # Ensure dates are properly converted to pandas timestamps
-                    data['date'] = pd.to_datetime(data['date'])
+                    complete_df['date'] = pd.to_datetime(complete_df['date'])
                     
                     # Convert filter dates to pandas timestamps for consistent comparison
                     # Also remove timezone info to avoid comparison issues
@@ -320,10 +320,7 @@ class GraphGenerator:
                     end_dt = pd.to_datetime(end_filter).tz_localize(None)
                     
                     # Filter the primary data
-                    data = data[(data['date'] >= start_dt) & (data['date'] <= end_dt)]
-                    # Recalculate COVID period after date filtering
-                    pre_covid = data[data['date'] < covid_start]
-                    post_covid = data[data['date'] > covid_end]
+                    complete_df = complete_df[(complete_df['date'] >= start_dt) & (complete_df['date'] <= end_dt)]
                     
                     # Update chart title with date range info
                     date_range_str = f"{start_dt.strftime('%b %Y')} - {end_dt.strftime('%b %Y')}"
