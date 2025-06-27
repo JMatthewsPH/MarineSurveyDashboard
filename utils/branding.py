@@ -17,16 +17,51 @@ def display_logo(size="medium"):
     
     # Size configurations
     size_configs = {
-        "small": {"width": 200, "columns": [1, 2, 1]},
-        "medium": {"width": 300, "columns": [1, 3, 1]},
-        "large": {"width": 400, "columns": [1, 4, 1]}
+        "small": {"width": 200},
+        "medium": {"width": 300},
+        "large": {"width": 400}
     }
     
     if os.path.exists(logo_path):
         config = size_configs.get(size, size_configs["medium"])
-        cols = st.columns(config["columns"])
-        with cols[1]:
-            st.image(logo_path, width=config["width"])
+        
+        # Convert logo to base64 for better control
+        logo_b64 = get_base64_encoded_image(logo_path)
+        
+        # Create centered logo using HTML to avoid clickable behavior
+        st.markdown(f'''
+            <div style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
+                <img src="data:image/png;base64,{logo_b64}" 
+                     width="{config["width"]}" 
+                     style="max-width: 100%; height: auto; pointer-events: none;">
+            </div>
+        ''', unsafe_allow_html=True)
+        
+        # Add CSS to remove any unwanted anchor elements around images
+        st.markdown("""
+            <style>
+            /* Remove anchor elements around logo images */
+            .stApp a[href="#"]:has(img),
+            .stApp a[href=""]:has(img),
+            .stApp a:not([href]):has(img) {
+                pointer-events: none !important;
+                text-decoration: none !important;
+                color: inherit !important;
+            }
+            
+            /* Ensure logo images are not clickable */
+            .stApp img {
+                pointer-events: none !important;
+            }
+            
+            /* Center logo container */
+            .stApp .element-container:has(img[src*="Logo"]) {
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+            }
+            </style>
+        """, unsafe_allow_html=True)
 
 def add_favicon():
     """
