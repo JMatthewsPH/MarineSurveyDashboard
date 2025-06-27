@@ -156,6 +156,53 @@ class SimpleGraphGenerator:
                 showlegend=True
             ))
         
+        # Add "Data Collection Ongoing" indicator for current/future seasons
+        if not data.empty:
+            current_date = pd.Timestamp.now()
+            last_data_point = data.iloc[-1]
+            last_data_date = last_data_point['date']
+            
+            # If the last data point is recent (within 6 months), show ongoing collection
+            if (current_date - last_data_date).days < 180:
+                # Generate next expected season
+                if last_data_date.month in [1, 2]:  # Winter season
+                    next_season_date = pd.Timestamp(last_data_date.year, 4, 1)  # Spring
+                    next_season = f"MAR-MAY {last_data_date.year}"
+                elif last_data_date.month in [4, 5]:  # Spring season  
+                    next_season_date = pd.Timestamp(last_data_date.year, 7, 1)  # Summer
+                    next_season = f"JUN-AUG {last_data_date.year}"
+                elif last_data_date.month in [7, 8]:  # Summer season
+                    next_season_date = pd.Timestamp(last_data_date.year, 10, 1)  # Fall
+                    next_season = f"SEP-NOV {last_data_date.year}"
+                else:  # Fall season
+                    next_season_date = pd.Timestamp(last_data_date.year + 1, 1, 1)  # Winter next year
+                    next_season = f"DEC-FEB {last_data_date.year + 1}"
+                
+                # Add dotted line to indicate ongoing data collection
+                fig.add_trace(go.Scatter(
+                    x=[last_data_point['season'], next_season],
+                    y=[last_data_point[metric_column], last_data_point[metric_column]],
+                    line=dict(color='#888888', dash='dot', width=1),
+                    mode='lines',
+                    name='Data Collection Ongoing',
+                    showlegend=True
+                ))
+                
+                # Add annotation for ongoing data collection
+                fig.add_annotation(
+                    x=next_season,
+                    y=last_data_point[metric_column],
+                    text="Data Collection<br>Ongoing",
+                    showarrow=True,
+                    arrowhead=2,
+                    arrowcolor="#888888",
+                    arrowwidth=1,
+                    font=dict(size=10, color="#888888"),
+                    bgcolor="white",
+                    bordercolor="#888888",
+                    borderwidth=1
+                )
+        
         # Add comparison data if provided
         if comparison_data is not None:
             if not isinstance(comparison_data, list):
