@@ -123,6 +123,16 @@ class GraphGenerator:
             tertiary_label: Label for tertiary data
             show_confidence_interval: Whether to show confidence interval bands (95% CI)
         """
+        
+        # Debug logging for Lutoban Pier
+        if 'Lutoban Pier' in title:
+            print(f"DEBUG LUTOBAN MAIN: Creating chart for {title}")
+            print(f"DEBUG LUTOBAN MAIN: Data shape: {data.shape}")
+            print(f"DEBUG LUTOBAN MAIN: Data empty? {data.empty}")
+            if not data.empty:
+                print(f"DEBUG LUTOBAN MAIN: Data columns: {list(data.columns)}")
+                print(f"DEBUG LUTOBAN MAIN: First few rows:")
+                print(data.head())
 
         # Create base figure
         fig = go.Figure()
