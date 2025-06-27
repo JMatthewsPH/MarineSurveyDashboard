@@ -177,8 +177,18 @@ with st.sidebar:
     if start_date > end_date:
         st.error(TRANSLATIONS[st.session_state.language]['date_range_error'])
     
-    # Municipality filter removed - trend analysis shows all municipalities
-    municipality_filter = None
+    # Municipality filter option
+    st.header("Filter by Municipality")
+    
+    # Get all municipalities
+    municipalities = sorted(list(set([site.municipality for site in sites])))
+    selected_municipality = st.selectbox(
+        "Select Municipality",
+        ["All Municipalities"] + municipalities,
+        index=0  # Default to "All Municipalities"
+    )
+    
+    municipality_filter = None if selected_municipality == "All Municipalities" else selected_municipality
     
     # Comparison metric selection
     st.header("Comparison Metric")
@@ -336,120 +346,137 @@ st.header("Trend Analysis")
 trend_container = st.container()
 
 with trend_container:
+    # Options for trend analysis
+    col1, col2 = st.columns([1, 2])
+    
+    with col1:
+        grouping_option = st.radio(
+            "Group by:",
+            ["Individual Sites", "Municipality"]
+        )
+        
+        group_by_municipality = grouping_option == "Municipality"
+        
+        highlight_option = st.checkbox("Highlight specific sites", value=False)
+        
+        highlight_sites = None
+        if highlight_option:
+            # Get site names
+            site_names = [site.name for site in sites]
+            if municipality_filter:
+                # Filter sites by municipality
+                filtered_sites = [site.name for site in sites if site.municipality == municipality_filter]
+                highlight_sites = st.multiselect(
+                    "Select sites to highlight:",
+                    filtered_sites,
+                    max_selections=5
+                )
+            else:
+                highlight_sites = st.multiselect(
+                    "Select sites to highlight:",
+                    site_names,
+                    max_selections=5
+                )
+    
     # Create placeholder for trend chart
     trend_placeholder = st.empty()
     with trend_placeholder:
-        st.text("Loading municipal trend analysis chart...")
+        st.text("Loading trend analysis chart...")
     
-    # Create municipal average data for trend analysis
-    def create_municipal_average_data(metric_name, date_range=None):
-        """Create municipal average data for trend analysis"""
-        
-        # Get all sites
-        all_sites = data_processor.get_sites()
-        
-        # Collect data for each municipality
-        municipal_data = []
-        
-        # Municipality mapping
-        municipalities = ['Zamboanguita', 'Santa Catalina', 'Siaton']
-        
-        for municipality in municipalities:
-            # Get sites for this municipality
-            municipality_sites = [site for site in all_sites if site.municipality == municipality]
-            
-            if not municipality_sites:
+    # Get trend analysis data based on selected metric
+    if comparison_metric == "Commercial Biomass":
+        # For Commercial Biomass, we can use existing methods
+        trend_data_list = []
+        for site in sites:
+            if municipality_filter and site.municipality != municipality_filter:
                 continue
                 
-            # Collect data from all sites in this municipality
-            municipality_site_data = []
+            site_data = data_processor.get_biomass_data(site.name)
+            if not site_data.empty:
+                site_data['site'] = site.name
+                site_data['municipality'] = site.municipality
+                trend_data_list.append(site_data)
+        
+        if trend_data_list:
+            trend_data = pd.concat(trend_data_list)
             
-            for site in municipality_sites:
-                # Get data based on metric type
-                if metric_name == "Commercial Biomass":
-                    site_data = data_processor.get_biomass_data(site.name)
-                    value_column = "Commercial Biomass"
-                elif metric_name == "Hard Coral Cover":
-                    site_data = data_processor.get_coral_cover_data(site.name)
-                    value_column = "Hard Coral Cover"
-                elif metric_name == "Omnivore Density":
-                    site_data = data_processor.get_metric_data(site.name, "omnivore")
-                    value_column = "omnivore_density"
-                elif metric_name == "Herbivore Density":
-                    site_data = data_processor.get_metric_data(site.name, "herbivore")
-                    value_column = "herbivore_density"
-                elif metric_name == "Carnivore Density":
-                    site_data = data_processor.get_metric_data(site.name, "carnivore")
-                    value_column = "carnivore_density"
-                elif metric_name == "Corallivore Density":
-                    site_data = data_processor.get_metric_data(site.name, "corallivore")
-                    value_column = "corallivore_density"
-                elif metric_name == "Fleshy Algae Cover":
-                    site_data = data_processor.get_metric_data(site.name, "fleshy_algae")
-                    value_column = "fleshy_macro_algae_cover"
-                elif metric_name == "Bleaching":
-                    site_data = data_processor.get_metric_data(site.name, "bleaching")
-                    value_column = "bleaching"
-                elif metric_name == "Rubble Cover":
-                    site_data = data_processor.get_metric_data(site.name, "rubble")
-                    value_column = "rubble"
-                else:
-                    continue
+            # Filter by date range if specified
+            if date_range:
+                # date_range already contains pandas timestamps
+                start_timestamp, end_timestamp = date_range
                 
-                if not site_data.empty and value_column in site_data.columns:
-                    site_data = site_data[['date', value_column]].copy()
-                    site_data['site'] = site.name
-                    municipality_site_data.append(site_data)
+                # Ensure trend_data['date'] is in datetime64 format
+                trend_data['date'] = pd.to_datetime(trend_data['date'])
+                
+                # Now filter using compatible types
+                trend_data = trend_data[
+                    (trend_data['date'] >= start_timestamp) & 
+                    (trend_data['date'] <= end_timestamp)
+                ]
             
-            if municipality_site_data:
-                # Combine all site data for this municipality
-                municipality_df = pd.concat(municipality_site_data)
-                municipality_df['date'] = pd.to_datetime(municipality_df['date'])
+            # Create trend chart
+            fig, config = graph_generator.create_multi_site_trend_chart(
+                trend_data=trend_data,
+                metric_name="Commercial Biomass",
+                group_by_municipality=group_by_municipality,
+                highlight_sites=highlight_sites
+            )
+            
+            # Display trend chart
+            trend_placeholder.empty()
+            trend_placeholder.plotly_chart(fig, use_container_width=True, config=config)
+        else:
+            trend_placeholder.warning("No trend data available for the selected filters.")
+            
+    elif comparison_metric == "Omnivore Density":
+        # For Omnivore Density, we use the get_metric_data method
+        trend_data_list = []
+        for site in sites:
+            if municipality_filter and site.municipality != municipality_filter:
+                continue
                 
-                # Filter by date range if specified
-                if date_range:
-                    start_timestamp, end_timestamp = date_range
-                    municipality_df = municipality_df[
-                        (municipality_df['date'] >= start_timestamp) & 
-                        (municipality_df['date'] <= end_timestamp)
-                    ]
+            # Use 'omnivore' as the metric type in get_metric_data
+            # This corresponds to the key in DataProcessor.METRIC_MAP
+            site_data = data_processor.get_metric_data(site.name, "omnivore")
+            if not site_data.empty:
+                site_data['site'] = site.name
+                site_data['municipality'] = site.municipality
+                trend_data_list.append(site_data)
+        
+        if trend_data_list:
+            trend_data = pd.concat(trend_data_list)
+            
+            # Filter by date range if specified
+            if date_range:
+                # date_range already contains pandas timestamps
+                start_timestamp, end_timestamp = date_range
                 
-                # Calculate average by date for this municipality
-                municipality_avg = municipality_df.groupby('date')[value_column].mean().reset_index()
-                municipality_avg['municipality'] = municipality
-                municipality_avg['metric_value'] = municipality_avg[value_column]
+                # Ensure trend_data['date'] is in datetime64 format
+                trend_data['date'] = pd.to_datetime(trend_data['date'])
                 
-                municipal_data.append(municipality_avg[['date', 'metric_value', 'municipality']])
-        
-        # Add "All Municipalities" average
-        if municipal_data:
-            all_data = pd.concat(municipal_data)
-            overall_avg = all_data.groupby('date')['metric_value'].mean().reset_index()
-            overall_avg['municipality'] = 'All Municipalities'
-            municipal_data.append(overall_avg[['date', 'metric_value', 'municipality']])
-        
-        return pd.concat(municipal_data) if municipal_data else pd.DataFrame()
-    
-    # Generate trend data for selected metric
-    trend_data = create_municipal_average_data(comparison_metric, date_range)
-    
-    if not trend_data.empty:
-        # Filter by municipality if specified
-        if municipality_filter:
-            trend_data = trend_data[trend_data['municipality'] == municipality_filter]
-        
-        # Create trend chart using the summary graph generator
-        fig, config = graph_generator.create_municipal_trend_chart(
-            trend_data=trend_data,
-            metric_name=comparison_metric,
-            show_all_municipalities=(municipality_filter is None)
-        )
-        
-        # Display trend chart
-        trend_placeholder.empty()
-        trend_placeholder.plotly_chart(fig, use_container_width=True, config=config)
+                # Now filter using compatible types
+                trend_data = trend_data[
+                    (trend_data['date'] >= start_timestamp) & 
+                    (trend_data['date'] <= end_timestamp)
+                ]
+            
+            # Create trend chart
+            fig, config = graph_generator.create_multi_site_trend_chart(
+                trend_data=trend_data,
+                metric_name="omnivore",  # Use the actual column name from the dataframe
+                group_by_municipality=group_by_municipality,
+                highlight_sites=highlight_sites
+            )
+            
+            # Display trend chart
+            trend_placeholder.empty()
+            trend_placeholder.plotly_chart(fig, use_container_width=True, config=config)
+        else:
+            trend_placeholder.warning("No trend data available for the selected filters.")
+            
     else:
-        trend_placeholder.warning(f"No {comparison_metric.lower()} trend data available for the selected filters.")
+        # For other metrics, display a placeholder message
+        trend_placeholder.info(f"Trend analysis for {comparison_metric} will be implemented soon.")
 
 
 # Add disclaimer text below trend analysis
