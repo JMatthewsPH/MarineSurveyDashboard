@@ -262,7 +262,10 @@ class SimpleGraphGenerator:
                 yanchor="bottom",
                 y=1.02,
                 xanchor="center",
-                x=0.5
+                x=0.5,
+                itemsizing="constant",
+                itemwidth=30,
+                traceorder="normal"
             ),
             hovermode='x unified',
             margin=dict(l=60, r=60, t=120, b=100)
