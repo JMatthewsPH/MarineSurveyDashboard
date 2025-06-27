@@ -508,10 +508,12 @@ if selected_site:
                 all_data = pd.concat(all_surveys)
                 min_date = pd.to_datetime(all_data['date'].min())
                 max_date = pd.to_datetime(all_data['date'].max())
+                print(f"DEBUG: Calculated date range from {min_date} to {max_date}")
             else:
                 # Fallback dates if no data
                 min_date = pd.to_datetime('2017-01-01')
-                max_date = pd.to_datetime('2023-12-31')
+                max_date = pd.to_datetime('2025-12-31')
+                print(f"DEBUG: Using fallback date range from {min_date} to {max_date}")
             
             # Date range selection
             col1, col2 = st.columns(2)
