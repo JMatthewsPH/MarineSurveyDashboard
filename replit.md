@@ -90,6 +90,7 @@ The Marine Conservation Philippines Platform is a comprehensive data visualizati
 - **Health Checks**: Database connection validation and automatic recovery
 
 ## Changelog
+- June 27, 2025: **COVID GAP DETECTION FIX** - Resolved issue where COVID period gap lines weren't appearing for specific metrics (Herbivore, Carnivore, Omnivore, Corallivore, Commercial Biomass). Dynamic gap detection now working correctly for all metrics, showing dotted gray lines across any data gap longer than 6 months.
 - June 27, 2025: **CHART TITLE CENTERING FIX** - Resolved Plotly title positioning issue where titles defaulted to plot area coordinates instead of paper coordinates, causing misalignment with margins and legends. Now all chart titles are properly centered on charts using paper-relative positioning.
 - June 27, 2025: **MOBILE-OPTIMIZED LAYOUT** - Removed redundant Streamlit titles above charts, keeping only centered Plotly titles on charts for cleaner mobile viewing experience
 - June 27, 2025: **DATA CLEANUP** - Removed 6 erroneous survey records from MAR-MAY 2021 that fell within COVID gap period (Apr 2020 - Mar 2022). Total dataset now contains 255 surveys.

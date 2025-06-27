@@ -304,6 +304,11 @@ class GraphGenerator:
         
         # Find gaps (more than 6 months between consecutive data points)
         gaps = []
+        if 'Lutoban Pier' in title:
+            print(f"DEBUG LUTOBAN: Checking {len(complete_df_sorted)} data points for gaps")
+            for i in range(len(complete_df_sorted)):
+                print(f"DEBUG LUTOBAN: Point {i}: {complete_df_sorted.iloc[i]['date']} - {complete_df_sorted.iloc[i]['season']}")
+        
         for i in range(len(complete_df_sorted) - 1):
             current_date = complete_df_sorted.iloc[i]['date']
             next_date = complete_df_sorted.iloc[i + 1]['date']
@@ -311,12 +316,13 @@ class GraphGenerator:
             # Calculate months between dates
             months_diff = (next_date.year - current_date.year) * 12 + (next_date.month - current_date.month)
             
+            if 'Lutoban Pier' in title:
+                print(f"DEBUG LUTOBAN: Gap between {current_date.strftime('%Y-%m-%d')} and {next_date.strftime('%Y-%m-%d')} = {months_diff} months")
+            
             # If gap is more than 6 months, it's likely a COVID period
             if months_diff > 6:
-                # Debug logging
-                print(f"DEBUG GAP: {title} - Gap found from {current_date.strftime('%Y-%m-%d')} to {next_date.strftime('%Y-%m-%d')} ({months_diff} months)")
-                print(f"DEBUG GAP: Seasons {complete_df_sorted.iloc[i]['season']} to {complete_df_sorted.iloc[i + 1]['season']}")
-                
+                if 'Lutoban Pier' in title:
+                    print(f"DEBUG LUTOBAN: Found gap! Adding dotted line.")
                 gaps.append({
                     'before_idx': i,
                     'after_idx': i + 1,
@@ -326,7 +332,7 @@ class GraphGenerator:
                     'after_value': complete_df_sorted.iloc[i + 1]['value']
                 })
         
-        print(f"DEBUG GAP: {title} - Found {len(gaps)} gaps")
+
         
         # Add all data points as one trace
         fig.add_trace(go.Scatter(
