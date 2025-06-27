@@ -39,6 +39,8 @@ a[href^="#"] {
     overflow: hidden !important;
 }
 
+
+
 /* Target specific Streamlit-generated anchor patterns */
 .element-container a,
 .stMarkdown a[href^="#"],

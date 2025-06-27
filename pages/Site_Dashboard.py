@@ -359,8 +359,15 @@ if selected_site:
             # Use the site's image_url if available, otherwise use a placeholder
             image_path = selected_site_obj.image_url if selected_site_obj.image_url else "https://via.placeholder.com/400x300"
             
-            st.image(image_path, use_container_width=True, 
-                     output_format="JPEG", caption=selected_site)
+            # Display image using HTML to avoid fullscreen button
+            st.markdown(f"""
+            <div style="text-align: center;">
+                <img src="{image_path}" 
+                     style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" 
+                     alt="{selected_site}">
+                <p style="margin-top: 8px; color: #666; font-size: 14px;">{selected_site}</p>
+            </div>
+            """, unsafe_allow_html=True)
 
         with cols[1]:
             # Show a loading placeholder for the description
