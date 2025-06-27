@@ -306,14 +306,6 @@ with matrix_container:
         if municipality_filter:
             matrix_data = matrix_data[matrix_data['municipality'] == municipality_filter]
         
-        # Create both heatmap and bar chart options
-        chart_type = st.radio(
-            "Choose visualization:",
-            ["Bar Chart", "Heatmap"],
-            horizontal=True,
-            key="comparison_chart_type"
-        )
-        
         matrix_placeholder.empty()
         
         # Show data availability info for commercial biomass
@@ -321,12 +313,11 @@ with matrix_container:
             sites_with_data = matrix_data[matrix_data[selected_metric].notna()]['site'].tolist()
             sites_no_data = matrix_data[matrix_data[selected_metric].isna()]['site'].tolist()
             
-            if len(sites_with_data) == 15:
-                st.success(f"📊 **Complete Coverage**: All 15 sites now have commercial biomass data available!")
-            elif sites_no_data:
+            if sites_no_data:
                 st.info(f"📊 **Data Status**: {len(sites_with_data)} sites have biomass data, {len(sites_no_data)} sites have no biomass data in database. Sites without data appear as zero on the chart and show 'No data in database' when hovered.")
         
-        if chart_type == "Bar Chart" and selected_metric == "commercial_biomass":
+        # Always create bar chart as default
+        if selected_metric == "commercial_biomass":
             # Create grouped bar chart with color coding for commercial biomass
             fig, config = graph_generator.create_municipality_grouped_bar_chart(
                 matrix_data=matrix_data,
@@ -334,20 +325,13 @@ with matrix_container:
                 title=f"Site Comparison: {comparison_metric}",
                 y_axis_label="Commercial Biomass (kg/ha)"
             )
-        elif chart_type == "Bar Chart":
+        else:
             # Create regular bar chart for other metrics
             fig, config = graph_generator.create_municipality_grouped_bar_chart(
                 matrix_data=matrix_data,
                 metric_column=selected_metric,
                 title=f"Site Comparison: {comparison_metric}",
                 y_axis_label=comparison_metric
-            )
-        else:
-            # Create heatmap
-            fig, config = graph_generator.create_site_comparison_heatmap(
-                matrix_data=matrix_data,
-                metric_column=selected_metric,
-                title=f"Site Comparison: {comparison_metric}"
             )
         
         # Display the selected chart
