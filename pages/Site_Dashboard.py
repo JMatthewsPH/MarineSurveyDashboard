@@ -506,9 +506,12 @@ if selected_site:
             # Combine all survey data to get date range
             if all_surveys:
                 all_data = pd.concat(all_surveys)
-                min_date = pd.to_datetime(all_data['date'].min())
-                max_date = pd.to_datetime(all_data['date'].max())
-                print(f"DEBUG: Calculated date range from {min_date} to {max_date}")
+                calculated_min = pd.to_datetime(all_data['date'].min())
+                calculated_max = pd.to_datetime(all_data['date'].max())
+                # Ensure we always start from 2017 to include all historical data
+                min_date = pd.to_datetime('2017-01-01')  # Always start from beginning
+                max_date = calculated_max
+                print(f"DEBUG: Calculated range {calculated_min} to {calculated_max}, using {min_date} to {max_date}")
             else:
                 # Fallback dates if no data
                 min_date = pd.to_datetime('2017-01-01')
