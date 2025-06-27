@@ -164,16 +164,8 @@ class GraphGenerator:
         # Format dates as seasons - vectorized operation
         data['season'] = data['date'].apply(format_season)
         
-        # Define COVID gap period for visual indication
-        covid_start = pd.Timestamp('2020-04-01')  # After Winter 2020 season (DEC-FEB 2020)
-        covid_end = pd.Timestamp('2022-03-01')    # Start of Spring 2022 season
-        
         # Sort data by date to ensure proper timeline ordering
         data_sorted = data.sort_values('date').copy()
-        
-        # Split data for COVID gap visualization but keep all data points
-        pre_covid_data = data_sorted[data_sorted['date'] < covid_start]
-        post_covid_data = data_sorted[data_sorted['date'] > covid_end]
         
 
         
@@ -194,9 +186,7 @@ class GraphGenerator:
         # Sort by date to ensure proper chronological order
         complete_df = complete_df.sort_values('date')
         
-        # Split data into pre and post COVID for gap visualization  
-        pre_covid = complete_df[complete_df['date'] < covid_start]
-        post_covid = complete_df[complete_df['date'] > covid_end]
+        # Data is ready for gap detection in the main plotting section
 
         # Get the metric name from the title - only compute once
         metric_name = title.split(' - ')[0].strip()
@@ -423,15 +413,33 @@ class GraphGenerator:
                     comp_df['date'] = pd.to_datetime(comp_df['date'])
                     comp_df['season'] = comp_df['date'].apply(format_season)
                     
-                    # Split into pre/post COVID periods
-                    pre_covid_comp = comp_df[comp_df['date'] < covid_start]
-                    post_covid_comp = comp_df[comp_df['date'] > covid_end]
+                    # Sort by date for gap detection
+                    comp_df_sorted = comp_df.sort_values('date').reset_index(drop=True)
+                    
+                    # Find gaps in this comparison data
+                    comp_gaps = []
+                    for j in range(len(comp_df_sorted) - 1):
+                        current_date = comp_df_sorted.iloc[j]['date']
+                        next_date = comp_df_sorted.iloc[j + 1]['date']
+                        
+                        # Calculate months between dates
+                        months_diff = (next_date.year - current_date.year) * 12 + (next_date.month - current_date.month)
+                        
+                        # If gap is more than 6 months, it's likely a COVID period
+                        if months_diff > 6:
+                            comp_gaps.append({
+                                'before_idx': j,
+                                'after_idx': j + 1,
+                                'before_season': comp_df_sorted.iloc[j]['season'],
+                                'after_season': comp_df_sorted.iloc[j + 1]['season'],
+                                'before_value': comp_df_sorted.iloc[j][comp_df.columns[1]],
+                                'after_value': comp_df_sorted.iloc[j + 1][comp_df.columns[1]]
+                            })
                 else:
                     # For empty dataframes, ensure we have a season column
                     if 'season' not in comp_df.columns:
                         comp_df['season'] = pd.Series(dtype='object')
-                    pre_covid_comp = comp_df
-                    post_covid_comp = comp_df
+                    comp_gaps = []
                 
                 # Pick a color (cycle through the available colors)
                 color = comparison_colors[i % len(comparison_colors)]
