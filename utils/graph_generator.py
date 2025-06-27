@@ -492,7 +492,7 @@ class GraphGenerator:
                 'tickangle': 45,
                 'automargin': True,
                 'type': 'category',
-                'categoryorder': 'category ascending',
+                'categoryorder': 'trace',  # Maintain order as data appears in traces
                 'tickfont': {'size': 10},
                 'title': {'standoff': 50}
             },
