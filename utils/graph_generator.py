@@ -186,13 +186,9 @@ class GraphGenerator:
         metric_column = complete_df.columns[1]  # Get the actual metric column name
         complete_df = complete_df.rename(columns={metric_column: 'value'})
         
-        # Split data into pre and post COVID - use fixed dates but check for actual gaps
-        covid_start = pd.Timestamp('2019-09-01')
-        covid_end = pd.Timestamp('2022-03-01')
-        
-        # Faster filtering with precomputed dates
-        pre_covid = data[data['date'] < covid_start]
-        post_covid = data[data['date'] > covid_end]
+        # Split data into pre and post COVID for gap visualization  
+        pre_covid = complete_df[complete_df['date'] < covid_start]
+        post_covid = complete_df[complete_df['date'] > covid_end]
 
         # Get the metric name from the title - only compute once
         metric_name = title.split(' - ')[0].strip()
@@ -342,27 +338,7 @@ class GraphGenerator:
                 mode='lines+markers'
             ))
 
-        # Add placeholder markers for future seasons only (post-COVID ongoing data collection)
-        future_seasons = [s for s in display_seasons if s not in data['season'].values]
-        if future_seasons:
-            # Filter to only include seasons after the latest data point
-            if not data.empty:
-                latest_data_season = data['season'].iloc[-1]
-                latest_index = display_seasons.index(latest_data_season) if latest_data_season in display_seasons else -1
-                future_seasons = display_seasons[latest_index + 1:] if latest_index >= 0 else []
-            
-            if future_seasons:
-                # Use mid-range value for positioning the grey markers
-                mid_y = (y_range['min'] + y_range['max']) / 2
-                fig.add_trace(go.Scatter(
-                    x=future_seasons,
-                    y=[mid_y] * len(future_seasons),
-                    name='Data Collection Ongoing',
-                    line=dict(color='#cccccc', dash='dash'),
-                    marker=dict(color='#cccccc', size=8, symbol='x'),
-                    mode='markers',
-                    hovertemplate='%{x}<br>Data Collection Ongoing<extra></extra>'
-                ))
+        # Skip future season markers for now - focusing on showing all existing data
 
         # Add COVID period indicator if data exists on both sides
         if not pre_covid.empty and not post_covid.empty:
@@ -556,8 +532,7 @@ class GraphGenerator:
                 'tickangle': 45,
                 'automargin': True,
                 'type': 'category',
-                'categoryorder': 'array',
-                'categoryarray': display_seasons,
+                'categoryorder': 'category ascending',
                 'tickfont': {'size': 10},
                 'title': {'standoff': 50}
             },
@@ -604,35 +579,7 @@ class GraphGenerator:
                 range=[0, 300]  # Reduced from 1000 to better fit actual data
             )
         
-        # Add text annotation for ongoing data collection (only for future seasons)
-        if not data.empty:
-            # Find seasons that are after the latest data point
-            latest_data_season = data['season'].iloc[-1]
-            if latest_data_season in display_seasons:
-                latest_season_idx = display_seasons.index(latest_data_season)
-                future_seasons_for_annotation = display_seasons[latest_season_idx + 1:]
-                
-                if future_seasons_for_annotation:
-                    first_future_season = future_seasons_for_annotation[0]
-                    
-                    # Add annotation for ongoing data collection
-                    mid_y = (y_range['min'] + y_range['max']) / 2
-                    fig.add_annotation(
-                        x=first_future_season,
-                        y=mid_y,
-                        text="Data Collection<br>Ongoing",
-                        showarrow=True,
-                        arrowhead=2,
-                        arrowsize=1,
-                        arrowwidth=2,
-                        arrowcolor="#666666",
-                        ax=0,
-                        ay=-40,
-                        font=dict(size=10, color="#666666"),
-                        bgcolor="rgba(255, 255, 255, 0.8)",
-                        bordercolor="#666666",
-                        borderwidth=1
-                    )
+        # Skip annotation logic for now - focus on showing all data correctly
             
         return fig, config
 
