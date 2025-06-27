@@ -1119,26 +1119,15 @@ if selected_site:
                 if not herbivore_comparison_data.empty:
                     label = f"{site_municipality} Average" if herbivore_compare_scope == "Municipality Average" else "All Sites Average"
                     herbivore_comparison_labels = [label]
-            print("BEFORE HERBIVORE CHART CREATION")
-            try:
-                herbivore_fig, herbivore_config = graph_generator.create_time_series(
-                    herbivore_data,
-                    f"Herbivore Density - {selected_site}",
-                    "Density (ind/ha)",
-                    comparison_data=herbivore_comparison_data,
-                    comparison_labels=herbivore_comparison_labels,
-                    date_range=date_range,
-                    show_confidence_interval=show_confidence_interval
-                )
-                print("HERBIVORE CHART CREATION SUCCESSFUL")
-            except Exception as e:
-                print(f"HERBIVORE CHART CREATION ERROR: {e}")
-                import traceback
-                traceback.print_exc()
-                # Create a fallback empty chart
-                import plotly.graph_objects as go
-                herbivore_fig = go.Figure()
-                herbivore_config = {'displayModeBar': False}
+            herbivore_fig, herbivore_config = graph_generator.create_time_series(
+                herbivore_data,
+                f"Herbivore Density - {selected_site}",
+                "Density (ind/ha)",
+                comparison_data=herbivore_comparison_data,
+                comparison_labels=herbivore_comparison_labels,
+                date_range=date_range,
+                show_confidence_interval=show_confidence_interval
+            )
             st.plotly_chart(herbivore_fig, use_container_width=True, config=herbivore_config, key='herbivore_chart')
 
             # Add spacing between charts

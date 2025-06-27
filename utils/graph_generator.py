@@ -123,7 +123,7 @@ class GraphGenerator:
             tertiary_label: Label for tertiary data
             show_confidence_interval: Whether to show confidence interval bands (95% CI)
         """
-        print(f"CHART FUNCTION CALLED: {title}")
+
         # Create base figure
         fig = go.Figure()
 
