@@ -1,4 +1,4 @@
-modules = ["python-3.11", "postgresql-16", "python3"]
+modules = ["python-3.11", "postgresql-16"]
 
 [nix]
 channel = "stable-24_05"
@@ -24,15 +24,14 @@ args = "Streamlit App"
 name = "Streamlit App"
 author = "agent"
 
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "streamlit run Home.py --server.port 5000 --server.address 0.0.0.0 --server.headless true"
+args = "streamlit run Home.py --server.port 5000"
 waitForPort = 5000
 
 [[ports]]
 localPort = 5000
 externalPort = 80
-
-[[ports]]
-localPort = 5001
-externalPort = 3000
