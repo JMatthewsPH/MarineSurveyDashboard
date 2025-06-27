@@ -287,12 +287,13 @@ class GraphGenerator:
                 hoverinfo='skip'
             ))
         
-        # Calculate confidence intervals if requested - reuse the helper function
+        # Calculate confidence intervals if requested (using complete dataset)
         metric_column = data.columns[1] if not data.empty else None
-        if show_confidence_interval and metric_column:
-            # Add confidence intervals for both periods with one helper function
-            add_confidence_interval(pre_covid, metric_column)
-            add_confidence_interval(post_covid, metric_column)
+        if show_confidence_interval and metric_column and not complete_df.empty:
+            # Use complete dataset for confidence intervals
+            complete_df_for_ci = complete_df.copy()
+            complete_df_for_ci[metric_column] = complete_df_for_ci['value']
+            add_confidence_interval(complete_df_for_ci, metric_column)
         
         # Add data points with automatic gap detection for COVID periods
         # Detect gaps in consecutive data and add dotted connectors
@@ -448,33 +449,29 @@ class GraphGenerator:
                 # We want to ensure the legend shows each site, regardless of data period
                 have_shown_in_legend = False
                 
-                # Add pre-COVID comparison data
-                if not pre_covid_comp.empty:
+                # Add comparison data as one continuous trace
+                if not comp_df.empty:
                     fig.add_trace(go.Scatter(
-                        x=pre_covid_comp['season'],
-                        y=pre_covid_comp[comp_df.columns[1]],
+                        x=comp_df['season'],
+                        y=comp_df[comp_df.columns[1]],
                         name=label,
                         line=dict(color=color, dash='solid'),
                         mode='lines+markers'
                     ))
                     have_shown_in_legend = True
-                
-                # Add post-COVID comparison data
-                if not post_covid_comp.empty:
-                    fig.add_trace(go.Scatter(
-                        x=post_covid_comp['season'],
-                        y=post_covid_comp[comp_df.columns[1]],
-                        name=label,
-                        line=dict(color=color, dash='solid'),
-                        mode='lines+markers',
-                        # Only hide from legend if we've already added this site to the legend
-                        showlegend=not have_shown_in_legend
-                    ))
-                    have_shown_in_legend = True
                     
-                # Ensure site is in legend even if it has no pre-COVID or post-COVID data
-                if not have_shown_in_legend:
-                    # Add a placeholder with NaN value just to show in legend
+                    # Add dotted connectors for gaps in this comparison data
+                    for j, gap in enumerate(comp_gaps):
+                        fig.add_trace(go.Scatter(
+                            x=[gap['before_season'], gap['after_season']],
+                            y=[gap['before_value'], gap['after_value']],
+                            line=dict(color='#cccccc', dash='dot', width=2),
+                            mode='lines',
+                            name='COVID-19 Period (No Data)' if i == 0 and j == 0 else '',
+                            showlegend=(i == 0 and j == 0)  # Only show in legend once
+                        ))
+                else:
+                    # Ensure site is in legend even if it has no data
                     placeholder_season = "2022Q1"  # Default placeholder season
                     fig.add_trace(go.Scatter(
                         x=[placeholder_season],
@@ -485,19 +482,7 @@ class GraphGenerator:
                         marker=dict(opacity=0),  # Transparent marker
                         showlegend=True
                     ))
-                    
-                # Add COVID period connector if both pre and post exist
-                if not pre_covid_comp.empty and not post_covid_comp.empty:
-                    last_pre = pre_covid_comp.iloc[-1]
-                    first_post = post_covid_comp.iloc[0]
-                    fig.add_trace(go.Scatter(
-                        x=[last_pre['season'], first_post['season']],
-                        y=[last_pre[comp_df.columns[1]], first_post[comp_df.columns[1]]],
-                        line=dict(color='#cccccc', dash='dot', width=2),
-                        mode='lines',
-                        name='COVID-19 Period (No Data)' if i == 0 else '',
-                        showlegend=(i == 0)  # Only show in legend once
-                    ))
+                    have_shown_in_legend = True
 
         # Update layout with fixed y-axis range and responsive design
         layout_updates = {
