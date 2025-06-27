@@ -13,6 +13,6 @@ dependencies = [
     "psycopg2-binary>=2.9.5",
     "reportlab>=4.0.0",
     "sqlalchemy>=2.0.0",
+    "streamlit>=1.42.0",
     "streamlit-folium>=0.25.0",
-    "streamlit>=1.28.0",
 ]
