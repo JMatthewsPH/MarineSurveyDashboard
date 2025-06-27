@@ -534,9 +534,15 @@ class GraphGenerator:
             }
         )
         
-        # Use annotation for perfectly centered title
+        # Clean the title text and use annotation for perfectly centered title
+        clean_title = str(title).strip()  # Remove any leading/trailing whitespace
+        print(f"DEBUG: Original title: '{title}' | Clean title: '{clean_title}' | Length: {len(clean_title)}")
+        
+        # Use HTML center tags as well for extra centering
+        centered_text = f"<center><b>{clean_title}</b></center>"
+        
         fig.add_annotation(
-            text=f"<b>{title}</b>",
+            text=centered_text,
             xref="paper", yref="paper",
             x=0.5, y=1.05,
             xanchor="center", yanchor="bottom",
