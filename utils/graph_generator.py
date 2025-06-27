@@ -296,63 +296,14 @@ class GraphGenerator:
             add_confidence_interval(pre_covid, metric_column)
             add_confidence_interval(post_covid, metric_column)
         
-        # Add primary site data with COVID gap handling
-        if not pre_covid.empty and not post_covid.empty:
-            # Add pre-COVID data
-            fig.add_trace(go.Scatter(
-                x=pre_covid['season'],
-                y=pre_covid[data.columns[1]],
-                name=y_label,
-                line=dict(color='#0077b6', dash='solid'),
-                mode='lines+markers'
-            ))
-            
-            # Add post-COVID data
-            fig.add_trace(go.Scatter(
-                x=post_covid['season'],
-                y=post_covid[data.columns[1]],
-                name=y_label,
-                line=dict(color='#0077b6', dash='solid'),
-                mode='lines+markers',
-                showlegend=False  # Don't duplicate in legend
-            ))
-            
-            # Add COVID gap connector (dotted line between last pre-COVID and first post-COVID points)
-            last_pre = pre_covid.iloc[-1]
-            first_post = post_covid.iloc[0]
-            fig.add_trace(go.Scatter(
-                x=[last_pre['season'], first_post['season']],
-                y=[last_pre[data.columns[1]], first_post[data.columns[1]]],
-                line=dict(color='#cccccc', dash='dot', width=2),
-                mode='lines',
-                name='COVID-19 Period (No Data)',
-                showlegend=True
-            ))
-        elif not data.empty:
-            # No COVID gap, add all data as one trace
-            fig.add_trace(go.Scatter(
-                x=data['season'],
-                y=data[data.columns[1]],
-                name=y_label,
-                line=dict(color='#0077b6', dash='solid'),
-                mode='lines+markers'
-            ))
-
-        # Skip future season markers for now - focusing on showing all existing data
-
-        # Add COVID period indicator if data exists on both sides
-        if not pre_covid.empty and not post_covid.empty:
-            last_pre_covid = pre_covid.iloc[-1]
-            first_post_covid = post_covid.iloc[0]
-            fig.add_trace(go.Scatter(
-                x=[last_pre_covid['season'], first_post_covid['season']],
-                y=[last_pre_covid[pre_covid.columns[1]], first_post_covid[post_covid.columns[1]]],
-                name='COVID-19 Period (No Data)',
-                line=dict(color='#888888', dash='dot', width=1),
-                opacity=0.3,
-                mode='lines',
-                showlegend=False
-            ))
+        # Add all data points - simplified approach
+        fig.add_trace(go.Scatter(
+            x=complete_df['season'],
+            y=complete_df['value'],
+            name=y_label,
+            line=dict(color='#0077b6', dash='solid'),
+            mode='lines+markers'
+        ))
 
         # Apply date range filter if provided
         if date_range and len(date_range) == 2:
