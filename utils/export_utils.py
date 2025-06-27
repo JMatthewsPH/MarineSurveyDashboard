@@ -157,7 +157,7 @@ def convert_plotly_to_matplotlib(fig):
     
     # Define COVID period dates for possible dotted line
     # COVID gap: from end of Winter 2020 to start of Spring 2021
-    covid_start = pd.Timestamp('2020-03-01')  # End of Winter 2020 season
+    covid_start = pd.Timestamp('2020-04-01')  # After Winter 2020 season (DEC-FEB 2020)
     covid_end = pd.Timestamp('2022-03-01')    # Start of Spring 2022 season
     
     # Check if this is a time series with COVID period
@@ -505,7 +505,7 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
                 fig, ax = plt.subplots(figsize=(8, 4))
                 
                 # Add COVID period markers
-                covid_start = pd.Timestamp('2020-03-01')  # End of Winter 2020 season
+                covid_start = pd.Timestamp('2020-04-01')  # After Winter 2020 season (DEC-FEB 2020)
                 covid_end = pd.Timestamp('2022-03-01')    # Start of Spring 2022 season
                 
                 # Import season formatting function
@@ -597,7 +597,7 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
                 fig, ax = plt.subplots(figsize=(8, 4))
                 
                 # Add COVID period markers
-                covid_start = pd.Timestamp('2020-03-01')  # End of Winter 2020 season
+                covid_start = pd.Timestamp('2020-04-01')  # After Winter 2020 season (DEC-FEB 2020)
                 covid_end = pd.Timestamp('2022-03-01')    # Start of Spring 2022 season
                 
                 # Import season formatting function
