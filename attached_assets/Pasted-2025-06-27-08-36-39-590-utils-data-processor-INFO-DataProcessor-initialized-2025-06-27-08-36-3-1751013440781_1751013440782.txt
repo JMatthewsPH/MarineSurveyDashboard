@@ -1,0 +1,328 @@
+2025-06-27 08:36:39,590 - utils.data_processor - INFO - DataProcessor initialized
+2025-06-27 08:36:39,649 - utils.data_processor - INFO - Fetching all sites from database
+2025-06-27 08:36:39,696 - utils.data_processor - INFO - Successfully fetched 15 sites from database
+2025-06-27 08:36:39,705 - utils.data_processor - INFO - Fetching biomass data for site: Basak
+2025-06-27 08:36:39,767 - utils.data_processor - INFO - Found 23 biomass surveys for Basak
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:36:40,049 - utils.data_processor - INFO - Fetching hard_coral data for site: Basak
+2025-06-27 08:36:40,118 - utils.data_processor - INFO - Found 23 hard_coral surveys for Basak
+DEBUG - Metric name: Hard Coral Cover
+Available columns for hard_coral: ['date', 'hard_coral']
+Available columns for hard_coral: ['date', 'hard_coral']
+Available columns for hard_coral: ['date', 'hard_coral']
+2025-06-27 08:36:40,663 - utils.data_processor - INFO - Fetching fleshy_algae data for site: Basak
+2025-06-27 08:36:40,738 - utils.data_processor - INFO - Found 23 fleshy_algae surveys for Basak
+DEBUG - Metric name: Fleshy Algae Cover
+Available columns for fleshy_algae: ['date', 'fleshy_algae']
+Available columns for fleshy_algae: ['date', 'fleshy_algae']
+Available columns for fleshy_algae: ['date', 'fleshy_algae']
+2025-06-27 08:36:41,122 - utils.data_processor - INFO - Fetching herbivore data for site: Basak
+2025-06-27 08:36:41,194 - utils.data_processor - INFO - Found 23 herbivore surveys for Basak
+DEBUG - Metric name: Herbivore Density
+Available columns for herbivore: ['date', 'herbivore']
+Available columns for herbivore: ['date', 'herbivore']
+Available columns for herbivore: ['date', 'herbivore']
+2025-06-27 08:36:41,732 - utils.data_processor - INFO - Fetching carnivore data for site: Basak
+2025-06-27 08:36:41,805 - utils.data_processor - INFO - Found 23 carnivore surveys for Basak
+DEBUG - Metric name: Carnivore Density
+Available columns for carnivore: ['date', 'carnivore']
+Available columns for carnivore: ['date', 'carnivore']
+Available columns for carnivore: ['date', 'carnivore']
+2025-06-27 08:36:42,248 - utils.data_processor - INFO - Fetching omnivore data for site: Basak
+2025-06-27 08:36:42,311 - utils.data_processor - INFO - Found 23 omnivore surveys for Basak
+DEBUG - Metric name: Omnivore Density
+Available columns for omnivore: ['date', 'omnivore']
+Available columns for omnivore: ['date', 'omnivore']
+Available columns for omnivore: ['date', 'omnivore']
+2025-06-27 08:36:42,807 - utils.data_processor - INFO - Fetching corallivore data for site: Basak
+2025-06-27 08:36:42,872 - utils.data_processor - INFO - Found 23 corallivore surveys for Basak
+DEBUG - Metric name: Corallivore Density
+Available columns for corallivore: ['date', 'corallivore']
+Available columns for corallivore: ['date', 'corallivore']
+Available columns for corallivore: ['date', 'corallivore']
+2025-06-27 08:36:43,288 - utils.data_processor - INFO - Fetching bleaching data for site: Basak
+2025-06-27 08:36:43,351 - utils.data_processor - INFO - Found 23 bleaching surveys for Basak
+DEBUG - Metric name: Bleaching
+Available columns for bleaching: ['date', 'bleaching']
+Available columns for bleaching: ['date', 'bleaching']
+Available columns for bleaching: ['date', 'bleaching']
+2025-06-27 08:36:43,895 - utils.data_processor - INFO - Fetching rubble data for site: Basak
+2025-06-27 08:36:43,966 - utils.data_processor - INFO - Found 23 rubble surveys for Basak
+DEBUG - Metric name: Rubble Cover
+Available columns for rubble: ['date', 'rubble']
+Available columns for rubble: ['date', 'rubble']
+Available columns for rubble: ['date', 'rubble']
+2025-06-27 08:36:45,489 - utils.data_processor - INFO - Fetching biomass data for site: Manalongon
+2025-06-27 08:36:45,562 - utils.data_processor - INFO - Found 4 biomass surveys for Manalongon
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:36:45,563 - utils.data_processor - INFO - Fetching biomass data for site: Cawitan
+2025-06-27 08:36:45,627 - utils.data_processor - INFO - Found 4 biomass surveys for Cawitan
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:36:45,628 - utils.data_processor - INFO - Fetching biomass data for site: Dalakit
+2025-06-27 08:36:45,701 - utils.data_processor - INFO - Found 17 biomass surveys for Dalakit
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:36:45,702 - utils.data_processor - INFO - Fetching biomass data for site: Lutoban North
+2025-06-27 08:36:45,769 - utils.data_processor - INFO - Found 23 biomass surveys for Lutoban North
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:36:45,770 - utils.data_processor - INFO - Fetching biomass data for site: Malatapay
+2025-06-27 08:36:45,834 - utils.data_processor - INFO - Found 23 biomass surveys for Malatapay
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:36:45,835 - utils.data_processor - INFO - Fetching biomass data for site: Kookoos
+2025-06-27 08:36:45,896 - utils.data_processor - INFO - Found 23 biomass surveys for Kookoos
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:36:45,897 - utils.data_processor - INFO - Fetching biomass data for site: Salag
+2025-06-27 08:36:45,960 - utils.data_processor - INFO - Found 16 biomass surveys for Salag
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:36:45,961 - utils.data_processor - INFO - Fetching biomass data for site: Mojon
+2025-06-27 08:36:46,021 - utils.data_processor - INFO - Found 2 biomass surveys for Mojon
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:36:46,022 - utils.data_processor - INFO - Fetching biomass data for site: Lutoban South
+2025-06-27 08:36:46,081 - utils.data_processor - INFO - Found 16 biomass surveys for Lutoban South
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:36:46,082 - utils.data_processor - INFO - Fetching biomass data for site: Andulay
+2025-06-27 08:36:46,144 - utils.data_processor - INFO - Found 23 biomass surveys for Andulay
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:36:46,145 - utils.data_processor - INFO - Fetching biomass data for site: Antulang
+2025-06-27 08:36:46,204 - utils.data_processor - INFO - Found 22 biomass surveys for Antulang
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:36:46,205 - utils.data_processor - INFO - Fetching biomass data for site: Guinsuan
+2025-06-27 08:36:46,265 - utils.data_processor - INFO - Found 23 biomass surveys for Guinsuan
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:36:46,266 - utils.data_processor - INFO - Fetching biomass data for site: Lutoban Pier
+2025-06-27 08:36:46,326 - utils.data_processor - INFO - Found 23 biomass surveys for Lutoban Pier
+DEBUG - Metric name: Commercial Biomass
+2025-06-27 08:36:46,327 - utils.data_processor - INFO - Fetching biomass data for site: Latason
+2025-06-27 08:36:46,386 - utils.data_processor - INFO - Found 13 biomass surveys for Latason
+DEBUG - Metric name: Commercial Biomass
+DEBUG: Calculated range 2017-10-01 00:00:00 to 2025-04-01 00:00:00, using 2017-01-01 00:00:00 to 2025-04-01 00:00:00
+DEBUG: Calculated range 2017-10-01 00:00:00 to 2025-04-01 00:00:00, using 2017-01-01 00:00:00 to 2025-04-01 00:00:00
+2025-06-27 08:36:52,061 - utils.data_processor - INFO - Fetching hard_coral data for site: Lutoban Pier
+2025-06-27 08:36:52,128 - utils.data_processor - INFO - Found 23 hard_coral surveys for Lutoban Pier
+DEBUG - Metric name: Hard Coral Cover
+Available columns for hard_coral: ['date', 'hard_coral']
+2025-06-27 08:36:52,311 - utils.data_processor - INFO - Fetching fleshy_algae data for site: Lutoban Pier
+2025-06-27 08:36:52,372 - utils.data_processor - INFO - Found 23 fleshy_algae surveys for Lutoban Pier
+DEBUG - Metric name: Fleshy Algae Cover
+Available columns for fleshy_algae: ['date', 'fleshy_algae']
+2025-06-27 08:36:52,568 - utils.data_processor - INFO - Fetching herbivore data for site: Lutoban Pier
+2025-06-27 08:36:52,630 - utils.data_processor - INFO - Found 23 herbivore surveys for Lutoban Pier
+DEBUG - Metric name: Herbivore Density
+Available columns for herbivore: ['date', 'herbivore']
+2025-06-27 08:36:52,801 - utils.data_processor - INFO - Fetching carnivore data for site: Lutoban Pier
+2025-06-27 08:36:52,861 - utils.data_processor - INFO - Found 23 carnivore surveys for Lutoban Pier
+DEBUG - Metric name: Carnivore Density
+Available columns for carnivore: ['date', 'carnivore']
+2025-06-27 08:36:53,057 - utils.data_processor - INFO - Fetching omnivore data for site: Lutoban Pier
+2025-06-27 08:36:53,120 - utils.data_processor - INFO - Found 23 omnivore surveys for Lutoban Pier
+DEBUG - Metric name: Omnivore Density
+Available columns for omnivore: ['date', 'omnivore']
+2025-06-27 08:36:53,322 - utils.data_processor - INFO - Fetching corallivore data for site: Lutoban Pier
+2025-06-27 08:36:53,381 - utils.data_processor - INFO - Found 23 corallivore surveys for Lutoban Pier
+DEBUG - Metric name: Corallivore Density
+Available columns for corallivore: ['date', 'corallivore']
+2025-06-27 08:36:53,562 - utils.data_processor - INFO - Fetching bleaching data for site: Lutoban Pier
+2025-06-27 08:36:53,621 - utils.data_processor - INFO - Found 23 bleaching surveys for Lutoban Pier
+DEBUG - Metric name: Bleaching
+Available columns for bleaching: ['date', 'bleaching']
+2025-06-27 08:36:53,801 - utils.data_processor - INFO - Fetching rubble data for site: Lutoban Pier
+2025-06-27 08:36:53,861 - utils.data_processor - INFO - Found 23 rubble surveys for Lutoban Pier
+DEBUG - Metric name: Rubble Cover
+Available columns for rubble: ['date', 'rubble']
+DEBUG: Calculated range 2017-10-01 00:00:00 to 2025-04-01 00:00:00, using 2017-01-01 00:00:00 to 2025-04-01 00:00:00
+DEBUG LUTOBAN SIMPLE: Creating chart for Commercial Fish Biomass - Lutoban Pier
+DEBUG LUTOBAN SIMPLE: Data shape: (23, 2)
+DEBUG LUTOBAN SIMPLE: Data empty? False
+DEBUG LUTOBAN SIMPLE: Data columns: ['date', 'Commercial Biomass']
+DEBUG LUTOBAN SIMPLE: First few rows:
+         date  Commercial Biomass
+0  2017-10-01               12.40
+1  2018-01-01               15.41
+2  2018-04-01                2.32
+3  2018-07-01                9.49
+4  2018-10-01                6.69
+DEBUG LUTOBAN SIMPLE: COVID period 2020-04-01 00:00:00 to 2022-03-31 00:00:00
+DEBUG LUTOBAN SIMPLE: Pre-COVID data points: 10
+DEBUG LUTOBAN SIMPLE: COVID period data points: 0
+DEBUG LUTOBAN SIMPLE: Post-COVID data points: 13
+DEBUG LUTOBAN SIMPLE: Last pre-COVID: 2020-01-01 00:00:00 - DEC-FEB 2020
+DEBUG LUTOBAN SIMPLE: First post-COVID: 2022-04-01 00:00:00 - MAR-MAY 2022
+DEBUG LUTOBAN SIMPLE: Will add COVID gap line? True
+DEBUG LUTOBAN SIMPLE: Adding COVID gap line from DEC-FEB 2020 to MAR-MAY 2022
+DEBUG LUTOBAN SIMPLE: Y values: 19.76 to nan
+DEBUG LUTOBAN SIMPLE: Both values valid? False
+DEBUG LUTOBAN SIMPLE: Skipping COVID gap line due to NaN values
+DEBUG LUTOBAN SIMPLE: Creating chart for Hard Coral Cover - Lutoban Pier
+DEBUG LUTOBAN SIMPLE: Data shape: (23, 2)
+DEBUG LUTOBAN SIMPLE: Data empty? False
+DEBUG LUTOBAN SIMPLE: Data columns: ['date', 'hard_coral']
+DEBUG LUTOBAN SIMPLE: First few rows:
+         date  hard_coral
+0  2017-10-01       83.44
+1  2018-01-01      136.40
+2  2018-04-01       74.06
+3  2018-07-01       67.87
+4  2018-10-01       55.33
+DEBUG LUTOBAN SIMPLE: COVID period 2020-04-01 00:00:00 to 2022-03-31 00:00:00
+DEBUG LUTOBAN SIMPLE: Pre-COVID data points: 10
+DEBUG LUTOBAN SIMPLE: COVID period data points: 0
+DEBUG LUTOBAN SIMPLE: Post-COVID data points: 13
+DEBUG LUTOBAN SIMPLE: Last pre-COVID: 2020-01-01 00:00:00 - DEC-FEB 2020
+DEBUG LUTOBAN SIMPLE: First post-COVID: 2022-04-01 00:00:00 - MAR-MAY 2022
+DEBUG LUTOBAN SIMPLE: Will add COVID gap line? True
+DEBUG LUTOBAN SIMPLE: Adding COVID gap line from DEC-FEB 2020 to MAR-MAY 2022
+DEBUG LUTOBAN SIMPLE: Y values: 87.25 to 69.67
+DEBUG LUTOBAN SIMPLE: Both values valid? True
+DEBUG LUTOBAN SIMPLE: Creating chart for Fleshy Algae Cover - Lutoban Pier
+DEBUG LUTOBAN SIMPLE: Data shape: (23, 2)
+DEBUG LUTOBAN SIMPLE: Data empty? False
+DEBUG LUTOBAN SIMPLE: Data columns: ['date', 'fleshy_algae']
+DEBUG LUTOBAN SIMPLE: First few rows:
+         date  fleshy_algae
+0  2017-10-01         17.67
+1  2018-01-01         12.80
+2  2018-04-01         11.94
+3  2018-07-01         22.13
+4  2018-10-01         16.33
+DEBUG LUTOBAN SIMPLE: COVID period 2020-04-01 00:00:00 to 2022-03-31 00:00:00
+DEBUG LUTOBAN SIMPLE: Pre-COVID data points: 10
+DEBUG LUTOBAN SIMPLE: COVID period data points: 0
+DEBUG LUTOBAN SIMPLE: Post-COVID data points: 13
+DEBUG LUTOBAN SIMPLE: Last pre-COVID: 2020-01-01 00:00:00 - DEC-FEB 2020
+DEBUG LUTOBAN SIMPLE: First post-COVID: 2022-04-01 00:00:00 - MAR-MAY 2022
+DEBUG LUTOBAN SIMPLE: Will add COVID gap line? True
+DEBUG LUTOBAN SIMPLE: Adding COVID gap line from DEC-FEB 2020 to MAR-MAY 2022
+DEBUG LUTOBAN SIMPLE: Y values: 20.83 to 23.2
+DEBUG LUTOBAN SIMPLE: Both values valid? True
+DEBUG SITE DASHBOARD: About to create Herbivore chart for Lutoban Pier
+DEBUG SITE DASHBOARD: Herbivore data shape: (23, 2)
+DEBUG SITE DASHBOARD: Herbivore data empty? False
+DEBUG LUTOBAN SIMPLE: Creating chart for Herbivore Density - Lutoban Pier
+DEBUG LUTOBAN SIMPLE: Data shape: (23, 2)
+DEBUG LUTOBAN SIMPLE: Data empty? False
+DEBUG LUTOBAN SIMPLE: Data columns: ['date', 'herbivore']
+DEBUG LUTOBAN SIMPLE: First few rows:
+         date  herbivore
+0  2017-10-01     164.42
+1  2018-01-01     119.75
+2  2018-04-01      71.56
+3  2018-07-01     207.67
+4  2018-10-01     166.43
+DEBUG LUTOBAN SIMPLE: COVID period 2020-04-01 00:00:00 to 2022-03-31 00:00:00
+DEBUG LUTOBAN SIMPLE: Pre-COVID data points: 10
+DEBUG LUTOBAN SIMPLE: COVID period data points: 0
+DEBUG LUTOBAN SIMPLE: Post-COVID data points: 13
+DEBUG LUTOBAN SIMPLE: Last pre-COVID: 2020-01-01 00:00:00 - DEC-FEB 2020
+DEBUG LUTOBAN SIMPLE: First post-COVID: 2022-04-01 00:00:00 - MAR-MAY 2022
+DEBUG LUTOBAN SIMPLE: Will add COVID gap line? True
+DEBUG LUTOBAN SIMPLE: Adding COVID gap line from DEC-FEB 2020 to MAR-MAY 2022
+DEBUG LUTOBAN SIMPLE: Y values: 110.1 to nan
+DEBUG LUTOBAN SIMPLE: Both values valid? False
+DEBUG LUTOBAN SIMPLE: Skipping COVID gap line due to NaN values
+DEBUG LUTOBAN SIMPLE: Creating chart for Carnivore Density - Lutoban Pier
+DEBUG LUTOBAN SIMPLE: Data shape: (23, 2)
+DEBUG LUTOBAN SIMPLE: Data empty? False
+DEBUG LUTOBAN SIMPLE: Data columns: ['date', 'carnivore']
+DEBUG LUTOBAN SIMPLE: First few rows:
+         date  carnivore
+0  2017-10-01      54.75
+1  2018-01-01      30.00
+2  2018-04-01      66.11
+3  2018-07-01      76.00
+4  2018-10-01      85.14
+DEBUG LUTOBAN SIMPLE: COVID period 2020-04-01 00:00:00 to 2022-03-31 00:00:00
+DEBUG LUTOBAN SIMPLE: Pre-COVID data points: 10
+DEBUG LUTOBAN SIMPLE: COVID period data points: 0
+DEBUG LUTOBAN SIMPLE: Post-COVID data points: 13
+DEBUG LUTOBAN SIMPLE: Last pre-COVID: 2020-01-01 00:00:00 - DEC-FEB 2020
+DEBUG LUTOBAN SIMPLE: First post-COVID: 2022-04-01 00:00:00 - MAR-MAY 2022
+DEBUG LUTOBAN SIMPLE: Will add COVID gap line? True
+DEBUG LUTOBAN SIMPLE: Adding COVID gap line from DEC-FEB 2020 to MAR-MAY 2022
+DEBUG LUTOBAN SIMPLE: Y values: 53.2 to nan
+DEBUG LUTOBAN SIMPLE: Both values valid? False
+DEBUG LUTOBAN SIMPLE: Skipping COVID gap line due to NaN values
+DEBUG LUTOBAN SIMPLE: Creating chart for Omnivore Density - Lutoban Pier
+DEBUG LUTOBAN SIMPLE: Data shape: (23, 2)
+DEBUG LUTOBAN SIMPLE: Data empty? False
+DEBUG LUTOBAN SIMPLE: Data columns: ['date', 'omnivore']
+DEBUG LUTOBAN SIMPLE: First few rows:
+         date  omnivore
+0  2017-10-01     18.33
+1  2018-01-01     20.25
+2  2018-04-01     12.44
+3  2018-07-01     23.67
+4  2018-10-01     21.14
+DEBUG LUTOBAN SIMPLE: COVID period 2020-04-01 00:00:00 to 2022-03-31 00:00:00
+DEBUG LUTOBAN SIMPLE: Pre-COVID data points: 10
+DEBUG LUTOBAN SIMPLE: COVID period data points: 0
+DEBUG LUTOBAN SIMPLE: Post-COVID data points: 13
+DEBUG LUTOBAN SIMPLE: Last pre-COVID: 2020-01-01 00:00:00 - DEC-FEB 2020
+DEBUG LUTOBAN SIMPLE: First post-COVID: 2022-04-01 00:00:00 - MAR-MAY 2022
+DEBUG LUTOBAN SIMPLE: Will add COVID gap line? True
+DEBUG LUTOBAN SIMPLE: Adding COVID gap line from DEC-FEB 2020 to MAR-MAY 2022
+DEBUG LUTOBAN SIMPLE: Y values: 17.7 to nan
+DEBUG LUTOBAN SIMPLE: Both values valid? False
+DEBUG LUTOBAN SIMPLE: Skipping COVID gap line due to NaN values
+DEBUG LUTOBAN SIMPLE: Creating chart for Corallivore Density - Lutoban Pier
+DEBUG LUTOBAN SIMPLE: Data shape: (23, 2)
+DEBUG LUTOBAN SIMPLE: Data empty? False
+DEBUG LUTOBAN SIMPLE: Data columns: ['date', 'corallivore']
+DEBUG LUTOBAN SIMPLE: First few rows:
+         date  corallivore
+0  2017-10-01        19.42
+1  2018-01-01        18.00
+2  2018-04-01        17.89
+3  2018-07-01        43.17
+4  2018-10-01        34.00
+DEBUG LUTOBAN SIMPLE: COVID period 2020-04-01 00:00:00 to 2022-03-31 00:00:00
+DEBUG LUTOBAN SIMPLE: Pre-COVID data points: 10
+DEBUG LUTOBAN SIMPLE: COVID period data points: 0
+DEBUG LUTOBAN SIMPLE: Post-COVID data points: 13
+DEBUG LUTOBAN SIMPLE: Last pre-COVID: 2020-01-01 00:00:00 - DEC-FEB 2020
+DEBUG LUTOBAN SIMPLE: First post-COVID: 2022-04-01 00:00:00 - MAR-MAY 2022
+DEBUG LUTOBAN SIMPLE: Will add COVID gap line? True
+DEBUG LUTOBAN SIMPLE: Adding COVID gap line from DEC-FEB 2020 to MAR-MAY 2022
+DEBUG LUTOBAN SIMPLE: Y values: 24.7 to nan
+DEBUG LUTOBAN SIMPLE: Both values valid? False
+DEBUG LUTOBAN SIMPLE: Skipping COVID gap line due to NaN values
+DEBUG LUTOBAN SIMPLE: Creating chart for Bleaching - Lutoban Pier
+DEBUG LUTOBAN SIMPLE: Data shape: (23, 2)
+DEBUG LUTOBAN SIMPLE: Data empty? False
+DEBUG LUTOBAN SIMPLE: Data columns: ['date', 'bleaching']
+DEBUG LUTOBAN SIMPLE: First few rows:
+         date  bleaching
+0  2017-10-01       2.56
+1  2018-01-01       2.30
+2  2018-04-01       2.81
+3  2018-07-01       6.53
+4  2018-10-01       3.42
+DEBUG LUTOBAN SIMPLE: COVID period 2020-04-01 00:00:00 to 2022-03-31 00:00:00
+DEBUG LUTOBAN SIMPLE: Pre-COVID data points: 10
+DEBUG LUTOBAN SIMPLE: COVID period data points: 0
+DEBUG LUTOBAN SIMPLE: Post-COVID data points: 13
+DEBUG LUTOBAN SIMPLE: Last pre-COVID: 2020-01-01 00:00:00 - DEC-FEB 2020
+DEBUG LUTOBAN SIMPLE: First post-COVID: 2022-04-01 00:00:00 - MAR-MAY 2022
+DEBUG LUTOBAN SIMPLE: Will add COVID gap line? True
+DEBUG LUTOBAN SIMPLE: Adding COVID gap line from DEC-FEB 2020 to MAR-MAY 2022
+DEBUG LUTOBAN SIMPLE: Y values: 10.12 to 2.87
+DEBUG LUTOBAN SIMPLE: Both values valid? True
+DEBUG LUTOBAN SIMPLE: Creating chart for Rubble Cover - Lutoban Pier
+DEBUG LUTOBAN SIMPLE: Data shape: (23, 2)
+DEBUG LUTOBAN SIMPLE: Data empty? False
+DEBUG LUTOBAN SIMPLE: Data columns: ['date', 'rubble']
+DEBUG LUTOBAN SIMPLE: First few rows:
+         date  rubble
+0  2017-10-01   10.89
+1  2018-01-01   10.20
+2  2018-04-01    6.44
+3  2018-07-01    5.20
+4  2018-10-01    7.83
+DEBUG LUTOBAN SIMPLE: COVID period 2020-04-01 00:00:00 to 2022-03-31 00:00:00
+DEBUG LUTOBAN SIMPLE: Pre-COVID data points: 10
+DEBUG LUTOBAN SIMPLE: COVID period data points: 0
+DEBUG LUTOBAN SIMPLE: Post-COVID data points: 13
+DEBUG LUTOBAN SIMPLE: Last pre-COVID: 2020-01-01 00:00:00 - DEC-FEB 2020
+DEBUG LUTOBAN SIMPLE: First post-COVID: 2022-04-01 00:00:00 - MAR-MAY 2022
+DEBUG LUTOBAN SIMPLE: Will add COVID gap line? True
+DEBUG LUTOBAN SIMPLE: Adding COVID gap line from DEC-FEB 2020 to MAR-MAY 2022
+DEBUG LUTOBAN SIMPLE: Y values: 5.0 to 9.47
+DEBUG LUTOBAN SIMPLE: Both values valid? True

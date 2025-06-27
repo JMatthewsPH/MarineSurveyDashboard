@@ -1119,12 +1119,6 @@ if selected_site:
                 if not herbivore_comparison_data.empty:
                     label = f"{site_municipality} Average" if herbivore_compare_scope == "Municipality Average" else "All Sites Average"
                     herbivore_comparison_labels = [label]
-            # Debug logging before chart creation
-            if selected_site == "Lutoban Pier":
-                print(f"DEBUG SITE DASHBOARD: About to create Herbivore chart for {selected_site}")
-                print(f"DEBUG SITE DASHBOARD: Herbivore data shape: {herbivore_data.shape}")
-                print(f"DEBUG SITE DASHBOARD: Herbivore data empty? {herbivore_data.empty}")
-            
             herbivore_fig, herbivore_config = graph_generator.create_time_series(
                 herbivore_data,
                 f"Herbivore Density - {selected_site}",

@@ -54,16 +54,6 @@ class SimpleGraphGenerator:
         Data comes clean from database - just plot it
         """
         
-        # Debug logging for Lutoban Pier
-        if 'Lutoban Pier' in title:
-            print(f"DEBUG LUTOBAN SIMPLE: Creating chart for {title}")
-            print(f"DEBUG LUTOBAN SIMPLE: Data shape: {data.shape}")
-            print(f"DEBUG LUTOBAN SIMPLE: Data empty? {data.empty}")
-            if not data.empty:
-                print(f"DEBUG LUTOBAN SIMPLE: Data columns: {list(data.columns)}")
-                print(f"DEBUG LUTOBAN SIMPLE: First few rows:")
-                print(data.head())
-        
         # Chart configuration
         config = {
             'displayModeBar': True,
@@ -116,18 +106,6 @@ class SimpleGraphGenerator:
         post_covid = data[data['date'] > covid_end]
         covid_period = data[(data['date'] >= covid_start) & (data['date'] <= covid_end)]
         
-        # Debug logging for Lutoban Pier
-        if 'Lutoban Pier' in title:
-            print(f"DEBUG LUTOBAN SIMPLE: COVID period {covid_start} to {covid_end}")
-            print(f"DEBUG LUTOBAN SIMPLE: Pre-COVID data points: {len(pre_covid)}")
-            print(f"DEBUG LUTOBAN SIMPLE: COVID period data points: {len(covid_period)}")
-            print(f"DEBUG LUTOBAN SIMPLE: Post-COVID data points: {len(post_covid)}")
-            if not pre_covid.empty:
-                print(f"DEBUG LUTOBAN SIMPLE: Last pre-COVID: {pre_covid.iloc[-1]['date']} - {pre_covid.iloc[-1]['season']}")
-            if not post_covid.empty:
-                print(f"DEBUG LUTOBAN SIMPLE: First post-COVID: {post_covid.iloc[0]['date']} - {post_covid.iloc[0]['season']}")
-            print(f"DEBUG LUTOBAN SIMPLE: Will add COVID gap line? {not pre_covid.empty and not post_covid.empty}")
-        
         # Plot pre-COVID data if exists
         if not pre_covid.empty:
             fig.add_trace(go.Scatter(
@@ -173,12 +151,6 @@ class SimpleGraphGenerator:
             last_pre_value = last_pre[metric_column]
             first_post_value = first_post[metric_column]
             
-            # Debug logging for Lutoban Pier
-            if 'Lutoban Pier' in title:
-                print(f"DEBUG LUTOBAN SIMPLE: Adding COVID gap line from {last_pre['season']} to {first_post['season']}")
-                print(f"DEBUG LUTOBAN SIMPLE: Y values: {last_pre_value} to {first_post_value}")
-                print(f"DEBUG LUTOBAN SIMPLE: Both values valid? {pd.notna(last_pre_value) and pd.notna(first_post_value)}")
-            
             # Only create gap line if both values are valid (not NaN)
             if pd.notna(last_pre_value) and pd.notna(first_post_value):
                 fig.add_trace(go.Scatter(
@@ -189,8 +161,6 @@ class SimpleGraphGenerator:
                     name='COVID-19 Period (No Data)',
                     showlegend=True
                 ))
-            elif 'Lutoban Pier' in title:
-                print(f"DEBUG LUTOBAN SIMPLE: Skipping COVID gap line due to NaN values")
         
         # Add "Data Collection Ongoing" indicator for current/future seasons
         if not data.empty:
