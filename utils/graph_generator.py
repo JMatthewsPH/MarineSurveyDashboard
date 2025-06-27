@@ -304,14 +304,52 @@ class GraphGenerator:
             add_confidence_interval(pre_covid, metric_column)
             add_confidence_interval(post_covid, metric_column)
         
-        # Add all data points - simplified approach
+        # Add data points with automatic gap detection for COVID periods
+        # Detect gaps in consecutive data and add dotted connectors
+        
+        # Sort data chronologically
+        complete_df_sorted = complete_df.sort_values('date').reset_index(drop=True)
+        
+        # Find gaps (more than 6 months between consecutive data points)
+        gaps = []
+        for i in range(len(complete_df_sorted) - 1):
+            current_date = complete_df_sorted.iloc[i]['date']
+            next_date = complete_df_sorted.iloc[i + 1]['date']
+            
+            # Calculate months between dates
+            months_diff = (next_date.year - current_date.year) * 12 + (next_date.month - current_date.month)
+            
+            # If gap is more than 6 months, it's likely a COVID period
+            if months_diff > 6:
+                gaps.append({
+                    'before_idx': i,
+                    'after_idx': i + 1,
+                    'before_season': complete_df_sorted.iloc[i]['season'],
+                    'after_season': complete_df_sorted.iloc[i + 1]['season'],
+                    'before_value': complete_df_sorted.iloc[i]['value'],
+                    'after_value': complete_df_sorted.iloc[i + 1]['value']
+                })
+        
+        # Add all data points as one trace
         fig.add_trace(go.Scatter(
             x=complete_df['season'],
             y=complete_df['value'],
             name=y_label,
             line=dict(color='#0077b6', dash='solid'),
-            mode='lines+markers'
+            mode='lines+markers',
+            showlegend=True
         ))
+        
+        # Add dotted lines for each detected gap
+        for i, gap in enumerate(gaps):
+            fig.add_trace(go.Scatter(
+                x=[gap['before_season'], gap['after_season']],
+                y=[gap['before_value'], gap['after_value']],
+                line=dict(color='#cccccc', dash='dot', width=2),
+                mode='lines',
+                name='COVID-19 Period (No Data)' if i == 0 else '',
+                showlegend=(i == 0)  # Only show in legend once
+            ))
 
         # Apply date range filter if provided
         if date_range and len(date_range) == 2:
