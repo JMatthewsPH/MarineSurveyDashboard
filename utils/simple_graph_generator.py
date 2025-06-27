@@ -259,10 +259,13 @@ class SimpleGraphGenerator:
             font=dict(family="Arial, sans-serif", size=12, color='#2c3e50'),
             legend=dict(
                 orientation="h",
-                yanchor="bottom",
-                y=1.02,
+                yanchor="top",
+                y=0.98,
                 xanchor="right",
-                x=1
+                x=0.98,
+                bgcolor="rgba(255,255,255,0.8)",
+                bordercolor="rgba(0,0,0,0.1)",
+                borderwidth=1
             ),
             hovermode='x unified',
             margin=dict(l=60, r=60, t=80, b=100)
