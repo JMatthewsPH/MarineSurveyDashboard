@@ -2,17 +2,3 @@
 headless = true
 address = "0.0.0.0"
 port = 5000
-enableCORS = false
-enableXsrfProtection = false
-baseUrlPath = ""
-runOnSave = false
-
-[browser]
-gatherUsageStats = false
-
-[theme]
-primaryColor = "#0077b6"
-backgroundColor = "#ffffff"
-secondaryBackgroundColor = "#f0f8ff"
-textColor = "#000000"
-
