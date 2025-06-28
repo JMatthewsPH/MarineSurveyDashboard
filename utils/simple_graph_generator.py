@@ -17,16 +17,16 @@ def format_season(date_obj):
     year = date_obj.year
     month = date_obj.month
     
-    if month in [12, 1, 2]:
-        return f"DEC-FEB {year if month == 12 else year}"
-    elif month in [3, 4, 5]:
+    if month in [3, 4, 5]:  # Mar, Apr, May
         return f"MAR-MAY {year}"
-    elif month in [6, 7, 8]:
+    elif month in [6, 7, 8]:  # Jun, Jul, Aug
         return f"JUN-AUG {year}"
-    elif month in [9, 10, 11]:
+    elif month in [9, 10, 11]:  # Sep, Oct, Nov
         return f"SEP-NOV {year}"
-    else:
-        return f"Unknown {year}"
+    else:  # Dec, Jan, Feb (month in [12, 1, 2])
+        # For December, January, February - use February's year as the season year
+        season_year = year if month != 12 else year + 1
+        return f"DEC-FEB {season_year}"
 
 
 def season_sort_key(season_str):
@@ -117,8 +117,9 @@ class SimpleGraphGenerator:
         # Get the metric column (should be the second column)
         metric_column = data.columns[1]
         
-        # Format seasons for display
-        data['season'] = data['date'].apply(format_season)
+        # Format seasons for display (only if season column doesn't exist)
+        if 'season' not in data.columns:
+            data['season'] = data['date'].apply(format_season)
         
         # Apply date range filter if provided
         if date_range and len(date_range) == 2:
