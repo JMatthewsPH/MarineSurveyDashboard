@@ -173,9 +173,13 @@ class MapGenerator:
                         </div>
                         """
                         
+                        # Offset marker seaward by ~20px (approximately 0.0005 degrees longitude)
+                        # This moves markers away from shoreline for better visibility
+                        offset_longitude = site.longitude + 0.0005  # Move east/seaward
+                        
                         # Add tiny circle marker instead of large pin
                         folium.CircleMarker(
-                            location=[site.latitude, site.longitude],
+                            location=[site.latitude, offset_longitude],
                             radius=4,  # Tiny size like click markers
                             popup=folium.Popup(popup_html, max_width=250),
                             tooltip=f"{site.name}: {latest_biomass:.1f} kg/ha",
