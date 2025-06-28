@@ -1191,6 +1191,9 @@ if selected_site:
                 if not algae_comparison_data.empty:
                     label = f"{site_municipality} Average" if algae_compare_scope == "Municipality Average" else "All Sites Average"
                     algae_comparison_labels = [label]
+            # Get analysis options with mutual exclusivity
+            actual_show_error_bars, actual_show_confidence_interval = get_analysis_options()
+
             algae_fig, algae_config = graph_generator.create_time_series(
                 algae_data,
                 f"Fleshy Algae Cover - {selected_site}",
@@ -1198,8 +1201,8 @@ if selected_site:
                 comparison_data=algae_comparison_data,
                 comparison_labels=algae_comparison_labels,
                 date_range=date_range,
-                show_confidence_interval=show_confidence_interval,
-                show_error_bars=show_error_bars,
+                show_confidence_interval=actual_show_confidence_interval,
+                show_error_bars=actual_show_error_bars,
                 use_straight_lines=use_straight_lines
             )
             st.plotly_chart(algae_fig, use_container_width=True, config=algae_config, key='algae_chart')
@@ -1236,6 +1239,9 @@ if selected_site:
                 if not herbivore_comparison_data.empty:
                     label = f"{site_municipality} Average" if herbivore_compare_scope == "Municipality Average" else "All Sites Average"
                     herbivore_comparison_labels = [label]
+            # Get analysis options with mutual exclusivity
+            actual_show_error_bars, actual_show_confidence_interval = get_analysis_options()
+
             herbivore_fig, herbivore_config = graph_generator.create_time_series(
                 herbivore_data,
                 f"Herbivore Density - {selected_site}",
@@ -1243,8 +1249,8 @@ if selected_site:
                 comparison_data=herbivore_comparison_data,
                 comparison_labels=herbivore_comparison_labels,
                 date_range=date_range,
-                show_confidence_interval=show_confidence_interval,
-                show_error_bars=show_error_bars,
+                show_confidence_interval=actual_show_confidence_interval,
+                show_error_bars=actual_show_error_bars,
                 use_straight_lines=use_straight_lines
             )
             st.plotly_chart(herbivore_fig, use_container_width=True, config=herbivore_config, key='herbivore_chart')
@@ -1281,6 +1287,9 @@ if selected_site:
                 if not carnivore_comparison_data.empty:
                     label = f"{site_municipality} Average" if carnivore_compare_scope == "Municipality Average" else "All Sites Average"
                     carnivore_comparison_labels = [label]
+            # Get analysis options with mutual exclusivity
+            actual_show_error_bars, actual_show_confidence_interval = get_analysis_options()
+
             carnivore_fig, carnivore_config = graph_generator.create_time_series(
                 carnivore_data,
                 f"Carnivore Density - {selected_site}",
@@ -1288,8 +1297,8 @@ if selected_site:
                 comparison_data=carnivore_comparison_data,
                 comparison_labels=carnivore_comparison_labels,
                 date_range=date_range,
-                show_confidence_interval=show_confidence_interval,
-                show_error_bars=show_error_bars,
+                show_confidence_interval=actual_show_confidence_interval,
+                show_error_bars=actual_show_error_bars,
                 use_straight_lines=use_straight_lines
             )
             st.plotly_chart(carnivore_fig, use_container_width=True, config=carnivore_config, key='carnivore_chart')
@@ -1326,6 +1335,9 @@ if selected_site:
                 if not omnivore_comparison_data.empty:
                     label = f"{site_municipality} Average" if omnivore_compare_scope == "Municipality Average" else "All Sites Average"
                     omnivore_comparison_labels = [label]
+            # Get analysis options with mutual exclusivity
+            actual_show_error_bars, actual_show_confidence_interval = get_analysis_options()
+
             omnivore_fig, omnivore_config = graph_generator.create_time_series(
                 omnivore_data,
                 f"Omnivore Density - {selected_site}",
@@ -1333,8 +1345,8 @@ if selected_site:
                 comparison_data=omnivore_comparison_data,
                 comparison_labels=omnivore_comparison_labels,
                 date_range=date_range,
-                show_confidence_interval=show_confidence_interval,
-                show_error_bars=show_error_bars,
+                show_confidence_interval=actual_show_confidence_interval,
+                show_error_bars=actual_show_error_bars,
                 use_straight_lines=use_straight_lines
             )
             st.plotly_chart(omnivore_fig, use_container_width=True, config=omnivore_config, key='omnivore_chart')
@@ -1378,8 +1390,8 @@ if selected_site:
                 comparison_data=corallivore_comparison_data,
                 comparison_labels=corallivore_comparison_labels,
                 date_range=date_range,
-                show_confidence_interval=show_confidence_interval,
-                show_error_bars=show_error_bars,
+                show_confidence_interval=actual_show_confidence_interval,
+                show_error_bars=actual_show_error_bars,
                 use_straight_lines=use_straight_lines
             )
             st.plotly_chart(corallivore_fig, use_container_width=True, config=corallivore_config, key='corallivore_chart')
@@ -1423,8 +1435,8 @@ if selected_site:
                 comparison_data=bleaching_comparison_data,
                 comparison_labels=bleaching_comparison_labels,
                 date_range=date_range,
-                show_confidence_interval=show_confidence_interval,
-                show_error_bars=show_error_bars,
+                show_confidence_interval=actual_show_confidence_interval,
+                show_error_bars=actual_show_error_bars,
                 use_straight_lines=use_straight_lines
             )
             st.plotly_chart(bleaching_fig, use_container_width=True, config=bleaching_config, key='bleaching_chart')
@@ -1468,8 +1480,8 @@ if selected_site:
                 comparison_data=rubble_comparison_data,
                 comparison_labels=rubble_comparison_labels,
                 date_range=date_range,
-                show_confidence_interval=show_confidence_interval,
-                show_error_bars=show_error_bars,
+                show_confidence_interval=actual_show_confidence_interval,
+                show_error_bars=actual_show_error_bars,
                 use_straight_lines=use_straight_lines
             )
             st.plotly_chart(rubble_fig, use_container_width=True, config=rubble_config, key='rubble_chart')
