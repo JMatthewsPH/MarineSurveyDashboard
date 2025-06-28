@@ -401,7 +401,7 @@ if selected_site:
             st.title(TRANSLATIONS[st.session_state.language]['analysis_options'])
             
             # Compact Analysis Options with small question marks
-            st.markdown("**📊 Analysis Options**")
+            st.markdown("**Analysis Options**")
             
             # Let Streamlit handle checkbox state natively - no session state needed
             
