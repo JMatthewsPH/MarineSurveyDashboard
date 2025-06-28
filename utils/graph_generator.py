@@ -349,7 +349,7 @@ class GraphGenerator:
             x=complete_df['season'],
             y=complete_df['value'],
             name=y_label,
-            line=dict(color='#0077b6', dash='solid'),
+            line=dict(color='#0077b6', dash='solid', shape='spline', smoothing=1.3),
             mode='lines+markers',
             showlegend=True
         ))
@@ -978,6 +978,8 @@ class GraphGenerator:
                 name=name,
                 line=dict(
                     color=color,
+                    shape='spline',
+                    smoothing=1.3,
                     **line_props
                 ),
                 mode='lines+markers',
