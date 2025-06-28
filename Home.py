@@ -262,14 +262,14 @@ def create_site_card(site):
     st.markdown(f"""
         <div class="site-card">
             <div class="site-card-content">
-                <h3 style="margin-top: 0; color: #2c3e50;">{site.name}</h3>
-                <p style="margin: 8px 0; color: #666;"><strong>{municipality_label}:</strong> {site.municipality}</p>
-                <p style="margin: 12px 0; line-height: 1.4; color: #333; flex-grow: 1;">{truncated_description}</p>
+                <h3 style="margin-top: 0; color: #2b6cb0;">{site.name}</h3>
+                <p style="margin: 8px 0; color: #2d3748;"><strong>{municipality_label}:</strong> {site.municipality}</p>
+                <p style="margin: 12px 0; line-height: 1.4; color: #2d3748; flex-grow: 1;">{truncated_description}</p>
             </div>
             <div class="site-card-footer" style="margin-top: auto; padding-top: 15px;">
                 <a href="Site_Dashboard?site={site.name}" target="_self" style="text-decoration: none;">
                     <button class="site-button" style="
-                        background: #007bff; 
+                        background: #2b6cb0; 
                         color: white; 
                         border: none; 
                         padding: 10px 20px; 
@@ -278,7 +278,7 @@ def create_site_card(site):
                         width: 100%;
                         font-size: 14px;
                         transition: background 0.3s;
-                    " onmouseover="this.style.background='#0056b3'" onmouseout="this.style.background='#007bff'">
+                    " onmouseover="this.style.background='#4299e1'" onmouseout="this.style.background='#2b6cb0'">
                         {view_details_text}
                     </button>
                 </a>
