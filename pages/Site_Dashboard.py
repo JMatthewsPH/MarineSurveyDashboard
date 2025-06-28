@@ -421,7 +421,6 @@ if selected_site:
             with col1:
                 show_confidence_interval = st.checkbox(
                     "Confidence Intervals (95%)",
-                    value=st.session_state.get('show_confidence_interval', False),
                     key="confidence_interval_checkbox"
                 )
             with col2:
