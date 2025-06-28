@@ -429,8 +429,7 @@ if selected_site:
                 show_confidence_interval = st.checkbox(
                     "Confidence Intervals (95%)",
                     value=st.session_state.get('show_confidence_interval', False),
-                    key="confidence_interval_checkbox",
-                    disabled=show_error_bars
+                    key="confidence_interval_checkbox"
                 )
             with col2:
                 if st.button("?", key="confidence_help", help="Click for explanation"):
@@ -448,20 +447,19 @@ if selected_site:
                 if st.button("?", key="straight_lines_help", help="Click for explanation"):
                     st.session_state.show_straight_lines_popup = True
             
-            # Handle mutual exclusivity without causing reruns
-            if show_error_bars and show_confidence_interval:
-                # If both are checked, prioritize the most recently changed one
-                if show_error_bars != st.session_state.get('show_error_bars', False):
-                    # Error bars was just checked, uncheck confidence
-                    show_confidence_interval = False
-                elif show_confidence_interval != st.session_state.get('show_confidence_interval', False):
-                    # Confidence was just checked, uncheck error bars
-                    show_error_bars = False
-            
-            # Update session state
+            # Update session state immediately - no mutual exclusivity interference
             st.session_state.show_error_bars = show_error_bars
             st.session_state.show_confidence_interval = show_confidence_interval
             st.session_state.use_straight_lines = use_straight_lines
+            
+            # Helper function to handle mutual exclusivity for analysis options
+            def get_analysis_options():
+                actual_show_error_bars = show_error_bars
+                actual_show_confidence_interval = show_confidence_interval
+                if show_error_bars and show_confidence_interval:
+                    # If both are selected, prioritize error bars
+                    actual_show_confidence_interval = False
+                return actual_show_error_bars, actual_show_confidence_interval
             
             # Clear popup flags - they should only be triggered by question mark buttons, not checkboxes
             if 'show_error_bars_popup' not in st.session_state:
@@ -1053,6 +1051,9 @@ if selected_site:
                         label = f"{site_municipality} Average" if biomass_compare_scope == "Municipality Average" else "All Sites Average"
                         biomass_comparison_labels = [label]
                         
+                # Get analysis options with mutual exclusivity
+                actual_show_error_bars, actual_show_confidence_interval = get_analysis_options()
+
                 # Create the time series chart with date range filtering and analysis options
                 biomass_fig, biomass_config = graph_generator.create_time_series(
                     biomass_data,
@@ -1061,8 +1062,8 @@ if selected_site:
                     comparison_data=biomass_comparison_data,
                     comparison_labels=biomass_comparison_labels,
                     date_range=date_range,
-                    show_confidence_interval=show_confidence_interval,
-                    show_error_bars=show_error_bars,
+                    show_confidence_interval=actual_show_confidence_interval,
+                    show_error_bars=actual_show_error_bars,
                     use_straight_lines=use_straight_lines
                 )
                 
@@ -1130,6 +1131,9 @@ if selected_site:
                 if not coral_comparison_data.empty:
                     label = f"{site_municipality} Average" if coral_compare_scope == "Municipality Average" else "All Sites Average"
                     coral_comparison_labels = [label]
+            # Get analysis options with mutual exclusivity
+            actual_show_error_bars, actual_show_confidence_interval = get_analysis_options()
+
             coral_fig, coral_config = graph_generator.create_time_series(
                 coral_data,
                 f"Hard Coral Cover - {selected_site}",  # Title on chart
@@ -1137,8 +1141,8 @@ if selected_site:
                 comparison_data=coral_comparison_data,
                 comparison_labels=coral_comparison_labels,
                 date_range=date_range,
-                show_confidence_interval=show_confidence_interval,
-                show_error_bars=show_error_bars,
+                show_confidence_interval=actual_show_confidence_interval,
+                show_error_bars=actual_show_error_bars,
                 use_straight_lines=use_straight_lines
             )
             
