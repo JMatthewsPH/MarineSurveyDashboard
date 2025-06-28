@@ -29,6 +29,37 @@ def format_season(date_obj):
         return f"Unknown {year}"
 
 
+def season_sort_key(season_str):
+    """
+    Generate a sort key for chronological ordering of seasons
+    Input format: "MAR-MAY 2020", "DEC-FEB 2020", etc.
+    """
+    try:
+        parts = season_str.split(' ')
+        if len(parts) != 2:
+            return (9999, 0)  # Unknown seasons sort to end
+        
+        season_part, year_part = parts
+        year = int(year_part)
+        
+        # Map seasons to chronological order
+        season_order = {
+            'DEC-FEB': 0,
+            'MAR-MAY': 1, 
+            'JUN-AUG': 2,
+            'SEP-NOV': 3
+        }
+        
+        # For DEC-FEB, the year shown is for February, so DEC is actually previous year
+        if season_part == 'DEC-FEB':
+            year -= 1  # December is in the previous year
+        
+        season_num = season_order.get(season_part, 9)
+        return (year, season_num)
+    except:
+        return (9999, 0)  # Error cases sort to end
+
+
 def generate_filename(title: str, start_date=None, end_date=None) -> str:
     """Generate a filename based on the plot title and date range"""
     # Clean the title for filename
@@ -244,7 +275,23 @@ class SimpleGraphGenerator:
                         marker=dict(size=6, color=color)
                     ))
         
-        # Update layout
+        # Create chronological ordering for seasons
+        # Collect all unique seasons from main data and comparison data
+        all_seasons = set()
+        if not data.empty:
+            all_seasons.update(data['season'].unique())
+        
+        if comparison_data is not None:
+            if not isinstance(comparison_data, list):
+                comparison_data = [comparison_data]
+            for comp_data in comparison_data:
+                if not comp_data.empty and 'season' in comp_data.columns:
+                    all_seasons.update(comp_data['season'].unique())
+        
+        # Sort seasons chronologically
+        sorted_seasons = sorted(list(all_seasons), key=lambda x: season_sort_key(x))
+        
+        # Update layout with proper season ordering
         fig.update_layout(
             title=dict(
                 text=title, 
@@ -258,7 +305,9 @@ class SimpleGraphGenerator:
                 showgrid=True,
                 gridwidth=1,
                 gridcolor='#ecf0f1',
-                tickangle=45
+                tickangle=45,
+                categoryorder='array',
+                categoryarray=sorted_seasons
             ),
             yaxis=dict(
                 title=y_label,
