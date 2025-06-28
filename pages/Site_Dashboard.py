@@ -1383,6 +1383,9 @@ if selected_site:
                 if not corallivore_comparison_data.empty:
                     label = f"{site_municipality} Average" if corallivore_compare_scope == "Municipality Average" else "All Sites Average"
                     corallivore_comparison_labels = [label]
+            # Get analysis options with mutual exclusivity
+            actual_show_error_bars, actual_show_confidence_interval = get_analysis_options()
+
             corallivore_fig, corallivore_config = graph_generator.create_time_series(
                 corallivore_data,
                 f"Corallivore Density - {selected_site}",
@@ -1428,6 +1431,9 @@ if selected_site:
                 if not bleaching_comparison_data.empty:
                     label = f"{site_municipality} Average" if bleaching_compare_scope == "Municipality Average" else "All Sites Average"
                     bleaching_comparison_labels = [label]
+            # Get analysis options with mutual exclusivity
+            actual_show_error_bars, actual_show_confidence_interval = get_analysis_options()
+
             bleaching_fig, bleaching_config = graph_generator.create_time_series(
                 bleaching_data,
                 f"Bleaching - {selected_site}",
@@ -1473,6 +1479,9 @@ if selected_site:
                 if not rubble_comparison_data.empty:
                     label = f"{site_municipality} Average" if rubble_compare_scope == "Municipality Average" else "All Sites Average"
                     rubble_comparison_labels = [label]
+            # Get analysis options with mutual exclusivity
+            actual_show_error_bars, actual_show_confidence_interval = get_analysis_options()
+
             rubble_fig, rubble_config = graph_generator.create_time_series(
                 rubble_data,
                 f"Rubble Cover - {selected_site}",
