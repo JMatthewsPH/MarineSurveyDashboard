@@ -29,10 +29,24 @@ body {
     border-radius: 5px;
     margin-bottom: 15px;
     transition: transform 0.2s;
-    height: 100%;  /* Use full column height */
+    height: 340px;  /* Fixed height for uniform cards */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.site-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+.site-card-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+.site-card-footer {
+    margin-top: auto;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -238,24 +252,39 @@ def create_site_card(site):
     # Default description if not available
     description = description or TRANSLATIONS[language_code]['site_desc_placeholder']
     
-    # Truncate description to 150 characters for uniform height
-    truncated_description = description[:150] + "..." if len(description) > 150 else description
+    # Truncate description to exactly 140 characters for uniform height
+    truncated_description = description[:140] + "..." if len(description) > 140 else description
     
     # Get translations for labels
     municipality_label = TRANSLATIONS[language_code]['municipality']
     view_details_text = TRANSLATIONS[language_code]['view_details']
 
-    # Use native Streamlit container with border styling
-    with st.container(border=True):
-        st.subheader(site.name)
-        st.write(f"**{municipality_label}:** {site.municipality}")
-        st.write(truncated_description)
-        
-        # Add some spacing and the button
-        st.write("")  # Add spacing
-        if st.button(view_details_text, key=f"btn_{site.name}", use_container_width=True):
-            st.switch_page(f"pages/Site_Dashboard.py")
-            st.session_state.selected_site = site.name
+    st.markdown(f"""
+        <div class="site-card">
+            <div class="site-card-content">
+                <h3 style="margin-top: 0; color: #2c3e50;">{site.name}</h3>
+                <p style="margin: 8px 0; color: #666;"><strong>{municipality_label}:</strong> {site.municipality}</p>
+                <p style="margin: 12px 0; line-height: 1.4; color: #333; flex-grow: 1;">{truncated_description}</p>
+            </div>
+            <div class="site-card-footer" style="margin-top: auto; padding-top: 15px;">
+                <a href="Site_Dashboard?site={site.name}" target="_self" style="text-decoration: none;">
+                    <button class="site-button" style="
+                        background: #4CAF50; 
+                        color: white; 
+                        border: none; 
+                        padding: 10px 20px; 
+                        border-radius: 5px; 
+                        cursor: pointer; 
+                        width: 100%;
+                        font-size: 14px;
+                        transition: background 0.3s;
+                    " onmouseover="this.style.background='#45a049'" onmouseout="this.style.background='#4CAF50'">
+                        {view_details_text}
+                    </button>
+                </a>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
 
 # Define municipality display names with translations
 municipality_names = {
