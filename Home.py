@@ -29,6 +29,10 @@ body {
     border-radius: 5px;
     margin-bottom: 15px;
     transition: transform 0.2s;
+    height: 100%;  /* Use full column height */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -234,23 +238,24 @@ def create_site_card(site):
     # Default description if not available
     description = description or TRANSLATIONS[language_code]['site_desc_placeholder']
     
-    # Truncate description to 200 characters and add ellipsis
-    truncated_description = description[:200] + "..." if len(description) > 200 else description
+    # Truncate description to 150 characters for uniform height
+    truncated_description = description[:150] + "..." if len(description) > 150 else description
     
     # Get translations for labels
     municipality_label = TRANSLATIONS[language_code]['municipality']
     view_details_text = TRANSLATIONS[language_code]['view_details']
 
-    st.markdown(f"""
-        <div class="site-card">
-            <h3>{site.name}</h3>
-            <p><strong>{municipality_label}</strong> {site.municipality}</p>
-            <p>{truncated_description}</p>
-            <a href="Site_Dashboard?site={site.name}" target="_self">
-                <button class="site-button">{view_details_text}</button>
-            </a>
-        </div>
-    """, unsafe_allow_html=True)
+    # Use native Streamlit container with border styling
+    with st.container(border=True):
+        st.subheader(site.name)
+        st.write(f"**{municipality_label}:** {site.municipality}")
+        st.write(truncated_description)
+        
+        # Add some spacing and the button
+        st.write("")  # Add spacing
+        if st.button(view_details_text, key=f"btn_{site.name}", use_container_width=True):
+            st.switch_page(f"pages/Site_Dashboard.py")
+            st.session_state.selected_site = site.name
 
 # Define municipality display names with translations
 municipality_names = {
