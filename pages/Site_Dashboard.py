@@ -1213,7 +1213,9 @@ if selected_site:
                 comparison_data=coral_comparison_data,
                 comparison_labels=coral_comparison_labels,
                 date_range=date_range,
-                show_confidence_interval=show_confidence_interval
+                show_confidence_interval=show_confidence_interval,
+                show_error_bars=show_error_bars,
+                use_straight_lines=use_straight_lines
             )
             
             # Replace the placeholder with the actual chart
@@ -1268,7 +1270,9 @@ if selected_site:
                 comparison_data=algae_comparison_data,
                 comparison_labels=algae_comparison_labels,
                 date_range=date_range,
-                show_confidence_interval=show_confidence_interval
+                show_confidence_interval=show_confidence_interval,
+                show_error_bars=show_error_bars,
+                use_straight_lines=use_straight_lines
             )
             st.plotly_chart(algae_fig, use_container_width=True, config=algae_config, key='algae_chart')
 
@@ -1311,7 +1315,9 @@ if selected_site:
                 comparison_data=herbivore_comparison_data,
                 comparison_labels=herbivore_comparison_labels,
                 date_range=date_range,
-                show_confidence_interval=show_confidence_interval
+                show_confidence_interval=show_confidence_interval,
+                show_error_bars=show_error_bars,
+                use_straight_lines=use_straight_lines
             )
             st.plotly_chart(herbivore_fig, use_container_width=True, config=herbivore_config, key='herbivore_chart')
 
@@ -1354,7 +1360,9 @@ if selected_site:
                 comparison_data=carnivore_comparison_data,
                 comparison_labels=carnivore_comparison_labels,
                 date_range=date_range,
-                show_confidence_interval=show_confidence_interval
+                show_confidence_interval=show_confidence_interval,
+                show_error_bars=show_error_bars,
+                use_straight_lines=use_straight_lines
             )
             st.plotly_chart(carnivore_fig, use_container_width=True, config=carnivore_config, key='carnivore_chart')
 

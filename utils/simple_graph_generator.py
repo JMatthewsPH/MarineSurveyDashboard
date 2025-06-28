@@ -48,7 +48,7 @@ class SimpleGraphGenerator:
     def __init__(self, data_processor):
         self.data_processor = data_processor
 
-    def create_time_series(self, data, title, y_label, comparison_data=None, comparison_labels=None, date_range=None, secondary_data=None, secondary_label=None, tertiary_data=None, tertiary_label=None, show_confidence_interval=False):
+    def create_time_series(self, data, title, y_label, comparison_data=None, comparison_labels=None, date_range=None, secondary_data=None, secondary_label=None, tertiary_data=None, tertiary_label=None, show_confidence_interval=False, show_error_bars=False, use_straight_lines=False):
         """
         Create a simple time series chart
         Data comes clean from database - just plot it
@@ -106,13 +106,24 @@ class SimpleGraphGenerator:
         post_covid = data[data['date'] > covid_end]
         covid_period = data[(data['date'] >= covid_start) & (data['date'] <= covid_end)]
         
+        # Configure line style based on user preference
+        line_style = {
+            'color': '#0077b6',
+            'width': 3
+        }
+        
+        # Add smooth curves unless straight lines are requested
+        if not use_straight_lines:
+            line_style['shape'] = 'spline'
+            line_style['smoothing'] = 1.3
+        
         # Plot pre-COVID data if exists
         if not pre_covid.empty:
             fig.add_trace(go.Scatter(
                 x=pre_covid['season'],
                 y=pre_covid[metric_column],
                 name=y_label,
-                line=dict(color='#0077b6', width=3, shape='spline', smoothing=1.3),
+                line=line_style,
                 mode='lines+markers',
                 marker=dict(size=8, color='#0077b6'),
                 showlegend=True
