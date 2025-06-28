@@ -1131,7 +1131,7 @@ if selected_site:
                         label = f"{site_municipality} Average" if biomass_compare_scope == "Municipality Average" else "All Sites Average"
                         biomass_comparison_labels = [label]
                         
-                # Create the time series chart with date range filtering and confidence interval
+                # Create the time series chart with date range filtering and analysis options
                 biomass_fig, biomass_config = graph_generator.create_time_series(
                     biomass_data,
                     f"Commercial Fish Biomass - {selected_site}",  # Title on chart
@@ -1139,7 +1139,9 @@ if selected_site:
                     comparison_data=biomass_comparison_data,
                     comparison_labels=biomass_comparison_labels,
                     date_range=date_range,
-                    show_confidence_interval=show_confidence_interval  # Use the checkbox value
+                    show_confidence_interval=show_confidence_interval,
+                    show_error_bars=show_error_bars,
+                    use_straight_lines=use_straight_lines
                 )
                 
                 # Display the chart
@@ -1405,7 +1407,9 @@ if selected_site:
                 comparison_data=omnivore_comparison_data,
                 comparison_labels=omnivore_comparison_labels,
                 date_range=date_range,
-                show_confidence_interval=show_confidence_interval
+                show_confidence_interval=show_confidence_interval,
+                show_error_bars=show_error_bars,
+                use_straight_lines=use_straight_lines
             )
             st.plotly_chart(omnivore_fig, use_container_width=True, config=omnivore_config, key='omnivore_chart')
 
@@ -1448,7 +1452,9 @@ if selected_site:
                 comparison_data=corallivore_comparison_data,
                 comparison_labels=corallivore_comparison_labels,
                 date_range=date_range,
-                show_confidence_interval=show_confidence_interval
+                show_confidence_interval=show_confidence_interval,
+                show_error_bars=show_error_bars,
+                use_straight_lines=use_straight_lines
             )
             st.plotly_chart(corallivore_fig, use_container_width=True, config=corallivore_config, key='corallivore_chart')
 
