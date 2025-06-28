@@ -39,7 +39,7 @@ class MapGenerator:
             # Get all sites with coordinates and latest biomass data
             sites = self.data_processor.get_sites()
             
-            # Create base map centered on the region
+            # Create base map centered on the region with lighter sea color
             m = folium.Map(
                 location=[center_lat, center_lon],
                 zoom_start=zoom_start,
@@ -51,6 +51,15 @@ class MapGenerator:
                 tiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
                 attr='Esri',
                 name='Satellite',
+                overlay=False,
+                control=True
+            ).add_to(m)
+            
+            # Add a lighter sea-focused tile layer
+            folium.TileLayer(
+                tiles='https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}',
+                attr='Esri Ocean',
+                name='Ocean View',
                 overlay=False,
                 control=True
             ).add_to(m)
@@ -150,12 +159,16 @@ class MapGenerator:
                         </div>
                         """
                         
-                        # Add marker to map
-                        folium.Marker(
+                        # Add tiny circle marker instead of large pin
+                        folium.CircleMarker(
                             location=[site.latitude, site.longitude],
+                            radius=4,  # Tiny size like click markers
                             popup=folium.Popup(popup_html, max_width=250),
                             tooltip=f"{site.name}: {latest_biomass:.1f} kg/ha",
-                            icon=folium.Icon(color=color, icon=icon, prefix='glyphicon')
+                            color='white',
+                            weight=1,
+                            fillColor=color,
+                            fillOpacity=0.8
                         ).add_to(m)
                         
                         marker_data.append({
@@ -166,16 +179,33 @@ class MapGenerator:
                             'lon': site.longitude
                         })
             
-            # Add heatmap layer if we have data
+            # Add heatmap layer if we have data with reduced transparency and smaller radius
             if heatmap_data:
                 HeatMap(
                     heatmap_data,
                     name='Biomass Heatmap',
-                    min_opacity=0.3,
+                    min_opacity=0.15,  # Reduced transparency
                     max_zoom=18,
-                    radius=25,
-                    blur=15,
+                    radius=15,  # Smaller radius to minimize land spillover
+                    blur=8,     # Less blur to contain effect better
                     gradient={0.2: 'red', 0.4: 'orange', 0.6: 'yellow', 1.0: 'green'}
+                ).add_to(m)
+            
+            # Add municipality labels for the three main towns without map clutter
+            municipality_coords = {
+                'Santa Catalina': [9.3275, 123.1839],
+                'Siaton': [9.0608, 122.7781], 
+                'Zamboanguita': [9.0767, 123.1036]
+            }
+            
+            for municipality, coords in municipality_coords.items():
+                folium.Marker(
+                    location=coords,
+                    icon=folium.DivIcon(
+                        html=f'<div style="font-family: Arial; font-weight: bold; font-size: 12px; color: #2c3e50; text-shadow: 1px 1px 2px white; background: rgba(255,255,255,0.8); padding: 2px 6px; border-radius: 4px; border: 1px solid #bbb;">{municipality}</div>',
+                        icon_size=(80, 20),
+                        icon_anchor=(40, 10)
+                    )
                 ).add_to(m)
             
             # Add layer control
