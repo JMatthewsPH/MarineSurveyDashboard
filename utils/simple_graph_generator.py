@@ -244,7 +244,14 @@ class SimpleGraphGenerator:
                             comp_data = comp_data[(comp_data['date'] >= start_dt) & (comp_data['date'] <= end_dt)]
                     
                     color = colors[i % len(colors)]
-                    label = comparison_labels[i] if i < len(comparison_labels) else f"Comparison {i+1}"
+                    # Ensure label is a string, not a list
+                    if comparison_labels and isinstance(comparison_labels, list) and i < len(comparison_labels):
+                        label = comparison_labels[i]
+                        # If label is still a list (edge case), take first element
+                        if isinstance(label, list):
+                            label = label[0] if label else f"Comparison {i+1}"
+                    else:
+                        label = f"Comparison {i+1}"
                     
                     # Configure comparison line style based on user preference
                     comp_line_style = {
