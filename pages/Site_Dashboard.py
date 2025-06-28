@@ -950,11 +950,12 @@ if selected_site:
 
         @st.dialog("Confidence Intervals (95%)")
         def show_confidence_dialog():
-            st.write("Confidence intervals show the range where we can be 95% confident that the true population mean lies:")
-            st.write("• **Narrow bands:** More precise estimates (larger sample sizes)")
-            st.write("• **Wide bands:** Less precise estimates (smaller sample sizes)")
-            st.write("• **Interpretation:** If we repeated the study 100 times, 95 of those intervals would contain the true mean")
-            st.info("Note: Confidence intervals and error bars are mutually exclusive options.")
+            st.write("Confidence intervals show the statistical variability between seasonal mean estimates:")
+            st.write("• **Narrow bands:** Seasonal means are consistently close together")
+            st.write("• **Wide bands:** Seasonal means show more variability over time")
+            st.write("• **Interpretation:** Shows the expected range of variation in seasonal estimates")
+            st.info("Note: Each data point represents the mean of ~1000 surveys per season. Confidence intervals show between-season variability rather than within-season precision.")
+            st.info("Note: Confidence intervals and error bars are mutually exclusive options.")e options.")
 
         @st.dialog("Straight Line Graphs")
         def show_straight_lines_dialog():
