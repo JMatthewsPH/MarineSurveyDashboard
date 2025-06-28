@@ -9,60 +9,6 @@ from contextlib import contextmanager
 import logging
 import time  # Added for performance timing measurements
 
-def season_sort_key(season_str):
-    """
-    Generate a sort key for chronological ordering of seasons
-    Input format: "MAR-MAY 2020", "DEC-FEB 2020", etc.
-    """
-    try:
-        parts = season_str.split(' ')
-        if len(parts) != 2:
-            return (9999, 0)  # Unknown seasons sort to end
-        
-        season_part, year_part = parts
-        year = int(year_part)
-        
-        # Map seasons to chronological order
-        season_order = {
-            'DEC-FEB': 0,
-            'MAR-MAY': 1, 
-            'JUN-AUG': 2,
-            'SEP-NOV': 3
-        }
-        
-        # For DEC-FEB, the year shown is for February, so DEC is actually previous year
-        if season_part == 'DEC-FEB':
-            year -= 1  # December is in the previous year
-        
-        season_num = season_order.get(season_part, 9)
-        return (year, season_num)
-    except:
-        return (9999, 0)  # Error cases sort to end
-
-def format_season(date):
-    """Convert date to season format and handle season transitions"""
-    if pd.isna(date):
-        return None
-    
-    try:
-        date = pd.to_datetime(date)
-        month = date.month
-        year = date.year
-        
-        # Determine season based on month
-        if month in [3, 4, 5]:  # Mar, Apr, May
-            return f"MAR-MAY {year}"
-        elif month in [6, 7, 8]:  # Jun, Jul, Aug
-            return f"JUN-AUG {year}"
-        elif month in [9, 10, 11]:  # Sep, Oct, Nov
-            return f"SEP-NOV {year}"
-        else:  # Dec, Jan, Feb (month in [12, 1, 2])
-            # For December, January, February - use February's year as the season year
-            season_year = year if month != 12 else year + 1
-            return f"DEC-FEB {season_year}"
-    except:
-        return None
-
 # Configure logging
 logging.basicConfig(level=logging.INFO, 
                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -210,17 +156,7 @@ class DataProcessor:
             print(f"DEBUG - Metric name: {_self.DISPLAY_NAMES.get(column_name, metric)}")
             
             # Process results
-            df = pd.DataFrame(surveys, columns=['date', metric])
-            
-            # Convert dates and add season column for chronological ordering
-            if not df.empty:
-                df['date'] = pd.to_datetime(df['date'])
-                df['season'] = df['date'].apply(format_season)
-                
-                # Sort by date to ensure chronological order
-                df = df.sort_values('date').reset_index(drop=True)
-                
-            return df
+            return pd.DataFrame(surveys, columns=['date', metric])
         except Exception as e:
             logger.error(f"Error fetching metric data: {str(e)}")
             # Return empty DataFrame to prevent application crashes
@@ -291,11 +227,8 @@ class DataProcessor:
                     site_name = site_id_to_name[site_id]
                     if data:  # Only create DataFrame if we have data
                         df = pd.DataFrame(data, columns=['date', metric])
-                        # Pre-convert dates and add season formatting for chronological ordering
+                        # Pre-convert dates to improve chart rendering speed later
                         df['date'] = pd.to_datetime(df['date'])
-                        df['season'] = df['date'].apply(format_season)
-                        # Sort by date to ensure chronological order
-                        df = df.sort_values('date').reset_index(drop=True)
                         logger.info(f"Found {len(df)} {metric} surveys for {site_name}")
                         results[site_name] = df
                     else:
@@ -454,18 +387,7 @@ class DataProcessor:
             logger.info(f"Found {len(surveys)} biomass surveys for {site_name}")
             print(f"DEBUG - Metric name: {display_name}")
             
-            # Process results with season formatting
-            df = pd.DataFrame(surveys, columns=['date', display_name])
-            
-            # Convert dates and add season column for chronological ordering
-            if not df.empty:
-                df['date'] = pd.to_datetime(df['date'])
-                df['season'] = df['date'].apply(format_season)
-                
-                # Sort by date to ensure chronological order
-                df = df.sort_values('date').reset_index(drop=True)
-                
-            return df
+            return pd.DataFrame(surveys, columns=['date', display_name])
         except Exception as e:
             logger.error(f"Error fetching biomass data: {str(e)}")
             return pd.DataFrame(columns=['date', display_name])
@@ -522,13 +444,6 @@ class DataProcessor:
             for site_id, data in results_by_site_id.items():
                 site_name = site_id_to_name[site_id]
                 df = pd.DataFrame(data, columns=['date', display_name])
-                # Convert dates and add season column for chronological ordering
-                if not df.empty:
-                    df['date'] = pd.to_datetime(df['date'])
-                    df['season'] = df['date'].apply(format_season)
-                    # Sort by date to ensure chronological order
-                    df = df.sort_values('date').reset_index(drop=True)
-                    
                 logger.info(f"Found {len(df)} biomass surveys for {site_name}")
                 results[site_name] = df
                 

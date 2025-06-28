@@ -17,47 +17,16 @@ def format_season(date_obj):
     year = date_obj.year
     month = date_obj.month
     
-    if month in [3, 4, 5]:  # Mar, Apr, May
+    if month in [12, 1, 2]:
+        return f"DEC-FEB {year if month == 12 else year}"
+    elif month in [3, 4, 5]:
         return f"MAR-MAY {year}"
-    elif month in [6, 7, 8]:  # Jun, Jul, Aug
+    elif month in [6, 7, 8]:
         return f"JUN-AUG {year}"
-    elif month in [9, 10, 11]:  # Sep, Oct, Nov
+    elif month in [9, 10, 11]:
         return f"SEP-NOV {year}"
-    else:  # Dec, Jan, Feb (month in [12, 1, 2])
-        # For December, January, February - use February's year as the season year
-        season_year = year if month != 12 else year + 1
-        return f"DEC-FEB {season_year}"
-
-
-def season_sort_key(season_str):
-    """
-    Generate a sort key for chronological ordering of seasons
-    Input format: "MAR-MAY 2020", "DEC-FEB 2020", etc.
-    """
-    try:
-        parts = season_str.split(' ')
-        if len(parts) != 2:
-            return (9999, 0)  # Unknown seasons sort to end
-        
-        season_part, year_part = parts
-        year = int(year_part)
-        
-        # Map seasons to chronological order
-        season_order = {
-            'DEC-FEB': 0,
-            'MAR-MAY': 1, 
-            'JUN-AUG': 2,
-            'SEP-NOV': 3
-        }
-        
-        # For DEC-FEB, the year shown is for February, so DEC is actually previous year
-        if season_part == 'DEC-FEB':
-            year -= 1  # December is in the previous year
-        
-        season_num = season_order.get(season_part, 9)
-        return (year, season_num)
-    except:
-        return (9999, 0)  # Error cases sort to end
+    else:
+        return f"Unknown {year}"
 
 
 def generate_filename(title: str, start_date=None, end_date=None) -> str:
@@ -117,9 +86,8 @@ class SimpleGraphGenerator:
         # Get the metric column (should be the second column)
         metric_column = data.columns[1]
         
-        # Format seasons for display (only if season column doesn't exist)
-        if 'season' not in data.columns:
-            data['season'] = data['date'].apply(format_season)
+        # Format seasons for display
+        data['season'] = data['date'].apply(format_season)
         
         # Apply date range filter if provided
         if date_range and len(date_range) == 2:
@@ -144,7 +112,7 @@ class SimpleGraphGenerator:
                 x=pre_covid['season'],
                 y=pre_covid[metric_column],
                 name=y_label,
-                line=dict(color='#0077b6', width=3),
+                line=dict(color='#0077b6', width=3, shape='spline', smoothing=1.3),
                 mode='lines+markers',
                 marker=dict(size=8, color='#0077b6'),
                 showlegend=True
@@ -156,7 +124,7 @@ class SimpleGraphGenerator:
                 x=covid_period['season'],
                 y=covid_period[metric_column],
                 name=y_label,
-                line=dict(color='#0077b6', width=3),
+                line=dict(color='#0077b6', width=3, shape='spline', smoothing=1.3),
                 mode='lines+markers',
                 marker=dict(size=8, color='#0077b6'),
                 showlegend=False  # Don't duplicate legend
@@ -168,7 +136,7 @@ class SimpleGraphGenerator:
                 x=post_covid['season'],
                 y=post_covid[metric_column],
                 name=y_label,
-                line=dict(color='#0077b6', width=3),
+                line=dict(color='#0077b6', width=3, shape='spline', smoothing=1.3),
                 mode='lines+markers',
                 marker=dict(size=8, color='#0077b6'),
                 showlegend=False  # Don't duplicate legend
@@ -276,23 +244,7 @@ class SimpleGraphGenerator:
                         marker=dict(size=6, color=color)
                     ))
         
-        # Create chronological ordering for seasons
-        # Collect all unique seasons from main data and comparison data
-        all_seasons = set()
-        if not data.empty:
-            all_seasons.update(data['season'].unique())
-        
-        if comparison_data is not None:
-            if not isinstance(comparison_data, list):
-                comparison_data = [comparison_data]
-            for comp_data in comparison_data:
-                if not comp_data.empty and 'season' in comp_data.columns:
-                    all_seasons.update(comp_data['season'].unique())
-        
-        # Sort seasons chronologically
-        sorted_seasons = sorted(list(all_seasons), key=lambda x: season_sort_key(x))
-        
-        # Update layout with proper season ordering
+        # Update layout
         fig.update_layout(
             title=dict(
                 text=title, 
@@ -306,9 +258,7 @@ class SimpleGraphGenerator:
                 showgrid=True,
                 gridwidth=1,
                 gridcolor='#ecf0f1',
-                tickangle=45,
-                categoryorder='array',
-                categoryarray=sorted_seasons
+                tickangle=45
             ),
             yaxis=dict(
                 title=y_label,

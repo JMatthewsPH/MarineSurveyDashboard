@@ -90,7 +90,6 @@ The Marine Conservation Philippines Platform is a comprehensive data visualizati
 - **Health Checks**: Database connection validation and automatic recovery
 
 ## Changelog
-- June 28, 2025: **SMOOTH CURVE GRAPHS SITE-WIDE** - Applied spline smoothing (shape='spline', smoothing=1.3) to all line graphs across the platform. Updated SimpleGraphGenerator, GraphGenerator, and SummaryGraphGenerator to use smooth curves instead of straight lines for improved visual appeal and data trend visualization.
 - June 27, 2025: **DYNAMIC HEATMAP SCALING** - Implemented scalable legend and coloring system for biomass heatmap that automatically adapts to data distribution using percentile-based thresholds (66.67% and 33.33% for color divisions). Legend now displays actual calculated ranges instead of fixed values, preventing visualization issues when new data is added.
 - June 27, 2025: **TREND ANALYSIS DISCLAIMER** - Added comprehensive data interpretation disclaimer below trend analysis section explaining that graphs show averages of surveyed sites, survey site changes over time, and potential data skewing effects from new MPA additions.
 - June 27, 2025: **Y-AXIS DEFAULT RANGE FIX** - Fixed Y-axis default range for empty data cases to show [0,0] instead of [0,10], preventing misleading scale when no data is available.
