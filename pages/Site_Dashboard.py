@@ -1497,7 +1497,9 @@ if selected_site:
                 comparison_data=bleaching_comparison_data,
                 comparison_labels=bleaching_comparison_labels,
                 date_range=date_range,
-                show_confidence_interval=show_confidence_interval
+                show_confidence_interval=show_confidence_interval,
+                show_error_bars=show_error_bars,
+                use_straight_lines=use_straight_lines
             )
             st.plotly_chart(bleaching_fig, use_container_width=True, config=bleaching_config, key='bleaching_chart')
 
@@ -1540,7 +1542,9 @@ if selected_site:
                 comparison_data=rubble_comparison_data,
                 comparison_labels=rubble_comparison_labels,
                 date_range=date_range,
-                show_confidence_interval=show_confidence_interval
+                show_confidence_interval=show_confidence_interval,
+                show_error_bars=show_error_bars,
+                use_straight_lines=use_straight_lines
             )
             st.plotly_chart(rubble_fig, use_container_width=True, config=rubble_config, key='rubble_chart')
             
