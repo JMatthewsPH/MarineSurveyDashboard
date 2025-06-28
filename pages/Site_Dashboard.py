@@ -486,8 +486,33 @@ if selected_site:
                     z-index: 1000;
                     max-width: 500px;
                     border: 2px solid #0077b6;
+                    position: relative;
                 ">
-                    <h3 style="color: #0077b6; margin-top: 0;">Error Bars (Standard Deviation)</h3>
+                    <button onclick="
+                        var event = new CustomEvent('streamlit:setComponentValue', {
+                            detail: { value: 'close_error_bars_clicked' }
+                        });
+                        window.parent.document.dispatchEvent(event);
+                    " style="
+                        position: absolute;
+                        top: 15px;
+                        right: 15px;
+                        background: none;
+                        border: none;
+                        font-size: 24px;
+                        font-weight: bold;
+                        color: #666;
+                        cursor: pointer;
+                        width: 30px;
+                        height: 30px;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        transition: all 0.2s ease;
+                    " onmouseover="this.style.backgroundColor='#f0f0f0'; this.style.color='#333';" 
+                       onmouseout="this.style.backgroundColor='none'; this.style.color='#666';">×</button>
+                    <h3 style="color: #0077b6; margin-top: 0; padding-right: 40px;">Error Bars (Standard Deviation)</h3>
                     <p>Error bars show the standard deviation of the data points around the mean value. They indicate the variability or spread of the data:</p>
                     <ul>
                         <li><strong>Shorter bars:</strong> Data points are close together (low variability)</li>
