@@ -463,88 +463,102 @@ if selected_site:
             
             # Pop-up explanations using modals with working close buttons
             if 'show_error_bars_popup' in st.session_state and st.session_state.show_error_bars_popup:
-                # Dark overlay and popup modal
-                st.markdown("""
-                <div id="error-bars-overlay" style="
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background-color: rgba(0,0,0,0.5);
-                    z-index: 999;
-                "></div>
-                <div style="
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    background-color: white;
-                    padding: 30px;
-                    border-radius: 15px;
-                    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-                    z-index: 1000;
-                    max-width: 500px;
-                    border: 2px solid #0077b6;
-                ">
-                    <h3 style="color: #0077b6; margin-top: 0;">Error Bars (Standard Deviation)</h3>
-                    <p>Error bars show the standard deviation of the data points around the mean value. They indicate the variability or spread of the data:</p>
-                    <ul>
-                        <li><strong>Shorter bars:</strong> Data points are close together (low variability)</li>
-                        <li><strong>Longer bars:</strong> Data points are spread out (high variability)</li>
-                        <li><strong>Interpretation:</strong> About 68% of data points fall within 1 standard deviation</li>
-                    </ul>
-                    <p><em>Note: Error bars and confidence intervals are mutually exclusive options.</em></p>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                # Simple close button positioned properly
-                col1, col2, col3 = st.columns([1, 2, 1])
-                with col2:
-                    if st.button("✕ Close", key="close_error_bars", type="primary"):
-                        st.session_state.show_error_bars_popup = False
-                        st.rerun()
+                # Create a container for popup content
+                with st.container():
+                    # Dark overlay background
+                    st.markdown("""
+                    <div style="
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background-color: rgba(0,0,0,0.5);
+                        z-index: 999;
+                    "></div>
+                    """, unsafe_allow_html=True)
+                    
+                    # Center the popup content
+                    col1, col2, col3 = st.columns([1, 3, 1])
+                    with col2:
+                        # Popup content box
+                        st.markdown("""
+                        <div style="
+                            background-color: white;
+                            padding: 30px;
+                            border-radius: 15px;
+                            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                            border: 2px solid #0077b6;
+                            margin-top: 20vh;
+                            position: relative;
+                            z-index: 1000;
+                        ">
+                            <h3 style="color: #0077b6; margin-top: 0;">Error Bars (Standard Deviation)</h3>
+                            <p>Error bars show the standard deviation of the data points around the mean value. They indicate the variability or spread of the data:</p>
+                            <ul>
+                                <li><strong>Shorter bars:</strong> Data points are close together (low variability)</li>
+                                <li><strong>Longer bars:</strong> Data points are spread out (high variability)</li>
+                                <li><strong>Interpretation:</strong> About 68% of data points fall within 1 standard deviation</li>
+                            </ul>
+                            <p><em>Note: Error bars and confidence intervals are mutually exclusive options.</em></p>
+                        </div>
+                        """, unsafe_allow_html=True)
+                        
+                        # Close button positioned right after popup content
+                        st.markdown("<div style='text-align: center; margin-top: 10px; position: relative; z-index: 1001;'>", unsafe_allow_html=True)
+                        if st.button("✕ Close", key="close_error_bars", type="primary"):
+                            st.session_state.show_error_bars_popup = False
+                            st.rerun()
+                        st.markdown("</div>", unsafe_allow_html=True)
             
             if 'show_confidence_popup' in st.session_state and st.session_state.show_confidence_popup:
-                st.markdown("""
-                <div style="
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background-color: rgba(0,0,0,0.5);
-                    z-index: 999;
-                "></div>
-                <div style="
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    background-color: white;
-                    padding: 30px;
-                    border-radius: 15px;
-                    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-                    z-index: 1000;
-                    max-width: 500px;
-                    border: 2px solid #0077b6;
-                ">
-                    <h3 style="color: #0077b6; margin-top: 0;">Confidence Intervals (95%)</h3>
-                    <p>Confidence intervals show the range where we can be 95% confident that the true population mean lies:</p>
-                    <ul>
-                        <li><strong>Narrow bands:</strong> More precise estimates (larger sample sizes)</li>
-                        <li><strong>Wide bands:</strong> Less precise estimates (smaller sample sizes)</li>
-                        <li><strong>Interpretation:</strong> If we repeated the study 100 times, 95 of those intervals would contain the true mean</li>
-                    </ul>
-                    <p><em>Note: Confidence intervals and error bars are mutually exclusive options.</em></p>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                col1, col2, col3 = st.columns([1, 2, 1])
-                with col2:
-                    if st.button("✕ Close", key="close_confidence", type="primary"):
-                        st.session_state.show_confidence_popup = False
-                        st.rerun()
+                # Create a container for popup content
+                with st.container():
+                    # Dark overlay background
+                    st.markdown("""
+                    <div style="
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background-color: rgba(0,0,0,0.5);
+                        z-index: 999;
+                    "></div>
+                    """, unsafe_allow_html=True)
+                    
+                    # Center the popup content
+                    col1, col2, col3 = st.columns([1, 3, 1])
+                    with col2:
+                        # Popup content box
+                        st.markdown("""
+                        <div style="
+                            background-color: white;
+                            padding: 30px;
+                            border-radius: 15px;
+                            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                            border: 2px solid #0077b6;
+                            margin-top: 20vh;
+                            position: relative;
+                            z-index: 1000;
+                        ">
+                            <h3 style="color: #0077b6; margin-top: 0;">Confidence Intervals (95%)</h3>
+                            <p>Confidence intervals show the range where we can be 95% confident that the true population mean lies:</p>
+                            <ul>
+                                <li><strong>Narrow bands:</strong> More precise estimates (larger sample sizes)</li>
+                                <li><strong>Wide bands:</strong> Less precise estimates (smaller sample sizes)</li>
+                                <li><strong>Interpretation:</strong> If we repeated the study 100 times, 95 of those intervals would contain the true mean</li>
+                            </ul>
+                            <p><em>Note: Confidence intervals and error bars are mutually exclusive options.</em></p>
+                        </div>
+                        """, unsafe_allow_html=True)
+                        
+                        # Close button positioned right after popup content
+                        st.markdown("<div style='text-align: center; margin-top: 10px; position: relative; z-index: 1001;'>", unsafe_allow_html=True)
+                        if st.button("✕ Close", key="close_confidence", type="primary"):
+                            st.session_state.show_confidence_popup = False
+                            st.rerun()
+                        st.markdown("</div>", unsafe_allow_html=True)
             
             if 'show_straight_lines_popup' in st.session_state and st.session_state.show_straight_lines_popup:
                 st.markdown("""
