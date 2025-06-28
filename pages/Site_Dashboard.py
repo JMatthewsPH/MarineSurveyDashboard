@@ -952,9 +952,6 @@ if selected_site:
             st.write("• **Longer bars:** Data points are spread out (high variability)")
             st.write("• **Interpretation:** About 68% of data points fall within 1 standard deviation")
             st.info("Note: Error bars and confidence intervals are mutually exclusive options.")
-            
-            if st.button("Close", type="primary"):
-                st.rerun()
 
         @st.dialog("Confidence Intervals (95%)")
         def show_confidence_dialog():
@@ -963,9 +960,6 @@ if selected_site:
             st.write("• **Wide bands:** Less precise estimates (smaller sample sizes)")
             st.write("• **Interpretation:** If we repeated the study 100 times, 95 of those intervals would contain the true mean")
             st.info("Note: Confidence intervals and error bars are mutually exclusive options.")
-            
-            if st.button("Close", type="primary"):
-                st.rerun()
 
         @st.dialog("Straight Line Graphs")
         def show_straight_lines_dialog():
@@ -974,18 +968,13 @@ if selected_site:
             st.write("• **Smooth curves (default):** Rounded spline curves that emphasize overall trends")
             st.write("• **Use straight lines when:** You want to see precise data changes between time periods")
             st.write("• **Use smooth curves when:** You want to focus on general trend patterns")
-            
-            if st.button("Close", type="primary"):
-                st.rerun()
 
-        # Show dialogs based on session state
+        # Show only one dialog at a time based on session state
         if st.session_state.get('show_error_bars_popup', False):
             show_error_bars_dialog()
-            
-        if st.session_state.get('show_confidence_popup', False):
+        elif st.session_state.get('show_confidence_popup', False):
             show_confidence_dialog()
-            
-        if st.session_state.get('show_straight_lines_popup', False):
+        elif st.session_state.get('show_straight_lines_popup', False):
             show_straight_lines_dialog()
 
         # Display metrics section with comparisons
