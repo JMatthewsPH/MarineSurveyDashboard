@@ -205,23 +205,7 @@ class MapGenerator:
                     gradient={0.2: 'red', 0.4: 'orange', 0.6: 'yellow', 1.0: 'green'}
                 ).add_to(m)
             
-            # Add municipality labels for the three main towns without map clutter
-            municipality_coords = {
-                'Santa Catalina': [9.3275, 123.1839],
-                'Siaton': [9.0608, 122.7781], 
-                'Zamboanguita': [9.0767, 123.1036]
-            }
-            
-            for municipality, coords in municipality_coords.items():
-                folium.Marker(
-                    location=coords,
-                    icon=folium.DivIcon(
-                        html=f'<div style="font-family: Arial; font-weight: bold; font-size: 12px; color: #2c3e50; text-shadow: 1px 1px 2px white; background: rgba(255,255,255,0.8); padding: 2px 6px; border-radius: 4px; border: 1px solid #bbb;">{municipality}</div>',
-                        icon_size=(80, 20),
-                        icon_anchor=(40, 10)
-                    )
-                ).add_to(m)
-            
+
             # Add layer control
             folium.LayerControl().add_to(m)
             
