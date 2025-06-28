@@ -415,7 +415,7 @@ class SummaryGraphGenerator:
                         y=muni_avg[metric_col],
                         mode='lines+markers',
                         name=f"{municipality} Average",
-                        line=dict(color=colors[i % len(colors)], width=3, shape='spline', smoothing=1.3),
+                        line=dict(color=colors[i % len(colors)], width=3),
                         marker=dict(size=6)
                     ))
             else:
@@ -445,7 +445,7 @@ class SummaryGraphGenerator:
                         y=site_data[metric_col],
                         mode='lines+markers',
                         name=site,
-                        line=dict(color=colors[i % len(colors)], width=line_width, shape='spline', smoothing=1.3),
+                        line=dict(color=colors[i % len(colors)], width=line_width),
                         marker=dict(size=marker_size),
                         opacity=opacity
                     ))

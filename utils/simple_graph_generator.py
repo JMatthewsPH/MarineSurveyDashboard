@@ -143,7 +143,7 @@ class SimpleGraphGenerator:
                 x=pre_covid['season'],
                 y=pre_covid[metric_column],
                 name=y_label,
-                line=dict(color='#0077b6', width=3, shape='spline', smoothing=0.3),
+                line=dict(color='#0077b6', width=3),
                 mode='lines+markers',
                 marker=dict(size=8, color='#0077b6'),
                 showlegend=True
@@ -155,7 +155,7 @@ class SimpleGraphGenerator:
                 x=covid_period['season'],
                 y=covid_period[metric_column],
                 name=y_label,
-                line=dict(color='#0077b6', width=3, shape='spline', smoothing=0.3),
+                line=dict(color='#0077b6', width=3),
                 mode='lines+markers',
                 marker=dict(size=8, color='#0077b6'),
                 showlegend=False  # Don't duplicate legend
@@ -167,7 +167,7 @@ class SimpleGraphGenerator:
                 x=post_covid['season'],
                 y=post_covid[metric_column],
                 name=y_label,
-                line=dict(color='#0077b6', width=3, shape='spline', smoothing=1.3),
+                line=dict(color='#0077b6', width=3),
                 mode='lines+markers',
                 marker=dict(size=8, color='#0077b6'),
                 showlegend=False  # Don't duplicate legend
