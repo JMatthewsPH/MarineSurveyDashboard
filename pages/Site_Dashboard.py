@@ -461,9 +461,19 @@ if selected_site:
             st.session_state.show_confidence_interval = show_confidence_interval
             st.session_state.use_straight_lines = use_straight_lines
             
-            # Pop-up explanations using modals
+            # Pop-up explanations using modals with working close buttons
             if 'show_error_bars_popup' in st.session_state and st.session_state.show_error_bars_popup:
+                # Dark overlay and popup modal
                 st.markdown("""
+                <div id="error-bars-overlay" style="
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(0,0,0,0.5);
+                    z-index: 999;
+                "></div>
                 <div style="
                     position: fixed;
                     top: 50%;
@@ -486,6 +496,28 @@ if selected_site:
                     </ul>
                     <p><em>Note: Error bars and confidence intervals are mutually exclusive options.</em></p>
                 </div>
+                """, unsafe_allow_html=True)
+                
+                # Close button rendered outside the HTML modal but visible on top
+                st.markdown("""
+                <div style="
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, calc(-50% + 200px));
+                    z-index: 1001;
+                    text-align: center;
+                ">
+                """, unsafe_allow_html=True)
+                
+                if st.button("✕ Close", key="close_error_bars", type="primary"):
+                    st.session_state.show_error_bars_popup = False
+                    st.rerun()
+                    
+                st.markdown("</div>", unsafe_allow_html=True)
+            
+            if 'show_confidence_popup' in st.session_state and st.session_state.show_confidence_popup:
+                st.markdown("""
                 <div style="
                     position: fixed;
                     top: 0;
@@ -495,14 +527,6 @@ if selected_site:
                     background-color: rgba(0,0,0,0.5);
                     z-index: 999;
                 "></div>
-                """, unsafe_allow_html=True)
-                
-                if st.button("Close", key="close_error_bars"):
-                    st.session_state.show_error_bars_popup = False
-                    st.rerun()
-            
-            if 'show_confidence_popup' in st.session_state and st.session_state.show_confidence_popup:
-                st.markdown("""
                 <div style="
                     position: fixed;
                     top: 50%;
@@ -525,6 +549,27 @@ if selected_site:
                     </ul>
                     <p><em>Note: Confidence intervals and error bars are mutually exclusive options.</em></p>
                 </div>
+                """, unsafe_allow_html=True)
+                
+                st.markdown("""
+                <div style="
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, calc(-50% + 200px));
+                    z-index: 1001;
+                    text-align: center;
+                ">
+                """, unsafe_allow_html=True)
+                
+                if st.button("✕ Close", key="close_confidence", type="primary"):
+                    st.session_state.show_confidence_popup = False
+                    st.rerun()
+                    
+                st.markdown("</div>", unsafe_allow_html=True)
+            
+            if 'show_straight_lines_popup' in st.session_state and st.session_state.show_straight_lines_popup:
+                st.markdown("""
                 <div style="
                     position: fixed;
                     top: 0;
@@ -534,14 +579,6 @@ if selected_site:
                     background-color: rgba(0,0,0,0.5);
                     z-index: 999;
                 "></div>
-                """, unsafe_allow_html=True)
-                
-                if st.button("Close", key="close_confidence"):
-                    st.session_state.show_confidence_popup = False
-                    st.rerun()
-            
-            if 'show_straight_lines_popup' in st.session_state and st.session_state.show_straight_lines_popup:
-                st.markdown("""
                 <div style="
                     position: fixed;
                     top: 50%;
@@ -564,20 +601,24 @@ if selected_site:
                         <li><strong>Use smooth curves when:</strong> You want to focus on general trend patterns</li>
                     </ul>
                 </div>
-                <div style="
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background-color: rgba(0,0,0,0.5);
-                    z-index: 999;
-                "></div>
                 """, unsafe_allow_html=True)
                 
-                if st.button("Close", key="close_straight_lines"):
+                st.markdown("""
+                <div style="
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, calc(-50% + 200px));
+                    z-index: 1001;
+                    text-align: center;
+                ">
+                """, unsafe_allow_html=True)
+                
+                if st.button("✕ Close", key="close_straight_lines", type="primary"):
                     st.session_state.show_straight_lines_popup = False
                     st.rerun()
+                    
+                st.markdown("</div>", unsafe_allow_html=True)
             
             # Helper function to get all site data for export
             def get_site_data_for_export(site_name):
