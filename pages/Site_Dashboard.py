@@ -461,6 +461,14 @@ if selected_site:
             st.session_state.show_confidence_interval = show_confidence_interval
             st.session_state.use_straight_lines = use_straight_lines
             
+            # Clear popup flags - they should only be triggered by question mark buttons, not checkboxes
+            if 'show_error_bars_popup' not in st.session_state:
+                st.session_state.show_error_bars_popup = False
+            if 'show_confidence_popup' not in st.session_state:
+                st.session_state.show_confidence_popup = False  
+            if 'show_straight_lines_popup' not in st.session_state:
+                st.session_state.show_straight_lines_popup = False
+            
 
             
             # Helper function to get all site data for export
@@ -972,10 +980,16 @@ if selected_site:
         # Show only one dialog at a time based on session state
         if st.session_state.get('show_error_bars_popup', False):
             show_error_bars_dialog()
+            # Clear the popup flag after showing dialog
+            st.session_state.show_error_bars_popup = False
         elif st.session_state.get('show_confidence_popup', False):
             show_confidence_dialog()
+            # Clear the popup flag after showing dialog
+            st.session_state.show_confidence_popup = False
         elif st.session_state.get('show_straight_lines_popup', False):
             show_straight_lines_dialog()
+            # Clear the popup flag after showing dialog
+            st.session_state.show_straight_lines_popup = False
 
         # Display metrics section with comparisons
         if selected_site_obj:
