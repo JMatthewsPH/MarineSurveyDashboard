@@ -121,6 +121,9 @@ The Marine Conservation Philippines Platform is a comprehensive data visualizati
 - June 26, 2025: Updated logo to use "Logo Text Color.png" with base64 encoding for crisp display quality
 - June 25, 2025: Initial setup
 
+## Future Enhancement Suggestions
+- **Per-Season Confidence Intervals**: Investigate accessing raw survey counts and within-season standard deviations to calculate proper confidence intervals around each seasonal mean estimate (showing precision of ~1000 surveys per season rather than between-season variability)
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
