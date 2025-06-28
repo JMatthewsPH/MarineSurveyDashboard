@@ -147,9 +147,10 @@ class MapGenerator:
                         latest_biomass = biomass_df[biomass_col].iloc[-1]
                         latest_date = biomass_df['date'].iloc[-1]
                         
-                        # Add to heatmap data with dynamic scaling
+                        # Add to heatmap data with dynamic scaling using same offset as markers
                         weight = max(0.1, min(latest_biomass / max_biomass * 2.0, 2.0))
-                        heatmap_data.append([site.latitude, site.longitude, weight])
+                        offset_longitude = site.longitude + 0.0005  # Same offset as markers
+                        heatmap_data.append([site.latitude, offset_longitude, weight])
                         
                         # Determine color based on dynamic thresholds
                         if latest_biomass >= high_threshold:
