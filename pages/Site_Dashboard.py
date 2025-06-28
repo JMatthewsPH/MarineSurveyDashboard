@@ -400,80 +400,40 @@ if selected_site:
         with st.sidebar:
             st.title(TRANSLATIONS[st.session_state.language]['analysis_options'])
             
-            # Analysis Options in rounded white box
-            st.markdown("""
-            <div style="
-                background-color: #ffffff;
-                padding: 20px;
-                border-radius: 10px;
-                border: 1px solid #ddd;
-                margin: 10px 0;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            ">
-            """, unsafe_allow_html=True)
+            # Compact Analysis Options
+            st.markdown("**📊 Analysis Options**")
             
-            # Initialize session state for analysis options
-            if 'show_error_bars' not in st.session_state:
-                st.session_state.show_error_bars = False
-            if 'show_confidence_interval' not in st.session_state:
-                st.session_state.show_confidence_interval = False
-            if 'use_straight_lines' not in st.session_state:
-                st.session_state.use_straight_lines = False
+            # Simple checkboxes with built-in help tooltips
+            show_error_bars = st.checkbox(
+                "Error Bars (s.d.)",
+                value=False,
+                key="error_bars_checkbox",
+                help="Shows ±1 standard deviation around each data point to indicate variability. Cannot be used with Confidence Intervals."
+            )
             
-            # Error Bars option with question mark
-            col1, col2 = st.columns([4, 1])
-            with col1:
-                show_error_bars = st.checkbox(
-                    "Error Bars (s.d.)",
-                    value=st.session_state.show_error_bars,
-                    key="error_bars_checkbox"
-                )
-            with col2:
-                if st.button("❓", key="error_bars_help", help="Click for explanation"):
-                    st.session_state.show_error_bars_popup = True
+            show_confidence_interval = st.checkbox(
+                "Confidence Intervals (95%)",
+                value=False,
+                key="confidence_interval_checkbox",
+                disabled=show_error_bars,
+                help="Shows shaded bands indicating the range where we can be 95% confident the true trend lies. Cannot be used with Error Bars."
+            )
             
-            # Confidence Intervals option with question mark
-            col1, col2 = st.columns([4, 1])
-            with col1:
-                show_confidence_interval = st.checkbox(
-                    "Confidence Intervals (95%)",
-                    value=st.session_state.show_confidence_interval,
-                    key="confidence_interval_checkbox",
-                    disabled=show_error_bars  # Mutually exclusive
-                )
-            with col2:
-                if st.button("❓", key="confidence_help", help="Click for explanation"):
-                    st.session_state.show_confidence_popup = True
+            use_straight_lines = st.checkbox(
+                "Straight Line Graphs",
+                value=False,
+                key="straight_lines_checkbox",
+                help="Toggle between smooth curved lines (default) and straight line connections between data points."
+            )
             
-            # Straight Line Graphs option with question mark
-            col1, col2 = st.columns([4, 1])
-            with col1:
-                use_straight_lines = st.checkbox(
-                    "Straight Line Graphs",
-                    value=st.session_state.use_straight_lines,
-                    key="straight_lines_checkbox"
-                )
-            with col2:
-                if st.button("❓", key="straight_lines_help", help="Click for explanation"):
-                    st.session_state.show_straight_lines_popup = True
+            # Mutual exclusivity warning
+            if show_error_bars and show_confidence_interval:
+                st.warning("⚠️ Choose either Error Bars or Confidence Intervals, not both.")
+                show_error_bars = False
+                show_confidence_interval = False
             
-            # Handle mutual exclusivity
-            if show_error_bars and st.session_state.show_confidence_interval:
-                st.session_state.show_confidence_interval = False
-                st.rerun()
-            elif show_confidence_interval and st.session_state.show_error_bars:
-                st.session_state.show_error_bars = False
-                st.rerun()
-            
-            # Update session state
-            st.session_state.show_error_bars = show_error_bars
-            st.session_state.show_confidence_interval = show_confidence_interval
-            st.session_state.use_straight_lines = use_straight_lines
-            
-            st.markdown("</div>", unsafe_allow_html=True)
-            
-            # Pop-up explanations using modals
-            if 'show_error_bars_popup' in st.session_state and st.session_state.show_error_bars_popup:
+            # Removed pop-up explanations (now using built-in tooltips)
+            # Legacy popup code removed for cleaner interface
                 st.markdown("""
                 <div style="
                     position: fixed;
