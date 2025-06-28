@@ -416,7 +416,7 @@ if selected_site:
             with col1:
                 show_error_bars = st.checkbox(
                     "Error Bars (s.d.)",
-                    value=st.session_state.show_error_bars,
+                    value=st.session_state.get('show_error_bars', False),
                     key="error_bars_checkbox"
                 )
             with col2:
@@ -428,7 +428,7 @@ if selected_site:
             with col1:
                 show_confidence_interval = st.checkbox(
                     "Confidence Intervals (95%)",
-                    value=st.session_state.show_confidence_interval,
+                    value=st.session_state.get('show_confidence_interval', False),
                     key="confidence_interval_checkbox",
                     disabled=show_error_bars
                 )
@@ -441,20 +441,22 @@ if selected_site:
             with col1:
                 use_straight_lines = st.checkbox(
                     "Straight Line Graphs",
-                    value=st.session_state.use_straight_lines,
+                    value=st.session_state.get('use_straight_lines', False),
                     key="straight_lines_checkbox"
                 )
             with col2:
                 if st.button("?", key="straight_lines_help", help="Click for explanation"):
                     st.session_state.show_straight_lines_popup = True
             
-            # Handle mutual exclusivity
-            if show_error_bars and st.session_state.show_confidence_interval:
-                st.session_state.show_confidence_interval = False
-                st.rerun()
-            elif show_confidence_interval and st.session_state.show_error_bars:
-                st.session_state.show_error_bars = False
-                st.rerun()
+            # Handle mutual exclusivity without causing reruns
+            if show_error_bars and show_confidence_interval:
+                # If both are checked, prioritize the most recently changed one
+                if show_error_bars != st.session_state.get('show_error_bars', False):
+                    # Error bars was just checked, uncheck confidence
+                    show_confidence_interval = False
+                elif show_confidence_interval != st.session_state.get('show_confidence_interval', False):
+                    # Confidence was just checked, uncheck error bars
+                    show_error_bars = False
             
             # Update session state
             st.session_state.show_error_bars = show_error_bars
