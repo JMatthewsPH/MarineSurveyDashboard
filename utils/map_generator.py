@@ -39,29 +39,43 @@ class MapGenerator:
             # Get all sites with coordinates and latest biomass data
             sites = self.data_processor.get_sites()
             
-            # Create base map centered on the region with lighter sea color
+            # Create base map with higher max zoom to prevent data unavailable issues
             m = folium.Map(
                 location=[center_lat, center_lon],
                 zoom_start=zoom_start,
-                tiles='OpenStreetMap'
+                tiles='OpenStreetMap',
+                max_zoom=20  # Increased max zoom
             )
             
-            # Add satellite imagery layer option
+            # Add satellite imagery layer with higher zoom levels
             folium.TileLayer(
                 tiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
                 attr='Esri',
                 name='Satellite',
                 overlay=False,
-                control=True
+                control=True,
+                max_zoom=20
             ).add_to(m)
             
-            # Add a lighter sea-focused tile layer
+            # Add a lighter sea-focused tile layer with higher zoom
             folium.TileLayer(
                 tiles='https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}',
                 attr='Esri Ocean',
                 name='Ocean View',
                 overlay=False,
-                control=True
+                control=True,
+                max_zoom=20
+            ).add_to(m)
+            
+            # Add CartoDB Positron as backup with excellent zoom support
+            folium.TileLayer(
+                tiles='https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
+                attr='CartoDB',
+                name='Light Map',
+                overlay=False,
+                control=True,
+                max_zoom=20,
+                subdomains='abcd'
             ).add_to(m)
             
             # Collect data for heatmap and markers
@@ -185,7 +199,7 @@ class MapGenerator:
                     heatmap_data,
                     name='Biomass Heatmap',
                     min_opacity=0.15,  # Reduced transparency
-                    max_zoom=18,
+                    max_zoom=20,       # Increased to match map max zoom
                     radius=15,  # Smaller radius to minimize land spillover
                     blur=8,     # Less blur to contain effect better
                     gradient={0.2: 'red', 0.4: 'orange', 0.6: 'yellow', 1.0: 'green'}
