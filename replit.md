@@ -90,6 +90,7 @@ The Marine Conservation Philippines Platform is a comprehensive data visualizati
 - **Health Checks**: Database connection validation and automatic recovery
 
 ## Changelog
+- June 28, 2025: **CHECKBOX FUNCTIONALITY FIX** - Resolved session state race conditions causing analysis option checkboxes to require multiple clicks. Removed conflicting session state management and implemented native Streamlit checkbox handling for Error Bars, Confidence Intervals, and Straight Line Graphs options. Cleaned up duplicate "Analysis Options" headers in sidebar.
 - June 28, 2025: **SMOOTH CURVE IMPLEMENTATION** - Applied smooth/rounded line graphs as default across all charts site-wide. All Plotly scatter plots now use spline curves with smoothing=1.3 for improved visual appeal and data trend visualization.
 - June 27, 2025: **DYNAMIC HEATMAP SCALING** - Implemented scalable legend and coloring system for biomass heatmap that automatically adapts to data distribution using percentile-based thresholds (66.67% and 33.33% for color divisions). Legend now displays actual calculated ranges instead of fixed values, preventing visualization issues when new data is added.
 - June 27, 2025: **TREND ANALYSIS DISCLAIMER** - Added comprehensive data interpretation disclaimer below trend analysis section explaining that graphs show averages of surveyed sites, survey site changes over time, and potential data skewing effects from new MPA additions.
