@@ -403,20 +403,13 @@ if selected_site:
             # Compact Analysis Options with small question marks
             st.markdown("**📊 Analysis Options**")
             
-            # Initialize session state for analysis options
-            if 'show_error_bars' not in st.session_state:
-                st.session_state.show_error_bars = False
-            if 'show_confidence_interval' not in st.session_state:
-                st.session_state.show_confidence_interval = False
-            if 'use_straight_lines' not in st.session_state:
-                st.session_state.use_straight_lines = False
+            # Let Streamlit handle checkbox state natively - no session state needed
             
             # Error Bars with compact question mark
             col1, col2 = st.columns([6, 1])
             with col1:
                 show_error_bars = st.checkbox(
                     "Error Bars (s.d.)",
-                    value=st.session_state.get('show_error_bars', False),
                     key="error_bars_checkbox"
                 )
             with col2:
@@ -447,10 +440,7 @@ if selected_site:
                 if st.button("?", key="straight_lines_help", help="Click for explanation"):
                     st.session_state.show_straight_lines_popup = True
             
-            # Update session state immediately - no mutual exclusivity interference
-            st.session_state.show_error_bars = show_error_bars
-            st.session_state.show_confidence_interval = show_confidence_interval
-            st.session_state.use_straight_lines = use_straight_lines
+            # No session state updates needed - let Streamlit handle checkbox state natively
             
             # Helper function to handle mutual exclusivity for analysis options
             def get_analysis_options():
