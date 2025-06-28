@@ -486,33 +486,8 @@ if selected_site:
                     z-index: 1000;
                     max-width: 500px;
                     border: 2px solid #0077b6;
-                    position: relative;
                 ">
-                    <button onclick="
-                        var event = new CustomEvent('streamlit:setComponentValue', {
-                            detail: { value: 'close_error_bars_clicked' }
-                        });
-                        window.parent.document.dispatchEvent(event);
-                    " style="
-                        position: absolute;
-                        top: 15px;
-                        right: 15px;
-                        background: none;
-                        border: none;
-                        font-size: 24px;
-                        font-weight: bold;
-                        color: #666;
-                        cursor: pointer;
-                        width: 30px;
-                        height: 30px;
-                        border-radius: 50%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        transition: all 0.2s ease;
-                    " onmouseover="this.style.backgroundColor='#f0f0f0'; this.style.color='#333';" 
-                       onmouseout="this.style.backgroundColor='none'; this.style.color='#666';">×</button>
-                    <h3 style="color: #0077b6; margin-top: 0; padding-right: 40px;">Error Bars (Standard Deviation)</h3>
+                    <h3 style="color: #0077b6; margin-top: 0;">Error Bars (Standard Deviation)</h3>
                     <p>Error bars show the standard deviation of the data points around the mean value. They indicate the variability or spread of the data:</p>
                     <ul>
                         <li><strong>Shorter bars:</strong> Data points are close together (low variability)</li>
@@ -523,23 +498,12 @@ if selected_site:
                 </div>
                 """, unsafe_allow_html=True)
                 
-                # Close button rendered outside the HTML modal but visible on top
-                st.markdown("""
-                <div style="
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, calc(-50% + 200px));
-                    z-index: 1001;
-                    text-align: center;
-                ">
-                """, unsafe_allow_html=True)
-                
-                if st.button("✕ Close", key="close_error_bars", type="primary"):
-                    st.session_state.show_error_bars_popup = False
-                    st.rerun()
-                    
-                st.markdown("</div>", unsafe_allow_html=True)
+                # Simple close button positioned properly
+                col1, col2, col3 = st.columns([1, 2, 1])
+                with col2:
+                    if st.button("✕ Close", key="close_error_bars", type="primary"):
+                        st.session_state.show_error_bars_popup = False
+                        st.rerun()
             
             if 'show_confidence_popup' in st.session_state and st.session_state.show_confidence_popup:
                 st.markdown("""
@@ -576,22 +540,11 @@ if selected_site:
                 </div>
                 """, unsafe_allow_html=True)
                 
-                st.markdown("""
-                <div style="
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, calc(-50% + 200px));
-                    z-index: 1001;
-                    text-align: center;
-                ">
-                """, unsafe_allow_html=True)
-                
-                if st.button("✕ Close", key="close_confidence", type="primary"):
-                    st.session_state.show_confidence_popup = False
-                    st.rerun()
-                    
-                st.markdown("</div>", unsafe_allow_html=True)
+                col1, col2, col3 = st.columns([1, 2, 1])
+                with col2:
+                    if st.button("✕ Close", key="close_confidence", type="primary"):
+                        st.session_state.show_confidence_popup = False
+                        st.rerun()
             
             if 'show_straight_lines_popup' in st.session_state and st.session_state.show_straight_lines_popup:
                 st.markdown("""
@@ -628,22 +581,11 @@ if selected_site:
                 </div>
                 """, unsafe_allow_html=True)
                 
-                st.markdown("""
-                <div style="
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, calc(-50% + 200px));
-                    z-index: 1001;
-                    text-align: center;
-                ">
-                """, unsafe_allow_html=True)
-                
-                if st.button("✕ Close", key="close_straight_lines", type="primary"):
-                    st.session_state.show_straight_lines_popup = False
-                    st.rerun()
-                    
-                st.markdown("</div>", unsafe_allow_html=True)
+                col1, col2, col3 = st.columns([1, 2, 1])
+                with col2:
+                    if st.button("✕ Close", key="close_straight_lines", type="primary"):
+                        st.session_state.show_straight_lines_popup = False
+                        st.rerun()
             
             # Helper function to get all site data for export
             def get_site_data_for_export(site_name):
