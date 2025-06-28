@@ -946,8 +946,10 @@ if selected_site:
 
         # Pop-up explanations using modals with working close buttons (positioned in main page area)
         if 'show_error_bars_popup' in st.session_state and st.session_state.show_error_bars_popup:
+            # JavaScript to handle click-outside-to-close functionality
             st.markdown("""
-            <div style="
+            <style>
+            .popup-overlay {
                 position: fixed;
                 top: 0;
                 left: 0;
@@ -955,8 +957,9 @@ if selected_site:
                 height: 100%;
                 background-color: rgba(0,0,0,0.5);
                 z-index: 999;
-            "></div>
-            <div style="
+                cursor: pointer;
+            }
+            .popup-content {
                 position: fixed;
                 top: 50%;
                 left: 50%;
@@ -968,7 +971,11 @@ if selected_site:
                 border: 2px solid #0077b6;
                 z-index: 1000;
                 max-width: 500px;
-            ">
+                cursor: default;
+            }
+            </style>
+            <div class="popup-overlay" onclick="document.querySelector('[data-testid=\\"close_error_bars\\"]').click();"></div>
+            <div class="popup-content" onclick="event.stopPropagation();">
                 <h3 style="color: #0077b6; margin-top: 0;">Error Bars (Standard Deviation)</h3>
                 <p>Error bars show the standard deviation of the data points around the mean value. They indicate the variability or spread of the data:</p>
                 <ul>
@@ -979,7 +986,7 @@ if selected_site:
                 <p><em>Note: Error bars and confidence intervals are mutually exclusive options.</em></p>
             """, unsafe_allow_html=True)
             
-            # Close button inside the popup content
+            # Close button inside the popup content  
             if st.button("✕ Close", key="close_error_bars", type="primary"):
                 st.session_state.show_error_bars_popup = False
                 st.rerun()
@@ -988,28 +995,8 @@ if selected_site:
         
         if 'show_confidence_popup' in st.session_state and st.session_state.show_confidence_popup:
             st.markdown("""
-            <div style="
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0,0,0,0.5);
-                z-index: 999;
-            "></div>
-            <div style="
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background-color: white;
-                padding: 30px;
-                border-radius: 15px;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-                border: 2px solid #0077b6;
-                z-index: 1000;
-                max-width: 500px;
-            ">
+            <div class="popup-overlay" onclick="document.querySelector('[data-testid=\\"close_confidence\\"]').click();"></div>
+            <div class="popup-content" onclick="event.stopPropagation();">
                 <h3 style="color: #0077b6; margin-top: 0;">Confidence Intervals (95%)</h3>
                 <p>Confidence intervals show the range where we can be 95% confident that the true population mean lies:</p>
                 <ul>
@@ -1029,28 +1016,8 @@ if selected_site:
         
         if 'show_straight_lines_popup' in st.session_state and st.session_state.show_straight_lines_popup:
             st.markdown("""
-            <div style="
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0,0,0,0.5);
-                z-index: 999;
-            "></div>
-            <div style="
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background-color: white;
-                padding: 30px;
-                border-radius: 15px;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-                border: 2px solid #0077b6;
-                z-index: 1000;
-                max-width: 500px;
-            ">
+            <div class="popup-overlay" onclick="document.querySelector('[data-testid=\\"close_straight_lines\\"]').click();"></div>
+            <div class="popup-content" onclick="event.stopPropagation();">
                 <h3 style="color: #0077b6; margin-top: 0;">Straight Line Graphs</h3>
                 <p>Toggle between straight lines and smooth curves for trend visualization:</p>
                 <ul>
