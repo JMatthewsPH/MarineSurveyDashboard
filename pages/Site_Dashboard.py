@@ -400,11 +400,195 @@ if selected_site:
         with st.sidebar:
             st.title(TRANSLATIONS[st.session_state.language]['analysis_options'])
             
-            # Confidence Interval checkbox
-            show_confidence_interval = st.checkbox(
-                "Show Confidence Interval",
-                value=False  # Default to unchecked
-            )
+            # Analysis Options in rounded white box
+            st.markdown("""
+            <div style="
+                background-color: #ffffff;
+                padding: 20px;
+                border-radius: 10px;
+                border: 1px solid #ddd;
+                margin: 10px 0;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            ">
+            """, unsafe_allow_html=True)
+            
+            # Initialize session state for analysis options
+            if 'show_error_bars' not in st.session_state:
+                st.session_state.show_error_bars = False
+            if 'show_confidence_interval' not in st.session_state:
+                st.session_state.show_confidence_interval = False
+            if 'use_straight_lines' not in st.session_state:
+                st.session_state.use_straight_lines = False
+            
+            # Error Bars option with question mark
+            col1, col2 = st.columns([4, 1])
+            with col1:
+                show_error_bars = st.checkbox(
+                    "Error Bars (s.d.)",
+                    value=st.session_state.show_error_bars,
+                    key="error_bars_checkbox"
+                )
+            with col2:
+                if st.button("❓", key="error_bars_help", help="Click for explanation"):
+                    st.session_state.show_error_bars_popup = True
+            
+            # Confidence Intervals option with question mark
+            col1, col2 = st.columns([4, 1])
+            with col1:
+                show_confidence_interval = st.checkbox(
+                    "Confidence Intervals (95%)",
+                    value=st.session_state.show_confidence_interval,
+                    key="confidence_interval_checkbox",
+                    disabled=show_error_bars  # Mutually exclusive
+                )
+            with col2:
+                if st.button("❓", key="confidence_help", help="Click for explanation"):
+                    st.session_state.show_confidence_popup = True
+            
+            # Straight Line Graphs option with question mark
+            col1, col2 = st.columns([4, 1])
+            with col1:
+                use_straight_lines = st.checkbox(
+                    "Straight Line Graphs",
+                    value=st.session_state.use_straight_lines,
+                    key="straight_lines_checkbox"
+                )
+            with col2:
+                if st.button("❓", key="straight_lines_help", help="Click for explanation"):
+                    st.session_state.show_straight_lines_popup = True
+            
+            # Handle mutual exclusivity
+            if show_error_bars and st.session_state.show_confidence_interval:
+                st.session_state.show_confidence_interval = False
+                st.rerun()
+            elif show_confidence_interval and st.session_state.show_error_bars:
+                st.session_state.show_error_bars = False
+                st.rerun()
+            
+            # Update session state
+            st.session_state.show_error_bars = show_error_bars
+            st.session_state.show_confidence_interval = show_confidence_interval
+            st.session_state.use_straight_lines = use_straight_lines
+            
+            st.markdown("</div>", unsafe_allow_html=True)
+            
+            # Pop-up explanations using modals
+            if 'show_error_bars_popup' in st.session_state and st.session_state.show_error_bars_popup:
+                st.markdown("""
+                <div style="
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background-color: white;
+                    padding: 30px;
+                    border-radius: 15px;
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                    z-index: 1000;
+                    max-width: 500px;
+                    border: 2px solid #0077b6;
+                ">
+                    <h3 style="color: #0077b6; margin-top: 0;">Error Bars (Standard Deviation)</h3>
+                    <p>Error bars show the standard deviation of the data points around the mean value. They indicate the variability or spread of the data:</p>
+                    <ul>
+                        <li><strong>Shorter bars:</strong> Data points are close together (low variability)</li>
+                        <li><strong>Longer bars:</strong> Data points are spread out (high variability)</li>
+                        <li><strong>Interpretation:</strong> About 68% of data points fall within 1 standard deviation</li>
+                    </ul>
+                    <p><em>Note: Error bars and confidence intervals are mutually exclusive options.</em></p>
+                </div>
+                <div style="
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(0,0,0,0.5);
+                    z-index: 999;
+                "></div>
+                """, unsafe_allow_html=True)
+                
+                if st.button("Close", key="close_error_bars"):
+                    st.session_state.show_error_bars_popup = False
+                    st.rerun()
+            
+            if 'show_confidence_popup' in st.session_state and st.session_state.show_confidence_popup:
+                st.markdown("""
+                <div style="
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background-color: white;
+                    padding: 30px;
+                    border-radius: 15px;
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                    z-index: 1000;
+                    max-width: 500px;
+                    border: 2px solid #0077b6;
+                ">
+                    <h3 style="color: #0077b6; margin-top: 0;">Confidence Intervals (95%)</h3>
+                    <p>Confidence intervals show the range where we can be 95% confident that the true population mean lies:</p>
+                    <ul>
+                        <li><strong>Narrow bands:</strong> More precise estimates (larger sample sizes)</li>
+                        <li><strong>Wide bands:</strong> Less precise estimates (smaller sample sizes)</li>
+                        <li><strong>Interpretation:</strong> If we repeated the study 100 times, 95 of those intervals would contain the true mean</li>
+                    </ul>
+                    <p><em>Note: Confidence intervals and error bars are mutually exclusive options.</em></p>
+                </div>
+                <div style="
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(0,0,0,0.5);
+                    z-index: 999;
+                "></div>
+                """, unsafe_allow_html=True)
+                
+                if st.button("Close", key="close_confidence"):
+                    st.session_state.show_confidence_popup = False
+                    st.rerun()
+            
+            if 'show_straight_lines_popup' in st.session_state and st.session_state.show_straight_lines_popup:
+                st.markdown("""
+                <div style="
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background-color: white;
+                    padding: 30px;
+                    border-radius: 15px;
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                    z-index: 1000;
+                    max-width: 500px;
+                    border: 2px solid #0077b6;
+                ">
+                    <h3 style="color: #0077b6; margin-top: 0;">Straight Line Graphs</h3>
+                    <p>Toggle between straight lines and smooth curves for trend visualization:</p>
+                    <ul>
+                        <li><strong>Straight lines:</strong> Direct point-to-point connections showing exact data progression</li>
+                        <li><strong>Smooth curves (default):</strong> Rounded spline curves that emphasize overall trends</li>
+                        <li><strong>Use straight lines when:</strong> You want to see precise data changes between time periods</li>
+                        <li><strong>Use smooth curves when:</strong> You want to focus on general trend patterns</li>
+                    </ul>
+                </div>
+                <div style="
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(0,0,0,0.5);
+                    z-index: 999;
+                "></div>
+                """, unsafe_allow_html=True)
+                
+                if st.button("Close", key="close_straight_lines"):
+                    st.session_state.show_straight_lines_popup = False
+                    st.rerun()
             
             # Helper function to get all site data for export
             def get_site_data_for_export(site_name):

@@ -106,7 +106,7 @@ class GraphGenerator:
         
         return ranges.get(metric_name, {'min': 0, 'max': 100})  # default range
 
-    def create_time_series(self, data, title, y_label, comparison_data=None, comparison_labels=None, date_range=None, secondary_data=None, secondary_label=None, tertiary_data=None, tertiary_label=None, show_confidence_interval=False):
+    def create_time_series(self, data, title, y_label, comparison_data=None, comparison_labels=None, date_range=None, secondary_data=None, secondary_label=None, tertiary_data=None, tertiary_label=None, show_confidence_interval=False, show_error_bars=False, use_straight_lines=False):
         """
         Create time series graph with optional multiple comparison sites and date range
         
@@ -122,6 +122,8 @@ class GraphGenerator:
             tertiary_data: Optional tertiary metric data
             tertiary_label: Label for tertiary data
             show_confidence_interval: Whether to show confidence interval bands (95% CI)
+            show_error_bars: Whether to show error bars (standard deviation) - mutually exclusive with confidence intervals
+            use_straight_lines: Whether to use straight lines instead of smooth spline curves
         """
         
         # Debug logging for Lutoban Pier
@@ -298,13 +300,45 @@ class GraphGenerator:
                 hoverinfo='skip'
             ))
         
-        # Calculate confidence intervals if requested (using complete dataset)
+        # Helper function to calculate and add error bars (standard deviation)
+        def add_error_bars(data_subset, metric_column):
+            if data_subset.empty:
+                return
+                
+            # Get the y-values and calculate standard deviation
+            y_values = data_subset[metric_column].values
+            n_values = len(y_values)
+            if n_values <= 1:
+                return
+                
+            # Calculate standard deviation
+            std_dev = np.std(y_values, ddof=1)
+            
+            # Add error bars to the main trace
+            error_y = dict(
+                type='data',
+                array=[std_dev] * len(data_subset),
+                visible=True,
+                color='rgba(0, 119, 182, 0.5)',
+                thickness=2,
+                width=3
+            )
+            return error_y
+        
+        # Handle analysis options - confidence intervals and error bars are mutually exclusive
         metric_column = data.columns[1] if not data.empty else None
+        error_y_settings = None
+        
         if show_confidence_interval and metric_column and not complete_df.empty:
             # Use complete dataset for confidence intervals
             complete_df_for_ci = complete_df.copy()
             complete_df_for_ci[metric_column] = complete_df_for_ci['value']
             add_confidence_interval(complete_df_for_ci, metric_column)
+        elif show_error_bars and metric_column and not complete_df.empty:
+            # Calculate error bars for the main trace
+            complete_df_for_eb = complete_df.copy()
+            complete_df_for_eb[metric_column] = complete_df_for_eb['value']
+            error_y_settings = add_error_bars(complete_df_for_eb, metric_column)
         
         # Add data points with automatic gap detection for COVID periods
         # Detect gaps in consecutive data and add dotted connectors
