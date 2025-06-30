@@ -356,12 +356,22 @@ if selected_site:
             # Display the site image
             image_placeholder.empty()
             
-            # Use the site's image_url if available, otherwise use a placeholder
-            image_path = selected_site_obj.image_url if selected_site_obj.image_url else "https://via.placeholder.com/400x300"
+            # Use the site's image_url if available, otherwise construct path from site name
+            if selected_site_obj.image_url:
+                image_path = selected_site_obj.image_url
+            else:
+                # Convert site name to filename format (lowercase, spaces to underscores)
+                site_filename = selected_site.lower().replace(' ', '_').replace('-', '_')
+                image_path = f"assets/sites/{site_filename}.png"
             
             # Display image normally - will use CSS to hide fullscreen button
-            st.image(image_path, use_container_width=True, 
-                     output_format="JPEG", caption=selected_site)
+            try:
+                st.image(image_path, use_container_width=True, 
+                         output_format="JPEG", caption=selected_site)
+            except:
+                # Fallback to a default image if the specific site image doesn't exist
+                st.image("assets/branding/logo_icon.png", use_container_width=True, 
+                         output_format="JPEG", caption=f"{selected_site} (Image not available)")
 
         with cols[1]:
             # Show a loading placeholder for the description
