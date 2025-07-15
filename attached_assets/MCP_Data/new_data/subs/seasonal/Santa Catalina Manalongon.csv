@@ -1,4 +1,5 @@
-Period,Site,Rubble Cover,Fresh Algae Cover,Soft Coral Cover,Hard Coral Cover,Bleaching
-Spring 2024,Santa Catalina Manalongon,0.0,35.75,9.75,54.5,3.5
-Winter 24/25,Santa Catalina Manalongon,0.0,31.0,35.0,18.0,0.5
-Spring 2025,Santa Catalina Manalongon,0.75,65.25,5.75,35.0,0.12
+Period,Site,Corallivore Density,Detritivore Density,Omnivore Density,Carnivore Density,Herbivore Density,Total Density
+Spring 2024,Santa Catalina Manalongon,0.0,1.0,1.67,21.67,27.67,50.64
+Autumn 2024,Santa Catalina Manalongon,1.25,0.25,2.75,4.25,5.0,22.86
+Winter 24/25,Santa Catalina Manalongon,2.0,0.0,0.0,4.0,0.0,43.46
+Spring 2025,Santa Catalina Manalongon,0.5,3.62,1.5,7.25,35.75,43.67

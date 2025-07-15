@@ -1,4 +1,4 @@
-Period,Site,Rubble Cover,Fresh Algae Cover,Soft Coral Cover,Hard Coral Cover,Bleaching
-Winter 24/25,Mojon MPA,11.5,31.0,7.25,21.0,0.0
-Spring 2025,Mojon MPA,20.5,28.0,0.5,31.5,0.88
-Summer 2025,Mojon MPA,11.0,47.5,0.0,26.5,0.0
+Period,Site,Corallivore Density,Detritivore Density,Omnivore Density,Carnivore Density,Herbivore Density,Total Density
+Winter 24/25,Mojon MPA,1.0,3.25,2.25,11.75,27.75,46.0
+Spring 2025,Mojon MPA,2.25,1.75,3.25,11.25,24.75,36.15
+Summer 2025,Mojon MPA,1.5,1.0,3.0,12.0,28.5,46.0
