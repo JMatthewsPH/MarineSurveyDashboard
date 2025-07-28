@@ -130,7 +130,7 @@ with st.sidebar:
     for code, name in LANGUAGE_DISPLAY.items():
         if name == selected_language_display and code != st.session_state.language:
             st.session_state.language = code
-            st.rerun()
+            # Streamlit will automatically rerun when session state changes
     
     # Streamlit navigation is now automatically handled in the sidebar
     

@@ -177,7 +177,7 @@ with st.sidebar:
     for code, name in LANGUAGE_DISPLAY.items():
         if name == selected_language_display and code != st.session_state.language:
             st.session_state.language = code
-            st.rerun()
+            # No need for st.rerun() here - Streamlit will handle the change automatically
 
     # Streamlit navigation is now automatically handled in the sidebar
 
@@ -257,7 +257,7 @@ with st.sidebar:
                 default_index = i
                 break
     
-    # Function to handle site selection change with debouncing
+    # Function to handle site selection change
     def on_site_change():
         # Get the value from session state
         option = st.session_state.site_selector
@@ -268,9 +268,7 @@ with st.sidebar:
                 # Update both session state and URL params
                 st.session_state.selected_site_name = site
                 st.query_params["site"] = site
-                # Force a rerun to apply the change immediately but don't do this if we're already
-                # showing the correct site (improves performance)
-                st.rerun()
+                # Streamlit will automatically rerun when session state changes
     
     # Create the dropdown with the correct default selection and callback
     selected_option = st.selectbox(
