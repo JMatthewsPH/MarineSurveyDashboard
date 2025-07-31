@@ -198,7 +198,7 @@ class SummaryGraphGenerator:
             # Enhanced hover template with data availability information
             if 'biomass' in metric_column.lower():
                 hover_template = "<b>%{x}</b><br>Municipality: %{customdata[0]}<br>" + \
-                               "Biomass: %{y:.1f} kg/ha<br>" + \
+                               "Biomass: %{y:.1f} kg/100m²<br>" + \
                                "<i>%{customdata[1]}</i><extra></extra>"
             elif 'coral' in metric_column.lower() or 'algae' in metric_column.lower():
                 hover_template = "<b>%{x}</b><br>Municipality: %{customdata[0]}<br>" + \
@@ -460,7 +460,7 @@ class SummaryGraphGenerator:
             )
             
             # Update layout with centered title and responsive design
-            y_title = "Commercial Biomass (kg/ha)" if "biomass" in metric_name.lower() else metric_name
+            y_title = "Commercial Biomass (kg/100m²)" if "biomass" in metric_name.lower() else metric_name
             
             fig.update_layout(
                 title={
