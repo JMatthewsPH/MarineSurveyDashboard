@@ -1053,7 +1053,7 @@ if selected_site:
                 biomass_fig, biomass_config = graph_generator.create_time_series(
                     biomass_data,
                     f"Commercial Fish Biomass - {selected_site}",  # Title on chart
-                    "Biomass (kg/ha)",
+                    "Biomass (kg/100m²)",
                     comparison_data=biomass_comparison_data,
                     comparison_labels=biomass_comparison_labels,
                     date_range=date_range,

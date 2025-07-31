@@ -271,7 +271,7 @@ with indicators_container:
         with biomass_placeholder:
             skeleton_text_placeholder(lines=2)
             
-        biomass_val = f"{summary_metrics['avg_biomass']:.1f} kg/ha" if summary_metrics["avg_biomass"] > 0 else "No data"
+        biomass_val = f"{summary_metrics['avg_biomass']:.1f} kg/100m²" if summary_metrics["avg_biomass"] > 0 else "No data"
         biomass_placeholder.metric(
             label="Average Commercial Fish Biomass",
             value=biomass_val,
@@ -325,7 +325,7 @@ with matrix_container:
                 matrix_data=matrix_data,
                 metric_column=selected_metric,
                 title=f"Site Comparison: {comparison_metric}",
-                y_axis_label="Commercial Biomass (kg/ha)"
+                y_axis_label="Commercial Biomass (kg/100m²)"
             )
         else:
             # Create regular bar chart for other metrics
@@ -571,9 +571,9 @@ with st.spinner("Loading interactive biomass heatmap..."):
         st.markdown("### 🗺️ Geographic Biomass Distribution")
         st.markdown("""
         **How to use this map:**
-        - 🟢 **Green markers**: High biomass sites (≥100 kg/ha)
-        - 🟠 **Orange markers**: Medium biomass sites (50-100 kg/ha)  
-        - 🔴 **Red markers**: Low biomass sites (<50 kg/ha)
+        - 🟢 **Green markers**: High biomass sites (≥100 kg/100m²)
+        - 🟠 **Orange markers**: Medium biomass sites (50-100 kg/100m²)  
+        - 🔴 **Red markers**: Low biomass sites (<50 kg/100m²)
         - 🔥 **Heatmap overlay**: Shows biomass radiation intensity
         - 🗺️ **Layer control**: Switch between map view and satellite imagery
         - 📍 **Click markers**: View detailed site information

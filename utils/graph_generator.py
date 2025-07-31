@@ -81,8 +81,8 @@ class GraphGenerator:
     def get_metric_range(self, metric_name):
         """Define standard ranges for each metric type"""
         ranges = {
-            'Commercial Biomass': {'min': 0, 'max': 100},  # kg/ha
-            'Commercial Fish Biomass': {'min': 0, 'max': 100},  # kg/ha
+            'Commercial Biomass': {'min': 0, 'max': 100},  # kg/100m²
+            'Commercial Fish Biomass': {'min': 0, 'max': 100},  # kg/100m²
             'Hard Coral Cover': {'min': 0, 'max': 100},     # percentage
             'Fleshy Algae': {'min': 0, 'max': 100},         # percentage
             'Bleaching': {'min': 0, 'max': 100},            # percentage
@@ -931,7 +931,7 @@ class GraphGenerator:
         # Add appropriate labels in the hover data based on the metric type
         hover_template = ""
         if 'biomass' in metric_column:
-            hover_template = "<b>%{hovertext}</b><br>Municipality: %{x}<br>Biomass: %{marker.color:.1f} kg/ha<extra></extra>"
+            hover_template = "<b>%{hovertext}</b><br>Municipality: %{x}<br>Biomass: %{marker.color:.1f} kg/100m²<extra></extra>"
         elif 'coral' in metric_column or 'algae' in metric_column:
             hover_template = "<b>%{hovertext}</b><br>Municipality: %{x}<br>Cover: %{marker.color:.1f}%<extra></extra>"
         elif 'density' in metric_column:
@@ -1046,7 +1046,7 @@ class GraphGenerator:
         
         # Get an appropriate label based on the metric
         if 'biomass' in metric_name.lower():
-            y_title = "Biomass (kg/ha)"
+            y_title = "Biomass (kg/100m²)"
         elif 'coral' in metric_name.lower() or 'algae' in metric_name.lower() or 'cover' in metric_name.lower():
             y_title = "Cover (%)"
         elif 'density' in metric_name.lower():
@@ -1244,7 +1244,7 @@ class GraphGenerator:
             
             # Enhanced hover template
             if 'biomass' in metric_column.lower():
-                hover_template = "<b>%{x}</b><br>Municipality: %{customdata[0]}<br>Biomass: %{y:.1f} kg/ha<extra></extra>"
+                hover_template = "<b>%{x}</b><br>Municipality: %{customdata[0]}<br>Biomass: %{y:.1f} kg/100m²<extra></extra>"
             elif 'coral' in metric_column.lower() or 'algae' in metric_column.lower():
                 hover_template = "<b>%{x}</b><br>Municipality: %{customdata[0]}<br>Cover: %{y:.1f}%<extra></extra>"
             elif 'density' in metric_column.lower():
