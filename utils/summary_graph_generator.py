@@ -348,7 +348,7 @@ class SummaryGraphGenerator:
             config = {'displaylogo': False, 'responsive': True}
             return fig, config
 
-    def create_multi_site_trend_chart(self, trend_data, metric_name, group_by_municipality=False, highlight_sites=None):
+    def create_multi_site_trend_chart(self, trend_data, metric_name, group_by_municipality=False, highlight_sites=None, group_by_all_sites=False):
         """
         Create a multi-site trend chart for the Summary Dashboard
         
@@ -357,6 +357,7 @@ class SummaryGraphGenerator:
             metric_name: Name of the metric being displayed
             group_by_municipality: Whether to group lines by municipality
             highlight_sites: List of sites to highlight
+            group_by_all_sites: Whether to show overall average across all sites
         """
         try:
             if trend_data.empty:
@@ -399,7 +400,25 @@ class SummaryGraphGenerator:
             covid_start = pd.Timestamp('2020-04-01')
             covid_end = pd.Timestamp('2022-03-01')
             
-            if group_by_municipality:
+            if group_by_all_sites:
+                # Show overall average across all sites
+                all_sites_avg = trend_data.groupby('date')[metric_col].mean().reset_index()
+                
+                fig.add_trace(go.Scatter(
+                    x=all_sites_avg['date'],
+                    y=all_sites_avg[metric_col],
+                    mode='lines+markers',
+                    name="All Sites Average",
+                    line=dict(
+                        color='#1f77b4',
+                        width=3,
+                        shape='spline',
+                        smoothing=1.3
+                    ),
+                    marker=dict(size=8, line=dict(width=1, color='white')),
+                    hovertemplate=f"All Sites Average<br>Date: %{{x}}<br>{metric_name}: %{{y:.1f}}<extra></extra>"
+                ))
+            elif group_by_municipality:
                 # Group by municipality
                 municipalities = trend_data['municipality'].unique()
                 colors = px.colors.qualitative.Set3[:len(municipalities)]

@@ -352,14 +352,20 @@ with trend_container:
     with col1:
         grouping_option = st.radio(
             "Group by:",
-            ["Individual Sites", "Municipality"]
+            ["All Sites", "Municipality", "Individual Sites"],
+            index=0  # Default to "All Sites"
         )
         
         group_by_municipality = grouping_option == "Municipality"
+        group_by_all_sites = grouping_option == "All Sites"
         
-        highlight_option = st.checkbox("Highlight specific sites", value=False)
+        # Only show site highlighting option when not on "All Sites" mode
+        if grouping_option != "All Sites":
+            highlight_option = st.checkbox("Highlight specific sites", value=False)
+        else:
+            highlight_option = False
         
-        highlight_sites = None
+        highlight_sites = []
         if highlight_option:
             # Get site names
             site_names = [site.name for site in sites]
@@ -433,13 +439,25 @@ with trend_container:
                     (trend_data['date'] <= end_timestamp)
                 ]
             
-            # Create trend chart
-            fig, config = graph_generator.create_multi_site_trend_chart(
-                trend_data=trend_data,
-                metric_name="Commercial Biomass",
-                group_by_municipality=group_by_municipality,
-                highlight_sites=highlight_sites
-            )
+            # Create trend chart based on grouping option
+            if group_by_all_sites:
+                # Use summary graph generator for all sites average
+                fig, config = summary_graph_generator.create_multi_site_trend_chart(
+                    trend_data=trend_data,
+                    metric_name="Commercial Biomass",
+                    group_by_municipality=False,
+                    highlight_sites=highlight_sites,
+                    group_by_all_sites=True
+                )
+            else:
+                # Use summary graph generator for municipality/individual sites
+                fig, config = summary_graph_generator.create_multi_site_trend_chart(
+                    trend_data=trend_data,
+                    metric_name="Commercial Biomass",
+                    group_by_municipality=group_by_municipality,
+                    highlight_sites=highlight_sites,
+                    group_by_all_sites=False
+                )
             
             # Display trend chart
             trend_placeholder.empty()
@@ -479,13 +497,25 @@ with trend_container:
                     (trend_data['date'] <= end_timestamp)
                 ]
             
-            # Create trend chart
-            fig, config = graph_generator.create_multi_site_trend_chart(
-                trend_data=trend_data,
-                metric_name="omnivore",  # Use the actual column name from the dataframe
-                group_by_municipality=group_by_municipality,
-                highlight_sites=highlight_sites
-            )
+            # Create trend chart based on grouping option
+            if group_by_all_sites:
+                # Use summary graph generator for all sites average
+                fig, config = summary_graph_generator.create_multi_site_trend_chart(
+                    trend_data=trend_data,
+                    metric_name="Omnivore Density",
+                    group_by_municipality=False,
+                    highlight_sites=highlight_sites,
+                    group_by_all_sites=True
+                )
+            else:
+                # Use summary graph generator for municipality/individual sites
+                fig, config = summary_graph_generator.create_multi_site_trend_chart(
+                    trend_data=trend_data,
+                    metric_name="Omnivore Density",
+                    group_by_municipality=group_by_municipality,
+                    highlight_sites=highlight_sites,
+                    group_by_all_sites=False
+                )
             
             # Display trend chart
             trend_placeholder.empty()
@@ -493,50 +523,7 @@ with trend_container:
         else:
             trend_placeholder.warning("No trend data available for the selected filters.")
             
-    elif comparison_metric == "Commercial Biomass":
-        # For Commercial Biomass, we use the get_biomass_data method
-        trend_data_list = []
-        for site in sites:
-            if municipality_filter and site.municipality != municipality_filter:
-                continue
-                
-            # Get biomass data for this site
-            site_data = data_processor.get_biomass_data(site.name)
-            if not site_data.empty:
-                site_data['site'] = site.name
-                site_data['municipality'] = site.municipality
-                trend_data_list.append(site_data)
-        
-        if trend_data_list:
-            trend_data = pd.concat(trend_data_list)
-            
-            # Filter by date range if specified
-            if date_range:
-                # date_range already contains pandas timestamps
-                start_timestamp, end_timestamp = date_range
-                
-                # Ensure trend_data['date'] is in datetime64 format
-                trend_data['date'] = pd.to_datetime(trend_data['date'])
-                
-                # Now filter using compatible types
-                trend_data = trend_data[
-                    (trend_data['date'] >= start_timestamp) & 
-                    (trend_data['date'] <= end_timestamp)
-                ]
-            
-            # Create trend chart
-            fig, config = graph_generator.create_multi_site_trend_chart(
-                trend_data=trend_data,
-                metric_name="Commercial Biomass",
-                group_by_municipality=group_by_municipality,
-                highlight_sites=highlight_sites
-            )
-            
-            # Display trend chart
-            trend_placeholder.empty()
-            trend_placeholder.plotly_chart(fig, use_container_width=True, config=config)
-        else:
-            trend_placeholder.warning("No commercial biomass trend data available for the selected filters.")
+
             
     else:
         # For other metrics, display a placeholder message
