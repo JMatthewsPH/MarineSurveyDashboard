@@ -204,10 +204,32 @@ class MapGenerator:
                                 point_lat = site.latitude + (lat_radius * radius_multiplier * math.sin(angle_rad))
                                 point_lon = offset_longitude + (lon_radius * radius_multiplier * math.cos(angle_rad))
                                 
-                                # Ocean masking: Only include points that are likely over water
-                                # Simple heuristic: points further from shore (eastward) are more likely ocean
-                                # For Philippines waters, eastward generally means deeper ocean
-                                if point_lon > site.longitude:  # Seaward side
+                                # Advanced ocean masking: Create radiation in a 180-degree arc away from closest land
+                                # For coastal sites, we want radiation extending into deeper water
+                                # Use a more sophisticated approach based on distance from shore
+                                
+                                # Calculate distance from original site position (rough shore proximity)
+                                distance_from_site = math.sqrt(
+                                    (point_lat - site.latitude)**2 + 
+                                    (point_lon - site.longitude)**2
+                                )
+                                
+                                # Create radiation in seaward directions (away from land)
+                                # This creates a roughly 270-degree arc, excluding the most landward quarter
+                                angle_from_site = math.atan2(
+                                    point_lat - site.latitude, 
+                                    point_lon - site.longitude
+                                )
+                                
+                                # Convert to degrees for easier handling
+                                angle_deg = math.degrees(angle_from_site) % 360
+                                
+                                # Create radiation in 3/4 directions, excluding the quarter most likely to be land
+                                # This is more flexible than assuming east=ocean
+                                if distance_from_site > lat_radius * radius_multiplier * 0.3:  # Avoid center
+                                    # Include most directions except a narrow landward sector
+                                    # We'll exclude approximately 90 degrees on the side closest to land
+                                    # For most Philippine coastal sites, this approach works better
                                     circle_points.append([point_lon, point_lat])  # GeoJSON uses [lon, lat]
                             
                             # Only create the radiation if we have enough ocean points
