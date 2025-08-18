@@ -180,26 +180,67 @@ class MapGenerator:
                         # This moves markers away from shoreline for better visibility
                         offset_longitude = site.longitude + 0.0005  # Move east/seaward
                         
-                        # Add fixed-radius radiation circles (700m radius)
-                        # 700m ≈ 0.0063 degrees latitude (constant)
-                        # For longitude, we need to adjust for latitude: lon_degree = 700m / (111320 * cos(lat))
+                        # Add ocean-only radiation effect using custom GeoJSON
                         import math
+                        import json
+                        
+                        # Calculate radiation circles with ocean masking
+                        # 700m ≈ 0.0063 degrees latitude (constant)
                         lat_radius = 0.0063  # 700m in degrees latitude
                         lon_radius = 0.0063 / math.cos(math.radians(site.latitude))  # Adjust for latitude
                         
-                        # Create radiation effect with multiple concentric circles fading to transparency
+                        # Create radiation effect with ocean-constrained circles
                         for i, opacity in enumerate([0.3, 0.2, 0.1, 0.05]):
                             radius_multiplier = 1 - (i * 0.2)  # 100%, 80%, 60%, 40% of full radius
-                            folium.Circle(
-                                location=[site.latitude, offset_longitude],
-                                radius=700 * radius_multiplier,  # Fixed 700m radius, decreasing
-                                color=radiation_color,
-                                weight=0,  # No border
-                                fillColor=radiation_color,
-                                fillOpacity=opacity,
-                                popup=None,  # No popup on radiation circles
-                                tooltip=None  # No tooltip on radiation circles
-                            ).add_to(m)
+                            actual_radius = 700 * radius_multiplier
+                            
+                            # Create a custom circle polygon with many points for smooth ocean masking
+                            circle_points = []
+                            num_points = 64  # More points for smoother circles
+                            
+                            for angle in range(0, 360, 360 // num_points):
+                                # Calculate point on circle
+                                angle_rad = math.radians(angle)
+                                point_lat = site.latitude + (lat_radius * radius_multiplier * math.sin(angle_rad))
+                                point_lon = offset_longitude + (lon_radius * radius_multiplier * math.cos(angle_rad))
+                                
+                                # Ocean masking: Only include points that are likely over water
+                                # Simple heuristic: points further from shore (eastward) are more likely ocean
+                                # For Philippines waters, eastward generally means deeper ocean
+                                if point_lon > site.longitude:  # Seaward side
+                                    circle_points.append([point_lon, point_lat])  # GeoJSON uses [lon, lat]
+                            
+                            # Only create the radiation if we have enough ocean points
+                            if len(circle_points) >= 8:
+                                # Close the polygon
+                                if circle_points:
+                                    circle_points.append(circle_points[0])
+                                
+                                # Create GeoJSON feature for ocean-only radiation
+                                geojson_feature = {
+                                    "type": "Feature",
+                                    "geometry": {
+                                        "type": "Polygon",
+                                        "coordinates": [circle_points]
+                                    },
+                                    "properties": {
+                                        "fillColor": radiation_color,
+                                        "fillOpacity": opacity,
+                                        "stroke": False,
+                                        "weight": 0
+                                    }
+                                }
+                                
+                                # Add the ocean-constrained radiation
+                                folium.GeoJson(
+                                    geojson_feature,
+                                    style_function=lambda x: {
+                                        'fillColor': x['properties']['fillColor'],
+                                        'fillOpacity': x['properties']['fillOpacity'],
+                                        'stroke': x['properties']['stroke'],
+                                        'weight': x['properties']['weight']
+                                    }
+                                ).add_to(m)
                         
                         # Add tiny circle marker on top of radiation
                         folium.CircleMarker(
