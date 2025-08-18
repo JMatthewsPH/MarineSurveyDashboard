@@ -442,7 +442,7 @@ with trend_container:
             # Create trend chart based on grouping option
             if group_by_all_sites:
                 # Use summary graph generator for all sites average
-                fig, config = summary_graph_generator.create_multi_site_trend_chart(
+                fig, config = graph_generator.create_multi_site_trend_chart(
                     trend_data=trend_data,
                     metric_name="Commercial Biomass",
                     group_by_municipality=False,
@@ -451,7 +451,7 @@ with trend_container:
                 )
             else:
                 # Use summary graph generator for municipality/individual sites
-                fig, config = summary_graph_generator.create_multi_site_trend_chart(
+                fig, config = graph_generator.create_multi_site_trend_chart(
                     trend_data=trend_data,
                     metric_name="Commercial Biomass",
                     group_by_municipality=group_by_municipality,
@@ -500,7 +500,7 @@ with trend_container:
             # Create trend chart based on grouping option
             if group_by_all_sites:
                 # Use summary graph generator for all sites average
-                fig, config = summary_graph_generator.create_multi_site_trend_chart(
+                fig, config = graph_generator.create_multi_site_trend_chart(
                     trend_data=trend_data,
                     metric_name="Omnivore Density",
                     group_by_municipality=False,
@@ -509,7 +509,7 @@ with trend_container:
                 )
             else:
                 # Use summary graph generator for municipality/individual sites
-                fig, config = summary_graph_generator.create_multi_site_trend_chart(
+                fig, config = graph_generator.create_multi_site_trend_chart(
                     trend_data=trend_data,
                     metric_name="Omnivore Density",
                     group_by_municipality=group_by_municipality,
