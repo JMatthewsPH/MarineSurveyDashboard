@@ -176,83 +176,41 @@ class MapGenerator:
                         </div>
                         """
                         
-                        # Offset marker seaward by ~20px (approximately 0.0005 degrees longitude)
-                        # This moves markers away from shoreline for better visibility
-                        offset_longitude = site.longitude + 0.0005  # Move east/seaward
+                        # Move sites 50m seaward for ocean-only radiation (approximately 0.00045 degrees longitude)
+                        # This positions markers offshore, allowing simple circular radiation without land overlap
+                        seaward_offset = 0.00045 / math.cos(math.radians(site.latitude))  # Adjust for latitude
+                        offset_longitude = site.longitude + seaward_offset
+                        offset_latitude = site.latitude  # Keep latitude unchanged
                         
-                        # Add ocean-only radiation effect using custom GeoJSON
+                        # Add simple circular radiation effect with 100m radius
                         import math
                         import json
                         
-                        # Calculate radiation circles with ocean masking
-                        # 700m ≈ 0.0063 degrees latitude (constant)
-                        lat_radius = 0.0063  # 700m in degrees latitude
-                        lon_radius = 0.0063 / math.cos(math.radians(site.latitude))  # Adjust for latitude
+                        # Calculate 100m radius circles (much simpler than complex semicircles)
+                        # 100m ≈ 0.0009 degrees latitude (constant)
+                        lat_radius = 0.0009  # 100m in degrees latitude
+                        lon_radius = 0.0009 / math.cos(math.radians(site.latitude))  # Adjust for latitude
                         
-                        # Create ocean-only radiation effect using seaward-facing semicircles
+                        # Create simple circular radiation effect
                         for i, opacity in enumerate([0.3, 0.2, 0.1, 0.05]):
                             radius_multiplier = 1 - (i * 0.2)  # 100%, 80%, 60%, 40% of full radius
                             
-                            # Create seaward-facing semicircle (180 degrees)
-                            # Start from east (0°) and go to west (180°) - seaward arc
+                            # Create simple full circle (since sites are now positioned offshore)
                             circle_points = []
-                            num_points = 32  # Half circle with good resolution
-                            
-                            # Determine seaward direction based on site location and coastal orientation
-                            # For Philippines, we can use site-specific logic based on coordinates
-                            
-                            # Site-specific seaward direction mapping based on actual coastal geography
-                            # Looking at the map, I can see the actual orientations:
-                            site_seaward_angles = {
-                                # Zamboanguita sites (eastern coast facing southeast/east)
-                                'Malatapay': (45, 225),         # Southeast-facing
-                                'Lutoban North': (45, 225),     # Southeast-facing  
-                                'Lutoban South': (45, 225),     # Southeast-facing
-                                'Lutoban Pier': (45, 225),      # Southeast-facing
-                                
-                                # Siaton sites (analyzing from map positions)
-                                'Andulay': (315, 135),          # Northwest to southeast arc
-                                'Antulang': (0, 180),           # East-facing
-                                'Kookoos': (0, 180),            # East-facing
-                                'Salag': (270, 90),             # North-facing
-                                'Basak': (315, 135),            # Northwest-facing
-                                'Dalakit': (225, 45),           # Southwest-facing
-                                'Guinsuan': (180, 360),         # South-facing
-                                'Latason': (135, 315),          # Southeast-facing
-                                
-                                # Santa Catalina sites (southern coast)
-                                'Mojon': (90, 270),             # West-facing
-                                'Cawitan': (135, 315),          # Southeast-facing
-                                'Manalongon': (180, 360),       # South-facing
-                            }
-                            
-                            # Get site-specific angles or default to eastward
-                            if site.name in site_seaward_angles:
-                                start_angle, end_angle = site_seaward_angles[site.name]
-                                # Convert to the angle system we're using (where 0° = east, 90° = north)
-                                start_angle = start_angle - 90  # Adjust for our coordinate system
-                                end_angle = end_angle - 90
-                            else:
-                                # Default to eastward semicircle
-                                start_angle = -90  # Start from south
-                                end_angle = 90     # End at north
+                            num_points = 32  # Circle with good resolution
                             
                             for i_angle in range(num_points + 1):
-                                # Calculate angle for this point
-                                angle = start_angle + (end_angle - start_angle) * (i_angle / num_points)
+                                # Calculate angle for this point (full 360-degree circle)
+                                angle = (360 * i_angle / num_points)
                                 angle_rad = math.radians(angle)
                                 
-                                # Calculate point on semicircle
-                                point_lat = site.latitude + (lat_radius * radius_multiplier * math.sin(angle_rad))
+                                # Calculate point on circle
+                                point_lat = offset_latitude + (lat_radius * radius_multiplier * math.sin(angle_rad))
                                 point_lon = offset_longitude + (lon_radius * radius_multiplier * math.cos(angle_rad))
                                 
                                 circle_points.append([point_lon, point_lat])  # GeoJSON uses [lon, lat]
                             
-                            # Close the semicircle by connecting back to center and then to start
-                            circle_points.append([offset_longitude, site.latitude])  # Center point
-                            circle_points.append(circle_points[0])  # Close polygon
-                            
-                            # Create GeoJSON feature for seaward semicircle
+                            # Create GeoJSON feature for simple circle
                             geojson_feature = {
                                 "type": "Feature",
                                 "geometry": {
@@ -267,7 +225,7 @@ class MapGenerator:
                                 }
                             }
                             
-                            # Add the seaward radiation semicircle
+                            # Add the circular radiation
                             folium.GeoJson(
                                 geojson_feature,
                                 style_function=lambda x: {
@@ -278,9 +236,9 @@ class MapGenerator:
                                 }
                             ).add_to(m)
                         
-                        # Add tiny circle marker on top of radiation
+                        # Add tiny circle marker on top of radiation (using offset position)
                         folium.CircleMarker(
-                            location=[site.latitude, offset_longitude],
+                            location=[offset_latitude, offset_longitude],
                             radius=4,  # Tiny size like click markers
                             popup=folium.Popup(popup_html, max_width=250),
                             tooltip=f"{site.name}: {latest_biomass:.1f} kg/100m²",
