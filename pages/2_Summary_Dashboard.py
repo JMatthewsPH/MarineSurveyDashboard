@@ -350,39 +350,35 @@ with trend_container:
     col1, col2 = st.columns([1, 2])
     
     with col1:
+        # Municipal-level trend analysis selection
+        st.markdown("**Historic Overview Level:**")
         grouping_option = st.radio(
-            "Group by:",
-            ["All Sites", "Municipality", "Individual Sites"],
-            index=0  # Default to "All Sites"
+            "Select overview level:",
+            ["All Municipalities", "Zamboanguita", "Siaton", "Santa Catalina"],
+            index=0,  # Default to "All Municipalities"
+            help="Broad historic trends averaged by municipality for overview purposes. Use individual site pages for detailed site-specific analysis."
         )
         
-        group_by_municipality = grouping_option == "Municipality"
-        group_by_all_sites = grouping_option == "All Sites"
+        # Map selections to processing variables
+        if grouping_option == "All Municipalities":
+            group_by_all_sites = True
+            group_by_municipality = False
+            municipality_focus = None
+        elif grouping_option == "Zamboanguita":
+            group_by_all_sites = False
+            group_by_municipality = True
+            municipality_focus = "Zamboanguita"
+        elif grouping_option == "Siaton":
+            group_by_all_sites = False
+            group_by_municipality = True
+            municipality_focus = "Siaton"
+        else:  # Santa Catalina
+            group_by_all_sites = False
+            group_by_municipality = True
+            municipality_focus = "Santa Catalina"
         
-        # Only show site highlighting option when not on "All Sites" mode
-        if grouping_option != "All Sites":
-            highlight_option = st.checkbox("Highlight specific sites", value=False)
-        else:
-            highlight_option = False
-        
+        # No individual site highlighting in summary - use municipal averages only
         highlight_sites = []
-        if highlight_option:
-            # Get site names
-            site_names = [site.name for site in sites]
-            if municipality_filter:
-                # Filter sites by municipality
-                filtered_sites = [site.name for site in sites if site.municipality == municipality_filter]
-                highlight_sites = st.multiselect(
-                    "Select sites to highlight:",
-                    filtered_sites,
-                    max_selections=5
-                )
-            else:
-                highlight_sites = st.multiselect(
-                    "Select sites to highlight:",
-                    site_names,
-                    max_selections=5
-                )
     
     # Create placeholder for trend chart
     trend_placeholder = st.empty()
@@ -440,24 +436,13 @@ with trend_container:
                 ]
             
             # Create trend chart based on grouping option
-            if group_by_all_sites:
-                # Use summary graph generator for all sites average
-                fig, config = graph_generator.create_multi_site_trend_chart(
-                    trend_data=trend_data,
-                    metric_name="Commercial Biomass",
-                    group_by_municipality=False,
-                    highlight_sites=highlight_sites,
-                    group_by_all_sites=True
-                )
-            else:
-                # Use summary graph generator for municipality/individual sites
-                fig, config = graph_generator.create_multi_site_trend_chart(
-                    trend_data=trend_data,
-                    metric_name="Commercial Biomass",
-                    group_by_municipality=group_by_municipality,
-                    highlight_sites=highlight_sites,
-                    group_by_all_sites=False
-                )
+            # Generate municipal-level trend chart
+            fig, config = graph_generator.create_municipal_trend_chart(
+                trend_data=trend_data,
+                metric_name="Commercial Biomass",
+                group_by_all_sites=group_by_all_sites,
+                municipality_focus=municipality_focus if not group_by_all_sites else None
+            )
             
             # Display trend chart
             trend_placeholder.empty()
@@ -497,25 +482,13 @@ with trend_container:
                     (trend_data['date'] <= end_timestamp)
                 ]
             
-            # Create trend chart based on grouping option
-            if group_by_all_sites:
-                # Use summary graph generator for all sites average
-                fig, config = graph_generator.create_multi_site_trend_chart(
-                    trend_data=trend_data,
-                    metric_name="Omnivore Density",
-                    group_by_municipality=False,
-                    highlight_sites=highlight_sites,
-                    group_by_all_sites=True
-                )
-            else:
-                # Use summary graph generator for municipality/individual sites
-                fig, config = graph_generator.create_multi_site_trend_chart(
-                    trend_data=trend_data,
-                    metric_name="Omnivore Density",
-                    group_by_municipality=group_by_municipality,
-                    highlight_sites=highlight_sites,
-                    group_by_all_sites=False
-                )
+            # Generate municipal-level trend chart for omnivore density
+            fig, config = graph_generator.create_municipal_trend_chart(
+                trend_data=trend_data,
+                metric_name="Omnivore Density",
+                group_by_all_sites=group_by_all_sites,
+                municipality_focus=municipality_focus if not group_by_all_sites else None
+            )
             
             # Display trend chart
             trend_placeholder.empty()
@@ -525,6 +498,82 @@ with trend_container:
             
 
             
+    elif comparison_metric == "Herbivore Density":
+        # For Herbivore Density, use the get_metric_data method
+        trend_data_list = []
+        for site in sites:
+            if municipality_filter and site.municipality != municipality_filter:
+                continue
+                
+            site_data = data_processor.get_metric_data(site.name, "herbivore")
+            if not site_data.empty:
+                site_data['site'] = site.name
+                site_data['municipality'] = site.municipality
+                trend_data_list.append(site_data)
+        
+        if trend_data_list:
+            trend_data = pd.concat(trend_data_list)
+            
+            # Filter by date range if specified
+            if date_range:
+                start_timestamp, end_timestamp = date_range
+                trend_data['date'] = pd.to_datetime(trend_data['date'])
+                trend_data = trend_data[
+                    (trend_data['date'] >= start_timestamp) & 
+                    (trend_data['date'] <= end_timestamp)
+                ]
+            
+            # Generate municipal-level trend chart for herbivore density
+            fig, config = graph_generator.create_municipal_trend_chart(
+                trend_data=trend_data,
+                metric_name="Herbivore Density",
+                group_by_all_sites=group_by_all_sites,
+                municipality_focus=municipality_focus if not group_by_all_sites else None
+            )
+            
+            trend_placeholder.empty()
+            trend_placeholder.plotly_chart(fig, use_container_width=True, config=config)
+        else:
+            trend_placeholder.warning("No trend data available for the selected filters.")
+            
+    elif comparison_metric == "Corallivore Density":
+        # For Corallivore Density, use the get_metric_data method
+        trend_data_list = []
+        for site in sites:
+            if municipality_filter and site.municipality != municipality_filter:
+                continue
+                
+            site_data = data_processor.get_metric_data(site.name, "corallivore")
+            if not site_data.empty:
+                site_data['site'] = site.name
+                site_data['municipality'] = site.municipality
+                trend_data_list.append(site_data)
+        
+        if trend_data_list:
+            trend_data = pd.concat(trend_data_list)
+            
+            # Filter by date range if specified
+            if date_range:
+                start_timestamp, end_timestamp = date_range
+                trend_data['date'] = pd.to_datetime(trend_data['date'])
+                trend_data = trend_data[
+                    (trend_data['date'] >= start_timestamp) & 
+                    (trend_data['date'] <= end_timestamp)
+                ]
+            
+            # Generate municipal-level trend chart for corallivore density
+            fig, config = graph_generator.create_municipal_trend_chart(
+                trend_data=trend_data,
+                metric_name="Corallivore Density",
+                group_by_all_sites=group_by_all_sites,
+                municipality_focus=municipality_focus if not group_by_all_sites else None
+            )
+            
+            trend_placeholder.empty()
+            trend_placeholder.plotly_chart(fig, use_container_width=True, config=config)
+        else:
+            trend_placeholder.warning("No trend data available for the selected filters.")
+    
     else:
         # For other metrics, display a placeholder message
         trend_placeholder.info(f"Trend analysis for {comparison_metric} will be implemented soon.")

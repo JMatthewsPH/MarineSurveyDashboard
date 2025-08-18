@@ -348,6 +348,212 @@ class SummaryGraphGenerator:
             config = {'displaylogo': False, 'responsive': True}
             return fig, config
 
+    def create_municipal_trend_chart(self, trend_data, metric_name, group_by_all_sites=False, municipality_focus=None):
+        """
+        Create a municipal-level trend chart for Summary Dashboard broad overview
+        
+        Args:
+            trend_data: DataFrame with columns: date, metric_value, site, municipality
+            metric_name: Name of the metric being displayed  
+            group_by_all_sites: Whether to show overall average across all municipalities
+            municipality_focus: Specific municipality to focus on (Zamboanguita, Siaton, Santa Catalina)
+        """
+        try:
+            if trend_data.empty:
+                fig = go.Figure()
+                fig.add_annotation(
+                    text="No trend data available",
+                    xref="paper", yref="paper",
+                    x=0.5, y=0.5,
+                    showarrow=False,
+                    font=dict(size=16, color="gray")
+                )
+                config = {'displaylogo': False, 'responsive': True}
+                return fig, config
+            
+            # Ensure date is datetime
+            trend_data['date'] = pd.to_datetime(trend_data['date'])
+            
+            # Find the metric column
+            metric_col = None
+            for col in trend_data.columns:
+                if col.lower() in [metric_name.lower(), metric_name.lower().replace(' ', '_')]:
+                    metric_col = col
+                    break
+            
+            if metric_col is None:
+                # Look for numeric columns that aren't date, site, or municipality
+                numeric_cols = trend_data.select_dtypes(include=[np.number]).columns
+                for col in numeric_cols:
+                    if col not in ['site', 'municipality']:
+                        metric_col = col
+                        break
+            
+            if metric_col is None:
+                raise ValueError(f"Could not find metric column for {metric_name}")
+            
+            fig = go.Figure()
+            
+            # COVID period markers
+            covid_start = pd.Timestamp('2020-04-01')
+            covid_end = pd.Timestamp('2022-03-01')
+            
+            # Define municipality colors for consistency
+            municipality_colors = {
+                'Zamboanguita': '#2E8B57',  # Sea Green
+                'Siaton': '#4682B4',        # Steel Blue  
+                'Santa Catalina': '#CD853F' # Peru
+            }
+            
+            if group_by_all_sites:
+                # Show overall average across all municipalities
+                all_avg = trend_data.groupby('date')[metric_col].mean().reset_index()
+                
+                fig.add_trace(go.Scatter(
+                    x=all_avg['date'],
+                    y=all_avg[metric_col],
+                    mode='lines+markers',
+                    name="All Municipalities Average",
+                    line=dict(
+                        color='#1f77b4',
+                        width=3,
+                        shape='spline',
+                        smoothing=1.3
+                    ),
+                    marker=dict(size=6, color='#1f77b4'),
+                    hovertemplate='<b>All Municipalities</b><br>' +
+                                  'Date: %{x}<br>' +
+                                  f'{metric_name}: %{{y:.1f}}<br>' +
+                                  '<extra></extra>'
+                ))
+            elif municipality_focus:
+                # Show specific municipality average
+                muni_data = trend_data[trend_data['municipality'] == municipality_focus]
+                if not muni_data.empty:
+                    muni_avg = muni_data.groupby('date')[metric_col].mean().reset_index()
+                    
+                    fig.add_trace(go.Scatter(
+                        x=muni_avg['date'],
+                        y=muni_avg[metric_col],
+                        mode='lines+markers',
+                        name=f"{municipality_focus} Average",
+                        line=dict(
+                            color=municipality_colors.get(municipality_focus, '#1f77b4'),
+                            width=3,
+                            shape='spline',
+                            smoothing=1.3
+                        ),
+                        marker=dict(size=6, color=municipality_colors.get(municipality_focus, '#1f77b4')),
+                        hovertemplate=f'<b>{municipality_focus}</b><br>' +
+                                      'Date: %{x}<br>' +
+                                      f'{metric_name}: %{{y:.1f}}<br>' +
+                                      '<extra></extra>'
+                    ))
+            else:
+                # Show all three municipalities as separate averages
+                for municipality in ['Zamboanguita', 'Siaton', 'Santa Catalina']:
+                    muni_data = trend_data[trend_data['municipality'] == municipality]
+                    if not muni_data.empty:
+                        muni_avg = muni_data.groupby('date')[metric_col].mean().reset_index()
+                        
+                        fig.add_trace(go.Scatter(
+                            x=muni_avg['date'],
+                            y=muni_avg[metric_col],
+                            mode='lines+markers',
+                            name=f"{municipality}",
+                            line=dict(
+                                color=municipality_colors.get(municipality, '#1f77b4'),
+                                width=2.5,
+                                shape='spline',
+                                smoothing=1.3
+                            ),
+                            marker=dict(size=5, color=municipality_colors.get(municipality, '#1f77b4')),
+                            hovertemplate=f'<b>{municipality}</b><br>' +
+                                          'Date: %{x}<br>' +
+                                          f'{metric_name}: %{{y:.1f}}<br>' +
+                                          '<extra></extra>'
+                        ))
+            
+            # Add COVID-19 shaded region
+            fig.add_vrect(
+                x0=covid_start, x1=covid_end,
+                fillcolor="rgba(255, 200, 200, 0.3)",
+                layer="below",
+                line_width=0,
+                annotation_text="COVID-19 Impact Period",
+                annotation_position="top left",
+                annotation=dict(font_size=10, font_color="red")
+            )
+            
+            # Update layout for municipal overview styling
+            title_text = f"Municipal {metric_name} Trends - Historic Overview"
+            if municipality_focus:
+                title_text = f"{municipality_focus} {metric_name} Trends - Municipal Average"
+            
+            fig.update_layout(
+                title=dict(
+                    text=title_text,
+                    x=0.5,
+                    font=dict(size=16, color='#2c3e50')
+                ),
+                xaxis=dict(
+                    title="Date",
+                    showgrid=True,
+                    gridcolor='rgba(128,128,128,0.2)',
+                    title_font=dict(size=12, color='#2c3e50'),
+                    tickfont=dict(size=10, color='#2c3e50')
+                ),
+                yaxis=dict(
+                    title=f"{metric_name}",
+                    showgrid=True,
+                    gridcolor='rgba(128,128,128,0.2)',
+                    title_font=dict(size=12, color='#2c3e50'),
+                    tickfont=dict(size=10, color='#2c3e50'),
+                    rangemode='tozero'
+                ),
+                hovermode='x unified',
+                legend=dict(
+                    x=0.02,
+                    y=0.98,
+                    bgcolor="rgba(255, 255, 255, 0.8)",
+                    bordercolor="rgba(0, 0, 0, 0.2)",
+                    borderwidth=1
+                ),
+                plot_bgcolor='white',
+                paper_bgcolor='white',
+                margin=dict(l=60, r=40, t=80, b=60),
+                showlegend=True
+            )
+            
+            config = {
+                'displaylogo': False,
+                'modeBarButtonsToRemove': ['pan2d', 'lasso2d', 'select2d'],
+                'responsive': True,
+                'toImageButtonOptions': {
+                    'format': 'png',
+                    'filename': generate_filename(f"municipal_{metric_name}_trends"),
+                    'height': 600,
+                    'width': 1000,
+                    'scale': 2
+                }
+            }
+            
+            return fig, config
+            
+        except Exception as e:
+            logger.error(f"Error creating municipal trend chart: {str(e)}")
+            # Return empty figure with error message
+            fig = go.Figure()
+            fig.add_annotation(
+                text=f"Error loading trend data: {str(e)}",
+                xref="paper", yref="paper",
+                x=0.5, y=0.5,
+                showarrow=False,
+                font=dict(size=14, color="red")
+            )
+            config = {'displaylogo': False, 'responsive': True}
+            return fig, config
+
     def create_multi_site_trend_chart(self, trend_data, metric_name, group_by_municipality=False, highlight_sites=None, group_by_all_sites=False):
         """
         Create a multi-site trend chart for the Summary Dashboard
