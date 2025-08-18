@@ -198,10 +198,43 @@ class MapGenerator:
                             circle_points = []
                             num_points = 32  # Half circle with good resolution
                             
-                            # Create semicircle facing seaward (assuming sites are on west coast facing east)
-                            # Start angle: -90° (south), End angle: +90° (north) - creates eastward semicircle
-                            start_angle = -90  # Start from south
-                            end_angle = 90     # End at north
+                            # Determine seaward direction based on site location and coastal orientation
+                            # For Philippines, we can use site-specific logic based on coordinates
+                            
+                            # Site-specific seaward direction mapping based on actual coastal orientation
+                            site_seaward_angles = {
+                                # Zamboanguita sites (east coast facing east)
+                                'Malatapay': (0, 180),      # East-facing
+                                'Lutoban North': (0, 180),  # East-facing  
+                                'Lutoban South': (0, 180),  # East-facing
+                                'Lutoban Pier': (0, 180),   # East-facing
+                                
+                                # Siaton sites (mixed orientations)
+                                'Andulay': (45, 225),       # Northeast-facing
+                                'Antulang': (0, 180),       # East-facing
+                                'Kookoos': (0, 180),        # East-facing
+                                'Salag': (315, 135),        # Northwest-facing
+                                'Basak': (0, 180),          # East-facing
+                                'Dalakit': (270, 90),       # North-facing
+                                'Guinsuan': (0, 180),       # East-facing
+                                'Latason': (0, 180),        # East-facing
+                                
+                                # Santa Catalina sites (south/southwest coast)
+                                'Mojon': (180, 360),        # South-facing
+                                'Cawitan': (225, 45),       # Southwest-facing
+                                'Manalongon': (180, 360),   # South-facing
+                            }
+                            
+                            # Get site-specific angles or default to eastward
+                            if site.name in site_seaward_angles:
+                                start_angle, end_angle = site_seaward_angles[site.name]
+                                # Convert to the angle system we're using (where 0° = east, 90° = north)
+                                start_angle = start_angle - 90  # Adjust for our coordinate system
+                                end_angle = end_angle - 90
+                            else:
+                                # Default to eastward semicircle
+                                start_angle = -90  # Start from south
+                                end_angle = 90     # End at north
                             
                             for i_angle in range(num_points + 1):
                                 # Calculate angle for this point
