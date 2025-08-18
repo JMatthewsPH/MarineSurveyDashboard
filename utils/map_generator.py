@@ -201,28 +201,29 @@ class MapGenerator:
                             # Determine seaward direction based on site location and coastal orientation
                             # For Philippines, we can use site-specific logic based on coordinates
                             
-                            # Site-specific seaward direction mapping based on actual coastal orientation
+                            # Site-specific seaward direction mapping based on actual coastal geography
+                            # Looking at the map, I can see the actual orientations:
                             site_seaward_angles = {
-                                # Zamboanguita sites (east coast facing east)
-                                'Malatapay': (0, 180),      # East-facing
-                                'Lutoban North': (0, 180),  # East-facing  
-                                'Lutoban South': (0, 180),  # East-facing
-                                'Lutoban Pier': (0, 180),   # East-facing
+                                # Zamboanguita sites (eastern coast facing southeast/east)
+                                'Malatapay': (45, 225),         # Southeast-facing
+                                'Lutoban North': (45, 225),     # Southeast-facing  
+                                'Lutoban South': (45, 225),     # Southeast-facing
+                                'Lutoban Pier': (45, 225),      # Southeast-facing
                                 
-                                # Siaton sites (mixed orientations)
-                                'Andulay': (45, 225),       # Northeast-facing
-                                'Antulang': (0, 180),       # East-facing
-                                'Kookoos': (0, 180),        # East-facing
-                                'Salag': (315, 135),        # Northwest-facing
-                                'Basak': (0, 180),          # East-facing
-                                'Dalakit': (270, 90),       # North-facing
-                                'Guinsuan': (0, 180),       # East-facing
-                                'Latason': (0, 180),        # East-facing
+                                # Siaton sites (analyzing from map positions)
+                                'Andulay': (315, 135),          # Northwest to southeast arc
+                                'Antulang': (0, 180),           # East-facing
+                                'Kookoos': (0, 180),            # East-facing
+                                'Salag': (270, 90),             # North-facing
+                                'Basak': (315, 135),            # Northwest-facing
+                                'Dalakit': (225, 45),           # Southwest-facing
+                                'Guinsuan': (180, 360),         # South-facing
+                                'Latason': (135, 315),          # Southeast-facing
                                 
-                                # Santa Catalina sites (south/southwest coast)
-                                'Mojon': (180, 360),        # South-facing
-                                'Cawitan': (225, 45),       # Southwest-facing
-                                'Manalongon': (180, 360),   # South-facing
+                                # Santa Catalina sites (southern coast)
+                                'Mojon': (90, 270),             # West-facing
+                                'Cawitan': (135, 315),          # Southeast-facing
+                                'Manalongon': (180, 360),       # South-facing
                             }
                             
                             # Get site-specific angles or default to eastward
