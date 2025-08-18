@@ -1,7 +1,7 @@
 # Marine Conservation Philippines Platform
 
 ## Overview
-The Marine Conservation Philippines Platform is a comprehensive data visualization and analysis tool for monitoring marine protected areas (MPAs) across different municipalities in the Philippines. The platform provides interactive dashboards to track ecological metrics including coral cover, fish biomass, biodiversity indices, and conservation effectiveness over time. Its business vision is to empower marine conservation efforts through accessible and insightful data.
+The Marine Conservation Philippines Platform is a comprehensive data visualization and analysis tool for monitoring marine protected areas (MPAs) across different municipalities in the Philippines. The platform provides interactive dashboards to track ecological metrics including coral cover, fish biomass, biodiversity indices, and conservation effectiveness over time. Features an advanced biomass heatmap with ocean-constrained radiation effects and comprehensive trend analysis capabilities. Its business vision is to empower marine conservation efforts through accessible and insightful data.
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.
