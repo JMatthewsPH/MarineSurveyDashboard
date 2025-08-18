@@ -122,6 +122,7 @@ class MapGenerator:
             else:
                 # Fallback values if no data
                 max_biomass = 21
+                min_biomass = 0
                 high_threshold = 15
                 medium_threshold = 8
             
@@ -178,13 +179,14 @@ class MapGenerator:
                         
                         # Move sites 50m seaward for ocean-only radiation (approximately 0.00045 degrees longitude)
                         # This positions markers offshore, allowing simple circular radiation without land overlap
+                        import math
+                        import json
+                        
                         seaward_offset = 0.00045 / math.cos(math.radians(site.latitude))  # Adjust for latitude
                         offset_longitude = site.longitude + seaward_offset
                         offset_latitude = site.latitude  # Keep latitude unchanged
                         
                         # Add simple circular radiation effect with 100m radius
-                        import math
-                        import json
                         
                         # Calculate 100m radius circles (much simpler than complex semicircles)
                         # 100m ≈ 0.0009 degrees latitude (constant)
