@@ -189,80 +189,60 @@ class MapGenerator:
                         lat_radius = 0.0063  # 700m in degrees latitude
                         lon_radius = 0.0063 / math.cos(math.radians(site.latitude))  # Adjust for latitude
                         
-                        # Create radiation effect with ocean-constrained circles
+                        # Create ocean-only radiation effect using seaward-facing semicircles
                         for i, opacity in enumerate([0.3, 0.2, 0.1, 0.05]):
                             radius_multiplier = 1 - (i * 0.2)  # 100%, 80%, 60%, 40% of full radius
-                            actual_radius = 700 * radius_multiplier
                             
-                            # Create a custom circle polygon with many points for smooth ocean masking
+                            # Create seaward-facing semicircle (180 degrees)
+                            # Start from east (0°) and go to west (180°) - seaward arc
                             circle_points = []
-                            num_points = 64  # More points for smoother circles
+                            num_points = 32  # Half circle with good resolution
                             
-                            for angle in range(0, 360, 360 // num_points):
-                                # Calculate point on circle
+                            # Create semicircle facing seaward (assuming sites are on west coast facing east)
+                            # Start angle: -90° (south), End angle: +90° (north) - creates eastward semicircle
+                            start_angle = -90  # Start from south
+                            end_angle = 90     # End at north
+                            
+                            for i_angle in range(num_points + 1):
+                                # Calculate angle for this point
+                                angle = start_angle + (end_angle - start_angle) * (i_angle / num_points)
                                 angle_rad = math.radians(angle)
+                                
+                                # Calculate point on semicircle
                                 point_lat = site.latitude + (lat_radius * radius_multiplier * math.sin(angle_rad))
                                 point_lon = offset_longitude + (lon_radius * radius_multiplier * math.cos(angle_rad))
                                 
-                                # Advanced ocean masking: Create radiation in a 180-degree arc away from closest land
-                                # For coastal sites, we want radiation extending into deeper water
-                                # Use a more sophisticated approach based on distance from shore
-                                
-                                # Calculate distance from original site position (rough shore proximity)
-                                distance_from_site = math.sqrt(
-                                    (point_lat - site.latitude)**2 + 
-                                    (point_lon - site.longitude)**2
-                                )
-                                
-                                # Create radiation in seaward directions (away from land)
-                                # This creates a roughly 270-degree arc, excluding the most landward quarter
-                                angle_from_site = math.atan2(
-                                    point_lat - site.latitude, 
-                                    point_lon - site.longitude
-                                )
-                                
-                                # Convert to degrees for easier handling
-                                angle_deg = math.degrees(angle_from_site) % 360
-                                
-                                # Create radiation in 3/4 directions, excluding the quarter most likely to be land
-                                # This is more flexible than assuming east=ocean
-                                if distance_from_site > lat_radius * radius_multiplier * 0.3:  # Avoid center
-                                    # Include most directions except a narrow landward sector
-                                    # We'll exclude approximately 90 degrees on the side closest to land
-                                    # For most Philippine coastal sites, this approach works better
-                                    circle_points.append([point_lon, point_lat])  # GeoJSON uses [lon, lat]
+                                circle_points.append([point_lon, point_lat])  # GeoJSON uses [lon, lat]
                             
-                            # Only create the radiation if we have enough ocean points
-                            if len(circle_points) >= 8:
-                                # Close the polygon
-                                if circle_points:
-                                    circle_points.append(circle_points[0])
-                                
-                                # Create GeoJSON feature for ocean-only radiation
-                                geojson_feature = {
-                                    "type": "Feature",
-                                    "geometry": {
-                                        "type": "Polygon",
-                                        "coordinates": [circle_points]
-                                    },
-                                    "properties": {
-                                        "fillColor": radiation_color,
-                                        "fillOpacity": opacity,
-                                        "stroke": False,
-                                        "weight": 0
-                                    }
+                            # Close the semicircle by connecting back to center and then to start
+                            circle_points.append([offset_longitude, site.latitude])  # Center point
+                            circle_points.append(circle_points[0])  # Close polygon
+                            
+                            # Create GeoJSON feature for seaward semicircle
+                            geojson_feature = {
+                                "type": "Feature",
+                                "geometry": {
+                                    "type": "Polygon",
+                                    "coordinates": [circle_points]
+                                },
+                                "properties": {
+                                    "fillColor": radiation_color,
+                                    "fillOpacity": opacity,
+                                    "stroke": False,
+                                    "weight": 0
                                 }
-                                
-                                # Add the ocean-constrained radiation
-                                folium.GeoJson(
-                                    geojson_feature,
-                                    style_function=lambda x: {
-                                        'fillColor': x['properties']['fillColor'],
-                                        'fillOpacity': x['properties']['fillOpacity'],
-                                        'stroke': x['properties']['stroke'],
-                                        'weight': x['properties']['weight']
-                                    }
-                                ).add_to(m)
+                            }
+                            
+                            # Add the seaward radiation semicircle
+                            folium.GeoJson(
+                                geojson_feature,
+                                style_function=lambda x: {
+                                    'fillColor': x['properties']['fillColor'],
+                                    'fillOpacity': x['properties']['fillOpacity'],
+                                    'stroke': x['properties']['stroke'],
+                                    'weight': x['properties']['weight']
+                                }
+                            ).add_to(m)
                         
                         # Add tiny circle marker on top of radiation
                         folium.CircleMarker(
