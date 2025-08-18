@@ -78,8 +78,7 @@ class MapGenerator:
                 subdomains='abcd'
             ).add_to(m)
             
-            # Collect data for heatmap and markers
-            heatmap_data = []
+            # Collect data for markers
             marker_data = []
             biomass_values = []
             
@@ -126,7 +125,7 @@ class MapGenerator:
                 high_threshold = 15
                 medium_threshold = 8
             
-            # Second pass: create markers with dynamic thresholds
+            # Second pass: create markers and radiation circles with dynamic thresholds
             for site in sites:
                 if site.latitude and site.longitude:
                     # Get latest biomass data for this site
@@ -145,32 +144,35 @@ class MapGenerator:
                             continue  # Skip if no biomass data
                             
                         latest_biomass = biomass_df[biomass_col].iloc[-1]
-                        latest_date = biomass_df['date'].iloc[-1]
-                        
-                        # Add to heatmap data with dynamic scaling using same offset as markers
-                        weight = max(0.1, min(latest_biomass / max_biomass * 2.0, 2.0))
-                        offset_longitude = site.longitude + 0.0005  # Same offset as markers
-                        heatmap_data.append([site.latitude, offset_longitude, weight])
                         
                         # Determine color based on dynamic thresholds
                         if latest_biomass >= high_threshold:
                             color = 'green'
                             icon = 'leaf'
+                            radiation_color = '#00ff00'  # Green
                         elif latest_biomass >= medium_threshold:
                             color = 'orange'
                             icon = 'warning-sign'
+                            radiation_color = '#ffa500'  # Orange
                         else:
                             color = 'red'
                             icon = 'exclamation-sign'
+                            radiation_color = '#ff0000'  # Red
                         
-                        # Create popup content
+                        # Get site description based on current language (default to English)
+                        # Since we don't have access to session state here, use English as default
+                        description = site.description_en or f"Marine Protected Area in {site.municipality}"
+                        
+                        # Create popup content without date and with description
                         popup_html = f"""
-                        <div style="font-family: Arial, sans-serif; width: 200px;">
-                            <h4 style="margin: 0; color: #2c3e50;">{site.name}</h4>
+                        <div style="font-family: Arial, sans-serif; width: 250px;">
+                            <h4 style="margin: 0 0 10px 0; color: #2c3e50;">{site.name}</h4>
                             <p style="margin: 5px 0; color: #7f8c8d;"><b>Municipality:</b> {site.municipality}</p>
                             <p style="margin: 5px 0; color: #2c3e50;"><b>Latest Biomass:</b> {latest_biomass:.1f} kg/100m²</p>
-                            <p style="margin: 5px 0; color: #7f8c8d;"><b>Date:</b> {latest_date.strftime('%b %Y')}</p>
                             <p style="margin: 5px 0; color: #7f8c8d;"><b>Coordinates:</b> {site.latitude:.4f}, {site.longitude:.4f}</p>
+                            <div style="margin: 10px 0; padding: 8px; background: #f8f9fa; border-left: 3px solid #007acc; border-radius: 4px;">
+                                <p style="margin: 0; color: #2c3e50; font-size: 13px; line-height: 1.4;"><b>About this site:</b><br>{description}</p>
+                            </div>
                         </div>
                         """
                         
@@ -178,7 +180,28 @@ class MapGenerator:
                         # This moves markers away from shoreline for better visibility
                         offset_longitude = site.longitude + 0.0005  # Move east/seaward
                         
-                        # Add tiny circle marker instead of large pin
+                        # Add fixed-radius radiation circles (700m radius)
+                        # 700m ≈ 0.0063 degrees latitude (constant)
+                        # For longitude, we need to adjust for latitude: lon_degree = 700m / (111320 * cos(lat))
+                        import math
+                        lat_radius = 0.0063  # 700m in degrees latitude
+                        lon_radius = 0.0063 / math.cos(math.radians(site.latitude))  # Adjust for latitude
+                        
+                        # Create radiation effect with multiple concentric circles fading to transparency
+                        for i, opacity in enumerate([0.3, 0.2, 0.1, 0.05]):
+                            radius_multiplier = 1 - (i * 0.2)  # 100%, 80%, 60%, 40% of full radius
+                            folium.Circle(
+                                location=[site.latitude, offset_longitude],
+                                radius=700 * radius_multiplier,  # Fixed 700m radius, decreasing
+                                color=radiation_color,
+                                weight=0,  # No border
+                                fillColor=radiation_color,
+                                fillOpacity=opacity,
+                                popup=None,  # No popup on radiation circles
+                                tooltip=None  # No tooltip on radiation circles
+                            ).add_to(m)
+                        
+                        # Add tiny circle marker on top of radiation
                         folium.CircleMarker(
                             location=[site.latitude, offset_longitude],
                             radius=4,  # Tiny size like click markers
@@ -187,7 +210,7 @@ class MapGenerator:
                             color='white',
                             weight=1,
                             fillColor=color,
-                            fillOpacity=0.8
+                            fillOpacity=0.9
                         ).add_to(m)
                         
                         marker_data.append({
@@ -197,18 +220,6 @@ class MapGenerator:
                             'lat': site.latitude,
                             'lon': site.longitude
                         })
-            
-            # Add heatmap layer if we have data with reduced transparency and smaller radius
-            if heatmap_data:
-                HeatMap(
-                    heatmap_data,
-                    name='Biomass Heatmap',
-                    min_opacity=0.15,  # Reduced transparency
-                    max_zoom=20,       # Increased to match map max zoom
-                    radius=15,  # Smaller radius to minimize land spillover
-                    blur=8,     # Less blur to contain effect better
-                    gradient={0.2: 'red', 0.4: 'orange', 0.6: 'yellow', 1.0: 'green'}
-                ).add_to(m)
             
 
             # Add layer control
