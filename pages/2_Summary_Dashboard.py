@@ -595,13 +595,28 @@ st.markdown("""
     padding-bottom: 5rem;
 }
 div[data-testid="stPlotlyChart"] {
+    margin-bottom: 6rem !important;
+    overflow: hidden !important;
+    max-height: 500px !important;
+}
+.js-plotly-plot {
+    margin-bottom: 4rem !important;
+}
+.plot-container {
     margin-bottom: 4rem !important;
 }
 </style>
 """, unsafe_allow_html=True)
 
-# Force clear separation between sections
-st.markdown("<div style='height: 120px; clear: both;'></div>", unsafe_allow_html=True)
+# Force clear separation between sections with stronger CSS
+st.markdown("""
+<div style='height: 150px; clear: both; overflow: hidden; display: block; position: relative; z-index: 1;'></div>
+<style>
+.element-container:has(div[data-testid="stPlotlyChart"]) {
+    margin-bottom: 8rem !important;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # =================================
 # 📍 INTERACTIVE BIOMASS HEATMAP
