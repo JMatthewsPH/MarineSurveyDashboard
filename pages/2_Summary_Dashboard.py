@@ -585,8 +585,19 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Add spacing between sections
-st.markdown("<br><br>", unsafe_allow_html=True)
+# Add CSS to ensure proper chart containment and spacing
+st.markdown("""
+<style>
+div[data-testid="stPlotlyChart"] {
+    margin-bottom: 2rem !important;
+    max-height: 500px !important;
+    overflow: hidden !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# Add controlled spacing between sections
+st.markdown("<div style='margin-top: 3rem; margin-bottom: 2rem;'></div>", unsafe_allow_html=True)
 
 # =================================
 # 📍 INTERACTIVE BIOMASS HEATMAP
