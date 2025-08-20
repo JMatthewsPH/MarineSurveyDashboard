@@ -514,8 +514,11 @@ class SummaryGraphGenerator:
                 ),
                 hovermode='x unified',
                 legend=dict(
-                    x=0.02,
-                    y=0.98,
+                    orientation="h",
+                    x=0.5,
+                    xanchor='center',
+                    y=1.05,
+                    yanchor='bottom',
                     bgcolor="rgba(255, 255, 255, 0.8)",
                     bordercolor="rgba(0, 0, 0, 0.2)",
                     borderwidth=1
