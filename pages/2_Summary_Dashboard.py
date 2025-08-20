@@ -578,6 +578,9 @@ with trend_container:
         # For other metrics, display a placeholder message
         trend_placeholder.info(f"Trend analysis for {comparison_metric} will be implemented soon.")
 
+# Add spacing after any trend chart to prevent overlap
+st.markdown("<div style='height: 80px; clear: both;'></div>", unsafe_allow_html=True)
+
 # Add disclaimer text below trend analysis
 st.markdown("""
 <div style="font-size: 12px; color: #666; margin-top: 15px; margin-bottom: 30px; padding: 10px; background-color: #f8f9fa; border-left: 4px solid #007acc; border-radius: 4px;">
@@ -585,8 +588,20 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Add proper spacing between sections to prevent overlap
-st.markdown("<div style='margin-top: 80px; margin-bottom: 40px;'></div>", unsafe_allow_html=True)
+# Add CSS to prevent chart overlap and ensure proper spacing
+st.markdown("""
+<style>
+.main .block-container {
+    padding-bottom: 5rem;
+}
+div[data-testid="stPlotlyChart"] {
+    margin-bottom: 4rem !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# Force clear separation between sections
+st.markdown("<div style='height: 120px; clear: both;'></div>", unsafe_allow_html=True)
 
 # =================================
 # 📍 INTERACTIVE BIOMASS HEATMAP
