@@ -578,45 +578,15 @@ with trend_container:
         # For other metrics, display a placeholder message
         trend_placeholder.info(f"Trend analysis for {comparison_metric} will be implemented soon.")
 
-# Add spacing after any trend chart to prevent overlap
-st.markdown("<div style='height: 80px; clear: both;'></div>", unsafe_allow_html=True)
-
 # Add disclaimer text below trend analysis
 st.markdown("""
-<div style="font-size: 12px; color: #666; margin-top: 15px; margin-bottom: 30px; padding: 10px; background-color: #f8f9fa; border-left: 4px solid #007acc; border-radius: 4px;">
+<div style="font-size: 12px; color: #666; margin-top: 15px; margin-bottom: 20px; padding: 10px; background-color: #f8f9fa; border-left: 4px solid #007acc; border-radius: 4px;">
 <strong>Data Interpretation Note:</strong> Kindly note that the graphs are averages of all surveyed sites (either in totality or in the specific municipality you have selected.) In either case, this gives you a broad perspective of how historic trends is likely to have changed. <strong>Important note:</strong> The number of survey sites across municipalities have changed over the years. Some survey sites are no longer being monitored, while new MPAs have been created that MCP is now monitoring as well. The graph merely represent the historic averages, not how any particular MPA is doing. This means for example that the introduction of a new survey site may skew data. E.g. inclusion of a rich MPA will increase biomass averages even if no actual changes are observed in any sites.
 </div>
 """, unsafe_allow_html=True)
 
-# Add CSS to prevent chart overlap and ensure proper spacing
-st.markdown("""
-<style>
-.main .block-container {
-    padding-bottom: 5rem;
-}
-div[data-testid="stPlotlyChart"] {
-    margin-bottom: 6rem !important;
-    overflow: hidden !important;
-    max-height: 500px !important;
-}
-.js-plotly-plot {
-    margin-bottom: 4rem !important;
-}
-.plot-container {
-    margin-bottom: 4rem !important;
-}
-</style>
-""", unsafe_allow_html=True)
-
-# Force clear separation between sections with stronger CSS
-st.markdown("""
-<div style='height: 150px; clear: both; overflow: hidden; display: block; position: relative; z-index: 1;'></div>
-<style>
-.element-container:has(div[data-testid="stPlotlyChart"]) {
-    margin-bottom: 8rem !important;
-}
-</style>
-""", unsafe_allow_html=True)
+# Add spacing between sections
+st.markdown("<br><br>", unsafe_allow_html=True)
 
 # =================================
 # 📍 INTERACTIVE BIOMASS HEATMAP

@@ -522,8 +522,7 @@ class SummaryGraphGenerator:
                 plot_bgcolor='white',
                 paper_bgcolor='white',
                 margin=dict(l=60, r=40, t=80, b=60),
-                showlegend=True,
-                height=450  # Fixed height to prevent overlap
+                showlegend=True
             )
             
             config = {
