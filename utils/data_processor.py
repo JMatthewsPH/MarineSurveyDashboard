@@ -101,7 +101,7 @@ class DataProcessor:
         
         raise Exception("Failed to establish database connection after retries")
 
-    @st.cache_data(ttl=60, show_spinner=False)  # Temporarily reduced to 60 seconds to refresh site descriptions
+    @st.cache_resource(ttl=60, show_spinner=False)  # Use cache_resource for SQLAlchemy objects
     def get_sites(_self):  # Added underscore to ignore self in caching
         """Get all sites with their municipalities"""
         try:
