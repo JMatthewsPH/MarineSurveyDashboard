@@ -594,7 +594,7 @@ st.markdown("<br><br>", unsafe_allow_html=True)
 
 st.markdown("---")
 st.markdown("## 📍 Interactive Biomass Heatmap")
-st.markdown("Explore the geographic distribution of marine biomass across all MPA sites with this interactive map.")
+st.markdown("Examine the distribution of marine biomass across all survey sites with this interactive map. Click individual sites for more information. You can change map layout by clicking the top right layers icon.")
 
 # Create map generator
 with st.spinner("Loading interactive biomass heatmap..."):
@@ -609,13 +609,10 @@ with st.spinner("Loading interactive biomass heatmap..."):
         # Display the map
         st.markdown("### 🗺️ Geographic Biomass Distribution")
         st.markdown("""
-        **How to use this map:**
+        **Legend:**
         - 🟢 **Green markers**: High biomass sites (≥100 kg/100m²)
         - 🟠 **Orange markers**: Medium biomass sites (50-100 kg/100m²)  
         - 🔴 **Red markers**: Low biomass sites (<50 kg/100m²)
-        - 🔥 **Heatmap overlay**: Shows biomass radiation intensity
-        - 🗺️ **Layer control**: Switch between map view and satellite imagery
-        - 📍 **Click markers**: View detailed site information
         """)
         
         # Display the folium map with responsive width
