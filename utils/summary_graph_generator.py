@@ -494,6 +494,7 @@ class SummaryGraphGenerator:
                 title=dict(
                     text=title_text,
                     x=0.5,
+                    xanchor='center',
                     font=dict(size=16, color='#2c3e50')
                 ),
                 xaxis=dict(
