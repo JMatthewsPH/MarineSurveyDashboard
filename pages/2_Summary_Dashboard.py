@@ -585,8 +585,8 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Add spacing between sections
-st.markdown("<br><br>", unsafe_allow_html=True)
+# Add proper spacing between sections to prevent overlap
+st.markdown("<div style='margin-top: 80px; margin-bottom: 40px;'></div>", unsafe_allow_html=True)
 
 # =================================
 # 📍 INTERACTIVE BIOMASS HEATMAP
