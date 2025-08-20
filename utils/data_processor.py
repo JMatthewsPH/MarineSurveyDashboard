@@ -101,7 +101,7 @@ class DataProcessor:
         
         raise Exception("Failed to establish database connection after retries")
 
-    @st.cache_data(ttl=24*3600, show_spinner=False)  # Cache for 24 hours - site data rarely changes
+    @st.cache_data(ttl=60, show_spinner=False)  # Temporarily reduced to 60 seconds to refresh site descriptions
     def get_sites(_self):  # Added underscore to ignore self in caching
         """Get all sites with their municipalities"""
         try:

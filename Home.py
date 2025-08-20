@@ -157,6 +157,11 @@ with st.sidebar:
         key="language_selector"
     )
     
+    # Temporary cache refresh button for updated site descriptions
+    if st.button("🔄 Refresh Site Data", help="Click to refresh site descriptions"):
+        st.cache_data.clear()
+        st.rerun()
+    
     # Check if language changed and update session state
     for code, name in LANGUAGE_DISPLAY.items():
         if name == selected_language_display and code != st.session_state.language:
