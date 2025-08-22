@@ -130,38 +130,9 @@ document.addEventListener('DOMContentLoaded', function() {
 """
 st.markdown(fix_nav_js, unsafe_allow_html=True)
 
-# Apply branding
+# Apply branding including custom AnimRun.gif animation
 add_favicon()
-
-# Hide Streamlit's running indicator completely
-st.markdown("""
-<style>
-/* Hide all Streamlit status indicators and running text */
-.stSpinner,
-div[data-testid="stStatusWidget"],
-.stSpinner > div,
-.stProgress,
-.stAlert,
-div[data-testid="stStatusWidget"] *,
-div[role="status"],
-[aria-label*="Running"],
-[aria-label*="Loading"],
-div:contains("RUNNING"),
-span:contains("RUNNING"),
-div[class*="status"],
-div[class*="running"] {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-}
-
-/* Hide browser running indicators */
-body::before,
-html::before {
-    content: none !important;
-}
-</style>
-""", unsafe_allow_html=True)
+add_custom_loading_animation()
 
 # Initialize language in session state if not present
 if 'language' not in st.session_state:
@@ -217,7 +188,8 @@ st.markdown("<div style='padding-top: 20px;'></div>", unsafe_allow_html=True)
 # Add favicon to the page
 add_favicon()
 
-# Custom loading animation removed to eliminate "RUNNING..." indicator
+# Add custom AnimRun.gif loading animation
+add_custom_loading_animation()
 
 # Display the logo using our branding utility
 display_logo(size="medium")
