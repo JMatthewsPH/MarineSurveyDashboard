@@ -2,15 +2,7 @@ import streamlit as st
 import os
 import time
 
-# Health check endpoint for deployment
-# Only respond to specific health check requests
-try:
-    if st.query_params.get("healthcheck") == "true":
-        st.write("OK")
-        st.stop()
-except Exception:
-    # If query params fail, continue with normal app loading
-    pass
+# Health check moved to end of file to avoid interference
 
 # Explicit imports to avoid initialization issues
 from utils.data_processor import DataProcessor
@@ -349,3 +341,11 @@ try:
 except Exception:
     # Silently handle cleanup errors to avoid deployment issues
     pass
+
+# Health check endpoint for deployment (placed at end to avoid interference)
+if hasattr(st, 'query_params'):
+    try:
+        if st.query_params.get("healthcheck") == "true":
+            st.write("OK")
+    except:
+        pass
