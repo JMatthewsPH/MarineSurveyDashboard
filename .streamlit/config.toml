@@ -4,6 +4,12 @@ address = "0.0.0.0"
 port = 5000
 enableCORS = false
 enableXsrfProtection = false
+baseUrlPath = "/"
+enableStaticServing = true
+runOnSave = false
+allowRunOnSave = false
+maxUploadSize = 200
+fileWatcherType = "none"
 
 [browser]
 gatherUsageStats = false

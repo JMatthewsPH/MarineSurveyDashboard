@@ -1,6 +1,18 @@
 import streamlit as st
 import os
 import time
+
+# Health check endpoint for deployment
+# Only respond to specific health check requests
+try:
+    if st.query_params.get("healthcheck") == "true":
+        st.write("OK")
+        st.stop()
+except Exception:
+    # If query params fail, continue with normal app loading
+    pass
+
+# Explicit imports to avoid initialization issues
 from utils.data_processor import DataProcessor
 from utils.database import get_db
 from utils.translations import TRANSLATIONS
@@ -207,24 +219,35 @@ def get_processor():
     This helps improve performance by reusing the database connection
     while also ensuring the connection is periodically refreshed
     """
-    db = next(get_db())
-    processor = DataProcessor(db)
-    return processor
+    try:
+        db = next(get_db())
+        processor = DataProcessor(db)
+        return processor
+    except Exception as e:
+        st.error(f"Database connection failed: {str(e)}")
+        st.stop()
 
-# Get data processor with performance logging
-start_time = time.time()
-data_processor = get_processor()
-processing_time = time.time() - start_time
-
-# Get all sites with performance tracking
-start_time = time.time()
-sites = data_processor.get_sites()
-site_load_time = time.time() - start_time
-if site_load_time > 0.5:  # Only log if it's slow
-    print(f"Site data loading took {site_load_time:.2f} seconds")
+# Optimize startup - move heavy operations into functions
+@st.cache_data(ttl=300)  # Cache site data for 5 minutes
+def load_sites():
+    """Load sites data with caching and error handling"""
+    try:
+        start_time = time.time()
+        data_processor = get_processor()
+        sites = data_processor.get_sites()
+        load_time = time.time() - start_time
+        if load_time > 0.5:  # Only log if it's slow
+            print(f"Site data loading took {load_time:.2f} seconds")
+        return sites
+    except Exception as e:
+        st.error(f"Failed to load sites: {str(e)}")
+        return []
 
 # Import from ui_helpers
 from utils.ui_helpers import skeleton_text_placeholder
+
+# Load sites data (moved from global scope for optimization)
+sites = load_sites()
 
 # Efficiently group sites by municipality
 municipalities = {}
@@ -319,6 +342,10 @@ for municipality in display_order:
                 with cols[idx % 3]:
                     create_site_card(site)
 
-# Clean up
-db = next(get_db())
-db.close()
+# Clean up - improved error handling
+try:
+    db = next(get_db())
+    db.close()
+except Exception:
+    # Silently handle cleanup errors to avoid deployment issues
+    pass
