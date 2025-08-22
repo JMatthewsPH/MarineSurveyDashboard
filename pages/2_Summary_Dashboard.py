@@ -604,7 +604,7 @@ st.markdown("<div style='margin-top: 3rem; margin-bottom: 2rem;'></div>", unsafe
 # =================================
 
 st.markdown("---")
-st.markdown("## 📍 Interactive Biomass Heatmap")
+st.markdown("## Interactive Biomass Heatmap")
 st.markdown("Examine the distribution of marine biomass across all survey sites with this interactive map. Click individual sites for more information. You can change map layout by clicking the top right layers icon.")
 
 # Create map generator
@@ -618,7 +618,7 @@ with st.spinner("Loading interactive biomass heatmap..."):
         )
         
         # Display the map
-        st.markdown("### 🗺️ Geographic Biomass Distribution")
+        st.markdown("### Geographic Biomass Distribution")
         st.markdown("""
         **Legend:**
         - 🟢 **Green markers**: High biomass sites (≥100 kg/100m²)
