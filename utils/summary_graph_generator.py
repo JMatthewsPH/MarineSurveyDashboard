@@ -157,11 +157,11 @@ class SummaryGraphGenerator:
                 showlegend=False,  # Hide color legend to save space
                 coloraxis=dict(
                     colorbar=dict(
-                        len=1.0,  # Make colorbar same height as chart (100%)
+                        len=0.76,  # Match plot area height (accounting for margins)
                         thickness=20,  # Standard thickness
                         x=1.02,  # Position to the right
-                        y=0.5,  # Center vertically
-                        yanchor='middle'
+                        y=0.24,  # Align with X-axis area (bottom of plot)
+                        yanchor='bottom'
                     )
                 )
             )
