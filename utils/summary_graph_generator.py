@@ -158,7 +158,7 @@ class SummaryGraphGenerator:
                 coloraxis=dict(
                     colorbar=dict(
                         len=1.0,  # Full height to match chart
-                        thickness=20,  # Standard thickness
+                        thickness=30,  # 10 pixels longer
                         x=1.02,  # Position to the right
                         y=0.0,  # Start from bottom
                         yanchor='bottom'
