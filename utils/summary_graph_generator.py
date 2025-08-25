@@ -157,10 +157,10 @@ class SummaryGraphGenerator:
                 showlegend=False,  # Hide color legend to save space
                 coloraxis=dict(
                     colorbar=dict(
-                        len=1.05,  # 10 pixels longer in height
+                        len=1.10,  # 20 pixels longer in height total
                         thickness=20,  # Back to standard thickness
                         x=1.02,  # Position to the right
-                        y=-0.02,  # Start slightly below to accommodate extra length
+                        y=-0.04,  # Start lower to accommodate extra length
                         yanchor='bottom'
                     )
                 )
