@@ -380,8 +380,12 @@ a[href^="#"]:not([href*="/"]):not([href*="."]) {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
-    height: 100%;
-    min-height: 320px;  /* Ensure consistent minimum height */
+    width: 100% !important;
+    height: 320px !important;
+    max-width: none !important;
+    max-height: 320px !important;
+    min-height: 320px !important;
+    box-sizing: border-box !important;
 }
 
 .site-card:hover {

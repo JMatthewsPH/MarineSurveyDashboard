@@ -42,13 +42,17 @@ body {
     border-radius: 5px;
     margin-bottom: 15px;
     transition: transform 0.2s;
-    height: 100% !important;
+    width: 100% !important;
+    height: 320px !important;
+    max-width: none !important;
+    max-height: 320px !important;
     min-height: 320px !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
     background: white;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-sizing: border-box !important;
 }
 .site-card:hover {
     transform: translateY(-2px);
