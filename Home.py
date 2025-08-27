@@ -283,8 +283,8 @@ def create_site_card(site):
     # Default description if not available
     description = description or TRANSLATIONS[language_code]['site_desc_placeholder']
     
-    # Truncate description to exactly 120 characters for uniform height
-    truncated_description = description[:120] + "..." if len(description) > 120 else description
+    # Truncate description to exactly 80 characters to prioritize button visibility
+    truncated_description = description[:80] + "..." if len(description) > 80 else description
     
     # Get translations for labels
     municipality_label = TRANSLATIONS[language_code]['municipality']
@@ -295,9 +295,9 @@ def create_site_card(site):
             <div class="site-card-content">
                 <h3 style="margin-top: 0; color: #2b6cb0;">{site.name}</h3>
                 <p style="margin: 8px 0; color: #2d3748;"><strong>{municipality_label}:</strong> {site.municipality}</p>
-                <p style="margin: 12px 0; line-height: 1.4; color: #2d3748; flex-grow: 1; overflow: hidden; text-overflow: ellipsis;">{truncated_description}</p>
+                <p style="margin: 12px 0 8px 0; line-height: 1.3; color: #2d3748; height: 60px; overflow: hidden; text-overflow: ellipsis;">{truncated_description}</p>
             </div>
-            <div class="site-card-footer" style="margin-top: auto; padding-top: 15px;">
+            <div class="site-card-footer" style="margin-top: auto; padding-top: 20px; min-height: 60px; display: flex; align-items: flex-end;">
                 <a href="Site_Dashboard?site={site.name}" target="_self" style="text-decoration: none;">
                     <button class="site-button" style="
                         background: #2b6cb0; 
