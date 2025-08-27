@@ -33,7 +33,8 @@ body {
     border-radius: 5px;
     margin-bottom: 15px;
     transition: transform 0.2s;
-    height: 340px;  /* Fixed height for uniform cards */
+    min-height: 320px;  /* Minimum height for uniform cards */
+    height: 100%;      /* Allow flexible height within column constraints */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -328,11 +329,23 @@ display_order = ["Zamboanguita", "Siaton", "Santa Catalina"]
 for municipality in display_order:
     if municipality in municipalities and municipalities[municipality]:
         with st.expander(municipality_names[language_code][municipality], expanded=True):
-            # Create a grid layout for site cards
-            cols = st.columns(3)
-            for idx, site in enumerate(municipalities[municipality]):
-                with cols[idx % 3]:
-                    create_site_card(site)
+            # Create a grid layout for site cards with equal height rows
+            sites_list = municipalities[municipality]
+            
+            # Process sites in groups of 3 to ensure equal heights per row
+            for i in range(0, len(sites_list), 3):
+                row_sites = sites_list[i:i+3]
+                cols = st.columns(3)
+                
+                # Fill each column in this row
+                for col_idx, col in enumerate(cols):
+                    if col_idx < len(row_sites):
+                        with col:
+                            create_site_card(row_sites[col_idx])
+                    else:
+                        # Empty column if we don't have enough sites
+                        with col:
+                            st.empty()
 
 # Clean up - improved error handling
 try:

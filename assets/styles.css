@@ -381,7 +381,7 @@ a[href^="#"]:not([href*="/"]):not([href*="."]) {
     display: flex;
     flex-direction: column;
     height: 100%;
-    min-height: 220px;
+    min-height: 320px;  /* Ensure consistent minimum height */
 }
 
 .site-card:hover {
