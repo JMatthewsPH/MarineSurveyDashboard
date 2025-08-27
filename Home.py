@@ -43,16 +43,17 @@ body {
     margin-bottom: 15px;
     transition: transform 0.2s;
     width: 100% !important;
-    height: 320px !important;
+    height: 380px !important;
     max-width: none !important;
-    max-height: 320px !important;
-    min-height: 320px !important;
+    max-height: 380px !important;
+    min-height: 380px !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
     background: white;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     box-sizing: border-box !important;
+    overflow: hidden !important;
 }
 .site-card:hover {
     transform: translateY(-2px);
@@ -294,7 +295,7 @@ def create_site_card(site):
             <div class="site-card-content">
                 <h3 style="margin-top: 0; color: #2b6cb0;">{site.name}</h3>
                 <p style="margin: 8px 0; color: #2d3748;"><strong>{municipality_label}:</strong> {site.municipality}</p>
-                <p style="margin: 12px 0; line-height: 1.4; color: #2d3748; flex-grow: 1;">{truncated_description}</p>
+                <p style="margin: 12px 0; line-height: 1.4; color: #2d3748; flex-grow: 1; overflow: hidden; text-overflow: ellipsis;">{truncated_description}</p>
             </div>
             <div class="site-card-footer" style="margin-top: auto; padding-top: 15px;">
                 <a href="Site_Dashboard?site={site.name}" target="_self" style="text-decoration: none;">

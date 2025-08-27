@@ -381,11 +381,12 @@ a[href^="#"]:not([href*="/"]):not([href*="."]) {
     display: flex;
     flex-direction: column;
     width: 100% !important;
-    height: 320px !important;
+    height: 380px !important;
     max-width: none !important;
-    max-height: 320px !important;
-    min-height: 320px !important;
+    max-height: 380px !important;
+    min-height: 380px !important;
     box-sizing: border-box !important;
+    overflow: hidden !important;
 }
 
 .site-card:hover {
