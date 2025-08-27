@@ -409,7 +409,11 @@ with trend_container:
         # For Commercial Biomass, we can use existing methods
         trend_data_list = []
         for site in sites:
+            # Skip sites that don't match the municipality filter (if any)
             if municipality_filter and site.municipality != municipality_filter:
+                continue
+            # Skip sites that don't match the municipality focus (if not showing all sites)
+            if not group_by_all_sites and municipality_focus and site.municipality != municipality_focus:
                 continue
                 
             site_data = data_processor.get_biomass_data(site.name)
@@ -454,7 +458,11 @@ with trend_container:
         # For Omnivore Density, we use the get_metric_data method
         trend_data_list = []
         for site in sites:
+            # Skip sites that don't match the municipality filter (if any)
             if municipality_filter and site.municipality != municipality_filter:
+                continue
+            # Skip sites that don't match the municipality focus (if not showing all sites)
+            if not group_by_all_sites and municipality_focus and site.municipality != municipality_focus:
                 continue
                 
             # Use 'omnivore' as the metric type in get_metric_data
@@ -500,7 +508,11 @@ with trend_container:
         # For Hard Coral Cover, we use the get_coral_cover_data method
         trend_data_list = []
         for site in sites:
+            # Skip sites that don't match the municipality filter (if any)
             if municipality_filter and site.municipality != municipality_filter:
+                continue
+            # Skip sites that don't match the municipality focus (if not showing all sites)
+            if not group_by_all_sites and municipality_focus and site.municipality != municipality_focus:
                 continue
                 
             site_data = data_processor.get_coral_cover_data(site.name)
@@ -538,7 +550,11 @@ with trend_container:
         # For Fleshy Algae Cover, we use the get_metric_data method
         trend_data_list = []
         for site in sites:
+            # Skip sites that don't match the municipality filter (if any)
             if municipality_filter and site.municipality != municipality_filter:
+                continue
+            # Skip sites that don't match the municipality focus (if not showing all sites)
+            if not group_by_all_sites and municipality_focus and site.municipality != municipality_focus:
                 continue
                 
             site_data = data_processor.get_metric_data(site.name, "fleshy_algae")
@@ -576,7 +592,11 @@ with trend_container:
         # For Herbivore Density, use the get_metric_data method
         trend_data_list = []
         for site in sites:
+            # Skip sites that don't match the municipality filter (if any)
             if municipality_filter and site.municipality != municipality_filter:
+                continue
+            # Skip sites that don't match the municipality focus (if not showing all sites)
+            if not group_by_all_sites and municipality_focus and site.municipality != municipality_focus:
                 continue
                 
             site_data = data_processor.get_metric_data(site.name, "herbivore")
@@ -614,7 +634,11 @@ with trend_container:
         # For Corallivore Density, use the get_metric_data method
         trend_data_list = []
         for site in sites:
+            # Skip sites that don't match the municipality filter (if any)
             if municipality_filter and site.municipality != municipality_filter:
+                continue
+            # Skip sites that don't match the municipality focus (if not showing all sites)
+            if not group_by_all_sites and municipality_focus and site.municipality != municipality_focus:
                 continue
                 
             site_data = data_processor.get_metric_data(site.name, "corallivore")
