@@ -27,19 +27,15 @@ body {
     opacity: 1;
     transition: opacity 0.2s;
 }
-.site-card { 
-    border: 1px solid #eee;
-    padding: 15px;
-    border-radius: 5px;
-    margin-bottom: 15px;
-    transition: transform 0.2s;
-    min-height: 320px;  /* Minimum height for uniform cards */
-    height: 100%;      /* Allow flexible height within column constraints */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    background: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.site-card-grid:hover { 
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+.municipality-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+    gap: 1rem !important;
+    align-items: stretch !important;
 }
 .site-card:hover {
     transform: translateY(-2px);
@@ -325,27 +321,81 @@ municipality_names = {
 # Define the order of municipalities for display
 display_order = ["Zamboanguita", "Siaton", "Santa Catalina"]
 
-# Performance improvement - render cards more efficiently
+# Performance improvement - render cards more efficiently with CSS Grid
 for municipality in display_order:
     if municipality in municipalities and municipalities[municipality]:
         with st.expander(municipality_names[language_code][municipality], expanded=True):
-            # Create a grid layout for site cards with equal height rows
             sites_list = municipalities[municipality]
             
-            # Process sites in groups of 3 to ensure equal heights per row
-            for i in range(0, len(sites_list), 3):
-                row_sites = sites_list[i:i+3]
-                cols = st.columns(3)
+            # Create grid container with all cards
+            grid_html = f"""
+            <div class="municipality-grid" style="
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 1rem;
+                align-items: stretch;
+                margin-bottom: 1rem;
+            ">
+            """
+            
+            # Add all site cards to the grid
+            for site in sites_list:
+                # Get description based on language
+                if language_code == 'en':
+                    description = site.description_en
+                elif language_code == 'tl':
+                    description = site.description_fil
+                elif language_code == 'ceb':
+                    description = site.description_ceb or site.description_fil or site.description_en
+                else:
+                    description = site.description_en
+                    
+                description = description or TRANSLATIONS[language_code]['site_desc_placeholder']
+                truncated_description = description[:120] + "..." if len(description) > 120 else description
                 
-                # Fill each column in this row
-                for col_idx, col in enumerate(cols):
-                    if col_idx < len(row_sites):
-                        with col:
-                            create_site_card(row_sites[col_idx])
-                    else:
-                        # Empty column if we don't have enough sites
-                        with col:
-                            st.empty()
+                municipality_label = TRANSLATIONS[language_code]['municipality']
+                view_details_text = TRANSLATIONS[language_code]['view_details']
+                
+                grid_html += f"""
+                <div class="site-card-grid" style="
+                    background: white;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 12px;
+                    padding: 1.2rem;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                    display: flex;
+                    flex-direction: column;
+                    height: 320px;
+                    justify-content: space-between;
+                ">
+                    <div style="flex-grow: 1;">
+                        <h3 style="margin-top: 0; margin-bottom: 0.5rem; color: #2b6cb0;">{site.name}</h3>
+                        <p style="margin: 8px 0; color: #2d3748;"><strong>{municipality_label}:</strong> {site.municipality}</p>
+                        <p style="margin: 12px 0; line-height: 1.4; color: #2d3748; overflow: hidden;">{truncated_description}</p>
+                    </div>
+                    <div style="margin-top: auto; padding-top: 15px;">
+                        <a href="Site_Dashboard?site={site.name}" target="_self" style="text-decoration: none;">
+                            <button style="
+                                background: #2b6cb0; 
+                                color: white; 
+                                border: none; 
+                                padding: 10px 20px; 
+                                border-radius: 5px; 
+                                cursor: pointer; 
+                                width: 100%;
+                                font-size: 14px;
+                                transition: background 0.3s;
+                            " onmouseover="this.style.background='#4299e1'" onmouseout="this.style.background='#2b6cb0'">
+                                {view_details_text}
+                            </button>
+                        </a>
+                    </div>
+                </div>
+                """
+            
+            grid_html += "</div>"
+            st.markdown(grid_html, unsafe_allow_html=True)
 
 # Clean up - improved error handling
 try:
