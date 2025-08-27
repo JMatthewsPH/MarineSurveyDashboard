@@ -534,6 +534,44 @@ with trend_container:
         else:
             trend_placeholder.warning("No trend data available for the selected filters.")
             
+    elif comparison_metric == "Fleshy Algae Cover":
+        # For Fleshy Algae Cover, we use the get_metric_data method
+        trend_data_list = []
+        for site in sites:
+            if municipality_filter and site.municipality != municipality_filter:
+                continue
+                
+            site_data = data_processor.get_metric_data(site.name, "fleshy_algae")
+            if not site_data.empty:
+                site_data['site'] = site.name
+                site_data['municipality'] = site.municipality
+                trend_data_list.append(site_data)
+        
+        if trend_data_list:
+            trend_data = pd.concat(trend_data_list)
+            
+            # Filter by date range if specified
+            if date_range:
+                start_timestamp, end_timestamp = date_range
+                trend_data['date'] = pd.to_datetime(trend_data['date'])
+                trend_data = trend_data[
+                    (trend_data['date'] >= start_timestamp) & 
+                    (trend_data['date'] <= end_timestamp)
+                ]
+            
+            # Generate municipal-level trend chart for fleshy algae cover
+            fig, config = graph_generator.create_municipal_trend_chart(
+                trend_data=trend_data,
+                metric_name="Fleshy Algae Cover",
+                group_by_all_sites=group_by_all_sites,
+                municipality_focus=municipality_focus if not group_by_all_sites else None
+            )
+            
+            trend_placeholder.empty()
+            trend_placeholder.plotly_chart(fig, use_container_width=True, config=config)
+        else:
+            trend_placeholder.warning("No trend data available for the selected filters.")
+            
     elif comparison_metric == "Herbivore Density":
         # For Herbivore Density, use the get_metric_data method
         trend_data_list = []
