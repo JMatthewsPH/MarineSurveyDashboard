@@ -297,8 +297,8 @@ def create_site_card(site):
                 <p style="margin: 8px 0; color: #2d3748;"><strong>{municipality_label}:</strong> {site.municipality}</p>
                 <p style="margin: 12px 0 8px 0; line-height: 1.3; color: #2d3748; height: 60px; overflow: hidden; text-overflow: ellipsis;">{truncated_description}</p>
             </div>
-            <div class="site-card-footer" style="margin-top: auto; padding-top: 20px; min-height: 60px; display: flex; align-items: flex-end;">
-                <a href="Site_Dashboard?site={site.name}" target="_self" style="text-decoration: none;">
+            <div class="site-card-footer" style="margin-top: auto; padding-top: 20px; min-height: 60px; display: flex; align-items: center; justify-content: center; width: 100%;">
+                <a href="Site_Dashboard?site={site.name}" target="_self" style="text-decoration: none; width: 100%; display: block;">
                     <button class="site-button" style="
                         background: #2b6cb0; 
                         color: white; 
@@ -309,6 +309,9 @@ def create_site_card(site):
                         width: 100%;
                         font-size: 14px;
                         transition: background 0.3s;
+                        text-align: center;
+                        display: block;
+                        margin: 0 auto;
                     " onmouseover="this.style.background='#4299e1'" onmouseout="this.style.background='#2b6cb0'">
                         {view_details_text}
                     </button>
