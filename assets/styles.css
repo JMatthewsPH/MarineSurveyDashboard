@@ -106,7 +106,7 @@ a[href^="#"]:not([href*="/"]):not([href*="."]) {
 
 /* Remove any default margins from Streamlit elements */
 .block-container {
-    padding-top: 0.5rem !important;
+    padding-top: 0rem !important;
     padding-bottom: 0.5rem !important;
 }
 

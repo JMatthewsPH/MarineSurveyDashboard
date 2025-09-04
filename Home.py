@@ -197,8 +197,7 @@ language_code = st.session_state.language
 # Header
 subheader_text = TRANSLATIONS[language_code]['dashboard']
 
-# Minimal padding at the top to avoid crowding
-st.markdown("<div style='padding-top: 5px;'></div>", unsafe_allow_html=True)
+# Remove excessive top padding completely
 
 # Add favicon to the page
 add_favicon()
