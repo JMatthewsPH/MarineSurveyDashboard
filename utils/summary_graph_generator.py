@@ -98,21 +98,30 @@ class SummaryGraphGenerator:
             # Create site labels with municipality grouping for X-axis
             clean_data['site_label'] = clean_data['site']
             
-            # Determine color mapping based on metric values
-            min_val = clean_data[metric_column].min()
-            max_val = clean_data[metric_column].max()
+            # Determine color mapping based on metric values and ecological thresholds
+            actual_min_val = clean_data[metric_column].min()
+            actual_max_val = clean_data[metric_column].max()
             
-            # Create color scale: red (low) -> yellow (medium) -> green (high)
-            # For biomass and positive indicators, high values are green
-            # For negative indicators like bleaching, we'd reverse this
-            if 'biomass' in metric_column.lower() or 'coral' in metric_column.lower():
-                # Higher values are better (green)
+            # Use ecologically meaningful thresholds for biomass instead of dynamic scaling
+            if 'biomass' in metric_column.lower():
+                # Fixed ecological thresholds: 0=red, 20=green, 20+=green
+                min_val = 0
+                max_val = max(20, actual_max_val)  # Ensure scale goes to at least 20
                 colorscale = 'RdYlGn'  # Red-Yellow-Green
+            elif 'coral' in metric_column.lower():
+                # For coral cover, use percentage-based thresholds (0-100%)
+                min_val = 0
+                max_val = max(50, actual_max_val)  # Scale to at least 50% for coral
+                colorscale = 'RdYlGn'  # Red-Yellow-Green  
             elif 'bleaching' in metric_column.lower() or 'algae' in metric_column.lower():
                 # Lower values are better (reverse scale)
+                min_val = actual_min_val
+                max_val = actual_max_val
                 colorscale = 'RdYlGn_r'  # Green-Yellow-Red (reversed)
             else:
-                # Default to red-yellow-green for most metrics
+                # Default to red-yellow-green for most metrics with dynamic scaling
+                min_val = actual_min_val
+                max_val = actual_max_val
                 colorscale = 'RdYlGn'
             
             # Create the bar chart with color mapping (no title here - will be set in update_layout)
@@ -122,7 +131,7 @@ class SummaryGraphGenerator:
                 y=metric_column,
                 color=metric_column,
                 color_continuous_scale=colorscale,
-                range_color=[min_val, max_val],  # Set color range to match data range
+                range_color=[min_val, max_val],  # Use ecological thresholds for biomass, data range for others
                 labels={
                     'site_label': 'Site',
                     metric_column: y_axis_label or metric_column.replace('_', ' ').title()
