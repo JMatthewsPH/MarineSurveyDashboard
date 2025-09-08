@@ -1,5 +1,4 @@
-Period,Site,Corallivore Density,Detritivore Density,Omnivore Density,Carnivore Density,Herbivore Density,Total Density
-Spring 2024,Santa Catalina Cawitan,0.33,0.33,12.33,11.33,11.0,17.5
-Autumn 2024,Santa Catalina Cawitan,0.5,5.5,6.0,6.0,0.5,18.2
-Winter 24/25,Santa Catalina Cawitan,0.0,8.0,6.0,4.0,1.0,58.08
-Spring 2025,Santa Catalina Cawitan,0.25,7.75,5.25,7.75,20.5,34.26
+Period,Site,Rubble Cover,Fresh Algae Cover,Soft Coral Cover,Hard Coral Cover,Bleaching
+Spring 2024,Santa Catalina Cawitan,0.0,0.24,0.0,0.48,0.03
+Winter 24/25,Santa Catalina Cawitan,0.01,0.27,0.0,0.48,0.01
+Spring 2025,Santa Catalina Cawitan,0.04,0.41,0.0,0.26,0.01
