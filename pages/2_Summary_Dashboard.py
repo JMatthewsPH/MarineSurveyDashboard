@@ -274,8 +274,9 @@ with overall_stats_container:
         )
     
     with col2:
-        start = summary_metrics["start_date"]
-        end = summary_metrics["end_date"]
+        # Use the expanded seasonal ranges instead of representative dates
+        start = min_date  # This is the expanded seasonal start date we calculated earlier
+        end = max_date    # This is the expanded seasonal end date we calculated earlier
         date_text = f"{start.strftime('%b %Y')} - {end.strftime('%b %Y')}" if start and end else "No data"
         st.metric(
             label="Data Range", 
