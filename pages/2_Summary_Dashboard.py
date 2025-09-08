@@ -254,6 +254,8 @@ with indicators_container:
     # Create placeholders for metrics
     col1, col2, col3 = st.columns(3)
     
+    # First row of indicators
+    
     with col1:
         coral_placeholder = st.empty()
         with coral_placeholder:
@@ -287,6 +289,49 @@ with indicators_container:
         algae_placeholder.metric(
             label="Average Fleshy Algae Cover",
             value=algae_val,
+            delta=None
+        )
+
+# Second row of fish density indicators  
+fish_indicators_container = st.container()
+
+with fish_indicators_container:
+    # Create placeholders for fish density metrics
+    col4, col5, col6 = st.columns(3)
+    
+    with col4:
+        herbivore_placeholder = st.empty()
+        with herbivore_placeholder:
+            skeleton_text_placeholder(lines=2)
+            
+        herbivore_val = f"{summary_metrics['avg_herbivore']:.0f} ind/ha" if summary_metrics["avg_herbivore"] > 0 else "No data"
+        herbivore_placeholder.metric(
+            label="Average Herbivore Density",
+            value=herbivore_val,
+            delta=None
+        )
+    
+    with col5:
+        omnivore_placeholder = st.empty()
+        with omnivore_placeholder:
+            skeleton_text_placeholder(lines=2)
+            
+        omnivore_val = f"{summary_metrics['avg_omnivore']:.0f} ind/ha" if summary_metrics["avg_omnivore"] > 0 else "No data"
+        omnivore_placeholder.metric(
+            label="Average Omnivore Density",
+            value=omnivore_val,
+            delta=None
+        )
+    
+    with col6:
+        corallivore_placeholder = st.empty()
+        with corallivore_placeholder:
+            skeleton_text_placeholder(lines=2)
+            
+        corallivore_val = f"{summary_metrics['avg_corallivore']:.0f} ind/ha" if summary_metrics["avg_corallivore"] > 0 else "No data"
+        corallivore_placeholder.metric(
+            label="Average Corallivore Density",
+            value=corallivore_val,
             delta=None
         )
 
