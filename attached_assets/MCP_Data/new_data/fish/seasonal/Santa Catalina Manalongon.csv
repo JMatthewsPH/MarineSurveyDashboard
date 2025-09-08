@@ -1,4 +1,4 @@
-Period,Site,Corallivore Density,Detritivore Density,Omnivore Density,Carnivore Density,Herbivore Density,Total Density,Commercial Density,Total Biomass Density,Commercial Biomass Density
-Spring 2024,Santa Catalina Manalongon,4.5,30.5,8.0,85.5,150.5,134.25,76.0,14.19,10.15
-Autumn 2024,Santa Catalina Manalongon,3.0,16.5,8.0,61.0,80.5,436.38,310.75,30.65,23.69
-Spring 2025,Santa Catalina Manalongon,0.25,12.5,3.0,47.25,80.75,707.78,72.89,17.27,7.18
+Period,Site,Rubble Cover,Fresh Algae Cover,Soft Coral Cover,Hard Coral Cover,Bleaching
+Spring 2024,Santa Catalina Manalongon,0.0,0.3,0.08,0.45,0.03
+Winter 24/25,Santa Catalina Manalongon,0.0,0.26,0.29,0.15,0.0
+Spring 2025,Santa Catalina Manalongon,0.01,0.5,0.05,0.29,0.0
