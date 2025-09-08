@@ -259,7 +259,7 @@ with indicators_container:
         with coral_placeholder:
             skeleton_text_placeholder(lines=2)
         
-        coral_val = f"{summary_metrics['avg_hard_coral']:.1f}%" if summary_metrics["avg_hard_coral"] > 0 else "No data"
+        coral_val = f"{summary_metrics['avg_hard_coral'] * 100:.1f}%" if summary_metrics["avg_hard_coral"] > 0 else "No data"
         coral_placeholder.metric(
             label="Average Hard Coral Cover",
             value=coral_val,
@@ -283,7 +283,7 @@ with indicators_container:
         with algae_placeholder:
             skeleton_text_placeholder(lines=2)
             
-        algae_val = f"{summary_metrics['avg_fleshy_algae']:.1f}%" if summary_metrics["avg_fleshy_algae"] > 0 else "No data"
+        algae_val = f"{summary_metrics['avg_fleshy_algae'] * 100:.1f}%" if summary_metrics["avg_fleshy_algae"] > 0 else "No data"
         algae_placeholder.metric(
             label="Average Fleshy Algae Cover",
             value=algae_val,
