@@ -557,27 +557,56 @@ if selected_site:
             # Date Range Selection
             st.header(TRANSLATIONS[st.session_state.language]['date_range'])
             
-            # Get the min and max dates from all surveys 
-            all_surveys = []
-            for site in sites:
-                site_surveys = data_processor.get_biomass_data(site.name)
-                if not site_surveys.empty:
-                    all_surveys.append(site_surveys)
+            # Get the min and max dates from ALL surveys and expand to full seasonal ranges
+            def expand_to_full_season(date_obj):
+                """Convert representative seasonal date to full seasonal range"""
+                month = date_obj.month
+                year = date_obj.year
+                
+                if month == 4:  # Spring (Mar-May) - represented by April
+                    return pd.to_datetime(f'{year}-03-01'), pd.to_datetime(f'{year}-05-31')
+                elif month == 7:  # Summer (Jun-Aug) - represented by July  
+                    return pd.to_datetime(f'{year}-06-01'), pd.to_datetime(f'{year}-08-31')
+                elif month == 10:  # Autumn (Sep-Nov) - represented by October
+                    return pd.to_datetime(f'{year}-09-01'), pd.to_datetime(f'{year}-11-30')
+                elif month == 1:  # Winter (Dec-Feb) - represented by January
+                    # Winter spans years: Dec of previous year to Feb of current year
+                    return pd.to_datetime(f'{year-1}-12-01'), pd.to_datetime(f'{year}-02-28')
+                else:
+                    # Default: return the original date
+                    return date_obj, date_obj
             
-            # Combine all survey data to get date range
-            if all_surveys:
-                all_data = pd.concat(all_surveys)
-                calculated_min = pd.to_datetime(all_data['date'].min())
-                calculated_max = pd.to_datetime(all_data['date'].max())
-                # Ensure we always start from 2017 to include all historical data
-                min_date = pd.to_datetime('2017-01-01')  # Always start from beginning
-                max_date = calculated_max
-                print(f"DEBUG: Calculated range {calculated_min} to {calculated_max}, using {min_date} to {max_date}")
-            else:
-                # Fallback dates if no data
-                min_date = pd.to_datetime('2017-01-01')
-                max_date = pd.to_datetime('2025-12-31')
-                print(f"DEBUG: Using fallback date range from {min_date} to {max_date}")
+            try:
+                # Query the database directly to get the actual date range across all survey types
+                from sqlalchemy import func
+                from utils.database import Survey
+                db = data_processor._get_session()
+                
+                # Get min and max dates from all surveys
+                date_query = db.query(
+                    func.min(Survey.date).label('min_date'),
+                    func.max(Survey.date).label('max_date')
+                ).first()
+                
+                if date_query and date_query.min_date and date_query.max_date:
+                    # Expand representative dates to full seasonal ranges
+                    min_season_start, _ = expand_to_full_season(pd.to_datetime(date_query.min_date))
+                    _, max_season_end = expand_to_full_season(pd.to_datetime(date_query.max_date))
+                    
+                    min_date = min_season_start
+                    max_date = max_season_end
+                    print(f"DEBUG: Expanded seasonal range from {date_query.min_date} to {date_query.max_date}, using {min_date} to {max_date}")
+                else:
+                    # Fallback dates if no data
+                    min_date = pd.to_datetime('2017-03-01')  # Start of Spring 2017
+                    max_date = pd.to_datetime('2025-08-31')  # End of Summer 2025
+                    print(f"DEBUG: Using fallback seasonal date range from {min_date} to {max_date}")
+                    
+            except Exception as e:
+                print(f"ERROR: Failed to get date range from database: {e}")
+                # Fallback dates if query fails
+                min_date = pd.to_datetime('2017-03-01')
+                max_date = pd.to_datetime('2025-08-31')
             
             # Date range selection
             col1, col2 = st.columns(2)
