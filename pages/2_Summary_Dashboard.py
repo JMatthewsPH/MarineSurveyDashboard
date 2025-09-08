@@ -141,6 +141,7 @@ with st.sidebar:
     st.title(TRANSLATIONS[st.session_state.language]['analysis_options'])
     
     # Get the min and max dates from ALL surveys (not just biomass)
+    sites = data_processor.get_sites()
     try:
         # Query the database directly to get the actual date range across all survey types
         db = data_processor._get_session()
