@@ -68,6 +68,10 @@ class SummaryGraphGenerator:
             # Identify sites with genuine null/NaN values (no data) vs actual zeros
             no_data_sites = clean_data[clean_data[metric_column].isna()]['site'].tolist()
             
+            # Convert coral cover and algae cover from decimals to percentages
+            if 'coral' in metric_column.lower() or 'algae' in metric_column.lower() or 'bleaching' in metric_column.lower() or 'rubble' in metric_column.lower():
+                clean_data[metric_column] = clean_data[metric_column] * 100
+            
             # Replace NaN with 0 for visualization purposes
             clean_data[metric_column] = clean_data[metric_column].fillna(0)
             
@@ -382,6 +386,13 @@ class SummaryGraphGenerator:
             
             # Ensure date is datetime
             trend_data['date'] = pd.to_datetime(trend_data['date'])
+            
+            # Convert coral cover and algae cover from decimals to percentages for proper display
+            if any(term in metric_name.lower() for term in ['coral', 'algae', 'bleaching', 'rubble']):
+                # Find the metric column and convert it to percentage
+                for col in trend_data.columns:
+                    if col not in ['date', 'site', 'municipality'] and trend_data[col].dtype in ['float64', 'int64']:
+                        trend_data[col] = trend_data[col] * 100
             
             # Find the metric column
             metric_col = None
