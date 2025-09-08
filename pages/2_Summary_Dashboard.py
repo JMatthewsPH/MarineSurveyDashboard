@@ -16,6 +16,10 @@ from utils.database import get_db_session
 from utils.branding import display_logo, add_favicon, add_custom_loading_animation
 from utils.ui_helpers import loading_spinner, create_loading_placeholder, load_css, skeleton_text_placeholder
 from utils.navigation import display_navigation
+from sqlalchemy import func
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Set page config
 st.set_page_config(
@@ -136,23 +140,31 @@ with st.sidebar:
     
     st.title(TRANSLATIONS[st.session_state.language]['analysis_options'])
     
-    # Get the min and max dates from all surveys 
-    all_surveys = []
-    sites = data_processor.get_sites()
-    for site in sites:
-        site_surveys = data_processor.get_biomass_data(site.name)
-        if not site_surveys.empty:
-            all_surveys.append(site_surveys)
-    
-    # Combine all survey data to get date range
-    if all_surveys:
-        all_data = pd.concat(all_surveys)
-        min_date = pd.to_datetime(all_data['date'].min())
-        max_date = pd.to_datetime(all_data['date'].max())
-    else:
-        # Fallback dates if no data
+    # Get the min and max dates from ALL surveys (not just biomass)
+    try:
+        # Query the database directly to get the actual date range across all survey types
+        db = data_processor._get_session()
+        from utils.database import Survey
+        
+        # Get min and max dates from all surveys
+        date_query = db.query(
+            func.min(Survey.date).label('min_date'),
+            func.max(Survey.date).label('max_date')
+        ).first()
+        
+        if date_query and date_query.min_date and date_query.max_date:
+            min_date = pd.to_datetime(date_query.min_date)
+            max_date = pd.to_datetime(date_query.max_date)
+        else:
+            # Fallback dates if no data
+            min_date = pd.to_datetime('2017-01-01')
+            max_date = pd.to_datetime('2025-12-31')  # Updated fallback to include 2025
+            
+    except Exception as e:
+        logger.warning(f"Error getting date range from database: {e}")
+        # Fallback dates if query fails
         min_date = pd.to_datetime('2017-01-01')
-        max_date = pd.to_datetime('2023-12-31')
+        max_date = pd.to_datetime('2025-12-31')
     
     # Date range selection
     st.header(TRANSLATIONS[st.session_state.language]['date_range'])
