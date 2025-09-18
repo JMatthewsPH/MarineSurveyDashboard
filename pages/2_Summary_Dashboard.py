@@ -801,9 +801,9 @@ with st.spinner("Loading interactive biomass heatmap..."):
         st.markdown("### Geographic Biomass Distribution")
         st.markdown("""
         **Legend:**
-        - 🟢 **Green markers**: High biomass sites (≥100 kg/150m²)
-        - 🟠 **Orange markers**: Medium biomass sites (50-100 kg/150m²)  
-        - 🔴 **Red markers**: Low biomass sites (<50 kg/150m²)
+        - 🟢 **Green markers**: High biomass sites (≥20 kg/150m²)
+        - 🟠 **Orange markers**: Medium biomass sites (10-20 kg/150m²)  
+        - 🔴 **Red markers**: Low biomass sites (<10 kg/150m²)
         """)
         
         # Display the folium map with responsive width

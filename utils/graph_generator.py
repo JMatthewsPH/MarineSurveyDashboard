@@ -81,8 +81,8 @@ class GraphGenerator:
     def get_metric_range(self, metric_name):
         """Define standard ranges for each metric type"""
         ranges = {
-            'Commercial Biomass': {'min': 0, 'max': 100},  # kg/150m²
-            'Commercial Fish Biomass': {'min': 0, 'max': 100},  # kg/150m²
+            'Commercial Biomass': {'min': 0, 'max': 50},  # kg/150m² - adjusted for actual data range
+            'Commercial Fish Biomass': {'min': 0, 'max': 50},  # kg/150m² - adjusted for actual data range
             'Hard Coral Cover': {'min': 0, 'max': 100},     # percentage
             'Fleshy Algae': {'min': 0, 'max': 100},         # percentage
             'Bleaching': {'min': 0, 'max': 100},            # percentage
