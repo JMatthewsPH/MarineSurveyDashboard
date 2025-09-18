@@ -103,30 +103,23 @@ class MapGenerator:
                         latest_biomass = biomass_df[biomass_col].iloc[-1]
                         biomass_values.append(latest_biomass)
             
-            # Calculate dynamic thresholds based on data distribution
+            # Use fixed ecological thresholds to match site comparison chart
+            # These thresholds align with the site comparison logic: 0=red, 20=green
+            high_threshold = 20.0  # Green threshold - matches site comparison
+            medium_threshold = 10.0  # Orange threshold - middle value
+            
+            # Calculate actual data range for legend display
             if biomass_values:
                 import numpy as np
                 biomass_array = np.array(biomass_values)
                 max_biomass = np.max(biomass_array)
                 min_biomass = np.min(biomass_array)
-                
-                # Calculate percentile-based thresholds for more dynamic scaling
-                high_threshold = np.percentile(biomass_array, 66.67)  # Top third
-                medium_threshold = np.percentile(biomass_array, 33.33)  # Middle third
-                
-                # Ensure reasonable minimum gaps between thresholds
-                if high_threshold - medium_threshold < 2:
-                    high_threshold = medium_threshold + 2
-                if medium_threshold - min_biomass < 1:
-                    medium_threshold = min_biomass + 1
             else:
                 # Fallback values if no data
                 max_biomass = 21
                 min_biomass = 0
-                high_threshold = 15
-                medium_threshold = 8
             
-            # Second pass: create markers and radiation circles with dynamic thresholds
+            # Second pass: create markers and radiation circles with fixed thresholds
             for site in sites:
                 if site.latitude and site.longitude:
                     # Get latest biomass data for this site
