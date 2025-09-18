@@ -539,7 +539,7 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
                     
                 ax.set_title(f"Commercial Fish Biomass - {site_name}")
                 ax.set_xlabel("Season")
-                ax.set_ylabel("Biomass (kg/100m²)")
+                ax.set_ylabel("Biomass (kg/150m²)")
                 
                 # Rotate x-axis labels for better readability
                 plt.xticks(rotation=45, ha='right')
@@ -641,7 +641,7 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
                 elif 'density' in metric_column.lower() or 'herbivore' in metric.lower() or 'carnivore' in metric.lower() or 'omnivore' in metric.lower() or 'corallivore' in metric.lower():
                     ax.set_ylabel("Density (ind/ha)")
                 elif 'biomass' in metric_column.lower():
-                    ax.set_ylabel("Biomass (kg/100m²)")
+                    ax.set_ylabel("Biomass (kg/150m²)")
                 elif 'bleaching' in metric_column.lower():
                     ax.set_ylabel("Bleaching (%)")
                 else:
@@ -718,7 +718,7 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
                 # Handle null values for display
                 biomass_value = latest_biomass[biomass_column]
                 if biomass_value is not None:
-                    biomass_display = f"{biomass_value:.1f} kg/100m²"
+                    biomass_display = f"{biomass_value:.1f} kg/150m²"
                 else:
                     biomass_display = "N/A"
                 

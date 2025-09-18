@@ -169,7 +169,7 @@ class MapGenerator:
                         <div style="font-family: Arial, sans-serif; width: 250px;">
                             <h4 style="margin: 0 0 10px 0; color: #2c3e50;">{site.name}</h4>
                             <p style="margin: 5px 0; color: #7f8c8d;"><b>Municipality:</b> {site.municipality}</p>
-                            <p style="margin: 5px 0; color: #2c3e50;"><b>Latest Biomass:</b> {latest_biomass:.1f} kg/100m²</p>
+                            <p style="margin: 5px 0; color: #2c3e50;"><b>Latest Biomass:</b> {latest_biomass:.1f} kg/150m²</p>
                             <p style="margin: 5px 0; color: #7f8c8d;"><b>Coordinates:</b> {site.latitude:.4f}, {site.longitude:.4f}</p>
                             <div style="margin: 10px 0; padding: 8px; background: #f8f9fa; border-left: 3px solid #007acc; border-radius: 4px;">
                                 <p style="margin: 0; color: #2c3e50; font-size: 13px; line-height: 1.4;"><b>About this site:</b><br>{description}</p>
@@ -243,7 +243,7 @@ class MapGenerator:
                             location=[offset_latitude, offset_longitude],
                             radius=4,  # Tiny size like click markers
                             popup=folium.Popup(popup_html, max_width=250),
-                            tooltip=f"{site.name}: {latest_biomass:.1f} kg/100m²",
+                            tooltip=f"{site.name}: {latest_biomass:.1f} kg/150m²",
                             color='white',
                             weight=1,
                             fillColor=color,
@@ -272,10 +272,10 @@ class MapGenerator:
                 box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             ">
             <h4 style="margin-top: 0;">Commercial Biomass</h4>
-            <p><i class="glyphicon glyphicon-leaf" style="color: green;"></i> High (≥{high_threshold:.1f} kg/100m²)</p>
-            <p><i class="glyphicon glyphicon-warning-sign" style="color: orange;"></i> Medium ({medium_threshold:.1f}-{high_threshold:.1f} kg/100m²)</p>
-            <p><i class="glyphicon glyphicon-exclamation-sign" style="color: red;"></i> Low (<{medium_threshold:.1f} kg/100m²)</p>
-            <p style="font-size: 12px; color: #666; margin-top: 5px;">Range: {min_biomass:.1f}-{max_biomass:.1f} kg/100m²</p>
+            <p><i class="glyphicon glyphicon-leaf" style="color: green;"></i> High (≥{high_threshold:.1f} kg/150m²)</p>
+            <p><i class="glyphicon glyphicon-warning-sign" style="color: orange;"></i> Medium ({medium_threshold:.1f}-{high_threshold:.1f} kg/150m²)</p>
+            <p><i class="glyphicon glyphicon-exclamation-sign" style="color: red;"></i> Low (<{medium_threshold:.1f} kg/150m²)</p>
+            <p style="font-size: 12px; color: #666; margin-top: 5px;">Range: {min_biomass:.1f}-{max_biomass:.1f} kg/150m²</p>
             </div>
             '''
             m.get_root().add_child(folium.Element(legend_html))
