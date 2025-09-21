@@ -170,7 +170,7 @@ with st.sidebar:
         TRANSLATIONS[st.session_state.language]['lang_toggle'],
         list(LANGUAGE_DISPLAY.values()),
         index=list(LANGUAGE_DISPLAY.values()).index(current_language_display),
-        key="language_selector"
+        key="language_selector_site"  # Unique key for Site Dashboard
     )
     
     # Check if language changed and update session state

@@ -173,7 +173,7 @@ with st.sidebar:
         TRANSLATIONS[st.session_state.language]['lang_toggle'],
         list(LANGUAGE_DISPLAY.values()),
         index=list(LANGUAGE_DISPLAY.values()).index(current_language_display),
-        key="language_selector"
+        key="language_selector_home"  # Unique key for Home page
     )
     
     

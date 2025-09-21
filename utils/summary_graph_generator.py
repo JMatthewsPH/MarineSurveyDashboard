@@ -157,6 +157,7 @@ class SummaryGraphGenerator:
                 template="plotly_white",
                 margin=dict(l=60, r=60, t=100, b=120),  # More top margin for centered title
                 autosize=True,  # Enable responsive resizing
+                hovermode='closest',  # Use closest point hover instead of unified
                 xaxis=dict(
                     title="Sites (Grouped by Municipality)",
                     tickangle=-45,
@@ -236,7 +237,7 @@ class SummaryGraphGenerator:
                 customdata=clean_data[['municipality', 'data_status']].values
             )
             
-            # Configure download settings
+            # Configure download settings with standard plotly settings
             config = {
                 'toImageButtonOptions': {
                     'format': 'png',
@@ -250,9 +251,7 @@ class SummaryGraphGenerator:
                 'displayModeBar': True,
                 'modeBarButtons': [['zoomIn2d', 'zoomOut2d', 'resetScale2d', 'toImage']],
                 'scrollZoom': False,
-                'doubleClick': 'reset',
-                'showTips': True,
-                'displayModeBar': 'hover'
+                'doubleClick': 'reset'
             }
             
             return fig, config
