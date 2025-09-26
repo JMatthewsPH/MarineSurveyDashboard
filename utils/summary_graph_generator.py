@@ -160,12 +160,9 @@ class SummaryGraphGenerator:
                 hovermode='closest',  # Use closest point hover instead of unified
                 xaxis=dict(
                     title="Sites (Grouped by Municipality)",
-                    tickangle=-90,  # Vertical labels for better mobile readability
-                    tickmode='array',  # Use specific tick values for mobile-optimized spacing
-                    tickvals=list(range(0, len(clean_data), 2)),  # Show every 2nd site on mobile to reduce crowding
-                    ticktext=[clean_data['site_label'].tolist()[i] for i in range(0, len(clean_data), 2)],
-                    tickfont=dict(size=10),  # Slightly larger font since fewer labels
-                    dtick=1  # Ensure proper spacing
+                    tickangle=-45,  # Diagonal labels for better readability
+                    tickmode='linear',
+                    tickfont=dict(size=10)
                 ),
                 yaxis=dict(
                     title=y_axis_label or metric_column.replace('_', ' ').title(),

@@ -377,6 +377,41 @@ st.header("Site Comparison Matrix")
 matrix_container = st.container()
 
 with matrix_container:
+    # Add CSS for mobile detection and mobile-only municipality selector
+    st.markdown("""
+    <style>
+    .mobile-municipality-selector {
+        display: none;
+    }
+    
+    @media (max-width: 768px) {
+        .mobile-municipality-selector {
+            display: block;
+        }
+    }
+    
+    @media (min-width: 769px) {
+        .mobile-municipality-selector {
+            display: none !important;
+        }
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    # Mobile-only municipality selector
+    mobile_municipality_filter = None
+    with st.container():
+        st.markdown('<div class="mobile-municipality-selector">', unsafe_allow_html=True)
+        st.markdown("📱 **Mobile View**: Select municipality to focus on specific sites")
+        mobile_municipality_filter = st.selectbox(
+            "Choose municipality:",
+            ["All Municipalities", "Zamboanguita", "Siaton", "Santa Catalina"],
+            index=0,
+            key="mobile_municipality_filter",
+            help="On mobile, select a municipality to reduce chart complexity and improve readability"
+        )
+        st.markdown('</div>', unsafe_allow_html=True)
+    
     # Create placeholder for comparison chart
     matrix_placeholder = st.empty()
     with matrix_placeholder:
@@ -386,9 +421,13 @@ with matrix_container:
     matrix_data = data_processor.get_site_comparison_matrix()
     
     if matrix_data is not None and not matrix_data.empty:
-        # Apply municipality filter if specified
+        # Apply municipality filter if specified (desktop behavior)
         if municipality_filter:
             matrix_data = matrix_data[matrix_data['municipality'] == municipality_filter]
+        
+        # Apply mobile municipality filter if specified
+        if mobile_municipality_filter and mobile_municipality_filter != "All Municipalities":
+            matrix_data = matrix_data[matrix_data['municipality'] == mobile_municipality_filter]
         
         matrix_placeholder.empty()
         
