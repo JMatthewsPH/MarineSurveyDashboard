@@ -99,8 +99,24 @@ class SummaryGraphGenerator:
             # Sort by municipality and then by site name for consistent ordering
             clean_data = clean_data.sort_values(['municipality', 'site'])
             
-            # Create site labels with municipality grouping for X-axis
-            clean_data['site_label'] = clean_data['site']
+            # Create mobile-friendly site labels with municipality grouping for X-axis
+            def create_mobile_label(site_name):
+                """Create abbreviated labels for mobile display"""
+                if len(site_name) > 8:  # Abbreviate long names for mobile
+                    # Abbreviations based on actual site names in database
+                    abbreviations = {
+                        'Manalongon': 'Manal',
+                        'Lutoban North': 'Lutob N',
+                        'Lutoban South': 'Lutob S', 
+                        'Lutoban Pier': 'Lutob P',
+                        'Malatapay': 'Malat',
+                        'Guinsuan': 'Guinsu',
+                        'Antulang': 'Antul'
+                    }
+                    return abbreviations.get(site_name, site_name[:6])  # Use abbreviation or first 6 chars
+                return site_name
+            
+            clean_data['site_label'] = clean_data['site'].apply(create_mobile_label)
             
             # Determine color mapping based on metric values and ecological thresholds
             actual_min_val = clean_data[metric_column].min()
@@ -153,15 +169,19 @@ class SummaryGraphGenerator:
                     'yanchor': 'top',
                     'font': {'size': 18}
                 },
-                height=500,
+                height=600,  # Increased height for mobile readability
                 template="plotly_white",
-                margin=dict(l=60, r=60, t=100, b=120),  # More top margin for centered title
+                margin=dict(l=60, r=60, t=100, b=160),  # Increased bottom margin for rotated labels
                 autosize=True,  # Enable responsive resizing
                 hovermode='closest',  # Use closest point hover instead of unified
                 xaxis=dict(
                     title="Sites (Grouped by Municipality)",
-                    tickangle=-45,
-                    tickmode='linear'
+                    tickangle=-90,  # Vertical labels for better mobile readability
+                    tickmode='array',  # Use specific tick values for mobile-optimized spacing
+                    tickvals=list(range(0, len(clean_data), 2)),  # Show every 2nd site on mobile to reduce crowding
+                    ticktext=[clean_data['site_label'].tolist()[i] for i in range(0, len(clean_data), 2)],
+                    tickfont=dict(size=10),  # Slightly larger font since fewer labels
+                    dtick=1  # Ensure proper spacing
                 ),
                 yaxis=dict(
                     title=y_axis_label or metric_column.replace('_', ' ').title(),
