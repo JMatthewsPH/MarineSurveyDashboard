@@ -99,24 +99,8 @@ class SummaryGraphGenerator:
             # Sort by municipality and then by site name for consistent ordering
             clean_data = clean_data.sort_values(['municipality', 'site'])
             
-            # Create mobile-friendly site labels with municipality grouping for X-axis
-            def create_mobile_label(site_name):
-                """Create abbreviated labels for mobile display"""
-                if len(site_name) > 8:  # Abbreviate long names for mobile
-                    # Abbreviations based on actual site names in database
-                    abbreviations = {
-                        'Manalongon': 'Manal',
-                        'Lutoban North': 'Lutob N',
-                        'Lutoban South': 'Lutob S', 
-                        'Lutoban Pier': 'Lutob P',
-                        'Malatapay': 'Malat',
-                        'Guinsuan': 'Guinsu',
-                        'Antulang': 'Antul'
-                    }
-                    return abbreviations.get(site_name, site_name[:6])  # Use abbreviation or first 6 chars
-                return site_name
-            
-            clean_data['site_label'] = clean_data['site'].apply(create_mobile_label)
+            # Use full site names (no abbreviations)
+            clean_data['site_label'] = clean_data['site']
             
             # Determine color mapping based on metric values and ecological thresholds
             actual_min_val = clean_data[metric_column].min()
