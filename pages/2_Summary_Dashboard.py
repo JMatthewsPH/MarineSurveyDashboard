@@ -398,6 +398,11 @@ with matrix_container:
     </style>
     """, unsafe_allow_html=True)
     
+    # Simple mobile detection based on user agent
+    import re
+    user_agent = st.context.headers.get("user-agent", "").lower() if hasattr(st.context, 'headers') else ""
+    is_mobile = bool(re.search(r'mobile|android|iphone|ipad|tablet', user_agent)) or False
+    
     # Mobile-only municipality selector
     mobile_municipality_filter = None
     with st.container():
@@ -446,7 +451,8 @@ with matrix_container:
                 matrix_data=matrix_data,
                 metric_column=selected_metric,
                 title=f"Site Comparison: {comparison_metric}",
-                y_axis_label="Commercial Biomass (kg/150m²)"
+                y_axis_label="Commercial Biomass (kg/150m²)",
+                hide_colorbar=is_mobile
             )
         else:
             # Create regular bar chart for other metrics
@@ -454,7 +460,8 @@ with matrix_container:
                 matrix_data=matrix_data,
                 metric_column=selected_metric,
                 title=f"Site Comparison: {comparison_metric}",
-                y_axis_label=comparison_metric
+                y_axis_label=comparison_metric,
+                hide_colorbar=is_mobile
             )
         
         # Display the selected chart

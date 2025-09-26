@@ -50,7 +50,7 @@ class SummaryGraphGenerator:
     def __init__(self, data_processor):
         self.data_processor = data_processor
 
-    def create_municipality_grouped_bar_chart(self, matrix_data, metric_column, title=None, y_axis_label=None):
+    def create_municipality_grouped_bar_chart(self, matrix_data, metric_column, title=None, y_axis_label=None, hide_colorbar=False):
         """
         Create a bar chart with sites grouped by municipality, using red-yellow-green color coding
         for health indicators, starting Y-axis from 0
@@ -60,6 +60,7 @@ class SummaryGraphGenerator:
             metric_column: Column name to visualize
             title: Optional title for the chart
             y_axis_label: Label for Y-axis including units
+            hide_colorbar: Boolean to hide colorbar for mobile optimization
         """
         try:
             # Clean the data - track which sites have no data vs zero values
@@ -171,13 +172,14 @@ class SummaryGraphGenerator:
                 ),
                 showlegend=False,  # Hide color legend to save space
                 coloraxis=dict(
+                    showscale=not hide_colorbar,  # Hide colorbar on mobile when requested
                     colorbar=dict(
                         len=1.10,  # 20 pixels longer in height total
                         thickness=20,  # Back to standard thickness
                         x=1.02,  # Position to the right
                         y=-0.04,  # Start lower to accommodate extra length
                         yanchor='bottom'
-                    )
+                    ) if not hide_colorbar else dict()  # Empty dict if hiding colorbar
                 )
             )
             
