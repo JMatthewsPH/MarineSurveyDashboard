@@ -438,7 +438,7 @@ if selected_site:
             with col1:
                 use_straight_lines = st.checkbox(
                     "Straight Line Graphs",
-                    value=st.session_state.get('use_straight_lines', False),
+                    value=st.session_state.get('use_straight_lines', True),
                     key="straight_lines_checkbox"
                 )
             with col2:
@@ -996,8 +996,8 @@ if selected_site:
         @st.dialog("Straight Line Graphs")
         def show_straight_lines_dialog():
             st.write("Toggle between straight lines and smooth curves for trend visualization:")
-            st.write("• **Straight lines:** Direct point-to-point connections showing exact data progression")
-            st.write("• **Smooth curves (default):** Rounded spline curves that emphasize overall trends")
+            st.write("• **Straight lines (default):** Direct point-to-point connections showing exact data progression")
+            st.write("• **Smooth curves:** Rounded spline curves that emphasize overall trends")
             st.write("• **Use straight lines when:** You want to see precise data changes between time periods")
             st.write("• **Use smooth curves when:** You want to focus on general trend patterns")
 
