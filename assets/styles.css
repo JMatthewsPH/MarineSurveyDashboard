@@ -435,6 +435,74 @@ a[href^="#"]:not([href*="/"]):not([href*="."]) {
     box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
+/* ===== SIDEBAR COLLAPSE BUTTON - ALWAYS VISIBLE ON MOBILE ===== */
+/* Make sidebar collapse button always visible (not just on hover/focus) */
+/* This is critical for mobile usability since there's no hover state */
+button[data-testid="stBaseButton-headerNoPadding"],
+button[kind="header"][data-testid="baseButton-header"],
+button[kind="header"],
+[data-testid="collapsedControl"],
+button[aria-label*="Close sidebar"],
+button[aria-label*="Open sidebar"],
+section[data-testid="stSidebar"] > div > button,
+section[data-testid="stSidebar"] button[kind="header"],
+[data-testid="stSidebarHeader"] button {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: flex !important;
+    position: relative !important;
+    z-index: 999 !important;
+}
+
+/* Ensure the header container doesn't block clicks */
+[data-testid="stSidebarHeader"] {
+    pointer-events: none !important;
+}
+
+/* But the button itself should receive clicks */
+[data-testid="stSidebarHeader"] button {
+    pointer-events: auto !important;
+}
+
+/* Mobile-specific: Ensure collapse button is always visible and easy to tap */
+@media (max-width: 768px) {
+    button[data-testid="stBaseButton-headerNoPadding"],
+    button[kind="header"][data-testid="baseButton-header"],
+    button[kind="header"],
+    [data-testid="collapsedControl"],
+    button[aria-label*="Close sidebar"],
+    button[aria-label*="Open sidebar"],
+    section[data-testid="stSidebar"] > div > button,
+    section[data-testid="stSidebar"] button[kind="header"],
+    [data-testid="stSidebarHeader"] button {
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: flex !important;
+        min-width: 44px !important;
+        min-height: 44px !important;
+        width: 44px !important;
+        height: 44px !important;
+        padding: 10px !important;
+        background-color: rgba(255, 255, 255, 0.9) !important;
+        border-radius: 6px !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+        position: relative !important;
+        z-index: 999 !important;
+        pointer-events: auto !important;
+        cursor: pointer !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    /* Ensure the image/icon inside the button scales properly */
+    [data-testid="stSidebarHeader"] button img,
+    [data-testid="stSidebarHeader"] button svg {
+        width: 24px !important;
+        height: 24px !important;
+        pointer-events: none !important;
+    }
+}
+
 /* ===== MOBILE RESPONSIVENESS ===== */
 /* Mobile-specific base styles */
 @media (max-width: 768px) {
