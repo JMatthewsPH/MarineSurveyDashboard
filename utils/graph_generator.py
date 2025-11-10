@@ -74,6 +74,53 @@ def generate_filename(title: str, start_date=None, end_date=None) -> str:
 
     return f"{clean_title}_{date_str}.png"
 
+def add_confidence_interval(fig, df, x_col, metric_col):
+    """Add 95% confidence interval as a shaded ribbon around mean."""
+    ci_low = f"{metric_col}_CI_low"
+    ci_high = f"{metric_col}_CI_high"
+    if ci_low not in df.columns or ci_high not in df.columns:
+        return
+
+    fig.add_trace(go.Scatter(
+        x=df[x_col],
+        y=df[ci_high],
+        mode="lines",
+        line=dict(width=0),
+        showlegend=False,
+        hoverinfo="skip"
+    ))
+
+    fig.add_trace(go.Scatter(
+        x=df[x_col],
+        y=df[ci_low],
+        mode="lines",
+        fill="tonexty",
+        fillcolor="rgba(0, 119, 182, 0.15)",
+        line=dict(width=0),
+        name="95% CI",
+        hoverinfo="skip"
+    ))
+
+def build_error_y(df, metric_col):
+    """Return Plotly-compatible error_y object for ±1 SE display."""
+    eb_low = f"{metric_col}_EB_low"
+    eb_high = f"{metric_col}_EB_high"
+    if eb_low not in df.columns or eb_high not in df.columns:
+        return None
+
+    mean = df[metric_col]
+    eb_minus = mean - df[eb_low]
+    eb_plus = df[eb_high] - mean
+    return dict(
+        type="data",
+        symmetric=False,
+        array=eb_plus,
+        arrayminus=eb_minus,
+        visible=True,
+        color="rgba(0,0,0,0.4)",
+        thickness=1.5
+    )
+
 class GraphGenerator:
     def __init__(self, data_processor):
         self.data_processor = data_processor
