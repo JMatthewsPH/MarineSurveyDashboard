@@ -26,16 +26,16 @@ def generate_season_timeline(start_date, end_date=None):
     """Generate all seasons from start_date to end_date (or current date)"""
     if end_date is None:
         end_date = datetime.now()
-
+    
     seasons = []
     current = pd.to_datetime(start_date)
     target_end = pd.to_datetime(end_date)
-
+    
     while current <= target_end:
         season = format_season(current)
         if season not in seasons:
             seasons.append(season)
-
+        
         # Move to next season (3 months)
         if current.month in [3, 4, 5]:  # MAR-MAY -> JUN-AUG
             current = current.replace(month=6, day=1)
@@ -45,7 +45,7 @@ def generate_season_timeline(start_date, end_date=None):
             current = current.replace(month=12, day=1)
         else:  # DEC-FEB -> MAR-MAY (next year)
             current = current.replace(year=current.year + 1, month=3, day=1)
-
+    
     return seasons
 
 def generate_filename(title: str, start_date=None, end_date=None) -> str:
@@ -74,53 +74,6 @@ def generate_filename(title: str, start_date=None, end_date=None) -> str:
 
     return f"{clean_title}_{date_str}.png"
 
-def add_confidence_interval(fig, df, x_col, metric_col):
-    """Add 95% confidence interval as a shaded ribbon around mean."""
-    ci_low = f"{metric_col}_CI_low"
-    ci_high = f"{metric_col}_CI_high"
-    if ci_low not in df.columns or ci_high not in df.columns:
-        return
-
-    fig.add_trace(go.Scatter(
-        x=df[x_col],
-        y=df[ci_high],
-        mode="lines",
-        line=dict(width=0),
-        showlegend=False,
-        hoverinfo="skip"
-    ))
-
-    fig.add_trace(go.Scatter(
-        x=df[x_col],
-        y=df[ci_low],
-        mode="lines",
-        fill="tonexty",
-        fillcolor="rgba(0, 119, 182, 0.15)",
-        line=dict(width=0),
-        name="95% CI",
-        hoverinfo="skip"
-    ))
-
-def build_error_y(df, metric_col):
-    """Return Plotly-compatible error_y object for ±1 SE display."""
-    eb_low = f"{metric_col}_EB_low"
-    eb_high = f"{metric_col}_EB_high"
-    if eb_low not in df.columns or eb_high not in df.columns:
-        return None
-
-    mean = df[metric_col]
-    eb_minus = mean - df[eb_low]
-    eb_plus = df[eb_high] - mean
-    return dict(
-        type="data",
-        symmetric=False,
-        array=eb_plus,
-        arrayminus=eb_minus,
-        visible=True,
-        color="rgba(0,0,0,0.4)",
-        thickness=1.5
-    )
-
 class GraphGenerator:
     def __init__(self, data_processor):
         self.data_processor = data_processor
@@ -144,19 +97,19 @@ class GraphGenerator:
             'Rubble': {'min': 0, 'max': 100},               # percentage
             'Rubble Cover': {'min': 0, 'max': 100}          # percentage
         }
-
+        
         # If exact match not found, look for partial matches
         if metric_name not in ranges:
             for key in ranges:
                 if key in metric_name:
                     return ranges[key]
-
+        
         return ranges.get(metric_name, {'min': 0, 'max': 100})  # default range
 
     def create_time_series(self, data, title, y_label, comparison_data=None, comparison_labels=None, date_range=None, secondary_data=None, secondary_label=None, tertiary_data=None, tertiary_label=None, show_confidence_interval=False, show_error_bars=False, use_straight_lines=False):
         """
         Create time series graph with optional multiple comparison sites and date range
-
+        
         Args:
             data: Primary data to plot
             title: Chart title
@@ -172,7 +125,7 @@ class GraphGenerator:
             show_error_bars: Whether to show error bars (standard deviation) - mutually exclusive with confidence intervals
             use_straight_lines: Whether to use straight lines instead of smooth spline curves
         """
-
+        
         # Debug logging for Lutoban Pier
         if 'Lutoban Pier' in title:
             print(f"DEBUG LUTOBAN MAIN: Creating chart for {title}")
@@ -213,7 +166,7 @@ class GraphGenerator:
         if not isinstance(data['date'].iloc[0], pd.Timestamp):
             data['date'] = pd.to_datetime(data['date'])
         data = data.sort_values('date')
-
+        
         # Precompute these values to avoid recalculating them later
         start_date = data['date'].min()
         end_date = data['date'].max()
@@ -223,35 +176,35 @@ class GraphGenerator:
 
         # Format dates as seasons - vectorized operation
         data['season'] = data['date'].apply(format_season)
-
+        
         # Sort data by date to ensure proper timeline ordering
         data_sorted = data.sort_values('date').copy()
+        
 
-
-
+        
         # Use all actual data but properly aggregate by season
         # First, properly aggregate by season (group by season and take the mean)
         metric_column = data_sorted.columns[1]  # Get the actual metric column name
-
+        
         # Group by season and aggregate (using mean for multiple values in same season)
         aggregated_data = data_sorted.groupby('season').agg({
             'date': 'first',  # Take first date for each season
             metric_column: 'mean'  # Average if multiple surveys in same season
         }).reset_index()
-
+        
         # Rename the metric column to 'value' for consistent processing
         complete_df = aggregated_data.rename(columns={metric_column: 'value'})
         complete_df['has_data'] = True
-
+        
         # Sort by date to ensure proper chronological order
         complete_df = complete_df.sort_values('date')
-
+        
         # Data is ready for gap detection in the main plotting section
 
         # Get the metric name from the title - only compute once
         metric_name = title.split(' - ')[0].strip()
         y_range = self.get_metric_range(metric_name)
-
+        
         # Set custom tick intervals for specific metrics
         y_axis_settings = {
             'automargin': True,
@@ -262,7 +215,7 @@ class GraphGenerator:
             'side': 'left',
             'range': [y_range['min'], y_range['max']]  # Set fixed y-axis range
         }
-
+        
         # Add specific tick settings for different metrics
         if 'Herbivore' in metric_name:
             y_axis_settings.update({
@@ -308,121 +261,74 @@ class GraphGenerator:
             })
 
         # Helper function to calculate and add confidence intervals
-        # def add_confidence_interval(data_subset, metric_column):
-        #     if data_subset.empty:
-        #         return
-
-        #     # Get the y-values (using direct column name is faster)
-        #     y_values = data_subset[metric_column].values
-
-        #     # Vectorized calculations are much faster
-        #     n_values = len(y_values)
-        #     if n_values <= 1:
-        #         return
-
-        #     # Vectorized calculations for confidence intervals
-        #     sem = np.std(y_values, ddof=1) / np.sqrt(n_values)
-        #     ci_lower = np.maximum(y_values - 1.96 * sem, 0)  # Don't go below 0
-        #     ci_upper = y_values + 1.96 * sem
-
-        #     # Add confidence interval traces - add both at once
-        #     fig.add_trace(go.Scatter(
-        #         x=data_subset['season'],
-        #         y=ci_upper,
-        #         mode='lines',
-        #         line=dict(width=0),
-        #         showlegend=False,
-        #         hoverinfo='skip'
-        #     ))
-
-        #     fig.add_trace(go.Scatter(
-        #         x=data_subset['season'],
-        #         y=ci_lower,
-        #         mode='lines',
-        #         line=dict(width=0),
-        #         fill='tonexty',
-        #         fillcolor='rgba(0, 119, 182, 0.2)',  # Light blue with transparency
-        #         showlegend=False,
-        #         name='95% Confidence Interval',
-        #         hoverinfo='skip'
-        #     ))
-
-        def add_confidence_interval(fig, df, x_col, metric_col):
-            """Add 95% confidence interval as a shaded ribbon around mean."""
-            ci_low = f"{metric_col}_CI_low"
-            ci_high = f"{metric_col}_CI_high"
-            if ci_low not in df.columns or ci_high not in df.columns:
-                return  # skip if columns absent
-
+        def add_confidence_interval(data_subset, metric_column):
+            if data_subset.empty:
+                return
+                
+            # Get the y-values (using direct column name is faster)
+            y_values = data_subset[metric_column].values
+            
+            # Vectorized calculations are much faster
+            n_values = len(y_values)
+            if n_values <= 1:
+                return
+                
+            # Vectorized calculations for confidence intervals
+            sem = np.std(y_values, ddof=1) / np.sqrt(n_values)
+            ci_lower = np.maximum(y_values - 1.96 * sem, 0)  # Don't go below 0
+            ci_upper = y_values + 1.96 * sem
+            
+            # Add confidence interval traces - add both at once
             fig.add_trace(go.Scatter(
-                x=df[x_col],
-                y=df[ci_high],
-                mode="lines",
+                x=data_subset['season'],
+                y=ci_upper,
+                mode='lines',
                 line=dict(width=0),
                 showlegend=False,
-                hoverinfo="skip"
+                hoverinfo='skip'
             ))
-
+            
             fig.add_trace(go.Scatter(
-                x=df[x_col],
-                y=df[ci_low],
-                mode="lines",
-                fill="tonexty",
-                fillcolor="rgba(0, 119, 182, 0.15)",  # light blue colors
+                x=data_subset['season'],
+                y=ci_lower,
+                mode='lines',
                 line=dict(width=0),
-                name="95% CI",
-                hoverinfo="skip"
+                fill='tonexty',
+                fillcolor='rgba(0, 119, 182, 0.2)',  # Light blue with transparency
+                showlegend=False,
+                name='95% Confidence Interval',
+                hoverinfo='skip'
             ))
-
+        
         # Helper function to calculate and add error bars (standard deviation)
-        # def add_error_bars(data_subset, metric_column):
-        #     if data_subset.empty:
-        #         return
-
-        #     # Get the y-values and calculate standard deviation
-        #     y_values = data_subset[metric_column].values
-        #     n_values = len(y_values)
-        #     if n_values <= 1:
-        #         return
-
-        #     # Calculate standard deviation
-        #     std_dev = np.std(y_values, ddof=1)
-
-        #     # Add error bars to the main trace
-        #     error_y = dict(
-        #         type='data',
-        #         array=[std_dev] * len(data_subset),
-        #         visible=True,
-        #         color='rgba(0, 119, 182, 0.5)',
-        #         thickness=2,
-        #         width=3
-        #     )
-        #     return error_y
-
-        def build_error_y(df, metric_col):
-            """Return Plotly-compatible error_y object for ±1 SE display."""
-            eb_low = f"{metric_col}_EB_low"
-            eb_high = f"{metric_col}_EB_high"
-            if eb_low not in df.columns or eb_high not in df.columns:
-                return None
-
-            mean = df[metric_col]
-            eb_minus = mean - df[eb_low]
-            eb_plus = df[eb_high] - mean
-            return dict(
-                type="data",
-                symmetric=False,
-                array=eb_plus,
-                arrayminus=eb_minus,
+        def add_error_bars(data_subset, metric_column):
+            if data_subset.empty:
+                return
+                
+            # Get the y-values and calculate standard deviation
+            y_values = data_subset[metric_column].values
+            n_values = len(y_values)
+            if n_values <= 1:
+                return
+                
+            # Calculate standard deviation
+            std_dev = np.std(y_values, ddof=1)
+            
+            # Add error bars to the main trace
+            error_y = dict(
+                type='data',
+                array=[std_dev] * len(data_subset),
                 visible=True,
-                color="rgba(0,0,0,0.4)",
-                thickness=1.5
+                color='rgba(0, 119, 182, 0.5)',
+                thickness=2,
+                width=3
             )
-
+            return error_y
+        
         # Handle analysis options - confidence intervals and error bars are mutually exclusive
         metric_column = data.columns[1] if not data.empty else None
         error_y_settings = None
-
+        
         if show_confidence_interval and metric_column and not complete_df.empty:
             # Use complete dataset for confidence intervals
             complete_df_for_ci = complete_df.copy()
@@ -433,30 +339,30 @@ class GraphGenerator:
             complete_df_for_eb = complete_df.copy()
             complete_df_for_eb[metric_column] = complete_df_for_eb['value']
             error_y_settings = add_error_bars(complete_df_for_eb, metric_column)
-
+        
         # Add data points with automatic gap detection for COVID periods
         # Detect gaps in consecutive data and add dotted connectors
-
+        
         # Sort data chronologically
         complete_df_sorted = complete_df.sort_values('date').reset_index(drop=True)
-
+        
         # Find gaps (more than 6 months between consecutive data points)
         gaps = []
         if 'Lutoban Pier' in title:
             print(f"DEBUG LUTOBAN: Checking {len(complete_df_sorted)} data points for gaps")
             for i in range(len(complete_df_sorted)):
                 print(f"DEBUG LUTOBAN: Point {i}: {complete_df_sorted.iloc[i]['date']} - {complete_df_sorted.iloc[i]['season']}")
-
+        
         for i in range(len(complete_df_sorted) - 1):
             current_date = complete_df_sorted.iloc[i]['date']
             next_date = complete_df_sorted.iloc[i + 1]['date']
-
+            
             # Calculate months between dates
             months_diff = (next_date.year - current_date.year) * 12 + (next_date.month - current_date.month)
-
+            
             if 'Lutoban Pier' in title:
                 print(f"DEBUG LUTOBAN: Gap between {current_date.strftime('%Y-%m-%d')} and {next_date.strftime('%Y-%m-%d')} = {months_diff} months")
-
+            
             # If gap is more than 6 months, it's likely a COVID period
             if months_diff > 6:
                 if 'Lutoban Pier' in title:
@@ -469,20 +375,20 @@ class GraphGenerator:
                     'before_value': complete_df_sorted.iloc[i]['value'],
                     'after_value': complete_df_sorted.iloc[i + 1]['value']
                 })
+        
 
-
-
+        
         # Configure line style based on user preference
         line_style = {
             'color': '#0077b6',
             'dash': 'solid'
         }
-
+        
         # Add smooth curves unless straight lines are requested
         if not use_straight_lines:
             line_style['shape'] = 'spline'
             line_style['smoothing'] = 1.3
-
+        
         # Add all data points as one trace
         trace_args = {
             'x': complete_df['season'],
@@ -492,13 +398,13 @@ class GraphGenerator:
             'mode': 'lines+markers',
             'showlegend': True
         }
-
+        
         # Add error bars if requested
         if error_y_settings:
             trace_args['error_y'] = error_y_settings
-
+        
         fig.add_trace(go.Scatter(**trace_args))
-
+        
         # Add dotted lines for each detected gap
         for i, gap in enumerate(gaps):
             fig.add_trace(go.Scatter(
@@ -518,27 +424,27 @@ class GraphGenerator:
                 if not complete_df.empty:
                     # Ensure dates are properly converted to pandas timestamps
                     complete_df['date'] = pd.to_datetime(complete_df['date'])
-
+                    
                     # Convert filter dates to pandas timestamps for consistent comparison
                     # Also remove timezone info to avoid comparison issues
                     start_dt = pd.to_datetime(start_filter).tz_localize(None)
                     end_dt = pd.to_datetime(end_filter).tz_localize(None)
-
+                    
                     # Filter the primary data
                     complete_df = complete_df[(complete_df['date'] >= start_dt) & (complete_df['date'] <= end_dt)]
-
+                    
                     # Update chart title with date range info
                     date_range_str = f"{start_dt.strftime('%b %Y')} - {end_dt.strftime('%b %Y')}"
                     title = f"{title} ({date_range_str})"
-
+        
         # Define a list of colors for multiple comparison sites
         comparison_colors = ['#ef476f', '#ffd166', '#06d6a0', '#118ab2', '#073b4c', '#9b5de5', '#f15bb5']
-
+        
         # Handle comparison data (which can be a single DataFrame or a list of DataFrames)
         if comparison_data is not None:
             comparison_list = []
             labels_list = []
-
+            
             # Convert single DataFrame to list for consistent handling
             if isinstance(comparison_data, pd.DataFrame) and not comparison_data.empty:
                 comparison_list = [comparison_data]
@@ -554,7 +460,7 @@ class GraphGenerator:
                 else:
                     # Generate default labels if none provided
                     labels_list = [f'Comparison {i+1}' for i in range(len(comparison_list))]
-
+            
             # Process each comparison dataset
             for i, (comp_df, label) in enumerate(zip(comparison_list, labels_list)):
                 # Apply date range filter if specified
@@ -564,36 +470,36 @@ class GraphGenerator:
                         # Convert to datetime for consistent comparison
                         comp_df = comp_df.copy()
                         comp_df['date'] = pd.to_datetime(comp_df['date'])
-
+                        
                         # Convert filter dates to pandas timestamps for consistent comparison
                         # Also remove timezone info to avoid comparison issues
                         start_dt = pd.to_datetime(start_filter).tz_localize(None)
                         end_dt = pd.to_datetime(end_filter).tz_localize(None)
-
+                        
                         # Filter using consistent timestamp objects
                         comp_df = comp_df[(comp_df['date'] >= start_dt) & (comp_df['date'] <= end_dt)]
-
+                
                 # Sort and format data
                 if not comp_df.empty and 'date' in comp_df.columns:
                     comp_df = comp_df.sort_values('date')
-
+                
                 # Ensure comp_df['date'] is in datetime64 format
                 if not comp_df.empty:
                     comp_df['date'] = pd.to_datetime(comp_df['date'])
                     comp_df['season'] = comp_df['date'].apply(format_season)
-
+                    
                     # Sort by date for gap detection
                     comp_df_sorted = comp_df.sort_values('date').reset_index(drop=True)
-
+                    
                     # Find gaps in this comparison data
                     comp_gaps = []
                     for j in range(len(comp_df_sorted) - 1):
                         current_date = comp_df_sorted.iloc[j]['date']
                         next_date = comp_df_sorted.iloc[j + 1]['date']
-
+                        
                         # Calculate months between dates
                         months_diff = (next_date.year - current_date.year) * 12 + (next_date.month - current_date.month)
-
+                        
                         # If gap is more than 6 months, it's likely a COVID period
                         if months_diff > 6:
                             comp_gaps.append({
@@ -609,14 +515,14 @@ class GraphGenerator:
                     if 'season' not in comp_df.columns:
                         comp_df['season'] = pd.Series(dtype='object')
                     comp_gaps = []
-
+                
                 # Pick a color (cycle through the available colors)
                 color = comparison_colors[i % len(comparison_colors)]
-
+                
                 # Determine if we should add a legend item for this comparison
                 # We want to ensure the legend shows each site, regardless of data period
                 have_shown_in_legend = False
-
+                
                 # Add comparison data as one continuous trace
                 if not comp_df.empty:
                     fig.add_trace(go.Scatter(
@@ -627,7 +533,7 @@ class GraphGenerator:
                         mode='lines+markers'
                     ))
                     have_shown_in_legend = True
-
+                    
                     # Add dotted connectors for gaps in this comparison data
                     for j, gap in enumerate(comp_gaps):
                         fig.add_trace(go.Scatter(
@@ -697,7 +603,7 @@ class GraphGenerator:
             },
             'yaxis': y_axis_settings
         }
-
+        
         # Special handling for specific metrics to ensure they always show properly
         if 'Corallivore' in metric_name:
             layout_updates['yaxis']['tickmode'] = 'linear'
@@ -721,7 +627,7 @@ class GraphGenerator:
             layout_updates['yaxis']['dtick'] = 20  # 20% intervals for Rubble
 
         fig.update_layout(**layout_updates)
-
+        
         # Ensure title centering is properly applied
         fig.update_layout(
             title={
@@ -736,7 +642,7 @@ class GraphGenerator:
                 'pad': {'t': 20}
             }
         )
-
+        
         # Final direct fix for Corallivore Density - ensures that the visualization always shows ticks properly
         if 'Corallivore' in metric_name:
             fig.update_yaxes(
@@ -752,9 +658,9 @@ class GraphGenerator:
                 dtick=50,  # 50 unit intervals (reduced from 200)
                 range=[0, 300]  # Reduced from 1000 to better fit actual data
             )
-
+        
         # Skip annotation logic for now - focus on showing all data correctly
-
+            
         return fig, config
 
     def create_eco_tourism_chart(self, data, title, observation_type='percentage'):
@@ -834,11 +740,11 @@ class GraphGenerator:
             'displayModeBar': 'hover'  # Only show mode bar on hover to save space
         }
         return fig, config
-
+        
     def create_site_comparison_heatmap(self, matrix_data, metric_column, title=None):
         """
         Create a heatmap for site comparison based on selected metric
-
+        
         Args:
             matrix_data: DataFrame with sites as rows and metrics as columns
             metric_column: Column name to visualize in the heatmap
@@ -846,7 +752,7 @@ class GraphGenerator:
         """
         # Sort data by municipality then site name for better organization
         sorted_data = matrix_data.sort_values(['municipality', 'site'])
-
+        
         # Get color scale based on metric
         if metric_column == 'hard_coral_cover':
             colorscale = 'Blues'  # Use Blues for coral (higher is better)
@@ -867,7 +773,7 @@ class GraphGenerator:
         else:
             colorscale = 'Viridis'
             zmin, zmax = None, None
-
+            
         # Format annotations and create hover text
         formatted_values = []
         for val in sorted_data[metric_column]:
@@ -881,13 +787,13 @@ class GraphGenerator:
                 formatted_values.append(f"{val:.1f} ind/ha")
             else:
                 formatted_values.append(f"{val:.1f}")
-
+                
         # Create custom hover text
         hover_text = [
             f"Site: {row['site']}<br>Municipality: {row['municipality']}<br>{metric_column.replace('_', ' ').title()}: {val}"
             for val, (_, row) in zip(formatted_values, sorted_data.iterrows())
         ]
-
+            
         # Create the heatmap
         fig = go.Figure(data=go.Heatmap(
             z=sorted_data[metric_column],
@@ -900,11 +806,11 @@ class GraphGenerator:
             hoverinfo='text',
             hovertext=hover_text
         ))
-
+        
         # Add municipality separators
         municipalities = sorted_data['municipality'].unique()
         site_groups = []
-
+        
         for muni in municipalities:
             mask = sorted_data['municipality'] == muni
             site_groups.append({
@@ -913,7 +819,7 @@ class GraphGenerator:
                 'end': mask.iloc[::-1].idxmax(),
                 'count': mask.sum()
             })
-
+            
         # Add shapes to separate municipalities
         shapes = []
         for i, group in enumerate(site_groups):
@@ -922,7 +828,7 @@ class GraphGenerator:
                 if prev_end < group['start']:
                     y_pos = (sorted_data.index.get_loc(prev_end) + 
                             sorted_data.index.get_loc(group['start'])) / 2
-
+                    
                     shapes.append(dict(
                         type="line",
                         x0=-0.5,
@@ -931,10 +837,10 @@ class GraphGenerator:
                         y1=y_pos,
                         line=dict(color="black", width=2, dash="dot")
                     ))
-
+                    
         # Set layout
         title_text = title if title else f"Site Comparison by {metric_column.replace('_', ' ').title()}"
-
+        
         fig.update_layout(
             title=title_text,
             height=max(400, 20 * len(sorted_data) + 100),  # Adjust height based on number of sites
@@ -951,7 +857,7 @@ class GraphGenerator:
             shapes=shapes,
             template="plotly_white"
         )
-
+        
         # Configure download settings
         config = {
             'toImageButtonOptions': {
@@ -971,13 +877,13 @@ class GraphGenerator:
             'showTips': True,
             'displayModeBar': 'hover'
         }
-
+        
         return fig, config
-
+    
     def create_geographic_visualization(self, sites_data, metric_column, title=None):
         """
         Create a bubble map plot showing sites colored by metric value
-
+        
         Args:
             sites_data: DataFrame with site info including lat/lon and metric values
             metric_column: Column name to visualize with color and size
@@ -985,14 +891,14 @@ class GraphGenerator:
         """
         # This is a placeholder - in real implementation this would use lat/lon data
         # and create a Mapbox or Scattergeo plot
-
+        
         # First, handle NaN values in the metric column by replacing them with 0
         # Create a copy to avoid modifying the original dataframe
         chart_data = sites_data.copy()
-
+        
         # Fill NaN values with 0 for the metric column
         chart_data[metric_column] = chart_data[metric_column].fillna(0)
-
+        
         # Create a size column that's always positive (minimum 5) for better visibility
         # Scale the values to a reasonable range for the scatter plot
         # Handle different metric scales appropriately
@@ -1006,7 +912,7 @@ class GraphGenerator:
             chart_data['marker_size'] = chart_data[metric_column].apply(
                 lambda x: max(5, min(30, x)) if pd.notnull(x) else 5
             )
-
+        
         # Now we're sure marker_size doesn't contain any NaN values
         # For now, create a scatter plot with municipality on x-axis as an approximation
         fig = px.scatter(
@@ -1021,7 +927,7 @@ class GraphGenerator:
             size_max=40,
             opacity=0.8
         )
-
+        
         # Add appropriate labels in the hover data based on the metric type
         hover_template = ""
         if 'biomass' in metric_column:
@@ -1032,11 +938,11 @@ class GraphGenerator:
             hover_template = "<b>%{hovertext}</b><br>Municipality: %{x}<br>Density: %{marker.color:.1f} ind/ha<extra></extra>"
         else:
             hover_template = "<b>%{hovertext}</b><br>Municipality: %{x}<br>Value: %{marker.color:.1f}<extra></extra>"
-
+            
         fig.update_traces(
             hovertemplate=hover_template
         )
-
+        
         fig.update_layout(
             height=500,
             template="plotly_white",
@@ -1044,7 +950,7 @@ class GraphGenerator:
             xaxis_title="Municipality",
             yaxis_title="Site"
         )
-
+        
         # Configure download settings
         config = {
             'toImageButtonOptions': {
@@ -1064,13 +970,13 @@ class GraphGenerator:
             'showTips': True,
             'displayModeBar': 'hover'
         }
-
+        
         return fig, config
-
+        
     def create_multi_site_trend_chart(self, trend_data, metric_name, group_by_municipality=False, highlight_sites=None):
         """
         Create time series with multiple lines for all sites
-
+        
         Args:
             trend_data: DataFrame with 'date', 'site', 'municipality', and metric columns
             metric_name: Name of the metric column to plot
@@ -1079,7 +985,7 @@ class GraphGenerator:
         """
         # Create figure
         fig = go.Figure()
-
+        
         # Set up color mapping for consistent colors
         if group_by_municipality:
             municipalities = trend_data['municipality'].unique()
@@ -1089,16 +995,16 @@ class GraphGenerator:
             sites = trend_data['site'].unique()
             color_map = {site: px.colors.qualitative.Plotly[i % len(px.colors.qualitative.Plotly)] 
                         for i, site in enumerate(sites)}
-
+        
         # Add traces for each site or municipality group
         for site in trend_data['site'].unique():
             site_data = trend_data[trend_data['site'] == site]
-
+            
             if site_data.empty:
                 continue
-
+                
             municipality = site_data['municipality'].iloc[0]
-
+            
             # Determine line properties
             line_props = {}
             if highlight_sites and site in highlight_sites:
@@ -1107,7 +1013,7 @@ class GraphGenerator:
             else:
                 line_props['width'] = 1.5
                 line_props['dash'] = 'dot' if highlight_sites else None
-
+                
             # Set color based on grouping
             if group_by_municipality:
                 color = color_map[municipality]
@@ -1115,7 +1021,7 @@ class GraphGenerator:
             else:
                 color = color_map[site]
                 name = site
-
+                
             # Add the trace with improved styling
             fig.add_trace(go.Scatter(
                 x=site_data['date'],
@@ -1134,10 +1040,10 @@ class GraphGenerator:
                 ),
                 hovertemplate=f"{site} ({municipality})<br>Date: %{{x}}<br>{metric_name}: %{{y:.1f}}<extra></extra>"
             ))
-
+        
         # Format the y-axis range based on metric type - use fixed range of 0-100 with 10 unit spacing
         y_min, y_max = 0, 100
-
+        
         # Get an appropriate label based on the metric
         if 'biomass' in metric_name.lower():
             y_title = "Biomass (kg/150m²)"
@@ -1147,7 +1053,7 @@ class GraphGenerator:
             y_title = "Density (ind/ha)"
         else:
             y_title = metric_name.replace('_', ' ').title()
-
+        
         # Set title and layout with centered title and responsive design
         title = f"Trend Analysis: {metric_name.replace('_', ' ').title()} Across All Sites"
         fig.update_layout(
@@ -1183,7 +1089,7 @@ class GraphGenerator:
                 gridcolor='lightgray'
             )
         )
-
+        
         # Configure download settings
         config = {
             'toImageButtonOptions': {
@@ -1203,13 +1109,13 @@ class GraphGenerator:
             'showTips': True,
             'displayModeBar': 'hover'
         }
-
+        
         return fig, config
     def create_municipality_grouped_bar_chart(self, matrix_data, metric_column, title=None, y_axis_label=None):
         """
         Create a bar chart with sites grouped by municipality, using red-yellow-green color coding
         for health indicators, starting Y-axis from 0
-
+        
         Args:
             matrix_data: DataFrame with site, municipality, and metric columns
             metric_column: Column name to visualize
@@ -1220,11 +1126,11 @@ class GraphGenerator:
             import plotly.express as px
             import plotly.graph_objects as go
             import numpy as np
-
+            
             # Clean the data - replace NaN with 0 instead of dropping rows
             clean_data = matrix_data.copy()
             clean_data[metric_column] = clean_data[metric_column].fillna(0)
-
+            
             if clean_data.empty:
                 # Return empty chart if no data
                 fig = go.Figure()
@@ -1242,17 +1148,17 @@ class GraphGenerator:
                 )
                 config = {'displaylogo': False, 'responsive': True}
                 return fig, config
-
+            
             # Sort by municipality and then by site name for consistent ordering
             clean_data = clean_data.sort_values(['municipality', 'site'])
-
+            
             # Create site labels with municipality grouping for X-axis
             clean_data['site_label'] = clean_data['site']
-
+            
             # Determine color mapping based on metric values
             min_val = clean_data[metric_column].min()
             max_val = clean_data[metric_column].max()
-
+            
             # Create color scale: red (low) -> yellow (medium) -> green (high)
             # For biomass and positive indicators, high values are green
             # For negative indicators like bleaching, we'd reverse this
@@ -1265,7 +1171,7 @@ class GraphGenerator:
             else:
                 # Default to red-yellow-green for most metrics
                 colorscale = 'RdYlGn'
-
+            
             # Create the bar chart with color mapping (no title here - will be set in update_layout)
             fig = px.bar(
                 clean_data,
@@ -1279,7 +1185,7 @@ class GraphGenerator:
                 },
                 hover_data=['municipality']
             )
-
+            
             # Customize the layout with centered title and responsive design
             fig.update_layout(
                 title={
@@ -1306,14 +1212,14 @@ class GraphGenerator:
                 ),
                 showlegend=False  # Hide color legend to save space
             )
-
+            
             # Add municipality group separators
             municipalities = clean_data['municipality'].unique()
             x_pos = 0
             for i, municipality in enumerate(municipalities):
                 muni_data = clean_data[clean_data['municipality'] == municipality]
                 sites_in_muni = len(muni_data)
-
+                
                 # Add vertical line to separate municipalities (except before first)
                 if i > 0:
                     fig.add_vline(
@@ -1323,7 +1229,7 @@ class GraphGenerator:
                         line_color="gray",
                         opacity=0.5
                     )
-
+                
                 # Add municipality label
                 fig.add_annotation(
                     x=x_pos + (sites_in_muni - 1) / 2,
@@ -1333,9 +1239,9 @@ class GraphGenerator:
                     font=dict(size=12, color="darkblue"),
                     yref="y"
                 )
-
+                
                 x_pos += sites_in_muni
-
+            
             # Enhanced hover template
             if 'biomass' in metric_column.lower():
                 hover_template = "<b>%{x}</b><br>Municipality: %{customdata[0]}<br>Biomass: %{y:.1f} kg/150m²<extra></extra>"
@@ -1345,9 +1251,9 @@ class GraphGenerator:
                 hover_template = "<b>%{x}</b><br>Municipality: %{customdata[0]}<br>Density: %{y:.1f} ind/ha<extra></extra>"
             else:
                 hover_template = "<b>%{x}</b><br>Municipality: %{customdata[0]}<br>Value: %{y:.1f}<extra></extra>"
-
+            
             fig.update_traces(hovertemplate=hover_template)
-
+            
             # Configure download settings
             config = {
                 'toImageButtonOptions': {
@@ -1366,9 +1272,9 @@ class GraphGenerator:
                 'showTips': True,
                 'displayModeBar': 'hover'
             }
-
+            
             return fig, config
-
+            
         except Exception as e:
             print(f"Error creating municipality grouped bar chart: {str(e)}")
             # Return a simple error chart
