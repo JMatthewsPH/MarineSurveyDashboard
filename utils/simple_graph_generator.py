@@ -350,6 +350,7 @@ class SimpleGraphGenerator:
             "Display Mode",
             ["Mean + Confidence Interval", "Mean + Error Bars"],
             horizontal=True,
+            key=f"display_mode_{title.replace(' ', '_').lower()}"
         )
 
         # ----------------------------------------------------------------------
