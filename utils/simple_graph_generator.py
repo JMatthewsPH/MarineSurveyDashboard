@@ -86,6 +86,10 @@ class SimpleGraphGenerator:
         # Get the metric column (should be the second column)
         metric_column = data.columns[1]
         
+        # Convert decimal values to percentages for percentage-based metrics
+        if 'coral' in metric_column.lower() or 'algae' in metric_column.lower() or 'bleaching' in metric_column.lower() or 'rubble' in metric_column.lower():
+            data[metric_column] = data[metric_column] * 100
+        
         # Format seasons for display
         data['season'] = data['date'].apply(format_season)
         
@@ -233,6 +237,11 @@ class SimpleGraphGenerator:
                     comp_data['date'] = pd.to_datetime(comp_data['date'])
                     comp_data = comp_data.sort_values('date')
                     comp_metric_column = comp_data.columns[1]
+                    
+                    # Convert decimal values to percentages for percentage-based metrics
+                    if 'coral' in comp_metric_column.lower() or 'algae' in comp_metric_column.lower() or 'bleaching' in comp_metric_column.lower() or 'rubble' in comp_metric_column.lower():
+                        comp_data[comp_metric_column] = comp_data[comp_metric_column] * 100
+                    
                     comp_data['season'] = comp_data['date'].apply(format_season)
                     
                     # Apply same date filter
