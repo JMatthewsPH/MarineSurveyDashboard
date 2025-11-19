@@ -48,522 +48,275 @@ class SimpleGraphGenerator:
     def __init__(self, data_processor):
         self.data_processor = data_processor
 
-    # def create_time_series(self, data, title, y_label, comparison_data=None, comparison_labels=None, date_range=None, secondary_data=None, secondary_label=None, tertiary_data=None, tertiary_label=None, show_confidence_interval=False, show_error_bars=False, use_straight_lines=False):
-    #     """
-    #     Create a simple time series chart
-    #     Data comes clean from database - just plot it
-    #     """
-        
-    #     # Chart configuration
-    #     config = {
-    #         'displayModeBar': True,
-    #         'modeBarButtonsToRemove': ['pan2d', 'select2d', 'lasso2d', 'resetScale2d', 'zoomIn2d', 'zoomOut2d'],
-    #         'toImageButtonOptions': {
-    #             'format': 'png',
-    #             'filename': generate_filename(title),
-    #             'height': 500,
-    #             'width': 800,
-    #             'scale': 2
-    #         }
-    #     }
-        
-    #     fig = go.Figure()
-        
-    #     # Handle empty data
-    #     if data.empty:
-    #         fig.add_annotation(
-    #             text="No data available for the selected period",
-    #             xref="paper", yref="paper",
-    #             x=0.5, y=0.5, showarrow=False,
-    #             font=dict(size=16, color="gray")
-    #         )
-    #         return fig, config
-
-    #     # Simple data preparation
-    #     data['date'] = pd.to_datetime(data['date'])
-    #     data = data.sort_values('date')
-        
-    #     # Get the metric column (should be the second column)
-    #     metric_column = data.columns[1]
-        
-    #     # Format seasons for display
-    #     data['season'] = data['date'].apply(format_season)
-        
-    #     # Apply date range filter if provided
-    #     if date_range and len(date_range) == 2:
-    #         start_filter, end_filter = date_range
-    #         if start_filter and end_filter:
-    #             start_dt = pd.to_datetime(start_filter)
-    #             end_dt = pd.to_datetime(end_filter)
-    #             data = data[(data['date'] >= start_dt) & (data['date'] <= end_dt)]
-        
-    #     # Check for COVID gap and split data if needed
-    #     covid_start = pd.Timestamp('2020-04-01')  # Apr 2020
-    #     covid_end = pd.Timestamp('2022-03-31')    # Mar 2022
-        
-    #     # Split data into pre and post COVID periods
-    #     pre_covid = data[data['date'] < covid_start]
-    #     post_covid = data[data['date'] > covid_end]
-    #     covid_period = data[(data['date'] >= covid_start) & (data['date'] <= covid_end)]
-        
-    #     # Configure line style based on user preference
-    #     line_style = {
-    #         'color': '#0077b6',
-    #         'width': 3
-    #     }
-        
-    #     # Add smooth curves unless straight lines are requested
-    #     if not use_straight_lines:
-    #         line_style['shape'] = 'spline'
-    #         line_style['smoothing'] = 1.3
-        
-    #     # Plot pre-COVID data if exists
-    #     if not pre_covid.empty:
-    #         fig.add_trace(go.Scatter(
-    #             x=pre_covid['season'],
-    #             y=pre_covid[metric_column],
-    #             name=y_label,
-    #             line=line_style,
-    #             mode='lines+markers',
-    #             marker=dict(size=8, color='#0077b6'),
-    #             showlegend=True
-    #         ))
-        
-    #     # Plot COVID period data if exists (same style)
-    #     if not covid_period.empty:
-    #         fig.add_trace(go.Scatter(
-    #             x=covid_period['season'],
-    #             y=covid_period[metric_column],
-    #             name=y_label,
-    #             line=line_style,
-    #             mode='lines+markers',
-    #             marker=dict(size=8, color='#0077b6'),
-    #             showlegend=False  # Don't duplicate legend
-    #         ))
-        
-    #     # Plot post-COVID data if exists
-    #     if not post_covid.empty:
-    #         fig.add_trace(go.Scatter(
-    #             x=post_covid['season'],
-    #             y=post_covid[metric_column],
-    #             name=y_label,
-    #             line=line_style,
-    #             mode='lines+markers',
-    #             marker=dict(size=8, color='#0077b6'),
-    #             showlegend=False  # Don't duplicate legend
-    #         ))
-        
-    #     # Add COVID gap dotted line if we have data before and after
-    #     if not pre_covid.empty and not post_covid.empty:
-    #         last_pre = pre_covid.iloc[-1]
-    #         first_post = post_covid.iloc[0]
-            
-    #         # Check if both Y values are valid (not NaN)
-    #         last_pre_value = last_pre[metric_column]
-    #         first_post_value = first_post[metric_column]
-            
-    #         # Only create gap line if both values are valid (not NaN)
-    #         if pd.notna(last_pre_value) and pd.notna(first_post_value):
-    #             fig.add_trace(go.Scatter(
-    #                 x=[last_pre['season'], first_post['season']],
-    #                 y=[last_pre_value, first_post_value],
-    #                 line=dict(color='#cccccc', dash='dot', width=2),
-    #                 mode='lines',
-    #                 name='COVID-19 Period (No Data)',
-    #                 showlegend=True
-    #             ))
-        
-    #     # Add "Data Collection Ongoing" indicator for current/future seasons
-    #     if not data.empty:
-    #         current_date = pd.Timestamp.now()
-    #         last_data_point = data.iloc[-1]
-    #         last_data_date = last_data_point['date']
-            
-    #         # If the last data point is recent (within 6 months), show ongoing collection
-    #         if (current_date - last_data_date).days < 180:
-    #             # Generate next expected season
-    #             if last_data_date.month in [1, 2]:  # Winter season
-    #                 next_season_date = pd.Timestamp(last_data_date.year, 4, 1)  # Spring
-    #                 next_season = f"MAR-MAY {last_data_date.year}"
-    #             elif last_data_date.month in [4, 5]:  # Spring season  
-    #                 next_season_date = pd.Timestamp(last_data_date.year, 7, 1)  # Summer
-    #                 next_season = f"JUN-AUG {last_data_date.year}"
-    #             elif last_data_date.month in [7, 8]:  # Summer season
-    #                 next_season_date = pd.Timestamp(last_data_date.year, 10, 1)  # Fall
-    #                 next_season = f"SEP-NOV {last_data_date.year}"
-    #             else:  # Fall season
-    #                 next_season_date = pd.Timestamp(last_data_date.year + 1, 1, 1)  # Winter next year
-    #                 next_season = f"DEC-FEB {last_data_date.year + 1}"
-                
-    #             # Add dotted line to indicate ongoing data collection
-    #             fig.add_trace(go.Scatter(
-    #                 x=[last_data_point['season'], next_season],
-    #                 y=[last_data_point[metric_column], last_data_point[metric_column]],
-    #                 line=dict(color='#888888', dash='dot', width=1),
-    #                 mode='lines',
-    #                 name='Data Collection Ongoing',
-    #                 showlegend=True
-    #             ))
-                
-    #             # Add annotation for ongoing data collection
-    #             fig.add_annotation(
-    #                 x=next_season,
-    #                 y=last_data_point[metric_column],
-    #                 text="Data Collection<br>Ongoing",
-    #                 showarrow=True,
-    #                 arrowhead=2,
-    #                 arrowcolor="#888888",
-    #                 arrowwidth=1,
-    #                 font=dict(size=10, color="#888888"),
-    #                 bgcolor="white",
-    #                 bordercolor="#888888",
-    #                 borderwidth=1
-    #             )
-        
-    #     # Add comparison data if provided
-    #     if comparison_data is not None:
-    #         if not isinstance(comparison_data, list):
-    #             comparison_data = [comparison_data]
-    #             comparison_labels = [comparison_labels] if comparison_labels else ["Comparison"]
-            
-    #         colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57']
-            
-    #         for i, comp_data in enumerate(comparison_data):
-    #             if not comp_data.empty:
-    #                 comp_data['date'] = pd.to_datetime(comp_data['date'])
-    #                 comp_data = comp_data.sort_values('date')
-    #                 comp_metric_column = comp_data.columns[1]
-    #                 comp_data['season'] = comp_data['date'].apply(format_season)
-                    
-    #                 # Apply same date filter
-    #                 if date_range and len(date_range) == 2:
-    #                     start_filter, end_filter = date_range
-    #                     if start_filter and end_filter:
-    #                         start_dt = pd.to_datetime(start_filter)
-    #                         end_dt = pd.to_datetime(end_filter)
-    #                         comp_data = comp_data[(comp_data['date'] >= start_dt) & (comp_data['date'] <= end_dt)]
-                    
-    #                 color = colors[i % len(colors)]
-    #                 # Ensure label is a string, not a list
-    #                 if comparison_labels and isinstance(comparison_labels, list) and i < len(comparison_labels):
-    #                     label = comparison_labels[i]
-    #                     # If label is still a list (edge case), take first element
-    #                     if isinstance(label, list):
-    #                         label = label[0] if label else f"Comparison {i+1}"
-    #                 else:
-    #                     label = f"Comparison {i+1}"
-                    
-    #                 # Configure comparison line style based on user preference
-    #                 comp_line_style = {
-    #                     'color': color,
-    #                     'width': 2,
-    #                     'dash': 'dash'
-    #                 }
-                    
-    #                 # Add smooth curves unless straight lines are requested
-    #                 if not use_straight_lines:
-    #                     comp_line_style['shape'] = 'spline'
-    #                     comp_line_style['smoothing'] = 1.3
-                    
-    #                 fig.add_trace(go.Scatter(
-    #                     x=comp_data['season'],
-    #                     y=comp_data[comp_metric_column],
-    #                     name=label,
-    #                     line=comp_line_style,
-    #                     mode='lines+markers',
-    #                     marker=dict(size=6, color=color)
-    #                 ))
-        
-    #     # Update layout
-    #     fig.update_layout(
-    #         title=dict(
-    #             text=title, 
-    #             x=0.5, 
-    #             xanchor='center',
-    #             xref='paper',
-    #             font=dict(size=18, color='#2c3e50')
-    #         ),
-    #         xaxis=dict(
-    #             title="Season",
-    #             showgrid=True,
-    #             gridwidth=1,
-    #             gridcolor='#ecf0f1',
-    #             tickangle=45
-    #         ),
-    #         yaxis=dict(
-    #             title=y_label,
-    #             showgrid=True,
-    #             gridwidth=1,
-    #             gridcolor='#ecf0f1'
-    #         ),
-    #         plot_bgcolor='white',
-    #         paper_bgcolor='white',
-    #         font=dict(family="Arial, sans-serif", size=12, color='#2c3e50'),
-    #         legend=dict(
-    #             orientation="h",
-    #             yanchor="bottom",
-    #             y=1.02,
-    #             xanchor="center",
-    #             x=0.5,
-    #             itemsizing="constant",
-    #             font=dict(size=11),
-    #             itemclick="toggleothers",
-    #             itemdoubleclick="toggle",
-    #             tracegroupgap=10
-    #         ),
-    #         hovermode='x unified',
-    #         margin=dict(l=60, r=60, t=120, b=100),
-    #         width=800,
-    #         height=500
-    #     )
-        
-    #     return fig, config
-
-    def create_time_series(
-        self,
-        data,
-        title,
-        y_label,
-        comparison_data=None,
-        comparison_labels=None,
-        date_range=None,
-        secondary_data=None,
-        secondary_label=None,
-        tertiary_data=None,
-        tertiary_label=None,
-        show_confidence_interval=False,
-        show_error_bars=False,
-        use_straight_lines=False,
-    ):
+    def create_time_series(self, data, title, y_label, comparison_data=None, comparison_labels=None, date_range=None, secondary_data=None, secondary_label=None, tertiary_data=None, tertiary_label=None, show_confidence_interval=False, show_error_bars=False, use_straight_lines=False):
         """
-        Create a simple time series chart.
-        Data comes clean from database - just plot it.
+        Create a simple time series chart
+        Data comes clean from database - just plot it
         """
-
-        # ----------------------------------------------------------------------
+        
         # Chart configuration
-        # ----------------------------------------------------------------------
         config = {
-            "displayModeBar": True,
-            "modeBarButtonsToRemove": [
-                "pan2d",
-                "select2d",
-                "lasso2d",
-                "resetScale2d",
-                "zoomIn2d",
-                "zoomOut2d",
-            ],
-            "toImageButtonOptions": {
-                "format": "png",
-                "filename": generate_filename(title),
-                "height": 500,
-                "width": 800,
-                "scale": 2,
-            },
+            'displayModeBar': True,
+            'modeBarButtonsToRemove': ['pan2d', 'select2d', 'lasso2d', 'resetScale2d', 'zoomIn2d', 'zoomOut2d'],
+            'toImageButtonOptions': {
+                'format': 'png',
+                'filename': generate_filename(title),
+                'height': 500,
+                'width': 800,
+                'scale': 2
+            }
         }
-
+        
         fig = go.Figure()
-
-        # ----------------------------------------------------------------------
-        # Handle empty data 
-        # ----------------------------------------------------------------------
+        
+        # Handle empty data
         if data.empty:
             fig.add_annotation(
                 text="No data available for the selected period",
-                xref="paper",
-                yref="paper",
-                x=0.5,
-                y=0.5,
-                showarrow=False,
-                font=dict(size=16, color="gray"),
+                xref="paper", yref="paper",
+                x=0.5, y=0.5, showarrow=False,
+                font=dict(size=16, color="gray")
             )
             return fig, config
 
-        # ----------------------------------------------------------------------
-        # Prepare and sort data
-        # ----------------------------------------------------------------------
-        data["date"] = pd.to_datetime(data["date"])
-        data = data.sort_values("date")
-
-        # Identify metric column
+        # Simple data preparation
+        data['date'] = pd.to_datetime(data['date'])
+        data = data.sort_values('date')
+        
+        # Get the metric column (should be the second column)
         metric_column = data.columns[1]
-        data["season"] = data["date"].apply(format_season)
-
-        # Apply date filter if provided
+        
+        # Format seasons for display
+        data['season'] = data['date'].apply(format_season)
+        
+        # Apply date range filter if provided
         if date_range and len(date_range) == 2:
             start_filter, end_filter = date_range
             if start_filter and end_filter:
                 start_dt = pd.to_datetime(start_filter)
                 end_dt = pd.to_datetime(end_filter)
-                data = data[(data["date"] >= start_dt) & (data["date"] <= end_dt)]
-
-        # ----------------------------------------------------------------------
-        # Split data into pre-, COVID-, and post-periods
-        # ----------------------------------------------------------------------
-        covid_start = pd.Timestamp("2020-04-01")
-        covid_end = pd.Timestamp("2022-03-31")
-
-        pre_covid = data[data["date"] < covid_start]
-        post_covid = data[data["date"] > covid_end]
-        covid_period = data[
-            (data["date"] >= covid_start) & (data["date"] <= covid_end)
-        ]
-
-        # Line styling
-        line_style = {"color": "#0077b6", "width": 3}
+                data = data[(data['date'] >= start_dt) & (data['date'] <= end_dt)]
+        
+        # Check for COVID gap and split data if needed
+        covid_start = pd.Timestamp('2020-04-01')  # Apr 2020
+        covid_end = pd.Timestamp('2022-03-31')    # Mar 2022
+        
+        # Split data into pre and post COVID periods
+        pre_covid = data[data['date'] < covid_start]
+        post_covid = data[data['date'] > covid_end]
+        covid_period = data[(data['date'] >= covid_start) & (data['date'] <= covid_end)]
+        
+        # Configure line style based on user preference
+        line_style = {
+            'color': '#0077b6',
+            'width': 3
+        }
+        
+        # Add smooth curves unless straight lines are requested
         if not use_straight_lines:
-            line_style["shape"] = "spline"
-            line_style["smoothing"] = 1.3
-
-        # ----------------------------------------------------------------------
-        # Calculate error bars/CI if needed
-        # ----------------------------------------------------------------------
-        import numpy as np
+            line_style['shape'] = 'spline'
+            line_style['smoothing'] = 1.3
         
-        # Prepare error bars if requested
-        error_y_for_trace = None
-        if show_error_bars and len(data) > 1:
-            std_dev = np.std(data[metric_column].values, ddof=1)
-            error_y_for_trace = dict(
-                type="data",
-                array=[std_dev] * len(data),
-                visible=True,
-                color="rgba(0, 0, 0, 0.4)",
-                thickness=1.5,
-                width=4
-            )
+        # Plot pre-COVID data if exists
+        if not pre_covid.empty:
+            fig.add_trace(go.Scatter(
+                x=pre_covid['season'],
+                y=pre_covid[metric_column],
+                name=y_label,
+                line=line_style,
+                mode='lines+markers',
+                marker=dict(size=8, color='#0077b6'),
+                showlegend=True
+            ))
         
-        # ----------------------------------------------------------------------
-        # Plot time series (pre-, COVID-, and post-COVID)
-        # ----------------------------------------------------------------------
-        trace_count = 0
-        for subset, showlegend in [
-            (pre_covid, True),
-            (covid_period, False),
-            (post_covid, False),
-        ]:
-            if not subset.empty:
-                # Determine error bars for this subset
-                subset_error_y = None
-                if error_y_for_trace and trace_count == 0:  # Only on first trace
-                    # Create error bars matching this subset's length
-                    std_dev = np.std(data[metric_column].values, ddof=1)
-                    subset_error_y = dict(
-                        type="data",
-                        array=[std_dev] * len(subset),
-                        visible=True,
-                        color="rgba(0, 0, 0, 0.4)",
-                        thickness=1.5,
-                        width=4
-                    )
-                
-                fig.add_trace(
-                    go.Scatter(
-                        x=subset["season"],
-                        y=subset[metric_column],
-                        name=y_label,
-                        line=line_style,
-                        mode="lines+markers",
-                        marker=dict(size=8, color="#0077b6"),
-                        showlegend=showlegend,
-                        error_y=subset_error_y,
-                    )
-                )
-                trace_count += 1
-
-        # Add dotted “COVID gap” line if applicable
+        # Plot COVID period data if exists (same style)
+        if not covid_period.empty:
+            fig.add_trace(go.Scatter(
+                x=covid_period['season'],
+                y=covid_period[metric_column],
+                name=y_label,
+                line=line_style,
+                mode='lines+markers',
+                marker=dict(size=8, color='#0077b6'),
+                showlegend=False  # Don't duplicate legend
+            ))
+        
+        # Plot post-COVID data if exists
+        if not post_covid.empty:
+            fig.add_trace(go.Scatter(
+                x=post_covid['season'],
+                y=post_covid[metric_column],
+                name=y_label,
+                line=line_style,
+                mode='lines+markers',
+                marker=dict(size=8, color='#0077b6'),
+                showlegend=False  # Don't duplicate legend
+            ))
+        
+        # Add COVID gap dotted line if we have data before and after
         if not pre_covid.empty and not post_covid.empty:
             last_pre = pre_covid.iloc[-1]
             first_post = post_covid.iloc[0]
-            if pd.notna(last_pre[metric_column]) and pd.notna(first_post[metric_column]):
-                fig.add_trace(
-                    go.Scatter(
-                        x=[last_pre["season"], first_post["season"]],
-                        y=[last_pre[metric_column], first_post[metric_column]],
-                        line=dict(color="#cccccc", dash="dot", width=2),
-                        mode="lines",
-                        name="COVID-19 Period (No Data)",
-                        showlegend=True,
-                    )
+            
+            # Check if both Y values are valid (not NaN)
+            last_pre_value = last_pre[metric_column]
+            first_post_value = first_post[metric_column]
+            
+            # Only create gap line if both values are valid (not NaN)
+            if pd.notna(last_pre_value) and pd.notna(first_post_value):
+                fig.add_trace(go.Scatter(
+                    x=[last_pre['season'], first_post['season']],
+                    y=[last_pre_value, first_post_value],
+                    line=dict(color='#cccccc', dash='dot', width=2),
+                    mode='lines',
+                    name='COVID-19 Period (No Data)',
+                    showlegend=True
+                ))
+        
+        # Add "Data Collection Ongoing" indicator for current/future seasons
+        if not data.empty:
+            current_date = pd.Timestamp.now()
+            last_data_point = data.iloc[-1]
+            last_data_date = last_data_point['date']
+            
+            # If the last data point is recent (within 6 months), show ongoing collection
+            if (current_date - last_data_date).days < 180:
+                # Generate next expected season
+                if last_data_date.month in [1, 2]:  # Winter season
+                    next_season_date = pd.Timestamp(last_data_date.year, 4, 1)  # Spring
+                    next_season = f"MAR-MAY {last_data_date.year}"
+                elif last_data_date.month in [4, 5]:  # Spring season  
+                    next_season_date = pd.Timestamp(last_data_date.year, 7, 1)  # Summer
+                    next_season = f"JUN-AUG {last_data_date.year}"
+                elif last_data_date.month in [7, 8]:  # Summer season
+                    next_season_date = pd.Timestamp(last_data_date.year, 10, 1)  # Fall
+                    next_season = f"SEP-NOV {last_data_date.year}"
+                else:  # Fall season
+                    next_season_date = pd.Timestamp(last_data_date.year + 1, 1, 1)  # Winter next year
+                    next_season = f"DEC-FEB {last_data_date.year + 1}"
+                
+                # Add dotted line to indicate ongoing data collection
+                fig.add_trace(go.Scatter(
+                    x=[last_data_point['season'], next_season],
+                    y=[last_data_point[metric_column], last_data_point[metric_column]],
+                    line=dict(color='#888888', dash='dot', width=1),
+                    mode='lines',
+                    name='Data Collection Ongoing',
+                    showlegend=True
+                ))
+                
+                # Add annotation for ongoing data collection
+                fig.add_annotation(
+                    x=next_season,
+                    y=last_data_point[metric_column],
+                    text="Data Collection<br>Ongoing",
+                    showarrow=True,
+                    arrowhead=2,
+                    arrowcolor="#888888",
+                    arrowwidth=1,
+                    font=dict(size=10, color="#888888"),
+                    bgcolor="white",
+                    bordercolor="#888888",
+                    borderwidth=1
                 )
-
-        # ----------------------------------------------------------------------
-        # Add Confidence Intervals (as shaded ribbon)
-        # Only if error bars are NOT enabled (mutual exclusivity)
-        # ----------------------------------------------------------------------
-        if show_confidence_interval and not show_error_bars and len(data) > 1:
-            # Calculate confidence intervals (95% = ±1.96 * SEM)
-            mean_values = data[metric_column].values
-            n = len(mean_values)
-            std_err = np.std(mean_values, ddof=1) / np.sqrt(n)
+        
+        # Add comparison data if provided
+        if comparison_data is not None:
+            if not isinstance(comparison_data, list):
+                comparison_data = [comparison_data]
+                comparison_labels = [comparison_labels] if comparison_labels else ["Comparison"]
             
-            ci_lower = np.maximum(mean_values - 1.96 * std_err, 0)  # Don't go below 0
-            ci_upper = mean_values + 1.96 * std_err
+            colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57']
             
-            # Add upper bound (invisible line)
-            fig.add_trace(go.Scatter(
-                x=data["season"],
-                y=ci_upper,
-                mode="lines",
-                line=dict(width=0),
-                showlegend=False,
-                hoverinfo="skip",
-                name="CI Upper"
-            ))
-            
-            # Add lower bound with fill to previous (creates ribbon)
-            fig.add_trace(go.Scatter(
-                x=data["season"],
-                y=ci_lower,
-                mode="lines",
-                line=dict(width=0),
-                fill="tonexty",  # Fill to previous trace (upper bound)
-                fillcolor="rgba(0, 119, 182, 0.15)",  # Light blue transparent
-                showlegend=True,
-                name="95% CI",
-                hoverinfo="skip"
-            ))
-
-        # ----------------------------------------------------------------------
-        # Layout and final appearance
-        # ----------------------------------------------------------------------
+            for i, comp_data in enumerate(comparison_data):
+                if not comp_data.empty:
+                    comp_data['date'] = pd.to_datetime(comp_data['date'])
+                    comp_data = comp_data.sort_values('date')
+                    comp_metric_column = comp_data.columns[1]
+                    comp_data['season'] = comp_data['date'].apply(format_season)
+                    
+                    # Apply same date filter
+                    if date_range and len(date_range) == 2:
+                        start_filter, end_filter = date_range
+                        if start_filter and end_filter:
+                            start_dt = pd.to_datetime(start_filter)
+                            end_dt = pd.to_datetime(end_filter)
+                            comp_data = comp_data[(comp_data['date'] >= start_dt) & (comp_data['date'] <= end_dt)]
+                    
+                    color = colors[i % len(colors)]
+                    # Ensure label is a string, not a list
+                    if comparison_labels and isinstance(comparison_labels, list) and i < len(comparison_labels):
+                        label = comparison_labels[i]
+                        # If label is still a list (edge case), take first element
+                        if isinstance(label, list):
+                            label = label[0] if label else f"Comparison {i+1}"
+                    else:
+                        label = f"Comparison {i+1}"
+                    
+                    # Configure comparison line style based on user preference
+                    comp_line_style = {
+                        'color': color,
+                        'width': 2,
+                        'dash': 'dash'
+                    }
+                    
+                    # Add smooth curves unless straight lines are requested
+                    if not use_straight_lines:
+                        comp_line_style['shape'] = 'spline'
+                        comp_line_style['smoothing'] = 1.3
+                    
+                    fig.add_trace(go.Scatter(
+                        x=comp_data['season'],
+                        y=comp_data[comp_metric_column],
+                        name=label,
+                        line=comp_line_style,
+                        mode='lines+markers',
+                        marker=dict(size=6, color=color)
+                    ))
+        
+        # Update layout
         fig.update_layout(
             title=dict(
-                text=title,
-                x=0.5,
-                xanchor="center",
-                font=dict(size=18, color="#2c3e50"),
+                text=title, 
+                x=0.5, 
+                xanchor='center',
+                xref='paper',
+                font=dict(size=18, color='#2c3e50')
             ),
             xaxis=dict(
                 title="Season",
                 showgrid=True,
                 gridwidth=1,
-                gridcolor="#ecf0f1",
-                tickangle=45,
+                gridcolor='#ecf0f1',
+                tickangle=45
             ),
             yaxis=dict(
                 title=y_label,
                 showgrid=True,
                 gridwidth=1,
-                gridcolor="#ecf0f1",
+                gridcolor='#ecf0f1'
             ),
-            plot_bgcolor="white",
-            paper_bgcolor="white",
-            font=dict(family="Arial, sans-serif", size=12, color="#2c3e50"),
+            plot_bgcolor='white',
+            paper_bgcolor='white',
+            font=dict(family="Arial, sans-serif", size=12, color='#2c3e50'),
             legend=dict(
                 orientation="h",
                 yanchor="bottom",
                 y=1.02,
                 xanchor="center",
                 x=0.5,
+                itemsizing="constant",
                 font=dict(size=11),
+                itemclick="toggleothers",
+                itemdoubleclick="toggle",
+                tracegroupgap=10
             ),
-            hovermode="x unified",
+            hovermode='x unified',
             margin=dict(l=60, r=60, t=120, b=100),
             width=800,
-            height=500,
+            height=500
         )
-
+        
         return fig, config
 
     def create_eco_tourism_chart(self, data, title, observation_type='percentage'):

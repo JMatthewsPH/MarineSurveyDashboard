@@ -4,9 +4,6 @@ from datetime import datetime, timedelta, date
 import pandas as pd
 import numpy as np
 
-#import numpy as np
-#import plotly.graph_objects as go
-
 def format_season(date_obj):
     """Convert date to season format"""
     month = date_obj.month
@@ -264,116 +261,69 @@ class GraphGenerator:
             })
 
         # Helper function to calculate and add confidence intervals
-        # def add_confidence_interval(data_subset, metric_column):
-        #     if data_subset.empty:
-        #         return
+        def add_confidence_interval(data_subset, metric_column):
+            if data_subset.empty:
+                return
                 
-        #     # Get the y-values (using direct column name is faster)
-        #     y_values = data_subset[metric_column].values
+            # Get the y-values (using direct column name is faster)
+            y_values = data_subset[metric_column].values
             
-        #     # Vectorized calculations are much faster
-        #     n_values = len(y_values)
-        #     if n_values <= 1:
-        #         return
+            # Vectorized calculations are much faster
+            n_values = len(y_values)
+            if n_values <= 1:
+                return
                 
-        #     # Vectorized calculations for confidence intervals
-        #     sem = np.std(y_values, ddof=1) / np.sqrt(n_values)
-        #     ci_lower = np.maximum(y_values - 1.96 * sem, 0)  # Don't go below 0
-        #     ci_upper = y_values + 1.96 * sem
+            # Vectorized calculations for confidence intervals
+            sem = np.std(y_values, ddof=1) / np.sqrt(n_values)
+            ci_lower = np.maximum(y_values - 1.96 * sem, 0)  # Don't go below 0
+            ci_upper = y_values + 1.96 * sem
             
-        #     # Add confidence interval traces - add both at once
-        #     fig.add_trace(go.Scatter(
-        #         x=data_subset['season'],
-        #         y=ci_upper,
-        #         mode='lines',
-        #         line=dict(width=0),
-        #         showlegend=False,
-        #         hoverinfo='skip'
-        #     ))
-            
-        #     fig.add_trace(go.Scatter(
-        #         x=data_subset['season'],
-        #         y=ci_lower,
-        #         mode='lines',
-        #         line=dict(width=0),
-        #         fill='tonexty',
-        #         fillcolor='rgba(0, 119, 182, 0.2)',  # Light blue with transparency
-        #         showlegend=False,
-        #         name='95% Confidence Interval',
-        #         hoverinfo='skip'
-        #     ))
-
-        def add_confidence_interval(fig, df, x_col, metric_col):
-            """Add 95% confidence interval as a shaded ribbon around mean."""
-            ci_low = f"{metric_col}_CI_low"
-            ci_high = f"{metric_col}_CI_high"
-            if ci_low not in df.columns or ci_high not in df.columns:
-                return  # skip if columns absent
-
+            # Add confidence interval traces - add both at once
             fig.add_trace(go.Scatter(
-                x=df[x_col],
-                y=df[ci_high],
-                mode="lines",
+                x=data_subset['season'],
+                y=ci_upper,
+                mode='lines',
                 line=dict(width=0),
                 showlegend=False,
-                hoverinfo="skip"
+                hoverinfo='skip'
             ))
             
             fig.add_trace(go.Scatter(
-                x=df[x_col],
-                y=df[ci_low],
-                mode="lines",
-                fill="tonexty",
-                fillcolor="rgba(0, 119, 182, 0.15)",  # light blue colors
+                x=data_subset['season'],
+                y=ci_lower,
+                mode='lines',
                 line=dict(width=0),
-                name="95% CI",
-                hoverinfo="skip"
+                fill='tonexty',
+                fillcolor='rgba(0, 119, 182, 0.2)',  # Light blue with transparency
+                showlegend=False,
+                name='95% Confidence Interval',
+                hoverinfo='skip'
             ))
         
         # Helper function to calculate and add error bars (standard deviation)
-        # def add_error_bars(data_subset, metric_column):
-        #     if data_subset.empty:
-        #         return
+        def add_error_bars(data_subset, metric_column):
+            if data_subset.empty:
+                return
                 
-        #     # Get the y-values and calculate standard deviation
-        #     y_values = data_subset[metric_column].values
-        #     n_values = len(y_values)
-        #     if n_values <= 1:
-        #         return
+            # Get the y-values and calculate standard deviation
+            y_values = data_subset[metric_column].values
+            n_values = len(y_values)
+            if n_values <= 1:
+                return
                 
-        #     # Calculate standard deviation
-        #     std_dev = np.std(y_values, ddof=1)
+            # Calculate standard deviation
+            std_dev = np.std(y_values, ddof=1)
             
-        #     # Add error bars to the main trace
-        #     error_y = dict(
-        #         type='data',
-        #         array=[std_dev] * len(data_subset),
-        #         visible=True,
-        #         color='rgba(0, 119, 182, 0.5)',
-        #         thickness=2,
-        #         width=3
-        #     )
-        #     return error_y
-
-        def build_error_y(df, metric_col):
-            """Return Plotly-compatible error_y object for ±1 SE display."""
-            eb_low = f"{metric_col}_EB_low"
-            eb_high = f"{metric_col}_EB_high"
-            if eb_low not in df.columns or eb_high not in df.columns:
-                return None
-
-            mean = df[metric_col]
-            eb_minus = mean - df[eb_low]
-            eb_plus = df[eb_high] - mean
-            return dict(
-                type="data",
-                symmetric=False,
-                array=eb_plus,
-                arrayminus=eb_minus,
+            # Add error bars to the main trace
+            error_y = dict(
+                type='data',
+                array=[std_dev] * len(data_subset),
                 visible=True,
-                color="rgba(0,0,0,0.4)",
-                thickness=1.5
+                color='rgba(0, 119, 182, 0.5)',
+                thickness=2,
+                width=3
             )
+            return error_y
         
         # Handle analysis options - confidence intervals and error bars are mutually exclusive
         metric_column = data.columns[1] if not data.empty else None

@@ -1,4 +1,4 @@
-Period,Site,Hard Coral Cover,Hard Coral Cover_N,Hard Coral Cover_SD,Hard Coral Cover_SE,Hard Coral Cover_CI_low,Hard Coral Cover_CI_high,Hard Coral Cover_EB_low,Hard Coral Cover_EB_high,Soft Coral Cover,Soft Coral Cover_N,Soft Coral Cover_SD,Soft Coral Cover_SE,Soft Coral Cover_CI_low,Soft Coral Cover_CI_high,Soft Coral Cover_EB_low,Soft Coral Cover_EB_high,Fresh Algae Cover,Fresh Algae Cover_N,Fresh Algae Cover_SD,Fresh Algae Cover_SE,Fresh Algae Cover_CI_low,Fresh Algae Cover_CI_high,Fresh Algae Cover_EB_low,Fresh Algae Cover_EB_high,Rubble Cover,Rubble Cover_N,Rubble Cover_SD,Rubble Cover_SE,Rubble Cover_CI_low,Rubble Cover_CI_high,Rubble Cover_EB_low,Rubble Cover_EB_high,Bleaching,Bleaching_N,Bleaching_SD,Bleaching_SE,Bleaching_CI_low,Bleaching_CI_high,Bleaching_EB_low,Bleaching_EB_high
-Spring 2024,Santa Catalina Manalongon,15.14,3,3.94,2.27,5.36,24.92,12.87,17.41,2.71,3,1.37,0.79,-0.69,6.1,1.92,3.5,9.93,3,9.35,5.4,-13.29,33.15,4.53,15.33,0.0,3,0.0,0.0,0.0,0.0,0.0,0.0,1.94,3,1.42,0.82,-1.58,5.47,1.13,2.76
-Winter 24/25,Santa Catalina Manalongon,15.0,1,,,,,,,29.17,1,,,,,,,25.83,1,,,,,,,0.0,1,,,,,,,0.83,1,,,,,,
-Spring 2025,Santa Catalina Manalongon,14.58,2,5.3,3.75,-33.06,62.23,10.83,18.33,2.4,2,1.62,1.15,-12.16,16.96,1.25,3.54,25.21,2,1.18,0.83,14.62,35.8,24.38,26.04,0.31,2,0.44,0.31,-3.66,4.28,0.0,0.62,0.1,2,0.15,0.1,-1.22,1.43,0.0,0.21
+Period,Site,Rubble Cover,Fresh Algae Cover,Soft Coral Cover,Hard Coral Cover,Bleaching
+Spring 2024,Santa Catalina Manalongon,0.0,0.3,0.08,0.45,0.03
+Winter 24/25,Santa Catalina Manalongon,0.0,0.26,0.29,0.15,0.0
+Spring 2025,Santa Catalina Manalongon,0.01,0.5,0.05,0.29,0.0

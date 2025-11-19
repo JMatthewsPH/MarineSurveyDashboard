@@ -1029,10 +1029,6 @@ if selected_site:
                 'doubleClick': 'reset'  # Double tap to reset view
             }
             
-            # PERFORMANCE OPTIMIZATION: Fetch ALL metrics in ONE query
-            with st.spinner("Loading site data..."):
-                all_metrics = data_processor.get_all_site_metrics(selected_site, start_date='2017-01-01')
-            
             # Add wrapper with mobile-responsive class
             st.markdown('<div class="mobile-responsive-charts">', unsafe_allow_html=True)
 
@@ -1041,9 +1037,9 @@ if selected_site:
 
             # Commercial Fish Biomass Chart (title will be on chart)
             
-            with st.spinner("Preparing biomass chart..."):
-                # Get biomass data from prefetched metrics (no additional query)
-                biomass_data = all_metrics['biomass']
+            with st.spinner("Loading biomass data..."):
+                # Get biomass data and comparison
+                biomass_data = data_processor.get_biomass_data(selected_site)
                 biomass_comparison_data = None
                 biomass_comparison_labels = None
                 
@@ -1131,7 +1127,7 @@ if selected_site:
                     )
             
             # Get coral cover data and comparison
-            coral_data = all_metrics['hard_coral']
+            coral_data = data_processor.get_metric_data(selected_site, 'hard_coral')
             coral_comparison_data = None
             coral_comparison_labels = None
             
@@ -1191,7 +1187,7 @@ if selected_site:
             st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
 
             # Get fleshy algae data and comparison
-            algae_data = all_metrics['fleshy_algae']
+            algae_data = data_processor.get_metric_data(selected_site, 'fleshy_algae')
             algae_comparison_data = None
             algae_comparison_labels = None
             
@@ -1239,7 +1235,7 @@ if selected_site:
             st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
 
             # Get herbivore data and comparison
-            herbivore_data = all_metrics['herbivore']
+            herbivore_data = data_processor.get_metric_data(selected_site, 'herbivore')
             herbivore_comparison_data = None
             herbivore_comparison_labels = None
             
@@ -1287,7 +1283,7 @@ if selected_site:
             st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
             
             # Get carnivore data and comparison
-            carnivore_data = all_metrics['carnivore']
+            carnivore_data = data_processor.get_metric_data(selected_site, 'carnivore')
             carnivore_comparison_data = None
             carnivore_comparison_labels = None
             
@@ -1335,7 +1331,7 @@ if selected_site:
             st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
 
             # Get omnivore data and comparison
-            omnivore_data = all_metrics['omnivore']
+            omnivore_data = data_processor.get_metric_data(selected_site, 'omnivore')
             omnivore_comparison_data = None
             omnivore_comparison_labels = None
             
@@ -1383,7 +1379,7 @@ if selected_site:
             st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
 
             # Get corallivore data and comparison
-            corallivore_data = all_metrics['corallivore']
+            corallivore_data = data_processor.get_metric_data(selected_site, 'corallivore')
             corallivore_comparison_data = None
             corallivore_comparison_labels = None
             
@@ -1431,7 +1427,7 @@ if selected_site:
             st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
 
             # Add bleaching visualization
-            bleaching_data = all_metrics['bleaching']
+            bleaching_data = data_processor.get_metric_data(selected_site, 'bleaching')
             bleaching_comparison_data = None
             bleaching_comparison_labels = None
             
@@ -1479,7 +1475,7 @@ if selected_site:
             st.markdown("<div style='margin-top: 2em;'></div>", unsafe_allow_html=True)
 
             # Add rubble visualization
-            rubble_data = all_metrics['rubble']
+            rubble_data = data_processor.get_metric_data(selected_site, 'rubble')
             rubble_comparison_data = None
             rubble_comparison_labels = None
             
