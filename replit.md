@@ -60,3 +60,21 @@ PDF quality: Professional appearance with proper logo sizing and aspect ratios
 - **Replit Environment**: PostgreSQL 16 module with Python 3.11.
 - **Docker Support**: Lightweight container with system dependencies.
 - **SSL Configuration**: Secure database connections with keepalive settings.
+
+## Data Maintenance
+
+### Data Format Standards
+- **CSV Storage**: Values stored as decimals (0.19 = 19%)
+- **Database Storage**: Values stored as decimals (0.19)
+- **Display Conversion**: Multiplied by 100 for percentage display (0.19 → 19%)
+
+### Data Reimport Process
+When CSV data doesn't match displayed values:
+1. Verify CSV shows decimal format (e.g., 0.19 for 19%)
+2. Check database values with SQL query
+3. Reimport specific category: `python3 -c "from utils.new_data_importer import import_category_data; from utils.database import get_db_session; import logging; logging.basicConfig(level=logging.INFO); with get_db_session() as db: import_category_data('attached_assets/MCP_Data/new_data/[category]', db)"`
+4. Categories: 'subs' (substrate/coral), 'fish', 'inverts'
+5. Verify fix with SQL query after reimport
+
+### Recent Fixes
+- 2025-11-19: Fixed hard coral cover data mismatch for Basak (showed 3.05% instead of 19%). Reimported substrate data to correct all sites.
