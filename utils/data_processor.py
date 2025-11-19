@@ -161,6 +161,106 @@ class DataProcessor:
             logger.error(f"Error fetching metric data: {str(e)}")
             # Return empty DataFrame to prevent application crashes
             return pd.DataFrame(columns=['date', metric])
+    
+    @st.cache_data(ttl=3600, show_spinner=False)
+    def get_all_site_metrics(_self, site_name: str, start_date='2017-01-01'):
+        """
+        PERFORMANCE OPTIMIZED: Fetch ALL metrics for a site in ONE database query
+        
+        This replaces 9 individual queries with a single optimized query,
+        dramatically improving page load performance.
+        
+        Args:
+            site_name: Name of the site to fetch data for
+            start_date: Start date for filtering data (YYYY-MM-DD format)
+            
+        Returns:
+            Dictionary mapping metric names to DataFrames:
+            {
+                'biomass': DataFrame with columns ['date', 'Commercial Biomass'],
+                'hard_coral': DataFrame with columns ['date', 'hard_coral'],
+                'fleshy_algae': DataFrame with columns ['date', 'fleshy_algae'],
+                'herbivore': DataFrame with columns ['date', 'herbivore'],
+                'carnivore': DataFrame with columns ['date', 'carnivore'],
+                'omnivore': DataFrame with columns ['date', 'omnivore'],
+                'corallivore': DataFrame with columns ['date', 'corallivore'],
+                'bleaching': DataFrame with columns ['date', 'bleaching'],
+                'rubble': DataFrame with columns ['date', 'rubble']
+            }
+        """
+        logger.info(f"Fetching ALL metrics for site: {site_name} (optimized single query)")
+        
+        try:
+            # Use common session management
+            db = _self._get_session()
+            
+            # Get site using query builder
+            site = QueryBuilder.site_by_name(db, site_name)
+            if not site:
+                logger.warning(f"Site not found: {site_name}")
+                # Return empty DataFrames for all metrics
+                return _self._empty_metrics_dict()
+            
+            # Fetch ALL metrics in a single optimized query
+            start_time = time.time()
+            surveys = QueryBuilder.all_site_metrics(db, site.id, start_date)
+            query_time = time.time() - start_time
+            
+            logger.info(f"Fetched {len(surveys)} surveys with ALL 9 metrics in {query_time:.3f}s (single query)")
+            
+            # Convert to dictionary of DataFrames, one per metric
+            results = {}
+            
+            if surveys:
+                # Unpack the tuple results into separate lists
+                dates = [row[0] for row in surveys]
+                biomass = [row[1] for row in surveys]
+                hard_coral = [row[2] for row in surveys]
+                fleshy_algae = [row[3] for row in surveys]
+                herbivore = [row[4] for row in surveys]
+                carnivore = [row[5] for row in surveys]
+                omnivore = [row[6] for row in surveys]
+                corallivore = [row[7] for row in surveys]
+                bleaching = [row[8] for row in surveys]
+                rubble = [row[9] for row in surveys]
+                
+                # Create DataFrames with proper column names
+                results['biomass'] = pd.DataFrame({
+                    'date': dates,
+                    _self.DISPLAY_NAMES.get('commercial_biomass', 'Commercial Biomass'): biomass
+                })
+                results['hard_coral'] = pd.DataFrame({'date': dates, 'hard_coral': hard_coral})
+                results['fleshy_algae'] = pd.DataFrame({'date': dates, 'fleshy_algae': fleshy_algae})
+                results['herbivore'] = pd.DataFrame({'date': dates, 'herbivore': herbivore})
+                results['carnivore'] = pd.DataFrame({'date': dates, 'carnivore': carnivore})
+                results['omnivore'] = pd.DataFrame({'date': dates, 'omnivore': omnivore})
+                results['corallivore'] = pd.DataFrame({'date': dates, 'corallivore': corallivore})
+                results['bleaching'] = pd.DataFrame({'date': dates, 'bleaching': bleaching})
+                results['rubble'] = pd.DataFrame({'date': dates, 'rubble': rubble})
+            else:
+                logger.info(f"No survey data found for {site_name}")
+                results = _self._empty_metrics_dict()
+            
+            return results
+            
+        except Exception as e:
+            logger.error(f"Error fetching all site metrics: {str(e)}")
+            # Return empty DataFrames to prevent application crashes
+            return _self._empty_metrics_dict()
+    
+    def _empty_metrics_dict(_self):
+        """Helper to create empty DataFrames for all metrics"""
+        return {
+            'biomass': pd.DataFrame(columns=['date', _self.DISPLAY_NAMES.get('commercial_biomass', 'Commercial Biomass')]),
+            'hard_coral': pd.DataFrame(columns=['date', 'hard_coral']),
+            'fleshy_algae': pd.DataFrame(columns=['date', 'fleshy_algae']),
+            'herbivore': pd.DataFrame(columns=['date', 'herbivore']),
+            'carnivore': pd.DataFrame(columns=['date', 'carnivore']),
+            'omnivore': pd.DataFrame(columns=['date', 'omnivore']),
+            'corallivore': pd.DataFrame(columns=['date', 'corallivore']),
+            'bleaching': pd.DataFrame(columns=['date', 'bleaching']),
+            'rubble': pd.DataFrame(columns=['date', 'rubble'])
+        }
             
     @st.cache_data(ttl=6*3600, show_spinner=False)  # Cache for 6 hours to balance freshness and performance
     def batch_get_metric_data(_self, site_names: list, metric: str, start_date='2017-01-01'):
