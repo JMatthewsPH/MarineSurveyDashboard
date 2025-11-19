@@ -341,18 +341,6 @@ class SimpleGraphGenerator:
         """
 
         # ----------------------------------------------------------------------
-        # Display Mode Toggle: Confidence Interval vs Error Bars
-        # ----------------------------------------------------------------------
-        import streamlit as st
-        from utils.graph_generator import add_confidence_interval, build_error_y
-
-        display_mode = st.radio(
-            "Display Mode",
-            ["Mean + Confidence Interval", "Mean + Error Bars"],
-            horizontal=True,
-        )
-
-        # ----------------------------------------------------------------------
         # Chart configuration
         # ----------------------------------------------------------------------
         config = {
