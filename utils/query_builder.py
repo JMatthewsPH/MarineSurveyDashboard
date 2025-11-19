@@ -206,3 +206,35 @@ class QueryBuilder:
         return (query.group_by(Survey.date)
                 .order_by(Survey.date)
                 .all())
+    
+    @staticmethod
+    def all_site_metrics(db: Session, site_id: int, start_date: str):
+        """
+        Fetch ALL metrics for a single site in ONE optimized query
+        
+        This dramatically improves performance by reducing 9 queries to 1.
+        
+        Args:
+            db: Database session
+            site_id: Site ID to fetch data for
+            start_date: Start date for filtering (YYYY-MM-DD)
+            
+        Returns:
+            List of tuples containing (date, biomass, hard_coral, fleshy_algae, 
+            herbivore, carnivore, omnivore, corallivore, bleaching, rubble)
+        """
+        return (db.query(
+                Survey.date,
+                Survey.commercial_biomass,
+                Survey.hard_coral_cover,
+                Survey.fleshy_macro_algae_cover,
+                Survey.herbivore_density,
+                Survey.carnivore_density,
+                Survey.omnivore_density,
+                Survey.corallivore_density,
+                Survey.bleaching,
+                Survey.rubble)
+            .filter(Survey.site_id == site_id)
+            .filter(Survey.date >= start_date)
+            .order_by(Survey.date)
+            .all())
