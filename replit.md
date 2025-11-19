@@ -77,4 +77,14 @@ When CSV data doesn't match displayed values:
 5. Verify fix with SQL query after reimport
 
 ### Recent Fixes
-- 2025-11-19: Fixed hard coral cover data mismatch for Basak (showed 3.05% instead of 19%). Reimported substrate data to correct all sites.
+- **2025-11-19 (Latest)**: Major data corruption cleanup
+  - Deleted 11 phantom database entries for 2025-10-01 (Autumn 2025) with corrupted data
+  - Sites affected: Latason (352% → 23%), Antulang (2833% → 26%), Dalakit (1500% → 15%), and 8 others
+  - Root cause: Phantom entries for non-existent Autumn 2025 period (CSV files only go to Summer 2025)
+  - Fixed chart generators (SimpleGraphGenerator and SummaryGraphGenerator) to properly convert decimals to percentages
+  - All 15 sites verified - database now matches CSV files perfectly
+  - All data values now correctly <= 1.0 in database (display as 0-100%)
+- **2025-11-19**: Fixed fish biomass discrepancies
+  - Andulay Winter 24/25: 6.85 → 7.18 kg/150m²
+  - Lutoban North Winter 24/25: 5.68 → 5.67 kg/150m²
+- **2025-11-19**: Fixed hard coral cover data mismatch for Basak (showed 3.05% instead of 19%). Reimported substrate data to correct all sites.
