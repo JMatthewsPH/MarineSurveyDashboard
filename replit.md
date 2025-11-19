@@ -33,6 +33,8 @@ PDF quality: Professional appearance with proper logo sizing and aspect ratios
 - **Data Metrics**: Hard coral cover, fish densities by feeding group, biomass data, substrate composition.
 - **Comparison Features**: Site-to-site comparisons and municipal averages.
 - **Trend Analysis**: Municipal-level averaging system for broad overview (All Municipalities, Zamboanguita, Siaton, Santa Catalina), "All Sites" grouping option for overall average across all monitored sites.
+- **Statistical Analysis**: Error bars (±1 standard deviation) and 95% confidence intervals (±1.96*SEM) as mutually exclusive display options with proper visualization.
+- **Chart Defaults**: Straight-line graphs as default with optional smoothed lines (spline smoothing factor 1.3).
 - **Biomass Heatmap**: Interactive map visualization with scalable legend and coloring system.
 - **Data Integrity**: Robust data validation during import, consistent site name mapping.
 
