@@ -453,27 +453,6 @@ class SimpleGraphGenerator:
                 )
 
         # ----------------------------------------------------------------------
-        # Add Confidence Interval or Error Bars depending on toggle
-        # ----------------------------------------------------------------------
-        if display_mode == "Mean + Confidence Interval":
-            add_confidence_interval(fig, data, x_col="season", metric_col=metric_column)
-        elif display_mode == "Mean + Error Bars":
-            err = build_error_y(data, metric_col=metric_column)
-            if err:
-                fig.add_trace(
-                    go.Scatter(
-                        x=data["season"],
-                        y=data[metric_column],
-                        mode="lines+markers",
-                        name="Mean ± SE",
-                        error_y=err,
-                        line=dict(color="#0077b6", width=2),
-                        marker=dict(size=6),
-                        showlegend=True,
-                    )
-                )
-
-        # ----------------------------------------------------------------------
         # Layout and final appearance
         # ----------------------------------------------------------------------
         fig.update_layout(
