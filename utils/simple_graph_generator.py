@@ -121,6 +121,9 @@ class SimpleGraphGenerator:
             line_style['shape'] = 'spline'
             line_style['smoothing'] = 1.3
         
+        # Track whether we've shown the main data series in the legend
+        main_legend_shown = False
+        
         # Plot pre-COVID data if exists
         if not pre_covid.empty:
             fig.add_trace(go.Scatter(
@@ -132,6 +135,7 @@ class SimpleGraphGenerator:
                 marker=dict(size=8, color='#0077b6'),
                 showlegend=True
             ))
+            main_legend_shown = True
         
         # Plot COVID period data if exists (same style)
         if not covid_period.empty:
@@ -142,8 +146,10 @@ class SimpleGraphGenerator:
                 line=line_style,
                 mode='lines+markers',
                 marker=dict(size=8, color='#0077b6'),
-                showlegend=False  # Don't duplicate legend
+                showlegend=not main_legend_shown  # Show legend if this is the first trace
             ))
+            if not main_legend_shown:
+                main_legend_shown = True
         
         # Plot post-COVID data if exists
         if not post_covid.empty:
@@ -154,8 +160,10 @@ class SimpleGraphGenerator:
                 line=line_style,
                 mode='lines+markers',
                 marker=dict(size=8, color='#0077b6'),
-                showlegend=False  # Don't duplicate legend
+                showlegend=not main_legend_shown  # Show legend if this is the first trace
             ))
+            if not main_legend_shown:
+                main_legend_shown = True
         
         # Add COVID gap dotted line if we have data before and after
         if not pre_covid.empty and not post_covid.empty:
