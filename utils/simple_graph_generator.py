@@ -453,6 +453,84 @@ class SimpleGraphGenerator:
                 )
 
         # ----------------------------------------------------------------------
+        # Add Confidence Intervals or Error Bars
+        # ----------------------------------------------------------------------
+        import numpy as np
+        
+        # Helper function to add 95% confidence interval
+        def add_confidence_interval_to_chart(fig, df, x_col, y_col):
+            """Add 95% confidence interval as shaded ribbon."""
+            if df.empty or len(df) < 2:
+                return
+            
+            # Calculate confidence intervals (95% = ±1.96 * SEM)
+            mean_values = df[y_col].values
+            n = len(mean_values)
+            std_err = np.std(mean_values, ddof=1) / np.sqrt(n)
+            
+            ci_lower = np.maximum(mean_values - 1.96 * std_err, 0)  # Don't go below 0
+            ci_upper = mean_values + 1.96 * std_err
+            
+            # Add upper bound (invisible line)
+            fig.add_trace(go.Scatter(
+                x=df[x_col],
+                y=ci_upper,
+                mode="lines",
+                line=dict(width=0),
+                showlegend=False,
+                hoverinfo="skip",
+                name="CI Upper"
+            ))
+            
+            # Add lower bound with fill to previous (creates ribbon)
+            fig.add_trace(go.Scatter(
+                x=df[x_col],
+                y=ci_lower,
+                mode="lines",
+                line=dict(width=0),
+                fill="tonexty",  # Fill to previous trace (upper bound)
+                fillcolor="rgba(0, 119, 182, 0.15)",  # Light blue transparent
+                showlegend=True,
+                name="95% CI",
+                hoverinfo="skip"
+            ))
+        
+        # Helper function to calculate error bars (standard deviation)
+        def calculate_error_bars(df, y_col):
+            """Calculate error bars as ±1 standard deviation."""
+            if df.empty or len(df) < 2:
+                return None
+            
+            std_dev = np.std(df[y_col].values, ddof=1)
+            
+            return dict(
+                type="data",
+                array=[std_dev] * len(df),  # Same error bar for all points
+                visible=True,
+                color="rgba(0, 0, 0, 0.4)",  # Dark gray
+                thickness=1.5,
+                width=4
+            )
+        
+        # Apply confidence intervals or error bars (mutually exclusive)
+        if show_confidence_interval and not data.empty:
+            add_confidence_interval_to_chart(fig, data, "season", metric_column)
+        elif show_error_bars and not data.empty:
+            error_y = calculate_error_bars(data, metric_column)
+            if error_y:
+                # Add a separate trace with error bars
+                fig.add_trace(go.Scatter(
+                    x=data["season"],
+                    y=data[metric_column],
+                    mode="markers",
+                    name="± Std Dev",
+                    error_y=error_y,
+                    marker=dict(size=0, color="#0077b6"),  # Invisible markers
+                    showlegend=True,
+                    hoverinfo="skip"
+                ))
+
+        # ----------------------------------------------------------------------
         # Layout and final appearance
         # ----------------------------------------------------------------------
         fig.update_layout(
