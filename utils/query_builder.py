@@ -29,8 +29,19 @@ class QueryBuilder:
     
     @staticmethod
     def metric_data(db: Session, site_id: int, column_name: str, start_date: str):
-        """Build a query for metric data with time range filtering"""
-        return (db.query(Survey.date, getattr(Survey, column_name))
+        """Build a query for metric data with time range filtering and statistical columns"""
+        stat_columns = [
+            getattr(Survey, column_name),
+            getattr(Survey, f"{column_name}_n", None),
+            getattr(Survey, f"{column_name}_sd", None),
+            getattr(Survey, f"{column_name}_ci_low", None),
+            getattr(Survey, f"{column_name}_ci_high", None),
+            getattr(Survey, f"{column_name}_eb_low", None),
+            getattr(Survey, f"{column_name}_eb_high", None)
+        ]
+        stat_columns = [col for col in stat_columns if col is not None]
+        
+        return (db.query(Survey.date, Survey.season, *stat_columns)
                 .filter(Survey.site_id == site_id)
                 .filter(Survey.date >= start_date)
                 .order_by(Survey.date)
@@ -48,16 +59,29 @@ class QueryBuilder:
             start_date: Start date for filtering (YYYY-MM-DD)
             
         Returns:
-            Dictionary mapping site_id to list of (date, value) tuples
+            Dictionary mapping site_id to list of tuples with (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
         """
         if not site_ids:
             return {}
+        
+        # Build list of statistical columns
+        stat_columns = [
+            getattr(Survey, column_name),
+            getattr(Survey, f"{column_name}_n", None),
+            getattr(Survey, f"{column_name}_sd", None),
+            getattr(Survey, f"{column_name}_ci_low", None),
+            getattr(Survey, f"{column_name}_ci_high", None),
+            getattr(Survey, f"{column_name}_eb_low", None),
+            getattr(Survey, f"{column_name}_eb_high", None)
+        ]
+        stat_columns = [col for col in stat_columns if col is not None]
             
         # Fetch all matching data in a single query
         query_results = (db.query(
                 Survey.site_id, 
-                Survey.date, 
-                getattr(Survey, column_name))
+                Survey.date,
+                Survey.season,
+                *stat_columns)
             .filter(Survey.site_id.in_(site_ids))
             .filter(Survey.date >= start_date)
             .order_by(Survey.site_id, Survey.date)
@@ -65,10 +89,11 @@ class QueryBuilder:
             
         # Organize results by site_id
         results_by_site = {}
-        for site_id, date, value in query_results:
+        for row in query_results:
+            site_id = row[0]
             if site_id not in results_by_site:
                 results_by_site[site_id] = []
-            results_by_site[site_id].append((date, value))
+            results_by_site[site_id].append(row[1:])
             
         return results_by_site
     
@@ -99,8 +124,17 @@ class QueryBuilder:
                 
     @staticmethod
     def biomass_data(db: Session, site_id: int, start_date: str):
-        """Specialized query for biomass data"""
-        return (db.query(Survey.date, Survey.commercial_biomass)
+        """Specialized query for biomass data with statistical columns"""
+        return (db.query(
+                Survey.date,
+                Survey.season,
+                Survey.commercial_biomass,
+                Survey.commercial_biomass_n,
+                Survey.commercial_biomass_sd,
+                Survey.commercial_biomass_ci_low,
+                Survey.commercial_biomass_ci_high,
+                Survey.commercial_biomass_eb_low,
+                Survey.commercial_biomass_eb_high)
                 .filter(Survey.site_id == site_id)
                 .filter(Survey.date >= start_date)
                 .order_by(Survey.date)
@@ -117,7 +151,7 @@ class QueryBuilder:
             start_date: Start date for filtering (YYYY-MM-DD)
             
         Returns:
-            Dictionary mapping site_id to list of (date, value) tuples
+            Dictionary mapping site_id to list of tuples with (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
         """
         if not site_ids:
             return {}
@@ -125,8 +159,15 @@ class QueryBuilder:
         # Fetch all matching data in a single query
         query_results = (db.query(
                 Survey.site_id, 
-                Survey.date, 
-                Survey.commercial_biomass)
+                Survey.date,
+                Survey.season,
+                Survey.commercial_biomass,
+                Survey.commercial_biomass_n,
+                Survey.commercial_biomass_sd,
+                Survey.commercial_biomass_ci_low,
+                Survey.commercial_biomass_ci_high,
+                Survey.commercial_biomass_eb_low,
+                Survey.commercial_biomass_eb_high)
             .filter(Survey.site_id.in_(site_ids))
             .filter(Survey.date >= start_date)
             .order_by(Survey.site_id, Survey.date)
@@ -134,17 +175,27 @@ class QueryBuilder:
             
         # Organize results by site_id
         results_by_site = {}
-        for site_id, date, value in query_results:
+        for row in query_results:
+            site_id = row[0]
             if site_id not in results_by_site:
                 results_by_site[site_id] = []
-            results_by_site[site_id].append((date, value))
+            results_by_site[site_id].append(row[1:])
             
         return results_by_site
                 
     @staticmethod
     def coral_cover_data(db: Session, site_id: int, start_date: str):
-        """Specialized query for coral cover data"""
-        return (db.query(Survey.date, Survey.hard_coral_cover)
+        """Specialized query for coral cover data with statistical columns"""
+        return (db.query(
+                Survey.date,
+                Survey.season,
+                Survey.hard_coral_cover,
+                Survey.hard_coral_cover_n,
+                Survey.hard_coral_cover_sd,
+                Survey.hard_coral_cover_ci_low,
+                Survey.hard_coral_cover_ci_high,
+                Survey.hard_coral_cover_eb_low,
+                Survey.hard_coral_cover_eb_high)
                 .filter(Survey.site_id == site_id)
                 .filter(Survey.date >= start_date)
                 .order_by(Survey.date)
@@ -161,7 +212,7 @@ class QueryBuilder:
             start_date: Start date for filtering (YYYY-MM-DD)
             
         Returns:
-            Dictionary mapping site_id to list of (date, value) tuples
+            Dictionary mapping site_id to list of tuples with (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
         """
         if not site_ids:
             return {}
@@ -169,8 +220,15 @@ class QueryBuilder:
         # Fetch all matching data in a single query
         query_results = (db.query(
                 Survey.site_id, 
-                Survey.date, 
-                Survey.hard_coral_cover)
+                Survey.date,
+                Survey.season,
+                Survey.hard_coral_cover,
+                Survey.hard_coral_cover_n,
+                Survey.hard_coral_cover_sd,
+                Survey.hard_coral_cover_ci_low,
+                Survey.hard_coral_cover_ci_high,
+                Survey.hard_coral_cover_eb_low,
+                Survey.hard_coral_cover_eb_high)
             .filter(Survey.site_id.in_(site_ids))
             .filter(Survey.date >= start_date)
             .order_by(Survey.site_id, Survey.date)
@@ -178,10 +236,11 @@ class QueryBuilder:
             
         # Organize results by site_id
         results_by_site = {}
-        for site_id, date, value in query_results:
+        for row in query_results:
+            site_id = row[0]
             if site_id not in results_by_site:
                 results_by_site[site_id] = []
-            results_by_site[site_id].append((date, value))
+            results_by_site[site_id].append(row[1:])
             
         return results_by_site
                 
