@@ -184,16 +184,29 @@ class GraphGenerator:
         
         # Use all actual data but properly aggregate by season
         # First, properly aggregate by season (group by season and take the mean)
-        metric_column = data_sorted.columns[1]  # Get the actual metric column name
+        metric_column = data_sorted.columns[2]  # Column order: date, season, metric, then statistical columns
         
-        # Group by season and aggregate (using mean for multiple values in same season)
-        aggregated_data = data_sorted.groupby('season').agg({
+        # Build aggregation dictionary - include statistical columns if they exist
+        agg_dict = {
             'date': 'first',  # Take first date for each season
             metric_column: 'mean'  # Average if multiple surveys in same season
-        }).reset_index()
+        }
         
-        # Rename the metric column to 'value' for consistent processing
-        complete_df = aggregated_data.rename(columns={metric_column: 'value'})
+        # Add statistical columns to aggregation if they exist
+        stat_suffixes = ['_n', '_sd', '_se', '_ci_low', '_ci_high', '_eb_low', '_eb_high']
+        for suffix in stat_suffixes:
+            stat_col = f'{metric_column}{suffix}'
+            if stat_col in data_sorted.columns:
+                # For sample size (n), use max; for others use mean
+                agg_dict[stat_col] = 'max' if suffix == '_n' else 'mean'
+        
+        # Group by season and aggregate
+        aggregated_data = data_sorted.groupby('season').agg(agg_dict).reset_index()
+        
+        # Keep the original metric column name for statistical column lookup
+        # but also create 'value' for backward compatibility
+        complete_df = aggregated_data.copy()
+        complete_df['value'] = complete_df[metric_column]
         complete_df['has_data'] = True
         
         # Sort by date to ensure proper chronological order
@@ -260,27 +273,34 @@ class GraphGenerator:
                 'dtick': 20  # 20 unit intervals for Commercial Fish Biomass
             })
 
-        # Helper function to calculate and add confidence intervals
+        # Helper function to add confidence intervals from database columns
         def add_confidence_interval(data_subset, metric_column):
             if data_subset.empty:
                 return
-                
-            # Get the y-values (using direct column name is faster)
-            y_values = data_subset[metric_column].values
             
-            # Vectorized calculations are much faster
-            n_values = len(y_values)
-            if n_values <= 1:
+            # Check if CI columns exist in the DataFrame
+            ci_low_col = f'{metric_column}_ci_low'
+            ci_high_col = f'{metric_column}_ci_high'
+            
+            if ci_low_col not in data_subset.columns or ci_high_col not in data_subset.columns:
                 return
-                
-            # Vectorized calculations for confidence intervals
-            sem = np.std(y_values, ddof=1) / np.sqrt(n_values)
-            ci_lower = np.maximum(y_values - 1.96 * sem, 0)  # Don't go below 0
-            ci_upper = y_values + 1.96 * sem
             
-            # Add confidence interval traces - add both at once
+            # Filter to rows where CI data is available (not NULL)
+            has_ci = data_subset[ci_low_col].notna() & data_subset[ci_high_col].notna()
+            if not has_ci.any():
+                return
+            
+            ci_data = data_subset[has_ci].copy()
+            
+            # Convert percentage values (data stored as decimals, display as percentages)
+            # Check if this is a percentage metric
+            is_percentage = 'Cover' in metric_column or 'cover' in metric_column.lower()
+            ci_lower = ci_data[ci_low_col].values * (100 if is_percentage else 1)
+            ci_upper = ci_data[ci_high_col].values * (100 if is_percentage else 1)
+            
+            # Add confidence interval traces
             fig.add_trace(go.Scatter(
-                x=data_subset['season'],
+                x=ci_data['season'],
                 y=ci_upper,
                 mode='lines',
                 line=dict(width=0),
@@ -289,56 +309,87 @@ class GraphGenerator:
             ))
             
             fig.add_trace(go.Scatter(
-                x=data_subset['season'],
+                x=ci_data['season'],
                 y=ci_lower,
                 mode='lines',
                 line=dict(width=0),
                 fill='tonexty',
-                fillcolor='rgba(0, 119, 182, 0.2)',  # Light blue with transparency
+                fillcolor='rgba(0, 119, 182, 0.2)',
                 showlegend=False,
                 name='95% Confidence Interval',
                 hoverinfo='skip'
             ))
         
-        # Helper function to calculate and add error bars (standard deviation)
+        # Helper function to add error bars from database columns
         def add_error_bars(data_subset, metric_column):
             if data_subset.empty:
-                return
-                
-            # Get the y-values and calculate standard deviation
-            y_values = data_subset[metric_column].values
-            n_values = len(y_values)
-            if n_values <= 1:
-                return
-                
-            # Calculate standard deviation
-            std_dev = np.std(y_values, ddof=1)
+                return None
             
-            # Add error bars to the main trace
-            error_y = dict(
-                type='data',
-                array=[std_dev] * len(data_subset),
-                visible=True,
-                color='rgba(0, 119, 182, 0.5)',
-                thickness=2,
-                width=3
-            )
-            return error_y
+            # Check if error bar columns exist in the DataFrame
+            eb_low_col = f'{metric_column}_eb_low'
+            eb_high_col = f'{metric_column}_eb_high'
+            sd_col = f'{metric_column}_sd'
+            
+            # Try error bar columns first, fallback to SD if available
+            if eb_low_col in data_subset.columns and eb_high_col in data_subset.columns:
+                # Filter to rows where EB data is available
+                has_eb = data_subset[eb_low_col].notna() & data_subset[eb_high_col].notna()
+                if not has_eb.any():
+                    return None
+                
+                # Convert percentage values (data stored as decimals, display as percentages)
+                is_percentage = 'Cover' in metric_column or 'cover' in metric_column.lower()
+                
+                # Calculate error bar arrays (distance from main value)
+                eb_data = data_subset.copy()
+                values = eb_data[metric_column].values * (100 if is_percentage else 1)
+                eb_low = eb_data[eb_low_col].values * (100 if is_percentage else 1)
+                eb_high = eb_data[eb_high_col].values * (100 if is_percentage else 1)
+                
+                # Error bars need symmetric or asymmetric arrays
+                error_minus = values - eb_low
+                error_plus = eb_high - values
+                
+                return dict(
+                    type='data',
+                    symmetric=False,
+                    array=error_plus,
+                    arrayminus=error_minus,
+                    visible=True,
+                    color='rgba(0, 119, 182, 0.5)',
+                    thickness=2,
+                    width=3
+                )
+            elif sd_col in data_subset.columns:
+                # Fallback to standard deviation if available
+                has_sd = data_subset[sd_col].notna()
+                if not has_sd.any():
+                    return None
+                
+                is_percentage = 'Cover' in metric_column or 'cover' in metric_column.lower()
+                sd_values = data_subset[sd_col].values * (100 if is_percentage else 1)
+                
+                return dict(
+                    type='data',
+                    array=sd_values,
+                    visible=True,
+                    color='rgba(0, 119, 182, 0.5)',
+                    thickness=2,
+                    width=3
+                )
+            
+            return None
         
         # Handle analysis options - confidence intervals and error bars are mutually exclusive
-        metric_column = data.columns[1] if not data.empty else None
+        # metric_column is already set from aggregation above
         error_y_settings = None
         
         if show_confidence_interval and metric_column and not complete_df.empty:
-            # Use complete dataset for confidence intervals
-            complete_df_for_ci = complete_df.copy()
-            complete_df_for_ci[metric_column] = complete_df_for_ci['value']
-            add_confidence_interval(complete_df_for_ci, metric_column)
+            # Use complete dataset with statistical columns for confidence intervals
+            add_confidence_interval(complete_df, metric_column)
         elif show_error_bars and metric_column and not complete_df.empty:
-            # Calculate error bars for the main trace
-            complete_df_for_eb = complete_df.copy()
-            complete_df_for_eb[metric_column] = complete_df_for_eb['value']
-            error_y_settings = add_error_bars(complete_df_for_eb, metric_column)
+            # Use complete dataset with statistical columns for error bars
+            error_y_settings = add_error_bars(complete_df, metric_column)
         
         # Add data points with automatic gap detection for COVID periods
         # Detect gaps in consecutive data and add dotted connectors
