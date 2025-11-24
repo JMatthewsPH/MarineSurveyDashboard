@@ -124,6 +124,22 @@ def clean_numeric_value(value):
         logger.warning(f"Could not convert value to float: {value}")
         return None
 
+def extract_metric_with_stats(row, metric_name):
+    """
+    Extract a metric and all its statistical measures from a row.
+    Returns a dict with keys: value, n, sd, se, ci_low, ci_high, eb_low, eb_high
+    """
+    return {
+        'value': clean_numeric_value(row.get(metric_name)),
+        'n': clean_numeric_value(row.get(f'{metric_name}_N')),
+        'sd': clean_numeric_value(row.get(f'{metric_name}_SD')),
+        'se': clean_numeric_value(row.get(f'{metric_name}_SE')),
+        'ci_low': clean_numeric_value(row.get(f'{metric_name}_CI_low')),
+        'ci_high': clean_numeric_value(row.get(f'{metric_name}_CI_high')),
+        'eb_low': clean_numeric_value(row.get(f'{metric_name}_EB_low')),
+        'eb_high': clean_numeric_value(row.get(f'{metric_name}_EB_high'))
+    }
+
 def import_category_data(category_path: str, db: Session):
     """Import data from a specific category folder (fish, inverts, or subs)."""
     seasonal_path = os.path.join(category_path, 'seasonal')
@@ -207,26 +223,175 @@ def import_category_data(category_path: str, db: Session):
                 
                 # Update survey data based on category
                 if category_name == 'fish':
-                    survey.corallivore_density = clean_numeric_value(row.get('Corallivore Density'))
-                    survey.omnivore_density = clean_numeric_value(row.get('Omnivore Density'))
-                    survey.carnivore_density = clean_numeric_value(row.get('Carnivore Density'))
-                    survey.herbivore_density = clean_numeric_value(row.get('Herbivore Density'))
-                    survey.total_density = clean_numeric_value(row.get('Total Density'))
-                    survey.commercial_density = clean_numeric_value(row.get('Commercial Density'))
-                    survey.commercial_biomass = clean_numeric_value(row.get('Commercial Biomass Density'))
+                    # Corallivore Density
+                    corallivore = extract_metric_with_stats(row, 'Corallivore Density')
+                    survey.corallivore_density = corallivore['value']
+                    survey.corallivore_density_n = corallivore['n']
+                    survey.corallivore_density_sd = corallivore['sd']
+                    survey.corallivore_density_se = corallivore['se']
+                    survey.corallivore_density_ci_low = corallivore['ci_low']
+                    survey.corallivore_density_ci_high = corallivore['ci_high']
+                    survey.corallivore_density_eb_low = corallivore['eb_low']
+                    survey.corallivore_density_eb_high = corallivore['eb_high']
+                    
+                    # Detritivore Density
+                    detritivore = extract_metric_with_stats(row, 'Detritivore Density')
+                    survey.detritivore_density = detritivore['value']
+                    survey.detritivore_density_n = detritivore['n']
+                    survey.detritivore_density_sd = detritivore['sd']
+                    survey.detritivore_density_se = detritivore['se']
+                    survey.detritivore_density_ci_low = detritivore['ci_low']
+                    survey.detritivore_density_ci_high = detritivore['ci_high']
+                    survey.detritivore_density_eb_low = detritivore['eb_low']
+                    survey.detritivore_density_eb_high = detritivore['eb_high']
+                    
+                    # Omnivore Density
+                    omnivore = extract_metric_with_stats(row, 'Omnivore Density')
+                    survey.omnivore_density = omnivore['value']
+                    survey.omnivore_density_n = omnivore['n']
+                    survey.omnivore_density_sd = omnivore['sd']
+                    survey.omnivore_density_se = omnivore['se']
+                    survey.omnivore_density_ci_low = omnivore['ci_low']
+                    survey.omnivore_density_ci_high = omnivore['ci_high']
+                    survey.omnivore_density_eb_low = omnivore['eb_low']
+                    survey.omnivore_density_eb_high = omnivore['eb_high']
+                    
+                    # Carnivore Density
+                    carnivore = extract_metric_with_stats(row, 'Carnivore Density')
+                    survey.carnivore_density = carnivore['value']
+                    survey.carnivore_density_n = carnivore['n']
+                    survey.carnivore_density_sd = carnivore['sd']
+                    survey.carnivore_density_se = carnivore['se']
+                    survey.carnivore_density_ci_low = carnivore['ci_low']
+                    survey.carnivore_density_ci_high = carnivore['ci_high']
+                    survey.carnivore_density_eb_low = carnivore['eb_low']
+                    survey.carnivore_density_eb_high = carnivore['eb_high']
+                    
+                    # Herbivore Density
+                    herbivore = extract_metric_with_stats(row, 'Herbivore Density')
+                    survey.herbivore_density = herbivore['value']
+                    survey.herbivore_density_n = herbivore['n']
+                    survey.herbivore_density_sd = herbivore['sd']
+                    survey.herbivore_density_se = herbivore['se']
+                    survey.herbivore_density_ci_low = herbivore['ci_low']
+                    survey.herbivore_density_ci_high = herbivore['ci_high']
+                    survey.herbivore_density_eb_low = herbivore['eb_low']
+                    survey.herbivore_density_eb_high = herbivore['eb_high']
+                    
+                    # Total Density
+                    total_density = extract_metric_with_stats(row, 'Total Density')
+                    survey.total_density = total_density['value']
+                    survey.total_density_n = total_density['n']
+                    survey.total_density_sd = total_density['sd']
+                    survey.total_density_se = total_density['se']
+                    survey.total_density_ci_low = total_density['ci_low']
+                    survey.total_density_ci_high = total_density['ci_high']
+                    survey.total_density_eb_low = total_density['eb_low']
+                    survey.total_density_eb_high = total_density['eb_high']
+                    
+                    # Commercial Density
+                    commercial_density = extract_metric_with_stats(row, 'Commercial Density')
+                    survey.commercial_density = commercial_density['value']
+                    survey.commercial_density_n = commercial_density['n']
+                    survey.commercial_density_sd = commercial_density['sd']
+                    survey.commercial_density_se = commercial_density['se']
+                    survey.commercial_density_ci_low = commercial_density['ci_low']
+                    survey.commercial_density_ci_high = commercial_density['ci_high']
+                    survey.commercial_density_eb_low = commercial_density['eb_low']
+                    survey.commercial_density_eb_high = commercial_density['eb_high']
+                    
+                    # Total Biomass Density
+                    total_biomass = extract_metric_with_stats(row, 'Total Biomass Density')
+                    survey.total_biomass = total_biomass['value']
+                    survey.total_biomass_n = total_biomass['n']
+                    survey.total_biomass_sd = total_biomass['sd']
+                    survey.total_biomass_se = total_biomass['se']
+                    survey.total_biomass_ci_low = total_biomass['ci_low']
+                    survey.total_biomass_ci_high = total_biomass['ci_high']
+                    survey.total_biomass_eb_low = total_biomass['eb_low']
+                    survey.total_biomass_eb_high = total_biomass['eb_high']
+                    
+                    # Commercial Biomass Density
+                    commercial_biomass = extract_metric_with_stats(row, 'Commercial Biomass Density')
+                    survey.commercial_biomass = commercial_biomass['value']
+                    survey.commercial_biomass_n = commercial_biomass['n']
+                    survey.commercial_biomass_sd = commercial_biomass['sd']
+                    survey.commercial_biomass_se = commercial_biomass['se']
+                    survey.commercial_biomass_ci_low = commercial_biomass['ci_low']
+                    survey.commercial_biomass_ci_high = commercial_biomass['ci_high']
+                    survey.commercial_biomass_eb_low = commercial_biomass['eb_low']
+                    survey.commercial_biomass_eb_high = commercial_biomass['eb_high']
                     
                 elif category_name == 'inverts':
-                    # For invertebrates, we can store additional data if needed
-                    # Current schema focuses on fish, so we'll log this for now
-                    invert_total = clean_numeric_value(row.get('Total Density'))
-                    logger.debug(f"Invertebrate total density for {mapped_site_name} {season}: {invert_total}")
+                    # Corallivore Density (from invertebrates)
+                    corallivore = extract_metric_with_stats(row, 'Corallivore Density')
+                    if corallivore['value'] is not None:
+                        survey.corallivore_density = corallivore['value']
+                        survey.corallivore_density_n = corallivore['n']
+                        survey.corallivore_density_sd = corallivore['sd']
+                        survey.corallivore_density_se = corallivore['se']
+                        survey.corallivore_density_ci_low = corallivore['ci_low']
+                        survey.corallivore_density_ci_high = corallivore['ci_high']
+                        survey.corallivore_density_eb_low = corallivore['eb_low']
+                        survey.corallivore_density_eb_high = corallivore['eb_high']
+                    
+                    logger.debug(f"Processed invertebrate data for {mapped_site_name} {season}")
                     
                 elif category_name == 'subs':
-                    survey.hard_coral_cover = clean_numeric_value(row.get('Hard Coral Cover'))
-                    survey.fleshy_macro_algae_cover = clean_numeric_value(row.get('Fresh Algae Cover'))
-                    survey.rubble = clean_numeric_value(row.get('Rubble Cover'))
-                    survey.bleaching = clean_numeric_value(row.get('Bleaching'))
-                    # Note: Soft Coral Cover doesn't have a direct mapping in current schema
+                    # Hard Coral Cover
+                    hard_coral = extract_metric_with_stats(row, 'Hard Coral Cover')
+                    survey.hard_coral_cover = hard_coral['value']
+                    survey.hard_coral_cover_n = hard_coral['n']
+                    survey.hard_coral_cover_sd = hard_coral['sd']
+                    survey.hard_coral_cover_se = hard_coral['se']
+                    survey.hard_coral_cover_ci_low = hard_coral['ci_low']
+                    survey.hard_coral_cover_ci_high = hard_coral['ci_high']
+                    survey.hard_coral_cover_eb_low = hard_coral['eb_low']
+                    survey.hard_coral_cover_eb_high = hard_coral['eb_high']
+                    
+                    # Soft Coral Cover
+                    soft_coral = extract_metric_with_stats(row, 'Soft Coral Cover')
+                    survey.soft_coral_cover = soft_coral['value']
+                    survey.soft_coral_cover_n = soft_coral['n']
+                    survey.soft_coral_cover_sd = soft_coral['sd']
+                    survey.soft_coral_cover_se = soft_coral['se']
+                    survey.soft_coral_cover_ci_low = soft_coral['ci_low']
+                    survey.soft_coral_cover_ci_high = soft_coral['ci_high']
+                    survey.soft_coral_cover_eb_low = soft_coral['eb_low']
+                    survey.soft_coral_cover_eb_high = soft_coral['eb_high']
+                    
+                    # Fresh Algae Cover
+                    algae = extract_metric_with_stats(row, 'Fresh Algae Cover')
+                    survey.fleshy_macro_algae_cover = algae['value']
+                    survey.fleshy_macro_algae_cover_n = algae['n']
+                    survey.fleshy_macro_algae_cover_sd = algae['sd']
+                    survey.fleshy_macro_algae_cover_se = algae['se']
+                    survey.fleshy_macro_algae_cover_ci_low = algae['ci_low']
+                    survey.fleshy_macro_algae_cover_ci_high = algae['ci_high']
+                    survey.fleshy_macro_algae_cover_eb_low = algae['eb_low']
+                    survey.fleshy_macro_algae_cover_eb_high = algae['eb_high']
+                    
+                    # Rubble Cover
+                    rubble = extract_metric_with_stats(row, 'Rubble Cover')
+                    survey.rubble = rubble['value']
+                    survey.rubble_n = rubble['n']
+                    survey.rubble_sd = rubble['sd']
+                    survey.rubble_se = rubble['se']
+                    survey.rubble_ci_low = rubble['ci_low']
+                    survey.rubble_ci_high = rubble['ci_high']
+                    survey.rubble_eb_low = rubble['eb_low']
+                    survey.rubble_eb_high = rubble['eb_high']
+                    
+                    # Bleaching
+                    bleaching = extract_metric_with_stats(row, 'Bleaching')
+                    survey.bleaching = bleaching['value']
+                    survey.bleaching_n = bleaching['n']
+                    survey.bleaching_sd = bleaching['sd']
+                    survey.bleaching_se = bleaching['se']
+                    survey.bleaching_ci_low = bleaching['ci_low']
+                    survey.bleaching_ci_high = bleaching['ci_high']
+                    survey.bleaching_eb_low = bleaching['eb_low']
+                    survey.bleaching_eb_high = bleaching['eb_high']
             
             # Commit after processing each file
             db.commit()
