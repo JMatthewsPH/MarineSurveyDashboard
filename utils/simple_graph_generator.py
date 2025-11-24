@@ -83,12 +83,18 @@ class SimpleGraphGenerator:
         data['date'] = pd.to_datetime(data['date'])
         data = data.sort_values('date')
         
-        # Get the metric column (should be the second column)
-        metric_column = data.columns[1]
+        # Get the metric column (column order: date, season, metric, then statistical columns)
+        metric_column = data.columns[2] if len(data.columns) > 2 else data.columns[1]
         
         # Convert decimal values to percentages for percentage-based metrics
-        if 'coral' in metric_column.lower() or 'algae' in metric_column.lower() or 'bleaching' in metric_column.lower() or 'rubble' in metric_column.lower():
+        is_percentage = 'coral' in metric_column.lower() or 'algae' in metric_column.lower() or 'bleaching' in metric_column.lower() or 'rubble' in metric_column.lower()
+        if is_percentage:
             data[metric_column] = data[metric_column] * 100
+            # Also convert statistical columns to percentages
+            for suffix in ['_ci_low', '_ci_high', '_eb_low', '_eb_high', '_sd']:
+                stat_col = f'{metric_column}{suffix}'
+                if stat_col in data.columns:
+                    data[stat_col] = data[stat_col] * 100
         
         # Format seasons for display
         data['season'] = data['date'].apply(format_season)
@@ -121,47 +127,185 @@ class SimpleGraphGenerator:
             line_style['shape'] = 'spline'
             line_style['smoothing'] = 1.3
         
+        # Prepare error bar settings if requested
+        error_y_settings = None
+        if show_error_bars and not data.empty:
+            # Check if error bar columns exist
+            eb_low_col = f'{metric_column}_eb_low'
+            eb_high_col = f'{metric_column}_eb_high'
+            sd_col = f'{metric_column}_sd'
+            
+            if eb_low_col in data.columns and eb_high_col in data.columns:
+                # Use asymmetric error bars from database
+                error_minus = data[metric_column] - data[eb_low_col]
+                error_plus = data[eb_high_col] - data[metric_column]
+                error_y_settings = dict(
+                    type='data',
+                    symmetric=False,
+                    array=error_plus,
+                    arrayminus=error_minus,
+                    visible=True,
+                    color='rgba(0, 119, 182, 0.5)',
+                    thickness=2,
+                    width=3
+                )
+            elif sd_col in data.columns:
+                # Fallback to standard deviation
+                error_y_settings = dict(
+                    type='data',
+                    array=data[sd_col],
+                    visible=True,
+                    color='rgba(0, 119, 182, 0.5)',
+                    thickness=2,
+                    width=3
+                )
+        
+        # Add confidence intervals if requested (mutually exclusive with error bars)
+        if show_confidence_interval and not show_error_bars and not data.empty:
+            ci_low_col = f'{metric_column}_ci_low'
+            ci_high_col = f'{metric_column}_ci_high'
+            
+            if ci_low_col in data.columns and ci_high_col in data.columns:
+                # Add CI for each data period (pre-COVID, COVID, post-COVID)
+                for period_data in [pre_covid, covid_period, post_covid]:
+                    if not period_data.empty:
+                        # Filter to rows with CI data
+                        has_ci = period_data[ci_low_col].notna() & period_data[ci_high_col].notna()
+                        if has_ci.any():
+                            ci_data = period_data[has_ci]
+                            # Add upper bound
+                            fig.add_trace(go.Scatter(
+                                x=ci_data['season'],
+                                y=ci_data[ci_high_col],
+                                mode='lines',
+                                line=dict(width=0),
+                                showlegend=False,
+                                hoverinfo='skip'
+                            ))
+                            # Add lower bound with fill
+                            fig.add_trace(go.Scatter(
+                                x=ci_data['season'],
+                                y=ci_data[ci_low_col],
+                                mode='lines',
+                                line=dict(width=0),
+                                fill='tonexty',
+                                fillcolor='rgba(0, 119, 182, 0.2)',
+                                showlegend=False,
+                                name='95% Confidence Interval',
+                                hoverinfo='skip'
+                            ))
+        
         # Track whether we've shown the main data series in the legend
         main_legend_shown = False
         
         # Plot pre-COVID data if exists
         if not pre_covid.empty:
-            fig.add_trace(go.Scatter(
-                x=pre_covid['season'],
-                y=pre_covid[metric_column],
-                name=y_label,
-                line=line_style,
-                mode='lines+markers',
-                marker=dict(size=8, color='#0077b6'),
-                showlegend=True
-            ))
+            trace_args = {
+                'x': pre_covid['season'],
+                'y': pre_covid[metric_column],
+                'name': y_label,
+                'line': line_style,
+                'mode': 'lines+markers',
+                'marker': dict(size=8, color='#0077b6'),
+                'showlegend': True
+            }
+            if error_y_settings and not show_confidence_interval:
+                # Filter error bar settings for pre-COVID period
+                pre_covid_indices = pre_covid.index
+                if error_y_settings.get('symmetric', True):
+                    trace_args['error_y'] = {
+                        'type': 'data',
+                        'array': error_y_settings['array'][pre_covid_indices],
+                        'visible': True,
+                        'color': error_y_settings['color'],
+                        'thickness': error_y_settings['thickness'],
+                        'width': error_y_settings['width']
+                    }
+                else:
+                    trace_args['error_y'] = {
+                        'type': 'data',
+                        'symmetric': False,
+                        'array': error_y_settings['array'][pre_covid_indices],
+                        'arrayminus': error_y_settings['arrayminus'][pre_covid_indices],
+                        'visible': True,
+                        'color': error_y_settings['color'],
+                        'thickness': error_y_settings['thickness'],
+                        'width': error_y_settings['width']
+                    }
+            fig.add_trace(go.Scatter(**trace_args))
             main_legend_shown = True
         
         # Plot COVID period data if exists (same style)
         if not covid_period.empty:
-            fig.add_trace(go.Scatter(
-                x=covid_period['season'],
-                y=covid_period[metric_column],
-                name=y_label,
-                line=line_style,
-                mode='lines+markers',
-                marker=dict(size=8, color='#0077b6'),
-                showlegend=not main_legend_shown  # Show legend if this is the first trace
-            ))
+            trace_args = {
+                'x': covid_period['season'],
+                'y': covid_period[metric_column],
+                'name': y_label,
+                'line': line_style,
+                'mode': 'lines+markers',
+                'marker': dict(size=8, color='#0077b6'),
+                'showlegend': not main_legend_shown
+            }
+            if error_y_settings and not show_confidence_interval:
+                covid_indices = covid_period.index
+                if error_y_settings.get('symmetric', True):
+                    trace_args['error_y'] = {
+                        'type': 'data',
+                        'array': error_y_settings['array'][covid_indices],
+                        'visible': True,
+                        'color': error_y_settings['color'],
+                        'thickness': error_y_settings['thickness'],
+                        'width': error_y_settings['width']
+                    }
+                else:
+                    trace_args['error_y'] = {
+                        'type': 'data',
+                        'symmetric': False,
+                        'array': error_y_settings['array'][covid_indices],
+                        'arrayminus': error_y_settings['arrayminus'][covid_indices],
+                        'visible': True,
+                        'color': error_y_settings['color'],
+                        'thickness': error_y_settings['thickness'],
+                        'width': error_y_settings['width']
+                    }
+            fig.add_trace(go.Scatter(**trace_args))
             if not main_legend_shown:
                 main_legend_shown = True
         
         # Plot post-COVID data if exists
         if not post_covid.empty:
-            fig.add_trace(go.Scatter(
-                x=post_covid['season'],
-                y=post_covid[metric_column],
-                name=y_label,
-                line=line_style,
-                mode='lines+markers',
-                marker=dict(size=8, color='#0077b6'),
-                showlegend=not main_legend_shown  # Show legend if this is the first trace
-            ))
+            trace_args = {
+                'x': post_covid['season'],
+                'y': post_covid[metric_column],
+                'name': y_label,
+                'line': line_style,
+                'mode': 'lines+markers',
+                'marker': dict(size=8, color='#0077b6'),
+                'showlegend': not main_legend_shown
+            }
+            if error_y_settings and not show_confidence_interval:
+                post_covid_indices = post_covid.index
+                if error_y_settings.get('symmetric', True):
+                    trace_args['error_y'] = {
+                        'type': 'data',
+                        'array': error_y_settings['array'][post_covid_indices],
+                        'visible': True,
+                        'color': error_y_settings['color'],
+                        'thickness': error_y_settings['thickness'],
+                        'width': error_y_settings['width']
+                    }
+                else:
+                    trace_args['error_y'] = {
+                        'type': 'data',
+                        'symmetric': False,
+                        'array': error_y_settings['array'][post_covid_indices],
+                        'arrayminus': error_y_settings['arrayminus'][post_covid_indices],
+                        'visible': True,
+                        'color': error_y_settings['color'],
+                        'thickness': error_y_settings['thickness'],
+                        'width': error_y_settings['width']
+                    }
+            fig.add_trace(go.Scatter(**trace_args))
             if not main_legend_shown:
                 main_legend_shown = True
         
@@ -244,11 +388,17 @@ class SimpleGraphGenerator:
                 if not comp_data.empty:
                     comp_data['date'] = pd.to_datetime(comp_data['date'])
                     comp_data = comp_data.sort_values('date')
-                    comp_metric_column = comp_data.columns[1]
+                    comp_metric_column = comp_data.columns[2] if len(comp_data.columns) > 2 else comp_data.columns[1]
                     
                     # Convert decimal values to percentages for percentage-based metrics
-                    if 'coral' in comp_metric_column.lower() or 'algae' in comp_metric_column.lower() or 'bleaching' in comp_metric_column.lower() or 'rubble' in comp_metric_column.lower():
+                    comp_is_percentage = 'coral' in comp_metric_column.lower() or 'algae' in comp_metric_column.lower() or 'bleaching' in comp_metric_column.lower() or 'rubble' in comp_metric_column.lower()
+                    if comp_is_percentage:
                         comp_data[comp_metric_column] = comp_data[comp_metric_column] * 100
+                        # Also convert statistical columns to percentages
+                        for suffix in ['_ci_low', '_ci_high', '_eb_low', '_eb_high', '_sd']:
+                            stat_col = f'{comp_metric_column}{suffix}'
+                            if stat_col in comp_data.columns:
+                                comp_data[stat_col] = comp_data[stat_col] * 100
                     
                     comp_data['season'] = comp_data['date'].apply(format_season)
                     
