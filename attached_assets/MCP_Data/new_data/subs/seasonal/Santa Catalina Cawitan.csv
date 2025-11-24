@@ -1,4 +1,4 @@
-Period,Site,Rubble Cover,Fresh Algae Cover,Soft Coral Cover,Hard Coral Cover,Bleaching
-Spring 2024,Santa Catalina Cawitan,0.0,0.24,0.0,0.48,0.03
-Winter 24/25,Santa Catalina Cawitan,0.01,0.27,0.0,0.48,0.01
-Spring 2025,Santa Catalina Cawitan,0.04,0.41,0.0,0.26,0.01
+Period,Site,Hard Coral Cover,Hard Coral Cover_N,Hard Coral Cover_SD,Hard Coral Cover_SE,Hard Coral Cover_CI_low,Hard Coral Cover_CI_high,Hard Coral Cover_EB_low,Hard Coral Cover_EB_high,Soft Coral Cover,Soft Coral Cover_N,Soft Coral Cover_SD,Soft Coral Cover_SE,Soft Coral Cover_CI_low,Soft Coral Cover_CI_high,Soft Coral Cover_EB_low,Soft Coral Cover_EB_high,Fresh Algae Cover,Fresh Algae Cover_N,Fresh Algae Cover_SD,Fresh Algae Cover_SE,Fresh Algae Cover_CI_low,Fresh Algae Cover_CI_high,Fresh Algae Cover_EB_low,Fresh Algae Cover_EB_high,Rubble Cover,Rubble Cover_N,Rubble Cover_SD,Rubble Cover_SE,Rubble Cover_CI_low,Rubble Cover_CI_high,Rubble Cover_EB_low,Rubble Cover_EB_high,Bleaching,Bleaching_N,Bleaching_SD,Bleaching_SE,Bleaching_CI_low,Bleaching_CI_high,Bleaching_EB_low,Bleaching_EB_high
+Spring 2024,Santa Catalina Cawitan,47.92,2,0.59,0.42,42.62,53.21,47.5,48.33,0.0,2,0.0,0.0,0.0,0.0,0.0,0.0,24.17,2,1.18,0.83,13.58,34.76,23.33,25.0,0.0,2,0.0,0.0,0.0,0.0,0.0,0.0,5.42,2,7.66,5.42,-63.41,74.24,0.0,10.83
+Winter 24/25,Santa Catalina Cawitan,48.33,1,,,,,,,0.0,1,,,,,,,26.67,1,,,,,,,1.25,1,,,,,,,2.08,1,,,,,,
+Spring 2025,Santa Catalina Cawitan,25.83,1,,,,,,,0.0,1,,,,,,,41.25,1,,,,,,,4.17,1,,,,,,,0.83,1,,,,,,

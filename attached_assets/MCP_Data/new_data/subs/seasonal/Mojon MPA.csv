@@ -1,4 +1,4 @@
-Period,Site,Rubble Cover,Fresh Algae Cover,Soft Coral Cover,Hard Coral Cover,Bleaching
-Winter 24/25,Mojon MPA,0.1,0.25,0.06,0.18,0.0
-Spring 2025,Mojon MPA,0.17,0.21,0.0,0.26,0.01
-Summer 2025,Mojon MPA,0.17,0.29,0.01,0.22,0.0
+Period,Site,Hard Coral Cover,Hard Coral Cover_N,Hard Coral Cover_SD,Hard Coral Cover_SE,Hard Coral Cover_CI_low,Hard Coral Cover_CI_high,Hard Coral Cover_EB_low,Hard Coral Cover_EB_high,Soft Coral Cover,Soft Coral Cover_N,Soft Coral Cover_SD,Soft Coral Cover_SE,Soft Coral Cover_CI_low,Soft Coral Cover_CI_high,Soft Coral Cover_EB_low,Soft Coral Cover_EB_high,Fresh Algae Cover,Fresh Algae Cover_N,Fresh Algae Cover_SD,Fresh Algae Cover_SE,Fresh Algae Cover_CI_low,Fresh Algae Cover_CI_high,Fresh Algae Cover_EB_low,Fresh Algae Cover_EB_high,Rubble Cover,Rubble Cover_N,Rubble Cover_SD,Rubble Cover_SE,Rubble Cover_CI_low,Rubble Cover_CI_high,Rubble Cover_EB_low,Rubble Cover_EB_high,Bleaching,Bleaching_N,Bleaching_SD,Bleaching_SE,Bleaching_CI_low,Bleaching_CI_high,Bleaching_EB_low,Bleaching_EB_high
+Winter 24/25,Mojon MPA,17.5,2,3.54,2.5,-14.27,49.27,15.0,20.0,6.04,2,2.06,1.46,-12.49,24.57,4.58,7.5,25.42,2,3.54,2.5,-6.35,57.18,22.92,27.92,9.58,2,1.77,1.25,-6.3,25.47,8.33,10.83,0.0,2,0.0,0.0,0.0,0.0,0.0,0.0
+Spring 2025,Mojon MPA,26.25,2,6.48,4.58,-31.99,84.49,21.67,30.83,0.42,2,0.59,0.42,-4.88,5.71,0.0,0.83,20.62,2,3.83,2.71,-13.79,55.04,17.92,23.33,17.08,2,3.54,2.5,-14.68,48.85,14.58,19.58,1.46,2,2.06,1.46,-17.07,19.99,0.0,2.92
+Summer 2025,Mojon MPA,22.36,3,5.42,3.13,8.89,35.83,19.23,25.49,0.56,3,0.96,0.56,-1.83,2.95,-0.0,1.11,28.61,3,3.15,1.82,20.77,36.45,26.79,30.43,16.81,3,8.68,5.01,-4.77,38.38,11.79,21.82,0.56,3,0.96,0.56,-1.83,2.95,-0.0,1.11
