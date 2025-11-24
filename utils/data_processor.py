@@ -147,7 +147,7 @@ class DataProcessor:
                 logger.warning(f"Site not found: {site_name}")
                 return pd.DataFrame(columns=['date', metric])
 
-            # Get metric data from database
+            # Get metric data from database with statistical columns
             surveys = QueryBuilder.metric_data(db, site.id, column_name, start_date)
 
             # Log results
@@ -155,8 +155,11 @@ class DataProcessor:
             
             print(f"DEBUG - Metric name: {_self.DISPLAY_NAMES.get(column_name, metric)}")
             
-            # Process results
-            return pd.DataFrame(surveys, columns=['date', metric])
+            # Process results with statistical columns
+            # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
+            columns = ['date', 'season', metric, f'{metric}_n', f'{metric}_sd', 
+                      f'{metric}_ci_low', f'{metric}_ci_high', f'{metric}_eb_low', f'{metric}_eb_high']
+            return pd.DataFrame(surveys, columns=columns)
         except Exception as e:
             logger.error(f"Error fetching metric data: {str(e)}")
             # Return empty DataFrame to prevent application crashes
@@ -221,26 +224,29 @@ class DataProcessor:
             # Convert results to DataFrames by site name - optimize with preallocation
             results = {}
             
+            # Define columns with statistical data
+            # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
+            columns = ['date', 'season', metric, f'{metric}_n', f'{metric}_sd', 
+                      f'{metric}_ci_low', f'{metric}_ci_high', f'{metric}_eb_low', f'{metric}_eb_high']
+            
             # Process data in a more optimized way - avoid redundant DataFrame creations
             for site_id, data in results_by_site_id.items():
                 if site_id in site_id_to_name:
                     site_name = site_id_to_name[site_id]
                     if data:  # Only create DataFrame if we have data
-                        df = pd.DataFrame(data, columns=['date', metric])
+                        df = pd.DataFrame(data, columns=columns)
                         # Pre-convert dates to improve chart rendering speed later
                         df['date'] = pd.to_datetime(df['date'])
                         logger.info(f"Found {len(df)} {metric} surveys for {site_name}")
                         results[site_name] = df
                     else:
                         # Empty DataFrame with proper column types
-                        results[site_name] = pd.DataFrame({'date': pd.Series(dtype='datetime64[ns]'), 
-                                                          metric: pd.Series(dtype='float64')})
+                        results[site_name] = pd.DataFrame({col: pd.Series(dtype='datetime64[ns]' if col == 'date' else 'object' if col == 'season' else 'float64') for col in columns})
                 
             # Add empty DataFrames for sites with no data - with proper column types
             for site_name in site_names:
                 if site_name not in results:
-                    results[site_name] = pd.DataFrame({'date': pd.Series(dtype='datetime64[ns]'), 
-                                                      metric: pd.Series(dtype='float64')})
+                    results[site_name] = pd.DataFrame({col: pd.Series(dtype='datetime64[ns]' if col == 'date' else 'object' if col == 'season' else 'float64') for col in columns})
                     
             logger.info(f"Successfully batch loaded {metric} data for {len(results)} sites")
             return results
@@ -248,8 +254,9 @@ class DataProcessor:
         except Exception as e:
             logger.error(f"Error batch fetching metric data: {str(e)}")
             # Return empty DataFrames to prevent application crashes - with proper column types
-            return {site: pd.DataFrame({'date': pd.Series(dtype='datetime64[ns]'), 
-                                       metric: pd.Series(dtype='float64')}) 
+            columns = ['date', 'season', metric, f'{metric}_n', f'{metric}_sd', 
+                      f'{metric}_ci_low', f'{metric}_ci_high', f'{metric}_eb_low', f'{metric}_eb_high']
+            return {site: pd.DataFrame({col: pd.Series(dtype='datetime64[ns]' if col == 'date' else 'object' if col == 'season' else 'float64') for col in columns}) 
                    for site in site_names}
 
     @st.cache_data(ttl=3600, show_spinner=False)
@@ -381,13 +388,17 @@ class DataProcessor:
                 logger.warning(f"Site not found: {site_name}")
                 return pd.DataFrame(columns=['date', display_name])
 
-            # Use specialized biomass query
+            # Use specialized biomass query with statistical columns
             surveys = QueryBuilder.biomass_data(db, site.id, start_date)
 
             logger.info(f"Found {len(surveys)} biomass surveys for {site_name}")
             print(f"DEBUG - Metric name: {display_name}")
             
-            return pd.DataFrame(surveys, columns=['date', display_name])
+            # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
+            columns = ['date', 'season', display_name, f'{display_name}_n', f'{display_name}_sd',
+                      f'{display_name}_ci_low', f'{display_name}_ci_high', 
+                      f'{display_name}_eb_low', f'{display_name}_eb_high']
+            return pd.DataFrame(surveys, columns=columns)
         except Exception as e:
             logger.error(f"Error fetching biomass data: {str(e)}")
             return pd.DataFrame(columns=['date', display_name])
@@ -439,11 +450,18 @@ class DataProcessor:
                 db, site_ids, start_date
             )
             
+            # Define columns with statistical data
+            # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
+            columns = ['date', 'season', display_name, f'{display_name}_n', f'{display_name}_sd',
+                      f'{display_name}_ci_low', f'{display_name}_ci_high', 
+                      f'{display_name}_eb_low', f'{display_name}_eb_high']
+            
             # Convert results to DataFrames by site name
             results = {}
             for site_id, data in results_by_site_id.items():
                 site_name = site_id_to_name[site_id]
-                df = pd.DataFrame(data, columns=['date', display_name])
+                df = pd.DataFrame(data, columns=columns)
+                df['date'] = pd.to_datetime(df['date'])
                 logger.info(f"Found {len(df)} biomass surveys for {site_name}")
                 results[site_name] = df
                 
@@ -451,7 +469,7 @@ class DataProcessor:
             for site_name in site_names:
                 if site_name not in results and site_name in site_name_to_id:
                     logger.info(f"No biomass surveys found for {site_name}")
-                    results[site_name] = pd.DataFrame(columns=['date', display_name])
+                    results[site_name] = pd.DataFrame({col: pd.Series(dtype='datetime64[ns]' if col == 'date' else 'object' if col == 'season' else 'float64') for col in columns})
                     
             print(f"DEBUG - Batch loaded biomass data for {len(results)} sites")
             return results
@@ -459,7 +477,10 @@ class DataProcessor:
         except Exception as e:
             logger.error(f"Error batch fetching biomass data: {str(e)}")
             # Return empty DataFrames to prevent application crashes
-            return {site: pd.DataFrame(columns=['date', display_name]) for site in site_names}
+            columns = ['date', 'season', display_name, f'{display_name}_n', f'{display_name}_sd',
+                      f'{display_name}_ci_low', f'{display_name}_ci_high', 
+                      f'{display_name}_eb_low', f'{display_name}_eb_high']
+            return {site: pd.DataFrame({col: pd.Series(dtype='datetime64[ns]' if col == 'date' else 'object' if col == 'season' else 'float64') for col in columns}) for site in site_names}
 
     @st.cache_data(ttl=3600, show_spinner=False)
     def get_coral_cover_data(_self, site_name, start_date='2017-01-01'):
@@ -479,13 +500,17 @@ class DataProcessor:
                 logger.warning(f"Site not found: {site_name}")
                 return pd.DataFrame(columns=['date', display_name])
 
-            # Use specialized coral cover query
+            # Use specialized coral cover query with statistical columns
             surveys = QueryBuilder.coral_cover_data(db, site.id, start_date)
 
             logger.info(f"Found {len(surveys)} coral cover surveys for {site_name}")
             print(f"DEBUG - Metric name: {display_name}")
             
-            return pd.DataFrame(surveys, columns=['date', display_name])
+            # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
+            columns = ['date', 'season', display_name, f'{display_name}_n', f'{display_name}_sd',
+                      f'{display_name}_ci_low', f'{display_name}_ci_high', 
+                      f'{display_name}_eb_low', f'{display_name}_eb_high']
+            return pd.DataFrame(surveys, columns=columns)
         except Exception as e:
             logger.error(f"Error fetching coral cover data: {str(e)}")
             return pd.DataFrame(columns=['date', display_name])
@@ -537,11 +562,18 @@ class DataProcessor:
                 db, site_ids, start_date
             )
             
+            # Define columns with statistical data
+            # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
+            columns = ['date', 'season', display_name, f'{display_name}_n', f'{display_name}_sd',
+                      f'{display_name}_ci_low', f'{display_name}_ci_high', 
+                      f'{display_name}_eb_low', f'{display_name}_eb_high']
+            
             # Convert results to DataFrames by site name
             results = {}
             for site_id, data in results_by_site_id.items():
                 site_name = site_id_to_name[site_id]
-                df = pd.DataFrame(data, columns=['date', display_name])
+                df = pd.DataFrame(data, columns=columns)
+                df['date'] = pd.to_datetime(df['date'])
                 logger.info(f"Found {len(df)} coral cover surveys for {site_name}")
                 results[site_name] = df
                 
@@ -549,7 +581,7 @@ class DataProcessor:
             for site_name in site_names:
                 if site_name not in results and site_name in site_name_to_id:
                     logger.info(f"No coral cover surveys found for {site_name}")
-                    results[site_name] = pd.DataFrame(columns=['date', display_name])
+                    results[site_name] = pd.DataFrame({col: pd.Series(dtype='datetime64[ns]' if col == 'date' else 'object' if col == 'season' else 'float64') for col in columns})
                     
             print(f"DEBUG - Batch loaded coral cover data for {len(results)} sites")
             return results
@@ -557,7 +589,10 @@ class DataProcessor:
         except Exception as e:
             logger.error(f"Error batch fetching coral cover data: {str(e)}")
             # Return empty DataFrames to prevent application crashes
-            return {site: pd.DataFrame(columns=['date', display_name]) for site in site_names}
+            columns = ['date', 'season', display_name, f'{display_name}_n', f'{display_name}_sd',
+                      f'{display_name}_ci_low', f'{display_name}_ci_high', 
+                      f'{display_name}_eb_low', f'{display_name}_eb_high']
+            return {site: pd.DataFrame({col: pd.Series(dtype='datetime64[ns]' if col == 'date' else 'object' if col == 'season' else 'float64') for col in columns}) for site in site_names}
 
     def get_fish_length_data(self, site_name, species, start_date='2017-01-01'):
         """Process fish length data by species"""
