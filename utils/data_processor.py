@@ -135,7 +135,10 @@ class DataProcessor:
         column_name = DataProcessor.METRIC_MAP.get(metric)
         if not column_name:
             logger.error(f"Invalid metric requested: {metric}")
-            return pd.DataFrame(columns=['date', metric])
+            column_name = metric  # Use placeholder for consistency
+            columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
+                      f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
+            return pd.DataFrame(columns=columns)
 
         try:
             # Use common session management
@@ -145,7 +148,9 @@ class DataProcessor:
             site = QueryBuilder.site_by_name(db, site_name)
             if not site:
                 logger.warning(f"Site not found: {site_name}")
-                return pd.DataFrame(columns=['date', metric])
+                columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
+                          f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
+                return pd.DataFrame(columns=columns)
 
             # Get metric data from database with statistical columns
             surveys = QueryBuilder.metric_data(db, site.id, column_name, start_date)
@@ -157,13 +162,16 @@ class DataProcessor:
             
             # Process results with statistical columns
             # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
-            columns = ['date', 'season', metric, f'{metric}_n', f'{metric}_sd', 
-                      f'{metric}_ci_low', f'{metric}_ci_high', f'{metric}_eb_low', f'{metric}_eb_high']
+            # Use database column_name for consistency with graph generators
+            columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
+                      f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
             return pd.DataFrame(surveys, columns=columns)
         except Exception as e:
             logger.error(f"Error fetching metric data: {str(e)}")
-            # Return empty DataFrame to prevent application crashes
-            return pd.DataFrame(columns=['date', metric])
+            # Return empty DataFrame to prevent application crashes - use column_name for consistency
+            columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
+                      f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
+            return pd.DataFrame(columns=columns)
             
     @st.cache_data(ttl=6*3600, show_spinner=False)  # Cache for 6 hours to balance freshness and performance
     def batch_get_metric_data(_self, site_names: list, metric: str, start_date='2017-01-01'):
@@ -187,7 +195,10 @@ class DataProcessor:
         column_name = DataProcessor.METRIC_MAP.get(metric)
         if not column_name:
             logger.error(f"Invalid metric requested: {metric}")
-            return {site: pd.DataFrame(columns=['date', metric]) for site in site_names}
+            column_name = metric  # Use placeholder for consistency
+            columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
+                      f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
+            return {site: pd.DataFrame(columns=columns) for site in site_names}
             
         try:
             # Use common session management
@@ -211,7 +222,9 @@ class DataProcessor:
             
             if not site_ids:
                 logger.warning("No valid site IDs found for the requested sites")
-                return {site: pd.DataFrame(columns=['date', metric]) for site in site_names}
+                columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
+                          f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
+                return {site: pd.DataFrame({col: pd.Series(dtype='datetime64[ns]' if col == 'date' else 'object' if col == 'season' else 'float64') for col in columns}) for site in site_names}
             
             # Fetch all metric data in a single optimized query
             start_time = time.time()
@@ -226,8 +239,9 @@ class DataProcessor:
             
             # Define columns with statistical data
             # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
-            columns = ['date', 'season', metric, f'{metric}_n', f'{metric}_sd', 
-                      f'{metric}_ci_low', f'{metric}_ci_high', f'{metric}_eb_low', f'{metric}_eb_high']
+            # Use database column_name for consistency with graph generators
+            columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
+                      f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
             
             # Process data in a more optimized way - avoid redundant DataFrame creations
             for site_id, data in results_by_site_id.items():
@@ -254,8 +268,9 @@ class DataProcessor:
         except Exception as e:
             logger.error(f"Error batch fetching metric data: {str(e)}")
             # Return empty DataFrames to prevent application crashes - with proper column types
-            columns = ['date', 'season', metric, f'{metric}_n', f'{metric}_sd', 
-                      f'{metric}_ci_low', f'{metric}_ci_high', f'{metric}_eb_low', f'{metric}_eb_high']
+            # Use database column_name for consistency
+            columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
+                      f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
             return {site: pd.DataFrame({col: pd.Series(dtype='datetime64[ns]' if col == 'date' else 'object' if col == 'season' else 'float64') for col in columns}) 
                    for site in site_names}
 
@@ -268,7 +283,10 @@ class DataProcessor:
         column_name = DataProcessor.METRIC_MAP.get(metric)
         if not column_name:
             logger.error(f"Invalid metric requested: {metric}")
-            return pd.DataFrame(columns=['date', metric])
+            column_name = metric  # Use placeholder for consistency
+            columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
+                      f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
+            return pd.DataFrame(columns=columns)
 
         exclude_site_id = None
         if exclude_site:
@@ -292,18 +310,23 @@ class DataProcessor:
 
             logger.info(f"Found {len(surveys)} average {metric} data points")
             
-            return pd.DataFrame(surveys, columns=['date', metric])
+            # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
+            columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
+                      f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
+            return pd.DataFrame(surveys, columns=columns)
         except Exception as e:
             logger.error(f"Error calculating average metric data: {str(e)}")
-            return pd.DataFrame(columns=['date', metric])
+            columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
+                      f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
+            return pd.DataFrame(columns=columns)
 
     @st.cache_data(ttl=3600, show_spinner=False)
     def get_average_biomass_data(_self, exclude_site=None, municipality=None, start_date='2017-01-01'):
         """Calculate average commercial fish biomass with optional municipality filter"""
         logger.info(f"Calculating average biomass (excluding {exclude_site}, municipality filter: {municipality})")
         
-        # Use the consistent display name from the class constants
-        display_name = _self.DISPLAY_NAMES.get('commercial_biomass', 'Commercial Biomass')
+        # Use the database column name for consistency
+        column_name = 'commercial_biomass'
         
         exclude_site_id = None
         if exclude_site:
@@ -327,18 +350,23 @@ class DataProcessor:
 
             logger.info(f"Found {len(surveys)} average biomass data points")
             
-            return pd.DataFrame(surveys, columns=['date', display_name])
+            # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
+            columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
+                      f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
+            return pd.DataFrame(surveys, columns=columns)
         except Exception as e:
             logger.error(f"Error calculating average biomass data: {str(e)}")
-            return pd.DataFrame(columns=['date', display_name])
+            columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
+                      f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
+            return pd.DataFrame(columns=columns)
 
     @st.cache_data(ttl=3600, show_spinner=False)
     def get_average_coral_cover_data(_self, exclude_site=None, municipality=None, start_date='2017-01-01'):
         """Calculate average hard coral cover with optional municipality filter"""
         logger.info(f"Calculating average coral cover (excluding {exclude_site}, municipality filter: {municipality})")
         
-        # Use the consistent display name from the class constants
-        display_name = _self.DISPLAY_NAMES.get('hard_coral_cover', 'Hard Coral Cover')
+        # Use the database column name for consistency
+        column_name = 'hard_coral_cover'
         
         exclude_site_id = None
         if exclude_site:
@@ -355,9 +383,6 @@ class DataProcessor:
             # Use common session management
             db = _self._get_session()
             
-            # Using the column name directly from class constants
-            column_name = 'hard_coral_cover'
-            
             # Use general average_metric_data from QueryBuilder
             surveys = QueryBuilder.average_metric_data(
                 db, column_name, exclude_site_id, municipality, start_date
@@ -365,10 +390,15 @@ class DataProcessor:
             
             logger.info(f"Found {len(surveys)} average coral cover data points")
             
-            return pd.DataFrame(surveys, columns=['date', display_name])
+            # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
+            columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
+                      f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
+            return pd.DataFrame(surveys, columns=columns)
         except Exception as e:
             logger.error(f"Error calculating average coral cover data: {str(e)}")
-            return pd.DataFrame(columns=['date', display_name])
+            columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
+                      f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
+            return pd.DataFrame(columns=columns)
 
     @st.cache_data(ttl=3600, show_spinner=False)
     def get_biomass_data(_self, site_name, start_date='2017-01-01'):
