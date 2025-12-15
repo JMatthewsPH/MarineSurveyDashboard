@@ -88,3 +88,8 @@ When CSV data doesn't match displayed values:
   - Andulay Winter 24/25: 6.85 → 7.18 kg/150m²
   - Lutoban North Winter 24/25: 5.68 → 5.67 kg/150m²
 - **2025-11-19**: Fixed hard coral cover data mismatch for Basak (showed 3.05% instead of 19%). Reimported substrate data to correct all sites.
+- **2025-12-15**: Added COVID period data filtering
+  - All data queries now exclude dates from April 2020 to March 2022
+  - COVID data was inaccurate due to pandemic restrictions affecting monitoring
+  - Filter implemented in QueryBuilder (_exclude_covid_filter) for all metric, biomass, and coral cover queries
+  - Data still exists in database but is hidden from all visualizations and exports

@@ -5,9 +5,13 @@ This module separates database query logic from the data processing layer,
 improving code organization and maintainability.
 """
 
-from sqlalchemy import func
+from datetime import datetime
+from sqlalchemy import func, and_, not_
 from sqlalchemy.orm import Session
 from .database import Site, Survey
+
+COVID_START = datetime(2020, 4, 1)
+COVID_END = datetime(2022, 3, 1)
 
 class QueryBuilder:
     """
@@ -16,6 +20,11 @@ class QueryBuilder:
     This class centralizes all query construction logic, making it easier
     to maintain and optimize database access patterns.
     """
+    
+    @staticmethod
+    def _exclude_covid_filter():
+        """Returns a filter to exclude COVID period data (April 2020 - March 2022)"""
+        return not_(and_(Survey.date >= COVID_START, Survey.date < COVID_END))
     
     @staticmethod
     def site_by_name(db: Session, site_name: str):
@@ -44,6 +53,7 @@ class QueryBuilder:
         return (db.query(Survey.date, Survey.season, *stat_columns)
                 .filter(Survey.site_id == site_id)
                 .filter(Survey.date >= start_date)
+                .filter(QueryBuilder._exclude_covid_filter())
                 .order_by(Survey.date)
                 .all())
                 
@@ -84,6 +94,7 @@ class QueryBuilder:
                 *stat_columns)
             .filter(Survey.site_id.in_(site_ids))
             .filter(Survey.date >= start_date)
+            .filter(QueryBuilder._exclude_covid_filter())
             .order_by(Survey.site_id, Survey.date)
             .all())
             
@@ -117,7 +128,8 @@ class QueryBuilder:
         if municipality:
             query = query.filter(Site.municipality == municipality)
             
-        # Group and order results
+        # Apply COVID filter and group/order results
+        query = query.filter(QueryBuilder._exclude_covid_filter())
         return (query.group_by(Survey.date)
                 .order_by(Survey.date)
                 .all())
@@ -137,6 +149,7 @@ class QueryBuilder:
                 Survey.commercial_biomass_eb_high)
                 .filter(Survey.site_id == site_id)
                 .filter(Survey.date >= start_date)
+                .filter(QueryBuilder._exclude_covid_filter())
                 .order_by(Survey.date)
                 .all())
                 
@@ -170,6 +183,7 @@ class QueryBuilder:
                 Survey.commercial_biomass_eb_high)
             .filter(Survey.site_id.in_(site_ids))
             .filter(Survey.date >= start_date)
+            .filter(QueryBuilder._exclude_covid_filter())
             .order_by(Survey.site_id, Survey.date)
             .all())
             
@@ -198,6 +212,7 @@ class QueryBuilder:
                 Survey.hard_coral_cover_eb_high)
                 .filter(Survey.site_id == site_id)
                 .filter(Survey.date >= start_date)
+                .filter(QueryBuilder._exclude_covid_filter())
                 .order_by(Survey.date)
                 .all())
                 
@@ -231,6 +246,7 @@ class QueryBuilder:
                 Survey.hard_coral_cover_eb_high)
             .filter(Survey.site_id.in_(site_ids))
             .filter(Survey.date >= start_date)
+            .filter(QueryBuilder._exclude_covid_filter())
             .order_by(Survey.site_id, Survey.date)
             .all())
             
@@ -261,6 +277,9 @@ class QueryBuilder:
             
         if municipality:
             query = query.filter(Site.municipality == municipality)
+        
+        # Apply COVID filter
+        query = query.filter(QueryBuilder._exclude_covid_filter())
             
         return (query.group_by(Survey.date)
                 .order_by(Survey.date)
