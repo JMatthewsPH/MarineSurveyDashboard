@@ -312,15 +312,18 @@ class SimpleGraphGenerator:
         
         # Add COVID gap dotted line if we have data before and after
         if not pre_covid.empty and not post_covid.empty:
-            last_pre = pre_covid.iloc[-1]
-            first_post = post_covid.iloc[0]
+            # Find the last valid (non-NaN) pre-COVID value
+            pre_covid_valid = pre_covid[pre_covid[metric_column].notna()]
+            # Find the first valid (non-NaN) post-COVID value
+            post_covid_valid = post_covid[post_covid[metric_column].notna()]
             
-            # Check if both Y values are valid (not NaN)
-            last_pre_value = last_pre[metric_column]
-            first_post_value = first_post[metric_column]
-            
-            # Only create gap line if both values are valid (not NaN)
-            if pd.notna(last_pre_value) and pd.notna(first_post_value):
+            # Only create gap line if we have valid values on both sides
+            if not pre_covid_valid.empty and not post_covid_valid.empty:
+                last_pre = pre_covid_valid.iloc[-1]
+                first_post = post_covid_valid.iloc[0]
+                last_pre_value = last_pre[metric_column]
+                first_post_value = first_post[metric_column]
+                
                 fig.add_trace(go.Scatter(
                     x=[last_pre['season'], first_post['season']],
                     y=[last_pre_value, first_post_value],
