@@ -446,6 +446,9 @@ class SimpleGraphGenerator:
                         marker=dict(size=6, color=color)
                     ))
         
+        # Get sorted seasons for x-axis ordering (maintain chronological order)
+        sorted_seasons = data.sort_values('date')['season'].unique().tolist()
+        
         # Update layout
         fig.update_layout(
             title=dict(
@@ -460,7 +463,9 @@ class SimpleGraphGenerator:
                 showgrid=True,
                 gridwidth=1,
                 gridcolor='#ecf0f1',
-                tickangle=45
+                tickangle=45,
+                categoryorder='array',
+                categoryarray=sorted_seasons
             ),
             yaxis=dict(
                 title=y_label,
