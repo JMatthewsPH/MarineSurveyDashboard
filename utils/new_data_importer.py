@@ -124,20 +124,35 @@ def clean_numeric_value(value):
         logger.warning(f"Could not convert value to float: {value}")
         return None
 
-def extract_metric_with_stats(row, metric_name):
+def extract_metric_with_stats(row, metric_name, convert_to_decimal=False):
     """
     Extract a metric and all its statistical measures from a row.
     Returns a dict with keys: value, n, sd, se, ci_low, ci_high, eb_low, eb_high
+    
+    Args:
+        row: DataFrame row
+        metric_name: Name of the metric column
+        convert_to_decimal: If True, divide percentage values by 100 for storage as decimals
     """
+    divisor = 100.0 if convert_to_decimal else 1.0
+    
+    value = clean_numeric_value(row.get(metric_name))
+    sd = clean_numeric_value(row.get(f'{metric_name}_SD'))
+    se = clean_numeric_value(row.get(f'{metric_name}_SE'))
+    ci_low = clean_numeric_value(row.get(f'{metric_name}_CI_low'))
+    ci_high = clean_numeric_value(row.get(f'{metric_name}_CI_high'))
+    eb_low = clean_numeric_value(row.get(f'{metric_name}_EB_low'))
+    eb_high = clean_numeric_value(row.get(f'{metric_name}_EB_high'))
+    
     return {
-        'value': clean_numeric_value(row.get(metric_name)),
-        'n': clean_numeric_value(row.get(f'{metric_name}_N')),
-        'sd': clean_numeric_value(row.get(f'{metric_name}_SD')),
-        'se': clean_numeric_value(row.get(f'{metric_name}_SE')),
-        'ci_low': clean_numeric_value(row.get(f'{metric_name}_CI_low')),
-        'ci_high': clean_numeric_value(row.get(f'{metric_name}_CI_high')),
-        'eb_low': clean_numeric_value(row.get(f'{metric_name}_EB_low')),
-        'eb_high': clean_numeric_value(row.get(f'{metric_name}_EB_high'))
+        'value': value / divisor if value is not None else None,
+        'n': clean_numeric_value(row.get(f'{metric_name}_N')),  # n stays as count
+        'sd': sd / divisor if sd is not None else None,
+        'se': se / divisor if se is not None else None,
+        'ci_low': ci_low / divisor if ci_low is not None else None,
+        'ci_high': ci_high / divisor if ci_high is not None else None,
+        'eb_low': eb_low / divisor if eb_low is not None else None,
+        'eb_high': eb_high / divisor if eb_high is not None else None
     }
 
 def import_category_data(category_path: str, db: Session):
@@ -338,8 +353,8 @@ def import_category_data(category_path: str, db: Session):
                     logger.debug(f"Processed invertebrate data for {mapped_site_name} {season}")
                     
                 elif category_name == 'subs':
-                    # Hard Coral Cover
-                    hard_coral = extract_metric_with_stats(row, 'Hard Coral Cover')
+                    # Hard Coral Cover (convert percentages to decimals for storage)
+                    hard_coral = extract_metric_with_stats(row, 'Hard Coral Cover', convert_to_decimal=True)
                     survey.hard_coral_cover = hard_coral['value']
                     survey.hard_coral_cover_n = hard_coral['n']
                     survey.hard_coral_cover_sd = hard_coral['sd']
@@ -349,8 +364,8 @@ def import_category_data(category_path: str, db: Session):
                     survey.hard_coral_cover_eb_low = hard_coral['eb_low']
                     survey.hard_coral_cover_eb_high = hard_coral['eb_high']
                     
-                    # Soft Coral Cover
-                    soft_coral = extract_metric_with_stats(row, 'Soft Coral Cover')
+                    # Soft Coral Cover (convert percentages to decimals for storage)
+                    soft_coral = extract_metric_with_stats(row, 'Soft Coral Cover', convert_to_decimal=True)
                     survey.soft_coral_cover = soft_coral['value']
                     survey.soft_coral_cover_n = soft_coral['n']
                     survey.soft_coral_cover_sd = soft_coral['sd']
@@ -360,8 +375,8 @@ def import_category_data(category_path: str, db: Session):
                     survey.soft_coral_cover_eb_low = soft_coral['eb_low']
                     survey.soft_coral_cover_eb_high = soft_coral['eb_high']
                     
-                    # Fresh Algae Cover
-                    algae = extract_metric_with_stats(row, 'Fresh Algae Cover')
+                    # Fresh Algae Cover (convert percentages to decimals for storage)
+                    algae = extract_metric_with_stats(row, 'Fresh Algae Cover', convert_to_decimal=True)
                     survey.fleshy_macro_algae_cover = algae['value']
                     survey.fleshy_macro_algae_cover_n = algae['n']
                     survey.fleshy_macro_algae_cover_sd = algae['sd']
@@ -371,8 +386,8 @@ def import_category_data(category_path: str, db: Session):
                     survey.fleshy_macro_algae_cover_eb_low = algae['eb_low']
                     survey.fleshy_macro_algae_cover_eb_high = algae['eb_high']
                     
-                    # Rubble Cover
-                    rubble = extract_metric_with_stats(row, 'Rubble Cover')
+                    # Rubble Cover (convert percentages to decimals for storage)
+                    rubble = extract_metric_with_stats(row, 'Rubble Cover', convert_to_decimal=True)
                     survey.rubble = rubble['value']
                     survey.rubble_n = rubble['n']
                     survey.rubble_sd = rubble['sd']
@@ -382,8 +397,8 @@ def import_category_data(category_path: str, db: Session):
                     survey.rubble_eb_low = rubble['eb_low']
                     survey.rubble_eb_high = rubble['eb_high']
                     
-                    # Bleaching
-                    bleaching = extract_metric_with_stats(row, 'Bleaching')
+                    # Bleaching (convert percentages to decimals for storage)
+                    bleaching = extract_metric_with_stats(row, 'Bleaching', convert_to_decimal=True)
                     survey.bleaching = bleaching['value']
                     survey.bleaching_n = bleaching['n']
                     survey.bleaching_sd = bleaching['sd']
