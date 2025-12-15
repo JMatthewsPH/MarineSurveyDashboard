@@ -70,7 +70,8 @@ class SummaryGraphGenerator:
             no_data_sites = clean_data[clean_data[metric_column].isna()]['site'].tolist()
             
             # Convert coral cover and algae cover from decimals to percentages
-            if 'coral' in metric_column.lower() or 'algae' in metric_column.lower() or 'bleaching' in metric_column.lower() or 'rubble' in metric_column.lower():
+            # Note: Use 'coral_cover' not 'coral' to avoid matching 'corallivore_density'
+            if 'coral_cover' in metric_column.lower() or 'algae' in metric_column.lower() or 'bleaching' in metric_column.lower() or 'rubble' in metric_column.lower():
                 clean_data[metric_column] = clean_data[metric_column] * 100
             
             # Replace NaN with 0 for visualization purposes
@@ -113,7 +114,7 @@ class SummaryGraphGenerator:
                 min_val = 0
                 max_val = max(20, actual_max_val)  # Ensure scale goes to at least 20
                 colorscale = 'RdYlGn'  # Red-Yellow-Green
-            elif 'coral' in metric_column.lower():
+            elif 'coral_cover' in metric_column.lower():
                 # For coral cover, use percentage-based thresholds (0-100%)
                 min_val = 0
                 max_val = max(50, actual_max_val)  # Scale to at least 50% for coral
@@ -217,7 +218,7 @@ class SummaryGraphGenerator:
                 hover_template = "<b>%{x}</b><br>Municipality: %{customdata[0]}<br>" + \
                                "Biomass: %{y:.1f} kg/150m²<br>" + \
                                "<i>%{customdata[1]}</i><extra></extra>"
-            elif 'coral' in metric_column.lower() or 'algae' in metric_column.lower():
+            elif 'coral_cover' in metric_column.lower() or 'algae' in metric_column.lower():
                 hover_template = "<b>%{x}</b><br>Municipality: %{customdata[0]}<br>" + \
                                "Cover: %{y:.1f}%<br>" + \
                                "<i>%{customdata[1]}</i><extra></extra>"
@@ -322,7 +323,7 @@ class SummaryGraphGenerator:
                 z=z_data,
                 y=y_labels,
                 x=[metric_column.replace('_', ' ').title()],
-                colorscale='RdYlGn' if 'biomass' in metric_column.lower() or 'coral' in metric_column.lower() else 'RdYlGn_r',
+                colorscale='RdYlGn' if 'biomass' in metric_column.lower() or 'coral_cover' in metric_column.lower() else 'RdYlGn_r',
                 hoverongaps=False,
                 hovertemplate="<b>%{y}</b><br>Value: %{z:.1f}<extra></extra>"
             ))

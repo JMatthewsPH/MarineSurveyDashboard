@@ -87,7 +87,8 @@ class SimpleGraphGenerator:
         metric_column = data.columns[2] if len(data.columns) > 2 else data.columns[1]
         
         # Convert decimal values to percentages for percentage-based metrics
-        is_percentage = 'coral' in metric_column.lower() or 'algae' in metric_column.lower() or 'bleaching' in metric_column.lower() or 'rubble' in metric_column.lower()
+        # Note: Use 'coral_cover' not 'coral' to avoid matching 'corallivore_density'
+        is_percentage = 'coral_cover' in metric_column.lower() or 'algae' in metric_column.lower() or 'bleaching' in metric_column.lower() or 'rubble' in metric_column.lower()
         if is_percentage:
             data[metric_column] = data[metric_column] * 100
             # Also convert statistical columns to percentages
@@ -391,7 +392,8 @@ class SimpleGraphGenerator:
                     comp_metric_column = comp_data.columns[2] if len(comp_data.columns) > 2 else comp_data.columns[1]
                     
                     # Convert decimal values to percentages for percentage-based metrics
-                    comp_is_percentage = 'coral' in comp_metric_column.lower() or 'algae' in comp_metric_column.lower() or 'bleaching' in comp_metric_column.lower() or 'rubble' in comp_metric_column.lower()
+                    # Note: Use 'coral_cover' not 'coral' to avoid matching 'corallivore_density'
+                    comp_is_percentage = 'coral_cover' in comp_metric_column.lower() or 'algae' in comp_metric_column.lower() or 'bleaching' in comp_metric_column.lower() or 'rubble' in comp_metric_column.lower()
                     if comp_is_percentage:
                         comp_data[comp_metric_column] = comp_data[comp_metric_column] * 100
                         # Also convert statistical columns to percentages

@@ -93,3 +93,8 @@ When CSV data doesn't match displayed values:
   - COVID data was inaccurate due to pandemic restrictions affecting monitoring
   - Filter implemented in QueryBuilder (_exclude_covid_filter) for all metric, biomass, and coral cover queries
   - Data still exists in database but is hidden from all visualizations and exports
+- **2025-12-15**: Fixed corallivore density display bug
+  - Chart generators were incorrectly multiplying corallivore_density by 100 (showed ~4000 instead of ~40 ind/ha)
+  - Root cause: Code checked for 'coral' in metric name, which matched 'corallivore_density'
+  - Fix: Changed all checks to use 'coral_cover' instead of 'coral' in simple_graph_generator.py, graph_generator.py, and summary_graph_generator.py
+  - Only true percentage metrics (hard_coral_cover, soft_coral_cover, algae, bleaching, rubble) are now multiplied by 100
