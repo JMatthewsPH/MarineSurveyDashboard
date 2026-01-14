@@ -8,6 +8,11 @@ import streamlit as st
 from contextlib import contextmanager
 import logging
 import time  # Added for performance timing measurements
+from collections import namedtuple
+
+# Named tuple for site data - supports both attribute access (site.name) and index access (site[1])
+SiteData = namedtuple('SiteData', ['id', 'name', 'municipality', 'latitude', 'longitude', 
+                                    'image_url', 'description_en', 'description_fil', 'description_ceb'])
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, 
@@ -109,8 +114,18 @@ class DataProcessor:
                 logger.info("Fetching all sites from database")
                 # Use the query builder to get sites
                 sites = QueryBuilder.all_sites(db)
-                # Convert to serializable format for caching
-                site_data = [(s.id, s.name, s.municipality) for s in sites]
+                # Convert to SiteData namedtuples for caching (supports both attribute and index access)
+                site_data = [SiteData(
+                    id=s.id, 
+                    name=s.name, 
+                    municipality=s.municipality,
+                    latitude=s.latitude,
+                    longitude=s.longitude,
+                    image_url=s.image_url,
+                    description_en=s.description_en,
+                    description_fil=s.description_fil,
+                    description_ceb=s.description_ceb
+                ) for s in sites]
                 logger.info(f"Successfully fetched {len(site_data)} sites from database")
                 return site_data
         except Exception as e:

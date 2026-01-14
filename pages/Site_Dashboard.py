@@ -144,9 +144,9 @@ if init_time > 0.5:  # Log if initialization is slow
 sites = data_processor.get_sites()
 
 # Create ordered groups by municipality
-zamboanguita_sites = sorted([site.name for site in sites if site.municipality == "Zamboanguita"])
-siaton_sites = sorted([site.name for site in sites if site.municipality == "Siaton"])
-santa_catalina_sites = sorted([site.name for site in sites if site.municipality == "Santa Catalina"])
+zamboanguita_sites = sorted([site[1] for site in sites if site[2] == "Zamboanguita"])
+siaton_sites = sorted([site[1] for site in sites if site[2] == "Siaton"])
+santa_catalina_sites = sorted([site[1] for site in sites if site[2] == "Santa Catalina"])
 
 # Combine in desired order for display in sidebar
 site_names = zamboanguita_sites + siaton_sites + santa_catalina_sites
@@ -326,7 +326,7 @@ with st.sidebar:
 
 # Display site content
 if selected_site:
-    selected_site_obj = next((site for site in sites if site.name == selected_site), None)
+    selected_site_obj = next((site for site in sites if site[1] == selected_site), None)
     if selected_site_obj:
         # Display small logo at the top of the dashboard
         display_logo(size="small")
@@ -402,7 +402,7 @@ if selected_site:
 
 
         # Get current site's municipality
-        site_municipality = selected_site_obj.municipality if selected_site_obj else None
+        site_municipality = selected_site_obj[2] if selected_site_obj else None
 
         # Sidebar metric comparisons and date range selection
         with st.sidebar:
@@ -664,7 +664,7 @@ if selected_site:
                 biomass_compare_sites = [extract_site_name(site) for site in biomass_compare_sites if extract_site_name(site)]
                 if biomass_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
-                    site_to_muni = {site.name: site.municipality for site in sites}
+                    site_to_muni = {site[1]: site[2] for site in sites}
                     biomass_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in biomass_compare_sites]
                         
             elif biomass_comparison == "Compare with Average":
@@ -708,7 +708,7 @@ if selected_site:
                 coral_compare_sites = [extract_site_name(site) for site in coral_compare_sites if extract_site_name(site)]
                 if coral_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
-                    site_to_muni = {site.name: site.municipality for site in sites}
+                    site_to_muni = {site[1]: site[2] for site in sites}
                     coral_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in coral_compare_sites]
             elif coral_comparison == "Compare with Average":
                 coral_compare_scope = st.selectbox(
@@ -745,7 +745,7 @@ if selected_site:
                 algae_compare_sites = [option.strip() for option in algae_compare_sites if option.startswith("  ")]
                 if algae_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
-                    site_to_muni = {site.name: site.municipality for site in sites}
+                    site_to_muni = {site[1]: site[2] for site in sites}
                     algae_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in algae_compare_sites]
             elif algae_comparison == "Compare with Average":
                 algae_compare_scope = st.selectbox(
@@ -782,7 +782,7 @@ if selected_site:
                 herbivore_compare_sites = [option.strip() for option in herbivore_compare_sites if option.startswith("  ")]
                 if herbivore_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
-                    site_to_muni = {site.name: site.municipality for site in sites}
+                    site_to_muni = {site[1]: site[2] for site in sites}
                     herbivore_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in herbivore_compare_sites]
             elif herbivore_comparison == "Compare with Average":
                 herbivore_compare_scope = st.selectbox(
@@ -819,7 +819,7 @@ if selected_site:
                 carnivore_compare_sites = [option.strip() for option in carnivore_compare_sites if option.startswith("  ")]
                 if carnivore_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
-                    site_to_muni = {site.name: site.municipality for site in sites}
+                    site_to_muni = {site[1]: site[2] for site in sites}
                     carnivore_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in carnivore_compare_sites]
             elif carnivore_comparison == "Compare with Average":
                 carnivore_compare_scope = st.selectbox(
@@ -856,7 +856,7 @@ if selected_site:
                 omnivore_compare_sites = [option.strip() for option in omnivore_compare_sites if option.startswith("  ")]
                 if omnivore_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
-                    site_to_muni = {site.name: site.municipality for site in sites}
+                    site_to_muni = {site[1]: site[2] for site in sites}
                     omnivore_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in omnivore_compare_sites]
             elif omnivore_comparison == "Compare with Average":
                 omnivore_compare_scope = st.selectbox(
@@ -893,7 +893,7 @@ if selected_site:
                 corallivore_compare_sites = [option.strip() for option in corallivore_compare_sites if option.startswith("  ")]
                 if corallivore_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
-                    site_to_muni = {site.name: site.municipality for site in sites}
+                    site_to_muni = {site[1]: site[2] for site in sites}
                     corallivore_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in corallivore_compare_sites]
             elif corallivore_comparison == "Compare with Average":
                 corallivore_compare_scope = st.selectbox(
@@ -930,7 +930,7 @@ if selected_site:
                 bleaching_compare_sites = [option.strip() for option in bleaching_compare_sites if option.startswith("  ")]
                 if bleaching_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
-                    site_to_muni = {site.name: site.municipality for site in sites}
+                    site_to_muni = {site[1]: site[2] for site in sites}
                     bleaching_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in bleaching_compare_sites]
             elif bleaching_comparison == "Compare with Average":
                 bleaching_compare_scope = st.selectbox(
@@ -967,7 +967,7 @@ if selected_site:
                 rubble_compare_sites = [option.strip() for option in rubble_compare_sites if option.startswith("  ")]
                 if rubble_compare_sites:
                     # Always group by municipality by default (helps organize datasets)
-                    site_to_muni = {site.name: site.municipality for site in sites}
+                    site_to_muni = {site[1]: site[2] for site in sites}
                     rubble_compare_labels = [f"{site} ({site_to_muni.get(site, 'Unknown')})" for site in rubble_compare_sites]
             elif rubble_comparison == "Compare with Average":
                 rubble_compare_scope = st.selectbox(

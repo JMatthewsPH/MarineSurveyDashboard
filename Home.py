@@ -258,13 +258,13 @@ sites = load_sites()
 # Efficiently group sites by municipality
 municipalities = {}
 for site in sites:
-    if site.municipality not in municipalities:
-        municipalities[site.municipality] = []
-    municipalities[site.municipality].append(site)
+    if site[2] not in municipalities:
+        municipalities[site[2]] = []
+    municipalities[site[2]].append(site)
 
 # Sort each group
 for muni in municipalities:
-    municipalities[muni] = sorted(municipalities[muni], key=lambda x: x.name)
+    municipalities[muni] = sorted(municipalities[muni], key=lambda x: x[1])
 
 # Function to create site card with translations
 def create_site_card(site):
@@ -292,12 +292,12 @@ def create_site_card(site):
     st.markdown(f"""
         <div class="site-card">
             <div class="site-card-content">
-                <h3 style="margin-top: 0; color: #2b6cb0;">{site.name}</h3>
-                <p style="margin: 8px 0; color: #2d3748;"><strong>{municipality_label}:</strong> {site.municipality}</p>
+                <h3 style="margin-top: 0; color: #2b6cb0;">{site[1]}</h3>
+                <p style="margin: 8px 0; color: #2d3748;"><strong>{municipality_label}:</strong> {site[2]}</p>
                 <p style="margin: 12px 0 8px 0; line-height: 1.3; color: #2d3748; height: 60px; overflow: hidden; text-overflow: ellipsis;">{truncated_description}</p>
             </div>
             <div class="site-card-footer" style="margin-top: auto; padding-top: 20px; min-height: 60px; display: flex; align-items: center; justify-content: center; width: 100%;">
-                <a href="Site_Dashboard?site={site.name}" target="_self" style="text-decoration: none; width: 100%; display: block;">
+                <a href="Site_Dashboard?site={site[1]}" target="_self" style="text-decoration: none; width: 100%; display: block;">
                     <button class="site-button" style="
                         background: #2b6cb0; 
                         color: white; 
