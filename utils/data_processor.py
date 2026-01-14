@@ -757,6 +757,12 @@ class DataProcessor:
         # Create a mapping from site name to municipality for use in the final matrix
         site_municipalities = {site[1]: site[2] for site in sites}
         
+        # Get database column names from METRIC_MAP for batch-loaded data
+        algae_column = DataProcessor.METRIC_MAP.get('fleshy_algae', 'fleshy_macro_algae_cover')
+        herbivore_column = DataProcessor.METRIC_MAP.get('herbivore', 'herbivore_density')
+        omnivore_column = DataProcessor.METRIC_MAP.get('omnivore', 'omnivore_density')
+        corallivore_column = DataProcessor.METRIC_MAP.get('corallivore', 'corallivore_density')
+        
         # Use batch loading for all metrics
         biomass_data_by_site = _self.batch_get_biomass_data(site_names, start_date='2017-01-01')
         coral_data_by_site = _self.batch_get_coral_cover_data(site_names, start_date='2017-01-01')
@@ -788,25 +794,25 @@ class DataProcessor:
             )
             
             latest_algae = (
-                algae_data_by_site[site_name]['fleshy_algae'].iloc[-1]
+                algae_data_by_site[site_name][algae_column].iloc[-1]
                 if site_name in algae_data_by_site and not algae_data_by_site[site_name].empty
                 else None
             )
             
             latest_herbivore = (
-                herbivore_data_by_site[site_name]['herbivore'].iloc[-1]
+                herbivore_data_by_site[site_name][herbivore_column].iloc[-1]
                 if site_name in herbivore_data_by_site and not herbivore_data_by_site[site_name].empty
                 else None
             )
             
             latest_omnivore = (
-                omnivore_data_by_site[site_name]['omnivore'].iloc[-1]
+                omnivore_data_by_site[site_name][omnivore_column].iloc[-1]
                 if site_name in omnivore_data_by_site and not omnivore_data_by_site[site_name].empty
                 else None
             )
             
             latest_corallivore = (
-                corallivore_data_by_site[site_name]['corallivore'].iloc[-1]
+                corallivore_data_by_site[site_name][corallivore_column].iloc[-1]
                 if site_name in corallivore_data_by_site and not corallivore_data_by_site[site_name].empty
                 else None
             )
