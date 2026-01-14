@@ -686,7 +686,8 @@ class DataProcessor:
         # Calculate average commercial fish biomass
         avg_biomass = combined_biomass_data[biomass_display_name].mean()
         
-        # Batch load algae data
+        # Batch load algae data - use database column name from METRIC_MAP
+        algae_column = DataProcessor.METRIC_MAP.get('fleshy_algae', 'fleshy_macro_algae_cover')
         algae_data_by_site = _self.batch_get_metric_data(site_names, 'fleshy_algae', start_date='2017-01-01')
         
         # Filter out empty dataframes and combine data
@@ -695,9 +696,13 @@ class DataProcessor:
         avg_fleshy_algae = 0
         if algae_dfs:
             combined_algae = pd.concat(algae_dfs)
-            avg_fleshy_algae = combined_algae['fleshy_algae'].mean()
+            avg_fleshy_algae = combined_algae[algae_column].mean()
         
-        # Calculate fish density averages
+        # Calculate fish density averages - use database column names from METRIC_MAP
+        herbivore_column = DataProcessor.METRIC_MAP.get('herbivore', 'herbivore_density')
+        omnivore_column = DataProcessor.METRIC_MAP.get('omnivore', 'omnivore_density')
+        corallivore_column = DataProcessor.METRIC_MAP.get('corallivore', 'corallivore_density')
+        
         herbivore_data_by_site = _self.batch_get_metric_data(site_names, 'herbivore', start_date='2017-01-01')
         omnivore_data_by_site = _self.batch_get_metric_data(site_names, 'omnivore', start_date='2017-01-01')
         corallivore_data_by_site = _self.batch_get_metric_data(site_names, 'corallivore', start_date='2017-01-01')
@@ -708,21 +713,21 @@ class DataProcessor:
             herbivore_dfs = [df for df in herbivore_data_by_site.values() if not df.empty]
             if herbivore_dfs:
                 combined_herbivore = pd.concat(herbivore_dfs)
-                avg_herbivore = combined_herbivore['herbivore'].mean()
+                avg_herbivore = combined_herbivore[herbivore_column].mean()
         
         avg_omnivore = 0
         if omnivore_data_by_site:
             omnivore_dfs = [df for df in omnivore_data_by_site.values() if not df.empty]
             if omnivore_dfs:
                 combined_omnivore = pd.concat(omnivore_dfs)
-                avg_omnivore = combined_omnivore['omnivore'].mean()
+                avg_omnivore = combined_omnivore[omnivore_column].mean()
         
         avg_corallivore = 0
         if corallivore_data_by_site:
             corallivore_dfs = [df for df in corallivore_data_by_site.values() if not df.empty]
             if corallivore_dfs:
                 combined_corallivore = pd.concat(corallivore_dfs)
-                avg_corallivore = combined_corallivore['corallivore'].mean()
+                avg_corallivore = combined_corallivore[corallivore_column].mean()
         
         return {
             "site_count": site_count,
