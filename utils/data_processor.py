@@ -680,34 +680,34 @@ class DataProcessor:
         avg_fleshy_algae = 0
         if algae_dfs:
             combined_algae = pd.concat(algae_dfs)
-            avg_fleshy_algae = combined_algae['fleshy_algae'].mean()
+            avg_fleshy_algae = combined_algae['fleshy_macro_algae_cover'].mean()
         
         # Calculate fish density averages
         herbivore_data_by_site = _self.batch_get_metric_data(site_names, 'herbivore', start_date='2017-01-01')
         omnivore_data_by_site = _self.batch_get_metric_data(site_names, 'omnivore', start_date='2017-01-01')
         corallivore_data_by_site = _self.batch_get_metric_data(site_names, 'corallivore', start_date='2017-01-01')
         
-        # Calculate average densities
+        # Calculate average densities (using database column names from METRIC_MAP)
         avg_herbivore = 0
         if herbivore_data_by_site:
             herbivore_dfs = [df for df in herbivore_data_by_site.values() if not df.empty]
             if herbivore_dfs:
                 combined_herbivore = pd.concat(herbivore_dfs)
-                avg_herbivore = combined_herbivore['herbivore'].mean()
+                avg_herbivore = combined_herbivore['herbivore_density'].mean()
         
         avg_omnivore = 0
         if omnivore_data_by_site:
             omnivore_dfs = [df for df in omnivore_data_by_site.values() if not df.empty]
             if omnivore_dfs:
                 combined_omnivore = pd.concat(omnivore_dfs)
-                avg_omnivore = combined_omnivore['omnivore'].mean()
+                avg_omnivore = combined_omnivore['omnivore_density'].mean()
         
         avg_corallivore = 0
         if corallivore_data_by_site:
             corallivore_dfs = [df for df in corallivore_data_by_site.values() if not df.empty]
             if corallivore_dfs:
                 combined_corallivore = pd.concat(corallivore_dfs)
-                avg_corallivore = combined_corallivore['corallivore'].mean()
+                avg_corallivore = combined_corallivore['corallivore_density'].mean()
         
         return {
             "site_count": site_count,
