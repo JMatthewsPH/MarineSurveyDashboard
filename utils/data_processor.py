@@ -101,22 +101,24 @@ class DataProcessor:
         
         raise Exception("Failed to establish database connection after retries")
 
-    @st.cache_resource(ttl=60, show_spinner=False)  # Use cache_resource for SQLAlchemy objects
+    @st.cache_data(ttl=300, show_spinner=False)  # Cache for 5 minutes - returns serializable data
     def get_sites(_self):  # Added underscore to ignore self in caching
         """Get all sites with their municipalities"""
         try:
-            db = _self._get_session()
-            logger.info("Fetching all sites from database")
-            # Use the query builder to get sites
-            sites = QueryBuilder.all_sites(db)
-            logger.info(f"Successfully fetched {len(sites)} sites from database")
-            return sites
+            with get_db_session() as db:
+                logger.info("Fetching all sites from database")
+                # Use the query builder to get sites
+                sites = QueryBuilder.all_sites(db)
+                # Convert to serializable format for caching
+                site_data = [(s.id, s.name, s.municipality) for s in sites]
+                logger.info(f"Successfully fetched {len(site_data)} sites from database")
+                return site_data
         except Exception as e:
             logger.error(f"Error fetching sites: {str(e)}")
             # Return empty list on error to prevent app crashes
             return []
 
-    @st.cache_data(ttl=3600, show_spinner=False)
+    @st.cache_data(ttl=300, show_spinner=False)  # Cache for 5 minutes
     def get_metric_data(_self, site_name: str, metric: str, start_date='2017-01-01'):
         """
         Process data for any metric
@@ -141,34 +143,29 @@ class DataProcessor:
             return pd.DataFrame(columns=columns)
 
         try:
-            # Use common session management
-            db = _self._get_session()
+            # Use context manager for proper session cleanup
+            with get_db_session() as db:
+                # Get site using query builder
+                site = QueryBuilder.site_by_name(db, site_name)
+                if not site:
+                    logger.warning(f"Site not found: {site_name}")
+                    columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
+                              f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
+                    return pd.DataFrame(columns=columns)
+
+                # Get metric data from database with statistical columns
+                surveys = QueryBuilder.metric_data(db, site.id, column_name, start_date)
+
+                # Log results
+                logger.info(f"Found {len(surveys)} {metric} surveys for {site_name}")
                 
-            # Get site using query builder
-            site = QueryBuilder.site_by_name(db, site_name)
-            if not site:
-                logger.warning(f"Site not found: {site_name}")
+                # Process results with statistical columns
                 columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
                           f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
-                return pd.DataFrame(columns=columns)
-
-            # Get metric data from database with statistical columns
-            surveys = QueryBuilder.metric_data(db, site.id, column_name, start_date)
-
-            # Log results
-            logger.info(f"Found {len(surveys)} {metric} surveys for {site_name}")
-            
-            print(f"DEBUG - Metric name: {_self.DISPLAY_NAMES.get(column_name, metric)}")
-            
-            # Process results with statistical columns
-            # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
-            # Use database column_name for consistency with graph generators
-            columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
-                      f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
-            return pd.DataFrame(surveys, columns=columns)
+                return pd.DataFrame(surveys, columns=columns)
         except Exception as e:
             logger.error(f"Error fetching metric data: {str(e)}")
-            # Return empty DataFrame to prevent application crashes - use column_name for consistency
+            # Return empty DataFrame to prevent application crashes
             columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
                       f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
             return pd.DataFrame(columns=columns)
@@ -201,69 +198,67 @@ class DataProcessor:
             return {site: pd.DataFrame(columns=columns) for site in site_names}
             
         try:
-            # Use common session management
-            db = _self._get_session()
-            
-            # Performance optimization: Get all site mappings in one go from the cached sites list
-            # This avoids a separate database query just for the sites
-            all_sites = _self.get_sites()
-            
-            # Create site name to ID map from the already fetched site list
-            site_name_to_id = {site.name: site.id for site in all_sites if site.name in site_names}
-            site_id_to_name = {site.id: site.name for site in all_sites if site.name in site_names}
+            # Use context manager for proper session cleanup
+            with get_db_session() as db:
+                # Performance optimization: Get all site mappings in one go from the cached sites list
+                # This avoids a separate database query just for the sites
+                all_sites = _self.get_sites()
                 
-            # Handle case where some sites aren't found
-            missing_sites = set(site_names) - set(site_name_to_id.keys())
-            if missing_sites:
-                logger.warning(f"Sites not found: {missing_sites}")
+                # Create site name to ID map from the already fetched site list (now returns tuples)
+                # Tuple format: (id, name, municipality)
+                site_name_to_id = {site[1]: site[0] for site in all_sites if site[1] in site_names}
+                site_id_to_name = {site[0]: site[1] for site in all_sites if site[1] in site_names}
                 
-            # Get all site IDs we found
-            site_ids = list(site_id_to_name.keys())
-            
-            if not site_ids:
-                logger.warning("No valid site IDs found for the requested sites")
+                # Handle case where some sites aren't found
+                missing_sites = set(site_names) - set(site_name_to_id.keys())
+                if missing_sites:
+                    logger.warning(f"Sites not found: {missing_sites}")
+                    
+                # Get all site IDs we found
+                site_ids = list(site_id_to_name.keys())
+                
+                if not site_ids:
+                    logger.warning("No valid site IDs found for the requested sites")
+                    columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
+                              f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
+                    return {site: pd.DataFrame({col: pd.Series(dtype='datetime64[ns]' if col == 'date' else 'object' if col == 'season' else 'float64') for col in columns}) for site in site_names}
+                
+                # Fetch all metric data in a single optimized query
+                start_time = time.time()
+                results_by_site_id = QueryBuilder.batch_metric_data(
+                    db, site_ids, column_name, start_date
+                )
+                query_time = time.time() - start_time
+                logger.info(f"Batch query completed in {query_time:.2f} seconds")
+                
+                # Convert results to DataFrames by site name - optimize with preallocation
+                results = {}
+                
+                # Define columns with statistical data
                 columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
                           f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
-                return {site: pd.DataFrame({col: pd.Series(dtype='datetime64[ns]' if col == 'date' else 'object' if col == 'season' else 'float64') for col in columns}) for site in site_names}
-            
-            # Fetch all metric data in a single optimized query
-            start_time = time.time()
-            results_by_site_id = QueryBuilder.batch_metric_data(
-                db, site_ids, column_name, start_date
-            )
-            query_time = time.time() - start_time
-            logger.info(f"Batch query completed in {query_time:.2f} seconds")
-            
-            # Convert results to DataFrames by site name - optimize with preallocation
-            results = {}
-            
-            # Define columns with statistical data
-            # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
-            # Use database column_name for consistency with graph generators
-            columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
-                      f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
-            
-            # Process data in a more optimized way - avoid redundant DataFrame creations
-            for site_id, data in results_by_site_id.items():
-                if site_id in site_id_to_name:
-                    site_name = site_id_to_name[site_id]
-                    if data:  # Only create DataFrame if we have data
-                        df = pd.DataFrame(data, columns=columns)
-                        # Pre-convert dates to improve chart rendering speed later
-                        df['date'] = pd.to_datetime(df['date'])
-                        logger.info(f"Found {len(df)} {metric} surveys for {site_name}")
-                        results[site_name] = df
-                    else:
-                        # Empty DataFrame with proper column types
-                        results[site_name] = pd.DataFrame({col: pd.Series(dtype='datetime64[ns]' if col == 'date' else 'object' if col == 'season' else 'float64') for col in columns})
                 
-            # Add empty DataFrames for sites with no data - with proper column types
-            for site_name in site_names:
-                if site_name not in results:
-                    results[site_name] = pd.DataFrame({col: pd.Series(dtype='datetime64[ns]' if col == 'date' else 'object' if col == 'season' else 'float64') for col in columns})
+                # Process data in a more optimized way - avoid redundant DataFrame creations
+                for site_id, data in results_by_site_id.items():
+                    if site_id in site_id_to_name:
+                        site_name = site_id_to_name[site_id]
+                        if data:  # Only create DataFrame if we have data
+                            df = pd.DataFrame(data, columns=columns)
+                            # Pre-convert dates to improve chart rendering speed later
+                            df['date'] = pd.to_datetime(df['date'])
+                            logger.info(f"Found {len(df)} {metric} surveys for {site_name}")
+                            results[site_name] = df
+                        else:
+                            # Empty DataFrame with proper column types
+                            results[site_name] = pd.DataFrame({col: pd.Series(dtype='datetime64[ns]' if col == 'date' else 'object' if col == 'season' else 'float64') for col in columns})
                     
-            logger.info(f"Successfully batch loaded {metric} data for {len(results)} sites")
-            return results
+                # Add empty DataFrames for sites with no data - with proper column types
+                for site_name in site_names:
+                    if site_name not in results:
+                        results[site_name] = pd.DataFrame({col: pd.Series(dtype='datetime64[ns]' if col == 'date' else 'object' if col == 'season' else 'float64') for col in columns})
+                        
+                logger.info(f"Successfully batch loaded {metric} data for {len(results)} sites")
+                return results
             
         except Exception as e:
             logger.error(f"Error batch fetching metric data: {str(e)}")
@@ -274,7 +269,7 @@ class DataProcessor:
             return {site: pd.DataFrame({col: pd.Series(dtype='datetime64[ns]' if col == 'date' else 'object' if col == 'season' else 'float64') for col in columns}) 
                    for site in site_names}
 
-    @st.cache_data(ttl=3600, show_spinner=False)
+    @st.cache_data(ttl=300, show_spinner=False)  # Cache for 5 minutes
     def get_average_metric_data(_self, metric: str, exclude_site=None, municipality=None, start_date='2017-01-01'):
         """Calculate average metric data across sites with optional municipality filter"""
         logger.info(f"Calculating average {metric} (excluding {exclude_site}, municipality filter: {municipality})")
@@ -283,124 +278,103 @@ class DataProcessor:
         column_name = DataProcessor.METRIC_MAP.get(metric)
         if not column_name:
             logger.error(f"Invalid metric requested: {metric}")
-            column_name = metric  # Use placeholder for consistency
+            column_name = metric
             columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
                       f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
             return pd.DataFrame(columns=columns)
 
-        exclude_site_id = None
-        if exclude_site:
-            try:
-                # Use common session management
-                db = _self._get_session()
-                site = QueryBuilder.site_by_name(db, exclude_site)
-                if site:
-                    exclude_site_id = site.id
-            except Exception as e:
-                logger.error(f"Error looking up exclude site: {str(e)}")
-
         try:
-            # Use common session management
-            db = _self._get_session()
-            
-            # Use QueryBuilder's average_metric_data method
-            surveys = QueryBuilder.average_metric_data(
-                db, column_name, exclude_site_id, municipality, start_date
-            )
+            # Use context manager for proper session cleanup
+            with get_db_session() as db:
+                exclude_site_id = None
+                if exclude_site:
+                    site = QueryBuilder.site_by_name(db, exclude_site)
+                    if site:
+                        exclude_site_id = site.id
+                
+                # Use QueryBuilder's average_metric_data method
+                surveys = QueryBuilder.average_metric_data(
+                    db, column_name, exclude_site_id, municipality, start_date
+                )
 
-            logger.info(f"Found {len(surveys)} average {metric} data points")
-            
-            # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
-            columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
-                      f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
-            return pd.DataFrame(surveys, columns=columns)
+                logger.info(f"Found {len(surveys)} average {metric} data points")
+                
+                columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
+                          f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
+                return pd.DataFrame(surveys, columns=columns)
         except Exception as e:
             logger.error(f"Error calculating average metric data: {str(e)}")
             columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
                       f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
             return pd.DataFrame(columns=columns)
 
-    @st.cache_data(ttl=3600, show_spinner=False)
+    @st.cache_data(ttl=300, show_spinner=False)
     def get_average_biomass_data(_self, exclude_site=None, municipality=None, start_date='2017-01-01'):
         """Calculate average commercial fish biomass with optional municipality filter"""
         logger.info(f"Calculating average biomass (excluding {exclude_site}, municipality filter: {municipality})")
         
         # Use the database column name for consistency
         column_name = 'commercial_biomass'
-        
-        exclude_site_id = None
-        if exclude_site:
-            try:
-                # Use common session management
-                db = _self._get_session()
-                site = QueryBuilder.site_by_name(db, exclude_site)
-                if site:
-                    exclude_site_id = site.id
-            except Exception as e:
-                logger.error(f"Error looking up exclude site: {str(e)}")
 
         try:
-            # Use common session management
-            db = _self._get_session()
-            
-            # Use QueryBuilder's average_biomass_data method
-            surveys = QueryBuilder.average_biomass_data(
-                db, exclude_site_id, municipality, start_date
-            )
+            with get_db_session() as db:
+                exclude_site_id = None
+                if exclude_site:
+                    site = QueryBuilder.site_by_name(db, exclude_site)
+                    if site:
+                        exclude_site_id = site.id
+                
+                # Use QueryBuilder's average_biomass_data method
+                surveys = QueryBuilder.average_biomass_data(
+                    db, exclude_site_id, municipality, start_date
+                )
 
-            logger.info(f"Found {len(surveys)} average biomass data points")
-            
-            # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
-            columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
-                      f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
-            return pd.DataFrame(surveys, columns=columns)
+                logger.info(f"Found {len(surveys)} average biomass data points")
+                
+                # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
+                columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
+                          f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
+                return pd.DataFrame(surveys, columns=columns)
         except Exception as e:
             logger.error(f"Error calculating average biomass data: {str(e)}")
             columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
                       f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
             return pd.DataFrame(columns=columns)
 
-    @st.cache_data(ttl=3600, show_spinner=False)
+    @st.cache_data(ttl=300, show_spinner=False)
     def get_average_coral_cover_data(_self, exclude_site=None, municipality=None, start_date='2017-01-01'):
         """Calculate average hard coral cover with optional municipality filter"""
         logger.info(f"Calculating average coral cover (excluding {exclude_site}, municipality filter: {municipality})")
         
         # Use the database column name for consistency
         column_name = 'hard_coral_cover'
-        
-        exclude_site_id = None
-        if exclude_site:
-            try:
-                # Use common session management
-                db = _self._get_session()
-                site = QueryBuilder.site_by_name(db, exclude_site)
-                if site:
-                    exclude_site_id = site.id
-            except Exception as e:
-                logger.error(f"Error looking up exclude site: {str(e)}")
-        
+
         try:
-            # Use common session management
-            db = _self._get_session()
-            
-            # Use general average_metric_data from QueryBuilder
-            surveys = QueryBuilder.average_metric_data(
-                db, column_name, exclude_site_id, municipality, start_date
-            )
-            
-            logger.info(f"Found {len(surveys)} average coral cover data points")
-            
-            # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
-            columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
-                      f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
-            return pd.DataFrame(surveys, columns=columns)
+            with get_db_session() as db:
+                exclude_site_id = None
+                if exclude_site:
+                    site = QueryBuilder.site_by_name(db, exclude_site)
+                    if site:
+                        exclude_site_id = site.id
+                
+                # Use general average_metric_data from QueryBuilder
+                surveys = QueryBuilder.average_metric_data(
+                    db, column_name, exclude_site_id, municipality, start_date
+                )
+                
+                logger.info(f"Found {len(surveys)} average coral cover data points")
+                
+                # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
+                columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
+                          f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
+                return pd.DataFrame(surveys, columns=columns)
         except Exception as e:
             logger.error(f"Error calculating average coral cover data: {str(e)}")
             columns = ['date', 'season', column_name, f'{column_name}_n', f'{column_name}_sd', 
                       f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
             return pd.DataFrame(columns=columns)
 
-    @st.cache_data(ttl=3600, show_spinner=False)
+    @st.cache_data(ttl=300, show_spinner=False)
     def get_biomass_data(_self, site_name, start_date='2017-01-01'):
         """Process commercial fish biomass data"""
         logger.info(f"Fetching biomass data for site: {site_name}")
@@ -409,31 +383,29 @@ class DataProcessor:
         display_name = _self.DISPLAY_NAMES.get('commercial_biomass', 'Commercial Biomass')
         
         try:
-            # Use common session management
-            db = _self._get_session()
+            with get_db_session() as db:
+                # Get site using QueryBuilder
+                site = QueryBuilder.site_by_name(db, site_name)
+                if not site:
+                    logger.warning(f"Site not found: {site_name}")
+                    return pd.DataFrame(columns=['date', display_name])
+
+                # Use specialized biomass query with statistical columns
+                surveys = QueryBuilder.biomass_data(db, site.id, start_date)
+
+                logger.info(f"Found {len(surveys)} biomass surveys for {site_name}")
+                print(f"DEBUG - Metric name: {display_name}")
                 
-            # Get site using QueryBuilder
-            site = QueryBuilder.site_by_name(db, site_name)
-            if not site:
-                logger.warning(f"Site not found: {site_name}")
-                return pd.DataFrame(columns=['date', display_name])
-
-            # Use specialized biomass query with statistical columns
-            surveys = QueryBuilder.biomass_data(db, site.id, start_date)
-
-            logger.info(f"Found {len(surveys)} biomass surveys for {site_name}")
-            print(f"DEBUG - Metric name: {display_name}")
-            
-            # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
-            columns = ['date', 'season', display_name, f'{display_name}_n', f'{display_name}_sd',
-                      f'{display_name}_ci_low', f'{display_name}_ci_high', 
-                      f'{display_name}_eb_low', f'{display_name}_eb_high']
-            return pd.DataFrame(surveys, columns=columns)
+                # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
+                columns = ['date', 'season', display_name, f'{display_name}_n', f'{display_name}_sd',
+                          f'{display_name}_ci_low', f'{display_name}_ci_high', 
+                          f'{display_name}_eb_low', f'{display_name}_eb_high']
+                return pd.DataFrame(surveys, columns=columns)
         except Exception as e:
             logger.error(f"Error fetching biomass data: {str(e)}")
             return pd.DataFrame(columns=['date', display_name])
             
-    @st.cache_data(ttl=3600, show_spinner=False)
+    @st.cache_data(ttl=300, show_spinner=False)
     def batch_get_biomass_data(_self, site_names: list, start_date='2017-01-01'):
         """
         Efficiently fetch biomass data for multiple sites in a single database query
@@ -454,55 +426,53 @@ class DataProcessor:
         display_name = _self.DISPLAY_NAMES.get('commercial_biomass', 'Commercial Biomass')
             
         try:
-            # Use common session management
-            db = _self._get_session()
-            
-            # First, get all site IDs in a single query
-            site_name_to_id = {}
-            site_id_to_name = {}
-            
-            # Query all sites at once rather than one at a time
-            sites = db.query(Site).filter(Site.name.in_(site_names)).all()
-            for site in sites:
-                site_name_to_id[site.name] = site.id
-                site_id_to_name[site.id] = site.name
+            with get_db_session() as db:
+                # First, get all site IDs in a single query
+                site_name_to_id = {}
+                site_id_to_name = {}
                 
-            # Handle case where some sites aren't found
-            missing_sites = set(site_names) - set(site_name_to_id.keys())
-            if missing_sites:
-                logger.warning(f"Sites not found: {missing_sites}")
-                
-            # Get all site IDs we found
-            site_ids = list(site_id_to_name.keys())
-            
-            # Fetch all biomass data in a single query
-            results_by_site_id = QueryBuilder.batch_biomass_data(
-                db, site_ids, start_date
-            )
-            
-            # Define columns with statistical data
-            # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
-            columns = ['date', 'season', display_name, f'{display_name}_n', f'{display_name}_sd',
-                      f'{display_name}_ci_low', f'{display_name}_ci_high', 
-                      f'{display_name}_eb_low', f'{display_name}_eb_high']
-            
-            # Convert results to DataFrames by site name
-            results = {}
-            for site_id, data in results_by_site_id.items():
-                site_name = site_id_to_name[site_id]
-                df = pd.DataFrame(data, columns=columns)
-                df['date'] = pd.to_datetime(df['date'])
-                logger.info(f"Found {len(df)} biomass surveys for {site_name}")
-                results[site_name] = df
-                
-            # Add empty DataFrames for sites with no data
-            for site_name in site_names:
-                if site_name not in results and site_name in site_name_to_id:
-                    logger.info(f"No biomass surveys found for {site_name}")
-                    results[site_name] = pd.DataFrame({col: pd.Series(dtype='datetime64[ns]' if col == 'date' else 'object' if col == 'season' else 'float64') for col in columns})
+                # Query all sites at once rather than one at a time
+                sites = db.query(Site).filter(Site.name.in_(site_names)).all()
+                for site in sites:
+                    site_name_to_id[site.name] = site.id
+                    site_id_to_name[site.id] = site.name
                     
-            print(f"DEBUG - Batch loaded biomass data for {len(results)} sites")
-            return results
+                # Handle case where some sites aren't found
+                missing_sites = set(site_names) - set(site_name_to_id.keys())
+                if missing_sites:
+                    logger.warning(f"Sites not found: {missing_sites}")
+                    
+                # Get all site IDs we found
+                site_ids = list(site_id_to_name.keys())
+                
+                # Fetch all biomass data in a single query
+                results_by_site_id = QueryBuilder.batch_biomass_data(
+                    db, site_ids, start_date
+                )
+                
+                # Define columns with statistical data
+                # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
+                columns = ['date', 'season', display_name, f'{display_name}_n', f'{display_name}_sd',
+                          f'{display_name}_ci_low', f'{display_name}_ci_high', 
+                          f'{display_name}_eb_low', f'{display_name}_eb_high']
+                
+                # Convert results to DataFrames by site name
+                results = {}
+                for site_id, data in results_by_site_id.items():
+                    site_name = site_id_to_name[site_id]
+                    df = pd.DataFrame(data, columns=columns)
+                    df['date'] = pd.to_datetime(df['date'])
+                    logger.info(f"Found {len(df)} biomass surveys for {site_name}")
+                    results[site_name] = df
+                    
+                # Add empty DataFrames for sites with no data
+                for site_name in site_names:
+                    if site_name not in results and site_name in site_name_to_id:
+                        logger.info(f"No biomass surveys found for {site_name}")
+                        results[site_name] = pd.DataFrame({col: pd.Series(dtype='datetime64[ns]' if col == 'date' else 'object' if col == 'season' else 'float64') for col in columns})
+                        
+                print(f"DEBUG - Batch loaded biomass data for {len(results)} sites")
+                return results
             
         except Exception as e:
             logger.error(f"Error batch fetching biomass data: {str(e)}")
@@ -512,7 +482,7 @@ class DataProcessor:
                       f'{display_name}_eb_low', f'{display_name}_eb_high']
             return {site: pd.DataFrame({col: pd.Series(dtype='datetime64[ns]' if col == 'date' else 'object' if col == 'season' else 'float64') for col in columns}) for site in site_names}
 
-    @st.cache_data(ttl=3600, show_spinner=False)
+    @st.cache_data(ttl=300, show_spinner=False)
     def get_coral_cover_data(_self, site_name, start_date='2017-01-01'):
         """Process hard coral cover data"""
         logger.info(f"Fetching coral cover data for site: {site_name}")
@@ -521,31 +491,29 @@ class DataProcessor:
         display_name = _self.DISPLAY_NAMES.get('hard_coral_cover', 'Hard Coral Cover')
         
         try:
-            # Use common session management
-            db = _self._get_session()
+            with get_db_session() as db:
+                # Get site using QueryBuilder
+                site = QueryBuilder.site_by_name(db, site_name)
+                if not site:
+                    logger.warning(f"Site not found: {site_name}")
+                    return pd.DataFrame(columns=['date', display_name])
+
+                # Use specialized coral cover query with statistical columns
+                surveys = QueryBuilder.coral_cover_data(db, site.id, start_date)
+
+                logger.info(f"Found {len(surveys)} coral cover surveys for {site_name}")
+                print(f"DEBUG - Metric name: {display_name}")
                 
-            # Get site using QueryBuilder
-            site = QueryBuilder.site_by_name(db, site_name)
-            if not site:
-                logger.warning(f"Site not found: {site_name}")
-                return pd.DataFrame(columns=['date', display_name])
-
-            # Use specialized coral cover query with statistical columns
-            surveys = QueryBuilder.coral_cover_data(db, site.id, start_date)
-
-            logger.info(f"Found {len(surveys)} coral cover surveys for {site_name}")
-            print(f"DEBUG - Metric name: {display_name}")
-            
-            # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
-            columns = ['date', 'season', display_name, f'{display_name}_n', f'{display_name}_sd',
-                      f'{display_name}_ci_low', f'{display_name}_ci_high', 
-                      f'{display_name}_eb_low', f'{display_name}_eb_high']
-            return pd.DataFrame(surveys, columns=columns)
+                # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
+                columns = ['date', 'season', display_name, f'{display_name}_n', f'{display_name}_sd',
+                          f'{display_name}_ci_low', f'{display_name}_ci_high', 
+                          f'{display_name}_eb_low', f'{display_name}_eb_high']
+                return pd.DataFrame(surveys, columns=columns)
         except Exception as e:
             logger.error(f"Error fetching coral cover data: {str(e)}")
             return pd.DataFrame(columns=['date', display_name])
             
-    @st.cache_data(ttl=3600, show_spinner=False)
+    @st.cache_data(ttl=300, show_spinner=False)
     def batch_get_coral_cover_data(_self, site_names: list, start_date='2017-01-01'):
         """
         Efficiently fetch coral cover data for multiple sites in a single database query
@@ -566,55 +534,53 @@ class DataProcessor:
         display_name = _self.DISPLAY_NAMES.get('hard_coral_cover', 'Hard Coral Cover')
             
         try:
-            # Use common session management
-            db = _self._get_session()
-            
-            # First, get all site IDs in a single query
-            site_name_to_id = {}
-            site_id_to_name = {}
-            
-            # Query all sites at once rather than one at a time
-            sites = db.query(Site).filter(Site.name.in_(site_names)).all()
-            for site in sites:
-                site_name_to_id[site.name] = site.id
-                site_id_to_name[site.id] = site.name
+            with get_db_session() as db:
+                # First, get all site IDs in a single query
+                site_name_to_id = {}
+                site_id_to_name = {}
                 
-            # Handle case where some sites aren't found
-            missing_sites = set(site_names) - set(site_name_to_id.keys())
-            if missing_sites:
-                logger.warning(f"Sites not found: {missing_sites}")
-                
-            # Get all site IDs we found
-            site_ids = list(site_id_to_name.keys())
-            
-            # Fetch all coral cover data in a single query
-            results_by_site_id = QueryBuilder.batch_coral_cover_data(
-                db, site_ids, start_date
-            )
-            
-            # Define columns with statistical data
-            # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
-            columns = ['date', 'season', display_name, f'{display_name}_n', f'{display_name}_sd',
-                      f'{display_name}_ci_low', f'{display_name}_ci_high', 
-                      f'{display_name}_eb_low', f'{display_name}_eb_high']
-            
-            # Convert results to DataFrames by site name
-            results = {}
-            for site_id, data in results_by_site_id.items():
-                site_name = site_id_to_name[site_id]
-                df = pd.DataFrame(data, columns=columns)
-                df['date'] = pd.to_datetime(df['date'])
-                logger.info(f"Found {len(df)} coral cover surveys for {site_name}")
-                results[site_name] = df
-                
-            # Add empty DataFrames for sites with no data
-            for site_name in site_names:
-                if site_name not in results and site_name in site_name_to_id:
-                    logger.info(f"No coral cover surveys found for {site_name}")
-                    results[site_name] = pd.DataFrame({col: pd.Series(dtype='datetime64[ns]' if col == 'date' else 'object' if col == 'season' else 'float64') for col in columns})
+                # Query all sites at once rather than one at a time
+                sites = db.query(Site).filter(Site.name.in_(site_names)).all()
+                for site in sites:
+                    site_name_to_id[site.name] = site.id
+                    site_id_to_name[site.id] = site.name
                     
-            print(f"DEBUG - Batch loaded coral cover data for {len(results)} sites")
-            return results
+                # Handle case where some sites aren't found
+                missing_sites = set(site_names) - set(site_name_to_id.keys())
+                if missing_sites:
+                    logger.warning(f"Sites not found: {missing_sites}")
+                    
+                # Get all site IDs we found
+                site_ids = list(site_id_to_name.keys())
+                
+                # Fetch all coral cover data in a single query
+                results_by_site_id = QueryBuilder.batch_coral_cover_data(
+                    db, site_ids, start_date
+                )
+                
+                # Define columns with statistical data
+                # QueryBuilder returns: (date, season, value, n, sd, ci_low, ci_high, eb_low, eb_high)
+                columns = ['date', 'season', display_name, f'{display_name}_n', f'{display_name}_sd',
+                          f'{display_name}_ci_low', f'{display_name}_ci_high', 
+                          f'{display_name}_eb_low', f'{display_name}_eb_high']
+                
+                # Convert results to DataFrames by site name
+                results = {}
+                for site_id, data in results_by_site_id.items():
+                    site_name = site_id_to_name[site_id]
+                    df = pd.DataFrame(data, columns=columns)
+                    df['date'] = pd.to_datetime(df['date'])
+                    logger.info(f"Found {len(df)} coral cover surveys for {site_name}")
+                    results[site_name] = df
+                    
+                # Add empty DataFrames for sites with no data
+                for site_name in site_names:
+                    if site_name not in results and site_name in site_name_to_id:
+                        logger.info(f"No coral cover surveys found for {site_name}")
+                        results[site_name] = pd.DataFrame({col: pd.Series(dtype='datetime64[ns]' if col == 'date' else 'object' if col == 'season' else 'float64') for col in columns})
+                        
+                print(f"DEBUG - Batch loaded coral cover data for {len(results)} sites")
+                return results
             
         except Exception as e:
             logger.error(f"Error batch fetching coral cover data: {str(e)}")
@@ -632,7 +598,7 @@ class DataProcessor:
         """Process eco-tourism data for the last 365 days"""
         return pd.Series(dtype='float64')
             
-    @st.cache_data(ttl=3600, show_spinner=False)
+    @st.cache_data(ttl=300, show_spinner=False)
     def get_all_sites_summary_metrics(_self):
         """Get summary statistics for all sites combined using optimized batch loading"""
         sites = _self.get_sites()
@@ -650,8 +616,8 @@ class DataProcessor:
                 "avg_fleshy_algae": 0,
             }
         
-        # Get site names for batch loading
-        site_names = [site.name for site in sites]
+        # Get site names for batch loading (sites are tuples: id, name, municipality)
+        site_names = [site[1] for site in sites]
         
         # Use batch loading for biomass data
         biomass_data_by_site = _self.batch_get_biomass_data(site_names, start_date='2017-01-01')
@@ -757,7 +723,7 @@ class DataProcessor:
             "avg_corallivore": avg_corallivore,
         }
     
-    @st.cache_data(ttl=3600, show_spinner=False)
+    @st.cache_data(ttl=300, show_spinner=False)
     def get_site_comparison_matrix(_self):
         """Generate matrix of all sites vs key metrics with latest values using optimized batch loading"""
         sites = _self.get_sites()
@@ -765,11 +731,11 @@ class DataProcessor:
         if not sites:
             return pd.DataFrame()
             
-        # Get site names for batch loading
-        site_names = [site.name for site in sites]
+        # Get site names for batch loading (sites are tuples: id, name, municipality)
+        site_names = [site[1] for site in sites]
         
         # Create a mapping from site name to municipality for use in the final matrix
-        site_municipalities = {site.name: site.municipality for site in sites}
+        site_municipalities = {site[1]: site[2] for site in sites}
         
         # Use batch loading for all metrics
         biomass_data_by_site = _self.batch_get_biomass_data(site_names, start_date='2017-01-01')
@@ -839,7 +805,7 @@ class DataProcessor:
         
         return pd.DataFrame(matrix_data)
     
-    @st.cache_data(ttl=3600, show_spinner=False)
+    @st.cache_data(ttl=300, show_spinner=False)
     def get_trend_analysis_data(_self, metric, start_date=None, end_date=None):
         """Get time series data for all sites for specified metric using optimized batch loading"""
         sites = _self.get_sites()
@@ -851,11 +817,11 @@ class DataProcessor:
         if start_date is None:
             start_date = '2017-01-01'
             
-        # Get site names for batch loading
-        site_names = [site.name for site in sites]
+        # Get site names for batch loading (sites are tuples: id, name, municipality)
+        site_names = [site[1] for site in sites]
         
         # Create a mapping from site name to municipality for use in the final dataset
-        site_municipalities = {site.name: site.municipality for site in sites}
+        site_municipalities = {site[1]: site[2] for site in sites}
         
         # Use batch loading based on the metric type
         if metric == 'biomass':
