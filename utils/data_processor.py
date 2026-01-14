@@ -106,7 +106,7 @@ class DataProcessor:
         
         raise Exception("Failed to establish database connection after retries")
 
-    @st.cache_data(ttl=300, show_spinner=False)  # Cache for 5 minutes - returns serializable data
+    @st.cache_data(ttl=86400, show_spinner=False)  # Cache for 24 hours - data updates quarterly
     def get_sites(_self):  # Added underscore to ignore self in caching
         """Get all sites with their municipalities"""
         try:
@@ -133,7 +133,7 @@ class DataProcessor:
             # Return empty list on error to prevent app crashes
             return []
 
-    @st.cache_data(ttl=300, show_spinner=False)  # Cache for 5 minutes
+    @st.cache_data(ttl=86400, show_spinner=False)  # Cache for 5 minutes
     def get_metric_data(_self, site_name: str, metric: str, start_date='2017-01-01'):
         """
         Process data for any metric
@@ -284,7 +284,7 @@ class DataProcessor:
             return {site: pd.DataFrame({col: pd.Series(dtype='datetime64[ns]' if col == 'date' else 'object' if col == 'season' else 'float64') for col in columns}) 
                    for site in site_names}
 
-    @st.cache_data(ttl=300, show_spinner=False)  # Cache for 5 minutes
+    @st.cache_data(ttl=86400, show_spinner=False)  # Cache for 5 minutes
     def get_average_metric_data(_self, metric: str, exclude_site=None, municipality=None, start_date='2017-01-01'):
         """Calculate average metric data across sites with optional municipality filter"""
         logger.info(f"Calculating average {metric} (excluding {exclude_site}, municipality filter: {municipality})")
@@ -323,7 +323,7 @@ class DataProcessor:
                       f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
             return pd.DataFrame(columns=columns)
 
-    @st.cache_data(ttl=300, show_spinner=False)
+    @st.cache_data(ttl=86400, show_spinner=False)
     def get_average_biomass_data(_self, exclude_site=None, municipality=None, start_date='2017-01-01'):
         """Calculate average commercial fish biomass with optional municipality filter"""
         logger.info(f"Calculating average biomass (excluding {exclude_site}, municipality filter: {municipality})")
@@ -356,7 +356,7 @@ class DataProcessor:
                       f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
             return pd.DataFrame(columns=columns)
 
-    @st.cache_data(ttl=300, show_spinner=False)
+    @st.cache_data(ttl=86400, show_spinner=False)
     def get_average_coral_cover_data(_self, exclude_site=None, municipality=None, start_date='2017-01-01'):
         """Calculate average hard coral cover with optional municipality filter"""
         logger.info(f"Calculating average coral cover (excluding {exclude_site}, municipality filter: {municipality})")
@@ -389,7 +389,7 @@ class DataProcessor:
                       f'{column_name}_ci_low', f'{column_name}_ci_high', f'{column_name}_eb_low', f'{column_name}_eb_high']
             return pd.DataFrame(columns=columns)
 
-    @st.cache_data(ttl=300, show_spinner=False)
+    @st.cache_data(ttl=86400, show_spinner=False)
     def get_biomass_data(_self, site_name, start_date='2017-01-01'):
         """Process commercial fish biomass data"""
         logger.info(f"Fetching biomass data for site: {site_name}")
@@ -420,7 +420,7 @@ class DataProcessor:
             logger.error(f"Error fetching biomass data: {str(e)}")
             return pd.DataFrame(columns=['date', display_name])
             
-    @st.cache_data(ttl=300, show_spinner=False)
+    @st.cache_data(ttl=86400, show_spinner=False)
     def batch_get_biomass_data(_self, site_names: list, start_date='2017-01-01'):
         """
         Efficiently fetch biomass data for multiple sites in a single database query
@@ -497,7 +497,7 @@ class DataProcessor:
                       f'{display_name}_eb_low', f'{display_name}_eb_high']
             return {site: pd.DataFrame({col: pd.Series(dtype='datetime64[ns]' if col == 'date' else 'object' if col == 'season' else 'float64') for col in columns}) for site in site_names}
 
-    @st.cache_data(ttl=300, show_spinner=False)
+    @st.cache_data(ttl=86400, show_spinner=False)
     def get_coral_cover_data(_self, site_name, start_date='2017-01-01'):
         """Process hard coral cover data"""
         logger.info(f"Fetching coral cover data for site: {site_name}")
@@ -528,7 +528,7 @@ class DataProcessor:
             logger.error(f"Error fetching coral cover data: {str(e)}")
             return pd.DataFrame(columns=['date', display_name])
             
-    @st.cache_data(ttl=300, show_spinner=False)
+    @st.cache_data(ttl=86400, show_spinner=False)
     def batch_get_coral_cover_data(_self, site_names: list, start_date='2017-01-01'):
         """
         Efficiently fetch coral cover data for multiple sites in a single database query
@@ -613,7 +613,7 @@ class DataProcessor:
         """Process eco-tourism data for the last 365 days"""
         return pd.Series(dtype='float64')
             
-    @st.cache_data(ttl=300, show_spinner=False)
+    @st.cache_data(ttl=86400, show_spinner=False)
     def get_all_sites_summary_metrics(_self):
         """Get summary statistics for all sites combined using optimized batch loading"""
         sites = _self.get_sites()
@@ -743,7 +743,7 @@ class DataProcessor:
             "avg_corallivore": avg_corallivore,
         }
     
-    @st.cache_data(ttl=300, show_spinner=False)
+    @st.cache_data(ttl=86400, show_spinner=False)
     def get_site_comparison_matrix(_self):
         """Generate matrix of all sites vs key metrics with latest values using optimized batch loading"""
         sites = _self.get_sites()
@@ -831,7 +831,7 @@ class DataProcessor:
         
         return pd.DataFrame(matrix_data)
     
-    @st.cache_data(ttl=300, show_spinner=False)
+    @st.cache_data(ttl=86400, show_spinner=False)
     def get_trend_analysis_data(_self, metric, start_date=None, end_date=None):
         """Get time series data for all sites for specified metric using optimized batch loading"""
         sites = _self.get_sites()
