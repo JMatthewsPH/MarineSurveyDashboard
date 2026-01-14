@@ -101,16 +101,20 @@ class DataProcessor:
         
         raise Exception("Failed to establish database connection after retries")
 
-    @st.cache_data(ttl=21600, show_spinner=False)  # Cache for 5 minutes - returns serializable data
+    @st.cache_data(ttl=21600, show_spinner=False)  # Cache for 6 hours - returns serializable data
     def get_sites(_self):  # Added underscore to ignore self in caching
-        """Get all sites with their municipalities"""
+        """Get all sites with their municipalities and descriptions
+        
+        Returns tuples: (id, name, municipality, description_en, description_fil, description_ceb)
+        Index mapping: [0]=id, [1]=name, [2]=municipality, [3]=desc_en, [4]=desc_fil, [5]=desc_ceb
+        """
         try:
             with get_db_session() as db:
                 logger.info("Fetching all sites from database")
                 # Use the query builder to get sites
                 sites = QueryBuilder.all_sites(db)
-                # Convert to serializable format for caching
-                site_data = [(s.id, s.name, s.municipality) for s in sites]
+                # Convert to serializable format for caching (include descriptions)
+                site_data = [(s.id, s.name, s.municipality, s.description_en, s.description_fil, s.description_ceb) for s in sites]
                 logger.info(f"Successfully fetched {len(site_data)} sites from database")
                 return site_data
         except Exception as e:

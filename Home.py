@@ -262,22 +262,23 @@ for site in sites:
         municipalities[site[2]] = []
     municipalities[site[2]].append(site)
 
-# Sort each group
+# Sort each group by site name (index 1)
 for muni in municipalities:
-    municipalities[muni] = sorted(municipalities[muni], key=lambda x: x.name)
+    municipalities[muni] = sorted(municipalities[muni], key=lambda x: x[1])
 
 # Function to create site card with translations
+# Site tuple format: (id, name, municipality, description_en, description_fil, description_ceb)
 def create_site_card(site):
-    # Get description based on language
+    # Get description based on language (indices: 3=en, 4=fil, 5=ceb)
     if language_code == 'en':
-        description = site.description_en
+        description = site[3]
     elif language_code == 'tl':
-        description = site.description_fil  # Using Filipino description for Tagalog
+        description = site[4]  # Using Filipino description for Tagalog
     elif language_code == 'ceb':
         # Use dedicated Cebuano description, fallback to Filipino then English
-        description = site.description_ceb or site.description_fil or site.description_en
+        description = site[5] or site[4] or site[3]
     else:
-        description = site.description_en
+        description = site[3]
         
     # Default description if not available
     description = description or TRANSLATIONS[language_code]['site_desc_placeholder']
