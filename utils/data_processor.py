@@ -154,7 +154,7 @@ class DataProcessor:
                     return pd.DataFrame(columns=columns)
 
                 # Get metric data from database with statistical columns
-                surveys = QueryBuilder.metric_data(db, site.id, column_name, start_date)
+                surveys = QueryBuilder.metric_data(db, site[0], column_name, start_date)
 
                 # Log results
                 logger.info(f"Found {len(surveys)} {metric} surveys for {site_name}")
@@ -290,7 +290,7 @@ class DataProcessor:
                 if exclude_site:
                     site = QueryBuilder.site_by_name(db, exclude_site)
                     if site:
-                        exclude_site_id = site.id
+                        exclude_site_id = site[0]
                 
                 # Use QueryBuilder's average_metric_data method
                 surveys = QueryBuilder.average_metric_data(
@@ -322,7 +322,7 @@ class DataProcessor:
                 if exclude_site:
                     site = QueryBuilder.site_by_name(db, exclude_site)
                     if site:
-                        exclude_site_id = site.id
+                        exclude_site_id = site[0]
                 
                 # Use QueryBuilder's average_biomass_data method
                 surveys = QueryBuilder.average_biomass_data(
@@ -355,7 +355,7 @@ class DataProcessor:
                 if exclude_site:
                     site = QueryBuilder.site_by_name(db, exclude_site)
                     if site:
-                        exclude_site_id = site.id
+                        exclude_site_id = site[0]
                 
                 # Use general average_metric_data from QueryBuilder
                 surveys = QueryBuilder.average_metric_data(
@@ -391,7 +391,7 @@ class DataProcessor:
                     return pd.DataFrame(columns=['date', display_name])
 
                 # Use specialized biomass query with statistical columns
-                surveys = QueryBuilder.biomass_data(db, site.id, start_date)
+                surveys = QueryBuilder.biomass_data(db, site[0], start_date)
 
                 logger.info(f"Found {len(surveys)} biomass surveys for {site_name}")
                 print(f"DEBUG - Metric name: {display_name}")
@@ -434,8 +434,8 @@ class DataProcessor:
                 # Query all sites at once rather than one at a time
                 sites = db.query(Site).filter(Site.name.in_(site_names)).all()
                 for site in sites:
-                    site_name_to_id[site.name] = site.id
-                    site_id_to_name[site.id] = site.name
+                    site_name_to_id[site[1]] = site[0]
+                    site_id_to_name[site[0]] = site[1]
                     
                 # Handle case where some sites aren't found
                 missing_sites = set(site_names) - set(site_name_to_id.keys())
@@ -499,7 +499,7 @@ class DataProcessor:
                     return pd.DataFrame(columns=['date', display_name])
 
                 # Use specialized coral cover query with statistical columns
-                surveys = QueryBuilder.coral_cover_data(db, site.id, start_date)
+                surveys = QueryBuilder.coral_cover_data(db, site[0], start_date)
 
                 logger.info(f"Found {len(surveys)} coral cover surveys for {site_name}")
                 print(f"DEBUG - Metric name: {display_name}")
@@ -542,8 +542,8 @@ class DataProcessor:
                 # Query all sites at once rather than one at a time
                 sites = db.query(Site).filter(Site.name.in_(site_names)).all()
                 for site in sites:
-                    site_name_to_id[site.name] = site.id
-                    site_id_to_name[site.id] = site.name
+                    site_name_to_id[site[1]] = site[0]
+                    site_id_to_name[site[0]] = site[1]
                     
                 # Handle case where some sites aren't found
                 missing_sites = set(site_names) - set(site_name_to_id.keys())
