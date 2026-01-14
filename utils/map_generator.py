@@ -86,7 +86,7 @@ class MapGenerator:
             for site in sites:
                 if site.latitude and site.longitude:
                     # Get latest biomass data for this site
-                    biomass_df = self.data_processor.get_biomass_data(site[1])
+                    biomass_df = self.data_processor.get_biomass_data(site.name)
                     
                     if not biomass_df.empty:
                         # Get the most recent biomass value - check column name
@@ -123,7 +123,7 @@ class MapGenerator:
             for site in sites:
                 if site.latitude and site.longitude:
                     # Get latest biomass data for this site
-                    biomass_df = self.data_processor.get_biomass_data(site[1])
+                    biomass_df = self.data_processor.get_biomass_data(site.name)
                     
                     if not biomass_df.empty:
                         # Get the most recent biomass value
@@ -155,13 +155,13 @@ class MapGenerator:
                         
                         # Get site description based on current language (default to English)
                         # Since we don't have access to session state here, use English as default
-                        description = site.description_en or f"Marine Protected Area in {site[2]}"
+                        description = site.description_en or f"Marine Protected Area in {site.municipality}"
                         
                         # Create popup content without date and with description
                         popup_html = f"""
                         <div style="font-family: Arial, sans-serif; width: 250px;">
-                            <h4 style="margin: 0 0 10px 0; color: #2c3e50;">{site[1]}</h4>
-                            <p style="margin: 5px 0; color: #7f8c8d;"><b>Municipality:</b> {site[2]}</p>
+                            <h4 style="margin: 0 0 10px 0; color: #2c3e50;">{site.name}</h4>
+                            <p style="margin: 5px 0; color: #7f8c8d;"><b>Municipality:</b> {site.municipality}</p>
                             <p style="margin: 5px 0; color: #2c3e50;"><b>Latest Biomass:</b> {latest_biomass:.1f} kg/150m²</p>
                             <p style="margin: 5px 0; color: #7f8c8d;"><b>Coordinates:</b> {site.latitude:.4f}, {site.longitude:.4f}</p>
                             <div style="margin: 10px 0; padding: 8px; background: #f8f9fa; border-left: 3px solid #007acc; border-radius: 4px;">
@@ -236,7 +236,7 @@ class MapGenerator:
                             location=[offset_latitude, offset_longitude],
                             radius=4,  # Tiny size like click markers
                             popup=folium.Popup(popup_html, max_width=250),
-                            tooltip=f"{site[1]}: {latest_biomass:.1f} kg/150m²",
+                            tooltip=f"{site.name}: {latest_biomass:.1f} kg/150m²",
                             color='white',
                             weight=1,
                             fillColor=color,
@@ -244,8 +244,8 @@ class MapGenerator:
                         ).add_to(m)
                         
                         marker_data.append({
-                            'name': site[1],
-                            'municipality': site[2],
+                            'name': site.name,
+                            'municipality': site.municipality,
                             'biomass': latest_biomass,
                             'lat': site.latitude,
                             'lon': site.longitude
@@ -314,10 +314,10 @@ class MapGenerator:
                 if site.latitude and site.longitude:
                     # Get metric data for this site
                     if metric == 'commercial_biomass':
-                        metric_df = self.data_processor.get_biomass_data(site[1])
+                        metric_df = self.data_processor.get_biomass_data(site.name)
                         value_col = 'commercial_biomass'
                     else:
-                        metric_df = self.data_processor.get_metric_data(site[1], metric)
+                        metric_df = self.data_processor.get_metric_data(site.name, metric)
                         value_col = self.data_processor.METRIC_MAP.get(metric, metric)
                     
                     if not metric_df.empty and value_col in metric_df.columns:
@@ -337,8 +337,8 @@ class MapGenerator:
                         
                         popup_html = f"""
                         <div style="font-family: Arial, sans-serif; width: 200px;">
-                            <h4 style="margin: 0; color: #2c3e50;">{site[1]}</h4>
-                            <p style="margin: 5px 0; color: #7f8c8d;"><b>Municipality:</b> {site[2]}</p>
+                            <h4 style="margin: 0; color: #2c3e50;">{site.name}</h4>
+                            <p style="margin: 5px 0; color: #7f8c8d;"><b>Municipality:</b> {site.municipality}</p>
                             <p style="margin: 5px 0; color: #2c3e50;"><b>{display_name}:</b> {latest_value:.1f}</p>
                             <p style="margin: 5px 0; color: #7f8c8d;"><b>Date:</b> {latest_date.strftime('%b %Y')}</p>
                         </div>
@@ -347,7 +347,7 @@ class MapGenerator:
                         folium.Marker(
                             location=[site.latitude, site.longitude],
                             popup=folium.Popup(popup_html, max_width=250),
-                            tooltip=f"{site[1]}: {latest_value:.1f}",
+                            tooltip=f"{site.name}: {latest_value:.1f}",
                             icon=folium.Icon(color=color, icon='info-sign', prefix='glyphicon')
                         ).add_to(m)
             

@@ -470,8 +470,8 @@ def generate_site_report_pdf(site_name, data_processor, metrics=None, include_bi
         
         # Find the matching site
         for site in sites_list:
-            if site[1] == site_name:
-                municipality_name = site[2]
+            if site.name == site_name:
+                municipality_name = site.municipality
                 break
                 
     except Exception as e:

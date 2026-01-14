@@ -217,7 +217,7 @@ with st.sidebar:
     st.header("Filter by Municipality")
     
     # Get all municipalities
-    municipalities = sorted(list(set([site[2] for site in sites])))
+    municipalities = sorted(list(set([site.municipality for site in sites])))
     selected_municipality = st.selectbox(
         "Select Municipality",
         ["All Municipalities"] + municipalities,
@@ -538,16 +538,16 @@ with trend_container:
         trend_data_list = []
         for site in sites:
             # Skip sites that don't match the municipality filter (if any)
-            if municipality_filter and site[2] != municipality_filter:
+            if municipality_filter and site.municipality != municipality_filter:
                 continue
             # Skip sites that don't match the municipality focus (if not showing all sites)
-            if not group_by_all_sites and municipality_focus and site[2] != municipality_focus:
+            if not group_by_all_sites and municipality_focus and site.municipality != municipality_focus:
                 continue
                 
-            site_data = data_processor.get_biomass_data(site[1])
+            site_data = data_processor.get_biomass_data(site.name)
             if not site_data.empty:
-                site_data['site'] = site[1]
-                site_data['municipality'] = site[2]
+                site_data['site'] = site.name
+                site_data['municipality'] = site.municipality
                 trend_data_list.append(site_data)
         
         if trend_data_list:
@@ -587,18 +587,18 @@ with trend_container:
         trend_data_list = []
         for site in sites:
             # Skip sites that don't match the municipality filter (if any)
-            if municipality_filter and site[2] != municipality_filter:
+            if municipality_filter and site.municipality != municipality_filter:
                 continue
             # Skip sites that don't match the municipality focus (if not showing all sites)
-            if not group_by_all_sites and municipality_focus and site[2] != municipality_focus:
+            if not group_by_all_sites and municipality_focus and site.municipality != municipality_focus:
                 continue
                 
             # Use 'omnivore' as the metric type in get_metric_data
             # This corresponds to the key in DataProcessor.METRIC_MAP
-            site_data = data_processor.get_metric_data(site[1], "omnivore")
+            site_data = data_processor.get_metric_data(site.name, "omnivore")
             if not site_data.empty:
-                site_data['site'] = site[1]
-                site_data['municipality'] = site[2]
+                site_data['site'] = site.name
+                site_data['municipality'] = site.municipality
                 trend_data_list.append(site_data)
         
         if trend_data_list:
@@ -637,16 +637,16 @@ with trend_container:
         trend_data_list = []
         for site in sites:
             # Skip sites that don't match the municipality filter (if any)
-            if municipality_filter and site[2] != municipality_filter:
+            if municipality_filter and site.municipality != municipality_filter:
                 continue
             # Skip sites that don't match the municipality focus (if not showing all sites)
-            if not group_by_all_sites and municipality_focus and site[2] != municipality_focus:
+            if not group_by_all_sites and municipality_focus and site.municipality != municipality_focus:
                 continue
                 
-            site_data = data_processor.get_coral_cover_data(site[1])
+            site_data = data_processor.get_coral_cover_data(site.name)
             if not site_data.empty:
-                site_data['site'] = site[1]
-                site_data['municipality'] = site[2]
+                site_data['site'] = site.name
+                site_data['municipality'] = site.municipality
                 trend_data_list.append(site_data)
         
         if trend_data_list:
@@ -679,16 +679,16 @@ with trend_container:
         trend_data_list = []
         for site in sites:
             # Skip sites that don't match the municipality filter (if any)
-            if municipality_filter and site[2] != municipality_filter:
+            if municipality_filter and site.municipality != municipality_filter:
                 continue
             # Skip sites that don't match the municipality focus (if not showing all sites)
-            if not group_by_all_sites and municipality_focus and site[2] != municipality_focus:
+            if not group_by_all_sites and municipality_focus and site.municipality != municipality_focus:
                 continue
                 
-            site_data = data_processor.get_metric_data(site[1], "fleshy_algae")
+            site_data = data_processor.get_metric_data(site.name, "fleshy_algae")
             if not site_data.empty:
-                site_data['site'] = site[1]
-                site_data['municipality'] = site[2]
+                site_data['site'] = site.name
+                site_data['municipality'] = site.municipality
                 trend_data_list.append(site_data)
         
         if trend_data_list:
@@ -721,16 +721,16 @@ with trend_container:
         trend_data_list = []
         for site in sites:
             # Skip sites that don't match the municipality filter (if any)
-            if municipality_filter and site[2] != municipality_filter:
+            if municipality_filter and site.municipality != municipality_filter:
                 continue
             # Skip sites that don't match the municipality focus (if not showing all sites)
-            if not group_by_all_sites and municipality_focus and site[2] != municipality_focus:
+            if not group_by_all_sites and municipality_focus and site.municipality != municipality_focus:
                 continue
                 
-            site_data = data_processor.get_metric_data(site[1], "herbivore")
+            site_data = data_processor.get_metric_data(site.name, "herbivore")
             if not site_data.empty:
-                site_data['site'] = site[1]
-                site_data['municipality'] = site[2]
+                site_data['site'] = site.name
+                site_data['municipality'] = site.municipality
                 trend_data_list.append(site_data)
         
         if trend_data_list:
@@ -763,16 +763,16 @@ with trend_container:
         trend_data_list = []
         for site in sites:
             # Skip sites that don't match the municipality filter (if any)
-            if municipality_filter and site[2] != municipality_filter:
+            if municipality_filter and site.municipality != municipality_filter:
                 continue
             # Skip sites that don't match the municipality focus (if not showing all sites)
-            if not group_by_all_sites and municipality_focus and site[2] != municipality_focus:
+            if not group_by_all_sites and municipality_focus and site.municipality != municipality_focus:
                 continue
                 
-            site_data = data_processor.get_metric_data(site[1], "corallivore")
+            site_data = data_processor.get_metric_data(site.name, "corallivore")
             if not site_data.empty:
-                site_data['site'] = site[1]
-                site_data['municipality'] = site[2]
+                site_data['site'] = site.name
+                site_data['municipality'] = site.municipality
                 trend_data_list.append(site_data)
         
         if trend_data_list:

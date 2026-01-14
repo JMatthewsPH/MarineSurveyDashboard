@@ -258,27 +258,26 @@ sites = load_sites()
 # Efficiently group sites by municipality
 municipalities = {}
 for site in sites:
-    if site[2] not in municipalities:
-        municipalities[site[2]] = []
-    municipalities[site[2]].append(site)
+    if site.municipality not in municipalities:
+        municipalities[site.municipality] = []
+    municipalities[site.municipality].append(site)
 
-# Sort each group by site name (index 1)
+# Sort each group
 for muni in municipalities:
-    municipalities[muni] = sorted(municipalities[muni], key=lambda x: x[1])
+    municipalities[muni] = sorted(municipalities[muni], key=lambda x: x.name)
 
 # Function to create site card with translations
-# Site tuple format: (id, name, municipality, description_en, description_fil, description_ceb)
 def create_site_card(site):
-    # Get description based on language (indices: 3=en, 4=fil, 5=ceb)
+    # Get description based on language
     if language_code == 'en':
-        description = site[3]
+        description = site.description_en
     elif language_code == 'tl':
-        description = site[4]  # Using Filipino description for Tagalog
+        description = site.description_fil  # Using Filipino description for Tagalog
     elif language_code == 'ceb':
         # Use dedicated Cebuano description, fallback to Filipino then English
-        description = site[5] or site[4] or site[3]
+        description = site.description_ceb or site.description_fil or site.description_en
     else:
-        description = site[3]
+        description = site.description_en
         
     # Default description if not available
     description = description or TRANSLATIONS[language_code]['site_desc_placeholder']
@@ -293,12 +292,12 @@ def create_site_card(site):
     st.markdown(f"""
         <div class="site-card">
             <div class="site-card-content">
-                <h3 style="margin-top: 0; color: #2b6cb0;">{site[1]}</h3>
-                <p style="margin: 8px 0; color: #2d3748;"><strong>{municipality_label}:</strong> {site[2]}</p>
+                <h3 style="margin-top: 0; color: #2b6cb0;">{site.name}</h3>
+                <p style="margin: 8px 0; color: #2d3748;"><strong>{municipality_label}:</strong> {site.municipality}</p>
                 <p style="margin: 12px 0 8px 0; line-height: 1.3; color: #2d3748; height: 60px; overflow: hidden; text-overflow: ellipsis;">{truncated_description}</p>
             </div>
             <div class="site-card-footer" style="margin-top: auto; padding-top: 20px; min-height: 60px; display: flex; align-items: center; justify-content: center; width: 100%;">
-                <a href="Site_Dashboard?site={site[1]}" target="_self" style="text-decoration: none; width: 100%; display: block;">
+                <a href="Site_Dashboard?site={site.name}" target="_self" style="text-decoration: none; width: 100%; display: block;">
                     <button class="site-button" style="
                         background: #2b6cb0; 
                         color: white; 

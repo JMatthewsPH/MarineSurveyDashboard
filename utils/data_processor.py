@@ -101,20 +101,16 @@ class DataProcessor:
         
         raise Exception("Failed to establish database connection after retries")
 
-    @st.cache_data(ttl=21600, show_spinner=False)  # Cache for 6 hours - returns serializable data
+    @st.cache_data(ttl=21600, show_spinner=False)  # Cache for 5 minutes - returns serializable data
     def get_sites(_self):  # Added underscore to ignore self in caching
-        """Get all sites with their municipalities and descriptions
-        
-        Returns tuples: (id, name, municipality, description_en, description_fil, description_ceb)
-        Index mapping: [0]=id, [1]=name, [2]=municipality, [3]=desc_en, [4]=desc_fil, [5]=desc_ceb
-        """
+        """Get all sites with their municipalities"""
         try:
             with get_db_session() as db:
                 logger.info("Fetching all sites from database")
                 # Use the query builder to get sites
                 sites = QueryBuilder.all_sites(db)
-                # Convert to serializable format for caching (include descriptions)
-                site_data = [(s.id, s.name, s.municipality, s.description_en, s.description_fil, s.description_ceb) for s in sites]
+                # Convert to serializable format for caching
+                site_data = [(s.id, s.name, s.municipality) for s in sites]
                 logger.info(f"Successfully fetched {len(site_data)} sites from database")
                 return site_data
         except Exception as e:
@@ -158,7 +154,7 @@ class DataProcessor:
                     return pd.DataFrame(columns=columns)
 
                 # Get metric data from database with statistical columns
-                surveys = QueryBuilder.metric_data(db, site[0], column_name, start_date)
+                surveys = QueryBuilder.metric_data(db, site.id, column_name, start_date)
 
                 # Log results
                 logger.info(f"Found {len(surveys)} {metric} surveys for {site_name}")
@@ -294,7 +290,7 @@ class DataProcessor:
                 if exclude_site:
                     site = QueryBuilder.site_by_name(db, exclude_site)
                     if site:
-                        exclude_site_id = site[0]
+                        exclude_site_id = site.id
                 
                 # Use QueryBuilder's average_metric_data method
                 surveys = QueryBuilder.average_metric_data(
@@ -326,7 +322,7 @@ class DataProcessor:
                 if exclude_site:
                     site = QueryBuilder.site_by_name(db, exclude_site)
                     if site:
-                        exclude_site_id = site[0]
+                        exclude_site_id = site.id
                 
                 # Use QueryBuilder's average_biomass_data method
                 surveys = QueryBuilder.average_biomass_data(
@@ -359,7 +355,7 @@ class DataProcessor:
                 if exclude_site:
                     site = QueryBuilder.site_by_name(db, exclude_site)
                     if site:
-                        exclude_site_id = site[0]
+                        exclude_site_id = site.id
                 
                 # Use general average_metric_data from QueryBuilder
                 surveys = QueryBuilder.average_metric_data(
@@ -395,7 +391,7 @@ class DataProcessor:
                     return pd.DataFrame(columns=['date', display_name])
 
                 # Use specialized biomass query with statistical columns
-                surveys = QueryBuilder.biomass_data(db, site[0], start_date)
+                surveys = QueryBuilder.biomass_data(db, site.id, start_date)
 
                 logger.info(f"Found {len(surveys)} biomass surveys for {site_name}")
                 print(f"DEBUG - Metric name: {display_name}")
@@ -438,8 +434,8 @@ class DataProcessor:
                 # Query all sites at once rather than one at a time
                 sites = db.query(Site).filter(Site.name.in_(site_names)).all()
                 for site in sites:
-                    site_name_to_id[site[1]] = site[0]
-                    site_id_to_name[site[0]] = site[1]
+                    site_name_to_id[site.name] = site.id
+                    site_id_to_name[site.id] = site.name
                     
                 # Handle case where some sites aren't found
                 missing_sites = set(site_names) - set(site_name_to_id.keys())
@@ -503,7 +499,7 @@ class DataProcessor:
                     return pd.DataFrame(columns=['date', display_name])
 
                 # Use specialized coral cover query with statistical columns
-                surveys = QueryBuilder.coral_cover_data(db, site[0], start_date)
+                surveys = QueryBuilder.coral_cover_data(db, site.id, start_date)
 
                 logger.info(f"Found {len(surveys)} coral cover surveys for {site_name}")
                 print(f"DEBUG - Metric name: {display_name}")
@@ -546,8 +542,8 @@ class DataProcessor:
                 # Query all sites at once rather than one at a time
                 sites = db.query(Site).filter(Site.name.in_(site_names)).all()
                 for site in sites:
-                    site_name_to_id[site[1]] = site[0]
-                    site_id_to_name[site[0]] = site[1]
+                    site_name_to_id[site.name] = site.id
+                    site_id_to_name[site.id] = site.name
                     
                 # Handle case where some sites aren't found
                 missing_sites = set(site_names) - set(site_name_to_id.keys())
@@ -684,34 +680,34 @@ class DataProcessor:
         avg_fleshy_algae = 0
         if algae_dfs:
             combined_algae = pd.concat(algae_dfs)
-            avg_fleshy_algae = combined_algae['fleshy_macro_algae_cover'].mean()
+            avg_fleshy_algae = combined_algae['fleshy_algae'].mean()
         
         # Calculate fish density averages
         herbivore_data_by_site = _self.batch_get_metric_data(site_names, 'herbivore', start_date='2017-01-01')
         omnivore_data_by_site = _self.batch_get_metric_data(site_names, 'omnivore', start_date='2017-01-01')
         corallivore_data_by_site = _self.batch_get_metric_data(site_names, 'corallivore', start_date='2017-01-01')
         
-        # Calculate average densities (using database column names from METRIC_MAP)
+        # Calculate average densities
         avg_herbivore = 0
         if herbivore_data_by_site:
             herbivore_dfs = [df for df in herbivore_data_by_site.values() if not df.empty]
             if herbivore_dfs:
                 combined_herbivore = pd.concat(herbivore_dfs)
-                avg_herbivore = combined_herbivore['herbivore_density'].mean()
+                avg_herbivore = combined_herbivore['herbivore'].mean()
         
         avg_omnivore = 0
         if omnivore_data_by_site:
             omnivore_dfs = [df for df in omnivore_data_by_site.values() if not df.empty]
             if omnivore_dfs:
                 combined_omnivore = pd.concat(omnivore_dfs)
-                avg_omnivore = combined_omnivore['omnivore_density'].mean()
+                avg_omnivore = combined_omnivore['omnivore'].mean()
         
         avg_corallivore = 0
         if corallivore_data_by_site:
             corallivore_dfs = [df for df in corallivore_data_by_site.values() if not df.empty]
             if corallivore_dfs:
                 combined_corallivore = pd.concat(corallivore_dfs)
-                avg_corallivore = combined_corallivore['corallivore_density'].mean()
+                avg_corallivore = combined_corallivore['corallivore'].mean()
         
         return {
             "site_count": site_count,
