@@ -6,7 +6,7 @@ This module handles importing the new structured data from fish, inverts, and su
 
 import pandas as pd
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from utils.database import get_db_session, Site, Survey
 import logging
@@ -54,12 +54,12 @@ def parse_period_to_date(period: str) -> datetime:
         # Format like "2024"
         year = int(year_part)
     
-    # Map seasons to months (using middle month of season)
+    # Map seasons to representative months
     season_months = {
         'Spring': 4,   # April (Mar-May)
         'Summer': 7,   # July (Jun-Aug)
         'Autumn': 10,  # October (Sep-Nov)
-        'Winter': 1    # January (Dec-Feb, but use Jan of the year)
+        'Winter': 2    # February (Dec-Feb, last month = end of season)
     }
     
     # For winter, if the format is "Winter 24/25", use the second year
@@ -70,7 +70,11 @@ def parse_period_to_date(period: str) -> datetime:
         else:
             year += 1900
     
-    month = season_months.get(season, 1)
+    month = season_months.get(season, 4)
+    if season == 'Winter':
+        # Use last day of February
+        last_day = datetime(year, month + 1, 1) - timedelta(days=1)
+        return last_day
     return datetime(year, month, 1)
 
 def parse_period_to_season(period: str) -> str:
