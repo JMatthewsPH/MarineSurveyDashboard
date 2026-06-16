@@ -112,13 +112,26 @@ class QueryBuilder:
     def average_metric_data(db: Session, column_name: str, exclude_site_id=None, 
                            municipality=None, start_date=None):
         """Build a query for average metric data across sites"""
-        # Start with base query
+        col = getattr(Survey, column_name)
+        n_col = getattr(Survey, f'{column_name}_n', None)
+        sd_col = getattr(Survey, f'{column_name}_sd', None)
+        ci_low_col = getattr(Survey, f'{column_name}_ci_low', None)
+        ci_high_col = getattr(Survey, f'{column_name}_ci_high', None)
+        eb_low_col = getattr(Survey, f'{column_name}_eb_low', None)
+        eb_high_col = getattr(Survey, f'{column_name}_eb_high', None)
+
         query = (db.query(
                 Survey.date,
-                func.avg(getattr(Survey, column_name)).label('average'))
-                .join(Site))  # Join with Site table to access municipality
-        
-        # Apply filters conditionally
+                func.min(Survey.season).label('season'),
+                func.avg(col).label('average'),
+                func.avg(n_col).label('n') if n_col is not None else func.cast(None, func.avg(col).type).label('n'),
+                func.avg(sd_col).label('sd') if sd_col is not None else func.cast(None, func.avg(col).type).label('sd'),
+                func.avg(ci_low_col).label('ci_low') if ci_low_col is not None else func.cast(None, func.avg(col).type).label('ci_low'),
+                func.avg(ci_high_col).label('ci_high') if ci_high_col is not None else func.cast(None, func.avg(col).type).label('ci_high'),
+                func.avg(eb_low_col).label('eb_low') if eb_low_col is not None else func.cast(None, func.avg(col).type).label('eb_low'),
+                func.avg(eb_high_col).label('eb_high') if eb_high_col is not None else func.cast(None, func.avg(col).type).label('eb_high'))
+                .join(Site))
+
         if start_date:
             query = query.filter(Survey.date >= start_date)
             
@@ -128,7 +141,6 @@ class QueryBuilder:
         if municipality:
             query = query.filter(Site.municipality == municipality)
             
-        # Apply COVID filter and group/order results
         query = query.filter(QueryBuilder._exclude_covid_filter())
         return (query.group_by(Survey.date)
                 .order_by(Survey.date)
