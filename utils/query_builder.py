@@ -266,7 +266,14 @@ class QueryBuilder:
         """Specialized query for average biomass data"""
         query = (db.query(
                 Survey.date,
-                func.avg(Survey.commercial_biomass).label('average'))
+                func.min(Survey.season).label('season'),
+                func.avg(Survey.commercial_biomass).label('average'),
+                func.avg(Survey.commercial_biomass_n).label('n'),
+                func.avg(Survey.commercial_biomass_sd).label('sd'),
+                func.avg(Survey.commercial_biomass_ci_low).label('ci_low'),
+                func.avg(Survey.commercial_biomass_ci_high).label('ci_high'),
+                func.avg(Survey.commercial_biomass_eb_low).label('eb_low'),
+                func.avg(Survey.commercial_biomass_eb_high).label('eb_high'))
                 .join(Site))
                 
         if start_date:
