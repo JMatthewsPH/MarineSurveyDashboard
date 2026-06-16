@@ -311,7 +311,7 @@ def create_site_card(site):
                         text-align: center;
                         display: block;
                         margin: 0 auto;
-                    " onmouseover="this.style.background='#4299e1'" onmouseout="this.style.background='#2b6cb0'">
+                    ">
                         {view_details_text}
                     </button>
                 </a>
